@@ -1,0 +1,43 @@
+public abstract interface annotation class at/released/weh/common/api/InternalWasiEmscriptenHostApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface class at/released/weh/common/api/Logger {
+	public static final field Companion Lat/released/weh/common/api/Logger$Companion;
+	public abstract fun a (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun a$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun d (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun d$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun e$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun i (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun i$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun v (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun v$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun w (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun w$default (Lat/released/weh/common/api/Logger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun withTag (Ljava/lang/String;)Lat/released/weh/common/api/Logger;
+}
+
+public final class at/released/weh/common/api/Logger$Companion : at/released/weh/common/api/Logger {
+	public fun a (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun d (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun i (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun v (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun w (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun withTag (Ljava/lang/String;)Lat/released/weh/common/api/Logger;
+}
+
+public abstract interface class at/released/weh/common/api/SqliteUintBitMask {
+	public abstract fun getMask-pVg5ArA ()I
+	public abstract fun getNewInstance ()Lkotlin/jvm/functions/Function1;
+}
+
+public final class at/released/weh/common/api/SqliteUintBitMaskKt {
+	public static final fun and (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
+	public static final fun clear (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
+	public static final fun contains (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Z
+	public static final fun or (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
+	public static final fun xor (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
+}
+

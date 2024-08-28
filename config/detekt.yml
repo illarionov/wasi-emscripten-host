@@ -1,0 +1,150 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+  weights:
+    # complexity: 2
+    # LongParameterList: 1
+    # style: 1
+    # comments: 1
+
+config:
+  validation: true
+  warningsAsErrors: true
+  checkExhaustiveness: false
+  excludes: ''
+
+processors:
+  active: true
+  exclude:
+    - 'DetektProgressListener'
+
+comments:
+  active: true
+
+complexity:
+  active: true
+  LongParameterList:
+    active: false # Original implementation of SQLiteOpenHelper has a large number of such functions
+    functionThreshold: 10
+    ignoreDefaultParameters: true
+  LongMethod:
+    active: true
+    ignoreAnnotated: ['Test']
+  NestedBlockDepth:
+    threshold: 5
+  TooManyFunctions:
+      active: false # Original implementation of SQLiteOpenHelper has classes with a huge number of functions
+
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true
+
+empty-blocks:
+  active: true
+
+exceptions:
+  active: true
+
+naming:
+  active: true
+  BooleanPropertyNaming:
+    active: true
+    allowedPattern: '^(is|has|are)'
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable', 'ParameterizedTest', "Test"]
+  NoNameShadowing:
+    active: false
+  InvalidPackageDeclaration:
+    active: false
+    rootPackage: "at.released.weh"
+    requireRootInDeclaration: false
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][_A-Z\d]*'
+
+performance:
+  active: true
+
+potential-bugs:
+  active: true
+
+style:
+  active: true
+
+  ForbiddenComment:
+    active: false # disabled for a while until everything is done
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - reason: 'print does not allow you to configure the output stream. Use a logger instead.'
+        value: 'kotlin.io.print'
+      - reason: 'println does not allow you to configure the output stream. Use a logger instead.'
+        value: 'kotlin.io.println'
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreNumbers: ['-1', '0', '1', '2', '3', '4', '8', '16', '32', '64', '1024']
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: false
+    excludeRawStrings: true
+  NoTabs:
+    active: true
+  ReturnCount:
+    active: true
+    max: 3
+    excludedFunctions:
+      - 'equals'
+    excludeLabeled: false
+    excludeReturnFromLambda: true
+    excludeGuardClauses: false
+  SpacingBetweenPackageAndImports:
+    active: true
+  TrailingWhitespace:
+    active: true
+  UnusedImports:
+    active: true
+  UnnecessaryAbstractClass:
+    active: false
+
+formatting:
+  active: true
+  android: true
+  autoCorrect: true
+
+  AnnotationOnSeparateLine:
+    active: false
+  ArgumentListWrapping:
+    active: true
+    autoCorrect: true
+    indentSize: 4
+    maxLineLength: 120 # Keep in sync with /.editorconfig
+  BlockCommentInitialStarAlignment:
+    active: true
+    autoCorrect: true
+  FunKeywordSpacing:
+    active: true
+    autoCorrect: true
+  FunctionStartOfBodySpacing:
+    active: true
+    autoCorrect: true
+  ImportOrdering:
+    active: true
+    autoCorrect: true
+    layout: '*,java.**,javax.**,kotlin.**,^' # Keep in sync with /.editorconfig
+  Indentation:
+    active: false
+  MaximumLineLength:
+    active: false
+  TrailingCommaOnCallSite:
+    active: true
+    autoCorrect: true
+    useTrailingCommaOnCallSite: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+    autoCorrect: true
+    useTrailingCommaOnDeclarationSite: true

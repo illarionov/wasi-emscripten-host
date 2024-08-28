@@ -1,0 +1,2156 @@
+public abstract interface class at/released/weh/host/EmbedderHost {
+	public abstract fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
+	public abstract fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
+	public abstract fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public abstract fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
+	public abstract fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
+	public abstract fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public abstract fun getRootLogger ()Lat/released/weh/common/api/Logger;
+	public abstract fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
+	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
+}
+
+public final class at/released/weh/host/EmbedderHost$Builder {
+	public fun <init> ()V
+	public final fun build ()Lat/released/weh/host/EmbedderHost;
+	public final fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
+	public final fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
+	public final fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
+	public final fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
+	public final fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
+	public final fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
+	public final fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
+	public final fun setClock (Lat/released/weh/host/EmbedderHost$Clock;)V
+	public final fun setCommandArgsProvider (Lat/released/weh/host/EmbedderHost$CommandArgsProvider;)V
+	public final fun setEntropySource (Lat/released/weh/host/EmbedderHost$EntropySource;)V
+	public final fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
+	public final fun setLocalTimeFormatter (Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;)V
+	public final fun setMonotonicClock (Lat/released/weh/host/EmbedderHost$MonotonicClock;)V
+	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
+	public final fun setSystemEnvProvider (Lat/released/weh/host/EmbedderHost$SystemEnvProvider;)V
+	public final fun setTimeZoneInfo (Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;)V
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$Clock {
+	public abstract fun getCurrentTimeEpochMilliseconds ()J
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$CommandArgsProvider {
+	public abstract fun getCommandArgs ()Ljava/util/List;
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$EntropySource {
+	public abstract fun generateEntropy (I)[B
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$LocalTimeFormatter {
+	public abstract fun format (J)Lat/released/weh/host/include/StructTm;
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$MonotonicClock {
+	public abstract fun getTimeMarkNanoseconds ()J
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$SystemEnvProvider {
+	public abstract fun getSystemEnv ()Ljava/util/Map;
+}
+
+public abstract interface class at/released/weh/host/EmbedderHost$TimeZoneInfoProvider {
+	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
+}
+
+public final class at/released/weh/host/base/WasmModules {
+	public static final field ENV_MODULE_NAME Ljava/lang/String;
+	public static final field INSTANCE Lat/released/weh/host/base/WasmModules;
+	public static final field SQLITE3_CALLBACK_MANAGER_MODULE_NAME Ljava/lang/String;
+	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
+}
+
+public final class at/released/weh/host/base/WasmPtr {
+	public static final field Companion Lat/released/weh/host/base/WasmPtr$Companion;
+	public static final field WASM_SIZEOF_PTR I
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/base/WasmPtr;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getAddr ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/base/WasmPtr$Companion {
+	public final fun getSQLITE3_NULL-CbBLMKg ()I
+	public final fun sqlite3Null-CbBLMKg ()I
+}
+
+public final class at/released/weh/host/base/WasmPtrKt {
+	public static final fun isSqlite3Null-e-C6Vng (I)Z
+	public static final fun plus-N0MNGDA (II)I
+}
+
+public final class at/released/weh/host/base/WasmValueType {
+	public static final field WebAssemblyTypes Lat/released/weh/host/base/WasmValueType$WebAssemblyTypes;
+	public static final synthetic fun box-impl (Ljava/lang/Byte;)Lat/released/weh/host/base/WasmValueType;
+	public static fun constructor-impl (Ljava/lang/Byte;)Ljava/lang/Byte;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/Byte;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/Byte;Ljava/lang/Byte;)Z
+	public final fun getOpcode ()Ljava/lang/Byte;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/Byte;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/Byte;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/base/WasmValueType$WebAssemblyTypes {
+	public final fun getExternRef-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getF32-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getF64-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getFuncRef-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getFunctionType-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getI32-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getI64-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getResultType-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getV128-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/base/WasmValueTypeExtKt {
+	public static final fun getPOINTER ()Ljava/lang/Byte;
+	public static final fun getPointer (Lat/released/weh/host/wasi/preview1/type/WasiTypename;)Ljava/lang/Byte;
+	public static final fun getPointer-uY7yA4Y (Ljava/lang/Byte;)Ljava/lang/Byte;
+}
+
+public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
+	public abstract fun getFunctionBinding-vD0Ly1k (I)Lat/released/weh/host/base/binding/WasmFunctionBinding;
+}
+
+public abstract interface class at/released/weh/host/base/binding/WasmFunctionBinding {
+	public abstract fun executeForDouble ([Ljava/lang/Object;)D
+	public abstract fun executeForFloat ([Ljava/lang/Object;)F
+	public abstract fun executeForInt ([Ljava/lang/Object;)I
+	public abstract fun executeForLong ([Ljava/lang/Object;)J
+	public abstract fun executeForPtr-EeN2TRI ([Ljava/lang/Object;)I
+	public abstract fun executeVoid ([Ljava/lang/Object;)V
+}
+
+public final class at/released/weh/host/base/binding/WasmFunctionBindingKt {
+	public static final fun executeForUInt (Lat/released/weh/host/base/binding/WasmFunctionBinding;[Ljava/lang/Object;)I
+	public static final fun executeForULong (Lat/released/weh/host/base/binding/WasmFunctionBinding;[Ljava/lang/Object;)J
+	public static final fun getBINDING_NOT_INITIALIZED ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+}
+
+public abstract interface class at/released/weh/host/base/function/HostFunction {
+	public abstract fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public abstract fun getWasmName ()Ljava/lang/String;
+}
+
+public abstract interface class at/released/weh/host/base/function/HostFunction$HostFunctionType {
+	public static final field Companion Lat/released/weh/host/base/function/HostFunction$HostFunctionType$Companion;
+	public abstract fun getParamTypes ()Ljava/util/List;
+	public abstract fun getReturnTypes ()Ljava/util/List;
+}
+
+public final class at/released/weh/host/base/function/HostFunction$HostFunctionType$Companion {
+	public final fun invoke (Ljava/util/List;Ljava/util/List;)Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public static synthetic fun invoke$default (Lat/released/weh/host/base/function/HostFunction$HostFunctionType$Companion;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+}
+
+public final class at/released/weh/host/base/function/HostFunctionExtKt {
+	public static final fun functionTypes (Ljava/util/Collection;)Ljava/util/Set;
+}
+
+public class at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/host/EmbedderHost;)V
+	public final fun getFunction ()Lat/released/weh/host/base/function/HostFunction;
+	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
+	protected final fun getLogger ()Lat/released/weh/common/api/Logger;
+}
+
+public final class at/released/weh/host/base/function/IndirectFunctionTableIndex {
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/base/function/IndirectFunctionTableIndex;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getFuncId ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/base/memory/DefaultWasiMemoryReader : at/released/weh/host/base/memory/WasiMemoryReader {
+	public fun <init> (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/common/api/Logger;)V
+	public fun read-1EKq_dk (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+}
+
+public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at/released/weh/host/base/memory/WasiMemoryWriter {
+	public fun <init> (Lat/released/weh/host/base/memory/ReadOnlyMemory;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/common/api/Logger;)V
+	public fun write-wFsMmWo (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+}
+
+public abstract interface class at/released/weh/host/base/memory/Memory : at/released/weh/host/base/memory/ReadOnlyMemory {
+	public abstract fun sink-Z5Htsd4 (II)Lkotlinx/io/RawSink;
+	public abstract fun writeI32-N0MNGDA (II)V
+	public abstract fun writeI64-N0MNGDA (IJ)V
+	public abstract fun writeI8-N0MNGDA (IB)V
+}
+
+public final class at/released/weh/host/base/memory/MemoryKt {
+	public static final fun sinkWithMaxSize-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;II)Lkotlinx/io/RawSink;
+	public static final fun writeNullTerminatedString-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;ILjava/lang/String;)I
+	public static final fun writePtr-J5BecxI (Lat/released/weh/host/base/memory/Memory;II)V
+	public static final fun writeU32-HYIQ7S8 (Lat/released/weh/host/base/memory/Memory;II)V
+	public static final fun writeU64-rzvJL5c (Lat/released/weh/host/base/memory/Memory;IJ)V
+	public static final fun writeU8-DunHRgs (Lat/released/weh/host/base/memory/Memory;IB)V
+}
+
+public abstract class at/released/weh/host/base/memory/MemoryRawSink : kotlinx/io/RawSink {
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	public fun flush ()V
+	protected final fun getBaseAddr-CbBLMKg ()I
+	protected final fun getEndAddressOrThrow (J)J
+	protected final fun getToAddrExclusive-CbBLMKg ()I
+	protected final fun setBaseAddr-e-C6Vng (I)V
+	public fun write (Lkotlinx/io/Buffer;J)V
+	protected abstract fun writeBytesToMemory-ilh_Uvc (Lkotlinx/io/Buffer;IJ)V
+}
+
+public abstract class at/released/weh/host/base/memory/MemoryRawSource : kotlinx/io/RawSource {
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	protected final fun getBaseAddr-CbBLMKg ()I
+	protected final fun getBytesLeft ()J
+	protected final fun getToAddrExclusive-CbBLMKg ()I
+	public fun readAtMostTo (Lkotlinx/io/Buffer;J)J
+	protected abstract fun readBytesFromMemory-8A16jWI (ILkotlinx/io/Buffer;I)V
+	protected final fun setBaseAddr-e-C6Vng (I)V
+}
+
+public final class at/released/weh/host/base/memory/Pages {
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/base/memory/Pages;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getCount ()J
+	public static final fun getInBytes-impl (J)J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/base/memory/PagesKt {
+	public static final field WASM_MEMORY_PAGE_SIZE J
+	public static final fun getWASM_MEMORY_32_MAX_PAGES ()J
+	public static final fun getWASM_MEMORY_64_MAX_PAGES ()J
+	public static final fun getWASM_MEMORY_SQLITE_MAX_PAGES ()J
+}
+
+public abstract interface class at/released/weh/host/base/memory/ReadOnlyMemory {
+	public abstract fun readI32-e-C6Vng (I)I
+	public abstract fun readI64-e-C6Vng (I)J
+	public abstract fun readI8-e-C6Vng (I)B
+	public abstract fun source-Z5Htsd4 (II)Lkotlinx/io/RawSource;
+}
+
+public final class at/released/weh/host/base/memory/ReadOnlyMemoryKt {
+	public static final fun readNullTerminatedString-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)Ljava/lang/String;
+	public static final fun readNullableNullTerminatedString-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)Ljava/lang/String;
+	public static final fun readPtr-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
+	public static final fun readU32-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
+	public static final fun readU64-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)J
+	public static final fun readU8-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)B
+	public static final fun sourceWithMaxSize-ilh_Uvc (Lat/released/weh/host/base/memory/ReadOnlyMemory;II)Lkotlinx/io/RawSource;
+}
+
+public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
+	public abstract fun read-1EKq_dk (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+}
+
+public abstract interface class at/released/weh/host/base/memory/WasiMemoryWriter {
+	public abstract fun write-wFsMmWo (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+}
+
+public final class at/released/weh/host/emscripten/AssertionFailedException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
+}
+
+public final class at/released/weh/host/emscripten/EmscriptenHostFunction : java/lang/Enum, at/released/weh/host/base/function/HostFunction {
+	public static final field ABORT_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field ASSERT_FAIL Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field Companion Lat/released/weh/host/emscripten/EmscriptenHostFunction$Companion;
+	public static final field EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_ASM_CONST_INT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_CHECK_BLOCKING_ALLOWED Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_CONSOLE_ERROR Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_DATE_NOW Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_EXIT_WITH_LIVE_RUNTIME Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_GET_NOW Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_GET_NOW_IS_MONOTONIC Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_INIT_MAIN_THREAD_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_NOTIFY_MAILBOX_POSTMESSAGE Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_RECEIVE_ON_MAIN_THREAD_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_RESIZE_HEAP Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_THREAD_CLEANUP Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_THREAD_MAILBOX_AWAIT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_THREAD_SET_STRONGREF Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_UNWIND_TO_JS_EVENT_LOOP Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field EXIT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field GETENTROPY Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field HANDLE_STACK_OVERFLOW Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field LOCALTIME_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field MMAP_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field MUNMAP_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field PTHREAD_CREATE_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_CHMOD Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FACCESSAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FCHMOD Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FCHOWN32 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FCNTL64 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FDATASYNC Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FSTAT64 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_FTRUNCATE64 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_GETCWD Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_IOCTL Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_LSTAT64 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_MKDIRAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_NEWFSTATAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_OPENAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_READLINKAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_RMDIR Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_STAT64 Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_UNLINKAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field SYSCALL_UTIMENSAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static final field TZSET_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public fun getWasmName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+	public static fun values ()[Lat/released/weh/host/emscripten/EmscriptenHostFunction;
+}
+
+public final class at/released/weh/host/emscripten/EmscriptenHostFunction$Companion {
+	public final fun getByWasmName ()Ljava/util/Map;
+}
+
+public abstract interface class at/released/weh/host/emscripten/export/EmscriptenMainExports {
+	public abstract fun get__errno_location ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get__wasm_call_ctors ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_initialize ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+}
+
+public class at/released/weh/host/emscripten/export/EmscriptenRuntime {
+	public static final field Companion Lat/released/weh/host/emscripten/export/EmscriptenRuntime$Companion;
+	protected fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/common/api/Logger;)V
+	public final fun getMainExports ()Lat/released/weh/host/emscripten/export/EmscriptenMainExports;
+	protected final fun getMemory ()Lat/released/weh/host/base/memory/Memory;
+	public final fun getStack ()Lat/released/weh/host/emscripten/export/stack/EmscriptenStack;
+	public fun initMainThread ()V
+	protected final fun initSingleThreadedMainThread ()V
+	public fun isMultiThread ()Z
+}
+
+public final class at/released/weh/host/emscripten/export/EmscriptenRuntime$Companion {
+	public final fun emscriptenSingleThreadedRuntime (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/common/api/Logger;)Lat/released/weh/host/emscripten/export/EmscriptenRuntime;
+}
+
+public final class at/released/weh/host/emscripten/export/memory/DynamicMemory {
+	public fun <init> (Lat/released/weh/host/emscripten/export/memory/DynamicMemoryExports;)V
+	public final fun allocOrThrow-ycCjXRU (I)I
+	public final fun free-e-C6Vng (I)V
+	public final fun getExports ()Lat/released/weh/host/emscripten/export/memory/DynamicMemoryExports;
+}
+
+public final class at/released/weh/host/emscripten/export/memory/DynamicMemory$OutOfMemoryException : java/lang/RuntimeException {
+	public fun <init> ()V
+}
+
+public abstract interface class at/released/weh/host/emscripten/export/memory/DynamicMemoryExports {
+	public abstract fun getFree ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getMalloc ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+}
+
+public final class at/released/weh/host/emscripten/export/memory/DynamicMemoryKt {
+	public static final fun freeSilent-XZvYtOA (Lat/released/weh/host/emscripten/export/memory/DynamicMemory;I)Ljava/lang/Object;
+}
+
+public final class at/released/weh/host/emscripten/export/pthread/EmscriptenPthread {
+	public fun <init> (Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadExports;Lat/released/weh/host/emscripten/export/memory/DynamicMemory;Lat/released/weh/host/base/memory/ReadOnlyMemory;)V
+	public final fun pthreadCreate-3rF6QEw (III)J
+	public final fun pthreadExit-e-C6Vng (I)V
+	public final fun pthreadSelf-s-VKNKU ()J
+}
+
+public abstract interface class at/released/weh/host/emscripten/export/pthread/EmscriptenPthreadExports {
+	public abstract fun getEmscripten_main_runtime_thread_id ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_main_thread_process_queued_calls ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getG_needs_dynamic_alloc ()I
+	public abstract fun getPthread_create ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getPthread_exit ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getPthread_self ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getSupports_wait ()I
+	public abstract fun getThread_ptr ()I
+	public abstract fun get__tls_align ()I
+	public abstract fun get__tls_base ()I
+	public abstract fun get__tls_size ()I
+	public abstract fun get_emscripten_check_mailbox ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_run_on_main_thread_js ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_crashed ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_exit ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_free_data ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_tls_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun is_main_thread ()I
+	public abstract fun is_runtime_thread ()I
+	public abstract fun setG_needs_dynamic_alloc (I)V
+	public abstract fun setSupports_wait (I)V
+	public abstract fun setThread_ptr (I)V
+	public abstract fun set__tls_base (I)V
+	public abstract fun set_main_thread (I)V
+	public abstract fun set_runtime_thread (I)V
+}
+
+public final class at/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal {
+	public fun <init> (Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadExports;)V
+	public final fun emscriptenThreadCrashed ()V
+	public final fun emscriptenThreadExit-e-C6Vng (I)V
+	public final fun emscriptenThreadFreeData-e-C6Vng (I)V
+	public final fun emscriptenThreadInit-HA9WWrk (IZZZIZ)V
+	public static synthetic fun emscriptenThreadInit-HA9WWrk$default (Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;IZZZIZILjava/lang/Object;)V
+	public final fun emscriptenTlsInit ()V
+}
+
+public final class at/released/weh/host/emscripten/export/pthread/PthreadException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getErrCode ()Lat/released/weh/filesystem/model/Errno;
+}
+
+public class at/released/weh/host/emscripten/export/pthread/PthreadManager {
+	public fun <init> (Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lkotlin/jvm/functions/Function0;)V
+	public final fun initMainThreadJs-e-C6Vng (I)V
+}
+
+public final class at/released/weh/host/emscripten/export/stack/EmscriptenStack {
+	public fun <init> (Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/common/api/Logger;)V
+	public final fun checkStackCookie (Lat/released/weh/host/base/memory/ReadOnlyMemory;)V
+	public final fun emscriptenStackRestore-e-C6Vng (I)V
+	public final fun emscriptenStackSetLimits-Z5Htsd4 (II)V
+	public final fun getEmscriptenStackBase-CbBLMKg ()I
+	public final fun getEmscriptenStackCurrent-CbBLMKg ()I
+	public final fun getEmscriptenStackEnd-CbBLMKg ()I
+	public final fun getEmscriptenStackFree ()I
+	public final fun setStackLimits ()V
+	public final fun stackCheckInit (Lat/released/weh/host/base/memory/Memory;)V
+	public final fun writeStackCookie (Lat/released/weh/host/base/memory/Memory;)V
+}
+
+public abstract interface class at/released/weh/host/emscripten/export/stack/EmscriptenStackExports {
+	public abstract fun getEmscripten_stack_get_base ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_current ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_end ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_free ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_set_limits ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get__set_stack_limits ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get__stack_base ()Ljava/lang/Integer;
+	public abstract fun get__stack_end ()Ljava/lang/Integer;
+	public abstract fun get__stack_pointer ()I
+	public abstract fun get_emscripten_stack_alloc ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_stack_restore ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun set__stack_base (Ljava/lang/Integer;)V
+	public abstract fun set__stack_end (Ljava/lang/Integer;)V
+	public abstract fun set__stack_pointer (I)V
+}
+
+public final class at/released/weh/host/emscripten/function/AbortJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()Ljava/lang/Void;
+}
+
+public final class at/released/weh/host/emscripten/function/AssertFailFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-gw1Egp8 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)Ljava/lang/Void;
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenAsmConstAsyncOnMainThreadFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-rsZiS70 (III)V
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenAsmConstIntFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-rsZiS70 (III)I
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenConsoleErrorFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)V
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenDateNowFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()D
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenGetNowFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()D
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenGetNowIsMonotonicFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()I
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeapFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public static final field Companion Lat/released/weh/host/emscripten/function/EmscriptenResizeHeapFunctionHandle$Companion;
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+}
+
+public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeapFunctionHandle$Companion {
+	public final fun calculateNewSizePages-GvQ4lMc (JJJ)J
+}
+
+public final class at/released/weh/host/emscripten/function/GetentropyFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;II)I
+}
+
+public final class at/released/weh/host/emscripten/function/HandleStackOverflowFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-XZvYtOA (Lat/released/weh/host/emscripten/export/stack/EmscriptenStack;I)Ljava/lang/Void;
+}
+
+public final class at/released/weh/host/emscripten/function/LocaltimeJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-Br7cVXU (Lat/released/weh/host/base/memory/Memory;JI)V
+}
+
+public final class at/released/weh/host/emscripten/function/MmapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-gtSjiHw (IIIIJII)I
+}
+
+public final class at/released/weh/host/emscripten/function/MunapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-92Yz8zk (IIIIIJ)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallChmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-HYIQ7S8 (Lat/released/weh/host/base/memory/ReadOnlyMemory;II)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFaccessatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-G6HztX0 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFchmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-PMWNU24 (II)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFchown32FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-eGkKrlo (III)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFcntl64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-Klo745w (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFstat64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-IoC99bQ (Lat/released/weh/host/base/memory/Memory;II)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallFtruncate64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-COHv1Vc (IJ)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallGetcwdFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;II)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallMkdiratFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-gO_FNhg (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallOpenatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-G6HztX0 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallReadlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-mD-VDt0 (Lat/released/weh/host/base/memory/Memory;IIII)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallRmdirFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public static final field Companion Lat/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;ZLat/released/weh/host/base/function/HostFunction;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun execute-J5BecxI (Lat/released/weh/host/base/memory/Memory;II)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle$Companion {
+	public final fun syscallLstat64 (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle;
+	public final fun syscallStat64 (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle;
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallUnlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-gO_FNhg (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+}
+
+public final class at/released/weh/host/emscripten/function/SyscallUtimensatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-PCOBZf0 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+}
+
+public final class at/released/weh/host/emscripten/function/TzsetJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-_dmkrqI (Lat/released/weh/host/base/memory/Memory;IIII)V
+}
+
+public final class at/released/weh/host/ext/BaseDirectoryExtKt {
+	public static final fun fromRawDirFd (Lat/released/weh/filesystem/model/BaseDirectory$Companion;I)Lat/released/weh/filesystem/model/BaseDirectory;
+}
+
+public final class at/released/weh/host/ext/NullTerminatedStringExtKt {
+	public static final fun encodeToNullTerminatedBuffer (Ljava/lang/String;I)Lkotlinx/io/Buffer;
+	public static synthetic fun encodeToNullTerminatedBuffer$default (Ljava/lang/String;IILjava/lang/Object;)Lkotlinx/io/Buffer;
+	public static final fun encodedNullTerminatedStringLength (Ljava/lang/String;)I
+}
+
+public final class at/released/weh/host/ext/SinkExtKt {
+	public static final fun writeNullTerminatedString (Lkotlinx/io/Sink;Ljava/lang/String;I)I
+	public static synthetic fun writeNullTerminatedString$default (Lkotlinx/io/Sink;Ljava/lang/String;IILjava/lang/Object;)I
+}
+
+public final class at/released/weh/host/include/Fcntl {
+	public static final field AT_EACCESS I
+	public static final field AT_FDCWD I
+	public static final field AT_REMOVEDIR I
+	public static final field AT_SYMLINK_FOLLOW I
+	public static final field AT_SYMLINK_NOFOLLOW I
+	public static final field F_DUPFD I
+	public static final field F_DUPFD_CLOEXEC I
+	public static final field F_GETFD I
+	public static final field F_GETFL I
+	public static final field F_GETLK I
+	public static final field F_GETOWN I
+	public static final field F_GETOWNER_UIDS I
+	public static final field F_GETOWN_EX I
+	public static final field F_GETSIG I
+	public static final field F_OK I
+	public static final field F_RDLCK S
+	public static final field F_SETFD I
+	public static final field F_SETFL I
+	public static final field F_SETLK I
+	public static final field F_SETLKW I
+	public static final field F_SETOWN I
+	public static final field F_SETOWN_EX I
+	public static final field F_SETSIG I
+	public static final field F_UNLCK S
+	public static final field F_WRLCK S
+	public static final field INSTANCE Lat/released/weh/host/include/Fcntl;
+	public static final field O_ACCMODE I
+	public static final field O_APPEND I
+	public static final field O_ASYNC I
+	public static final field O_CLOEXEC I
+	public static final field O_CREAT I
+	public static final field O_DIRECT I
+	public static final field O_DIRECTORY I
+	public static final field O_DSYNC I
+	public static final field O_EXCL I
+	public static final field O_LARGEFILE I
+	public static final field O_NDELAY I
+	public static final field O_NOATIME I
+	public static final field O_NOCTTY I
+	public static final field O_NOFOLLOW I
+	public static final field O_NONBLOCK I
+	public static final field O_PATH I
+	public static final field O_RDONLY I
+	public static final field O_RDWR I
+	public static final field O_SEARCH I
+	public static final field O_SYNC I
+	public static final field O_TMPFILE I
+	public static final field O_TRUNC I
+	public static final field O_WRONLY I
+	public static final field R_OK I
+	public static final field W_OK I
+	public static final field X_OK I
+}
+
+public final class at/released/weh/host/include/FcntlExtKt {
+	public static final fun oMaskToString-Qn1smSk (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/SqliteUintBitMask {
+	public static final field Companion Lat/released/weh/host/include/FileAccessibilityCheck$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/FileAccessibilityCheck;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun getMask-pVg5ArA ()I
+	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
+	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/include/FileAccessibilityCheck$Companion {
+	public final fun getF_OK-8QPWET8 ()I
+	public final fun getMASK-8QPWET8 ()I
+	public final fun getR_OK-8QPWET8 ()I
+	public final fun getW_OK-8QPWET8 ()I
+	public final fun getX_OK-8QPWET8 ()I
+}
+
+public final class at/released/weh/host/include/StructFlock {
+	public static final field Companion Lat/released/weh/host/include/StructFlock$Companion;
+	public static final field STRUCT_FLOCK_SIZE I
+	public synthetic fun <init> (SSJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()S
+	public final fun component2 ()S
+	public final fun component3-s-VKNKU ()J
+	public final fun component4-s-VKNKU ()J
+	public final fun component5 ()I
+	public final fun copy-orKg6c4 (SSJJI)Lat/released/weh/host/include/StructFlock;
+	public static synthetic fun copy-orKg6c4$default (Lat/released/weh/host/include/StructFlock;SSJJIILjava/lang/Object;)Lat/released/weh/host/include/StructFlock;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getL_len-s-VKNKU ()J
+	public final fun getL_pid ()I
+	public final fun getL_start-s-VKNKU ()J
+	public final fun getL_type ()S
+	public final fun getL_whence ()S
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/StructFlock$Companion {
+	public final fun unpack (Lkotlinx/io/Source;)Lat/released/weh/host/include/StructFlock;
+}
+
+public final class at/released/weh/host/include/StructPthread {
+	public static final field Companion Lat/released/weh/host/include/StructPthread$Companion;
+	public static final field STRUCT_PTHREAD_STACK_HIGH_OFFSET I
+	public static final field STRUCT_PTHREAD_STACK_SZIE_OFFSET I
+	public synthetic fun <init> (IIIIIIIIIBLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-CbBLMKg ()I
+	public final fun component10 ()B
+	public final fun component2-CbBLMKg ()I
+	public final fun component3-CbBLMKg ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6-CbBLMKg ()I
+	public final fun component7-CbBLMKg ()I
+	public final fun component8 ()I
+	public final fun component9 ()I
+	public final fun copy-WkxeaqY (IIIIIIIIIB)Lat/released/weh/host/include/StructPthread;
+	public static synthetic fun copy-WkxeaqY$default (Lat/released/weh/host/include/StructPthread;IIIIIIIIIBILjava/lang/Object;)Lat/released/weh/host/include/StructPthread;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCanary ()I
+	public final fun getMailbox-CbBLMKg ()I
+	public final fun getMailboxRefcount ()I
+	public final fun getNext-CbBLMKg ()I
+	public final fun getPrev-CbBLMKg ()I
+	public final fun getSelf-CbBLMKg ()I
+	public final fun getSleeping ()B
+	public final fun getSysinfo ()I
+	public final fun getTlsBase-CbBLMKg ()I
+	public final fun getWaitingAsync ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/StructPthread$Companion {
+}
+
+public final class at/released/weh/host/include/StructTimespec {
+	public synthetic fun <init> (JJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-s-VKNKU ()J
+	public final fun component2-s-VKNKU ()J
+	public final fun copy-PWzV0Is (JJ)Lat/released/weh/host/include/StructTimespec;
+	public static synthetic fun copy-PWzV0Is$default (Lat/released/weh/host/include/StructTimespec;JJILjava/lang/Object;)Lat/released/weh/host/include/StructTimespec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTv_nsec-s-VKNKU ()J
+	public final fun getTv_sec-s-VKNKU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/StructTimespecKt {
+	public static final fun getTimeMillis (Lat/released/weh/host/include/StructTimespec;)J
+}
+
+public final class at/released/weh/host/include/StructTm {
+	public fun <init> (IIIIIIIIIJLjava/lang/String;)V
+	public synthetic fun <init> (IIIIIIIIIJLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10 ()J
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun component9 ()I
+	public final fun copy (IIIIIIIIIJLjava/lang/String;)Lat/released/weh/host/include/StructTm;
+	public static synthetic fun copy$default (Lat/released/weh/host/include/StructTm;IIIIIIIIIJLjava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/include/StructTm;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTm_gmtoff ()J
+	public final fun getTm_hour ()I
+	public final fun getTm_isdst ()I
+	public final fun getTm_mday ()I
+	public final fun getTm_min ()I
+	public final fun getTm_mon ()I
+	public final fun getTm_sec ()I
+	public final fun getTm_wday ()I
+	public final fun getTm_yday ()I
+	public final fun getTm_year ()I
+	public final fun getTm_zone ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isDstFlag ()Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/StructTm$IsDstFlag : java/lang/Enum {
+	public static final field IN_EFFECT Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public static final field NOT_IN_EFFECT Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public static final field UNKNOWN Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public static fun values ()[Lat/released/weh/host/include/StructTm$IsDstFlag;
+}
+
+public final class at/released/weh/host/include/StructTmKt {
+	public static final field STRUCT_TM_PACKED_SIZE I
+	public static final fun asTmIsdstValue (Lat/released/weh/host/include/StructTm$IsDstFlag;)I
+	public static final fun pack (Lat/released/weh/host/include/StructTm;)Lkotlinx/io/Buffer;
+	public static final fun packTo (Lat/released/weh/host/include/StructTm;Lkotlinx/io/Sink;)V
+}
+
+public final class at/released/weh/host/include/TimeZoneInfo {
+	public fun <init> (JILjava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()J
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (JILjava/lang/String;Ljava/lang/String;)Lat/released/weh/host/include/TimeZoneInfo;
+	public static synthetic fun copy$default (Lat/released/weh/host/include/TimeZoneInfo;JILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/include/TimeZoneInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDaylight ()I
+	public final fun getDstName ()Ljava/lang/String;
+	public final fun getStdName ()Ljava/lang/String;
+	public final fun getTimeZone ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/include/sys/StructStatExtKt {
+	public static final field STRUCT_SIZE_PACKED_SIZE I
+	public static final fun pack (Lat/released/weh/filesystem/op/stat/StructStat;)Lkotlinx/io/Buffer;
+	public static final fun packTo (Lat/released/weh/filesystem/op/stat/StructStat;Lkotlinx/io/Sink;)V
+}
+
+public final class at/released/weh/host/include/sys/SysMmanMapFlags : at/released/weh/common/api/SqliteUintBitMask {
+	public static final field Companion Lat/released/weh/host/include/sys/SysMmanMapFlags$Companion;
+	public static final field MAP_HUGE_MASK I
+	public static final field MAP_HUGE_SHIFT I
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanMapFlags;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun getMask-pVg5ArA ()I
+	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
+	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/include/sys/SysMmanMapFlags$Companion {
+	public final fun getMAP_ANON-6HN-XAE ()I
+	public final fun getMAP_ANONYMOUS-6HN-XAE ()I
+	public final fun getMAP_DENYWRITE-6HN-XAE ()I
+	public final fun getMAP_EXECUTABLE-6HN-XAE ()I
+	public final fun getMAP_FILE-6HN-XAE ()I
+	public final fun getMAP_FIXED-6HN-XAE ()I
+	public final fun getMAP_FIXED_NOREPLACE-6HN-XAE ()I
+	public final fun getMAP_GROWSDOWN-6HN-XAE ()I
+	public final fun getMAP_HUGETLB-6HN-XAE ()I
+	public final fun getMAP_HUGE_16GB-6HN-XAE ()I
+	public final fun getMAP_HUGE_16KB-6HN-XAE ()I
+	public final fun getMAP_HUGE_16MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_1GB-6HN-XAE ()I
+	public final fun getMAP_HUGE_1MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_256MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_2GB-6HN-XAE ()I
+	public final fun getMAP_HUGE_2MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_32MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_512KB-6HN-XAE ()I
+	public final fun getMAP_HUGE_512MB-6HN-XAE ()I
+	public final fun getMAP_HUGE_64KB-6HN-XAE ()I
+	public final fun getMAP_HUGE_8MB-6HN-XAE ()I
+	public final fun getMAP_LOCKED-6HN-XAE ()I
+	public final fun getMAP_NONBLOCK-6HN-XAE ()I
+	public final fun getMAP_NORESERVE-6HN-XAE ()I
+	public final fun getMAP_POPULATE-6HN-XAE ()I
+	public final fun getMAP_PRIVATE-6HN-XAE ()I
+	public final fun getMAP_SHARED-6HN-XAE ()I
+	public final fun getMAP_SHARED_VALIDATE-6HN-XAE ()I
+	public final fun getMAP_STACK-6HN-XAE ()I
+	public final fun getMAP_SYNC-6HN-XAE ()I
+	public final fun getMAP_TYPE-6HN-XAE ()I
+}
+
+public final class at/released/weh/host/include/sys/SysMmanProt : at/released/weh/common/api/SqliteUintBitMask {
+	public static final field Companion Lat/released/weh/host/include/sys/SysMmanProt$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanProt;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun getMask-pVg5ArA ()I
+	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
+	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/include/sys/SysMmanProt$Companion {
+	public final fun getPROT_EXEC-E0MLoKs ()I
+	public final fun getPROT_GROWSDOWN-E0MLoKs ()I
+	public final fun getPROT_GROWSUP-E0MLoKs ()I
+	public final fun getPROT_NONE-E0MLoKs ()I
+	public final fun getPROT_READ-E0MLoKs ()I
+	public final fun getPROT_WRITE-E0MLoKs ()I
+}
+
+public final class at/released/weh/host/include/sys/SysStat {
+	public static final field INSTANCE Lat/released/weh/host/include/sys/SysStat;
+	public static final field UTIME_NOW I
+	public static final field UTIME_OMIT I
+}
+
+public final class at/released/weh/host/jvm/JvmEmbedderHost : at/released/weh/host/EmbedderHost {
+	public fun <init> ()V
+	public fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/EmbedderHost$SystemEnvProvider;Lat/released/weh/host/EmbedderHost$CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/EmbedderHost$Clock;Lat/released/weh/host/EmbedderHost$MonotonicClock;Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;Lat/released/weh/host/EmbedderHost$EntropySource;)V
+	public synthetic fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/EmbedderHost$SystemEnvProvider;Lat/released/weh/host/EmbedderHost$CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/EmbedderHost$Clock;Lat/released/weh/host/EmbedderHost$MonotonicClock;Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;Lat/released/weh/host/EmbedderHost$EntropySource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
+	public fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
+	public fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
+	public fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
+	public fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public fun getRootLogger ()Lat/released/weh/common/api/Logger;
+	public fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
+	public fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
+}
+
+public final class at/released/weh/host/jvm/JvmEntropySource : at/released/weh/host/EmbedderHost$EntropySource {
+	public fun <init> ()V
+	public fun <init> (Ljava/security/SecureRandom;)V
+	public synthetic fun <init> (Ljava/security/SecureRandom;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun generateEntropy (I)[B
+}
+
+public final class at/released/weh/host/jvm/JvmLocalTimeFormatter : at/released/weh/host/EmbedderHost$LocalTimeFormatter {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun format (J)Lat/released/weh/host/include/StructTm;
+	public final fun getLocalTimeZoneProvider ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class at/released/weh/host/jvm/JvmTimeZoneInfoProvider : at/released/weh/host/EmbedderHost$TimeZoneInfoProvider {
+	public fun <init> ()V
+	public fun <init> (Ljava/time/Clock;)V
+	public synthetic fun <init> (Ljava/time/Clock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
+}
+
+public final class at/released/weh/host/wasi/WasiHostFunction : java/lang/Enum, at/released/weh/host/base/function/HostFunction {
+	public static final field ARGS_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field ARGS_SIZES_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field CLOCK_RES_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field CLOCK_TIME_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field Companion Lat/released/weh/host/wasi/WasiHostFunction$Companion;
+	public static final field ENVIRON_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field ENVIRON_SIZES_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_ADVISE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_ALLOCATE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_CLOSE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_DATASYNC Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FDSTAT_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FDSTAT_SET_FLAGS Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FDSTAT_SET_RIGHTS Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FILESTAT_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FILESTAT_SET_SIZE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_PREAD Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_PRESTAT_DIR_NAME Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_PRESTAT_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_PWRITE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_READ Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_READDIR Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_RENUMBER Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_SEEK Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_SYNC Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_TELL Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field FD_WRITE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_CREATE_DIRECTORY Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_FILESTAT_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_LINK Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_OPEN Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_READLINK Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_REMOVE_DIRECTORY Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_RENAME Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_SYMLINK Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PATH_UNLINK_FILE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field POLL_ONEOFF Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PROC_EXIT Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field PROC_RAISE Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field RANDOM_GET Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field SCHED_YIELD Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field SOCK_ACCEPT Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field SOCK_RECV Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field SOCK_SEND Lat/released/weh/host/wasi/WasiHostFunction;
+	public static final field SOCK_SHUTDOWN Lat/released/weh/host/wasi/WasiHostFunction;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public fun getWasmName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/WasiHostFunction;
+	public static fun values ()[Lat/released/weh/host/wasi/WasiHostFunction;
+}
+
+public final class at/released/weh/host/wasi/WasiHostFunction$Companion {
+	public final fun getByWasmName ()Ljava/util/Map;
+}
+
+public final class at/released/weh/host/wasi/preview1/ext/WasiEnvironmentFunc {
+	public static final field INSTANCE Lat/released/weh/host/wasi/preview1/ext/WasiEnvironmentFunc;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/EnvironGetFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-J5BecxI (Lat/released/weh/host/base/memory/Memory;II)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/EnvironSizesGetFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-J5BecxI (Lat/released/weh/host/base/memory/Memory;II)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdCloseFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-jdnj7sY (I)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun execute-hCD5t2k (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryReader;IIII)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion {
+	public final fun fdPread (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle;
+	public final fun fdRead (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdSeekFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute-PkuuOwE (Lat/released/weh/host/base/memory/Memory;IJII)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun execute-jdnj7sY (I)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle$Companion {
+	public final fun fdSync (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle;
+	public final fun syscallFdatasync (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun execute-hCD5t2k (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryWriter;IIII)Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion {
+	public final fun fdPwrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
+	public final fun fdWrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
+}
+
+public final class at/released/weh/host/wasi/preview1/function/SchedYieldFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()Lat/released/weh/filesystem/model/Errno;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Advice : java/lang/Enum {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Advice$Companion;
+	public static final field DONTNEED Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static final field NOREUSE Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static final field NORMAL Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static final field RANDOM Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static final field SEQUENTIAL Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static final field WILLNEED Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Advice;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Advice;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Advice$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/CioVec {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/CioVec$Companion;
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-CbBLMKg ()I
+	public final fun component2-3_9_CwU ()I
+	public final fun copy-NymWZfM (II)Lat/released/weh/host/wasi/preview1/type/CioVec;
+	public static synthetic fun copy-NymWZfM$default (Lat/released/weh/host/wasi/preview1/type/CioVec;IIILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/CioVec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuf-CbBLMKg ()I
+	public final fun getBufLen-3_9_CwU ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/CioVec$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/CiovecArray {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/CiovecArray$Companion;
+	public static final synthetic fun box-impl (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/CiovecArray;
+	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
+	public final fun getCiovecList ()Ljava/util/List;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/List;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/List;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/CiovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/ClockId : java/lang/Enum {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/ClockId$Companion;
+	public static final field MONOTONIC Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public static final field PROCESS_CPUTIME_ID Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public static final field REALTIME Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public static final field THREAD_CPUTIME_ID Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/ClockId;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/ClockId$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Device {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Device$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Device;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Device$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dircookie {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Dircookie$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Dircookie;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dircookie$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dirent {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Dirent$Companion;
+	public synthetic fun <init> (JJILat/released/weh/host/wasi/preview1/type/Filetype;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-AQTAWoo ()J
+	public final fun component2-zPocmrw ()J
+	public final fun component3-Cnn2ELI ()I
+	public final fun component4 ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public final fun copy-PvC8qiU (JJILat/released/weh/host/wasi/preview1/type/Filetype;)Lat/released/weh/host/wasi/preview1/type/Dirent;
+	public static synthetic fun copy-PvC8qiU$default (Lat/released/weh/host/wasi/preview1/type/Dirent;JJILat/released/weh/host/wasi/preview1/type/Filetype;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Dirent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDIno-zPocmrw ()J
+	public final fun getDNamlen-Cnn2ELI ()I
+	public final fun getDNext-AQTAWoo ()J
+	public final fun getDType ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dirent$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dirnamlen {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Dirnamlen$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/wasi/preview1/type/Dirnamlen;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getRawValue-pVg5ArA ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Dirnamlen$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/ErrnoExtKt {
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Errno$Companion;)Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Event {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Event$Companion;
+	public synthetic fun <init> (JLat/released/weh/filesystem/model/Errno;Lat/released/weh/host/wasi/preview1/type/Eventtype;Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-J4zpkRc ()J
+	public final fun component2 ()Lat/released/weh/filesystem/model/Errno;
+	public final fun component3 ()Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public final fun component4 ()Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;
+	public final fun copy-UV8AVmA (JLat/released/weh/filesystem/model/Errno;Lat/released/weh/host/wasi/preview1/type/Eventtype;Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;)Lat/released/weh/host/wasi/preview1/type/Event;
+	public static synthetic fun copy-UV8AVmA$default (Lat/released/weh/host/wasi/preview1/type/Event;JLat/released/weh/filesystem/model/Errno;Lat/released/weh/host/wasi/preview1/type/Eventtype;Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Event;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Lat/released/weh/filesystem/model/Errno;
+	public final fun getFdReadwrite ()Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;
+	public final fun getType ()Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public final fun getUserdata-J4zpkRc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Event$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/EventFdReadwrite {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite$Companion;
+	public synthetic fun <init> (JSLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-OUdTjDQ ()J
+	public final fun component2-t6ZZBmU ()S
+	public final fun copy-eLjpPKg (JS)Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;
+	public static synthetic fun copy-eLjpPKg$default (Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;JSILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/EventFdReadwrite;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFlags-t6ZZBmU ()S
+	public final fun getNbytes-OUdTjDQ ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/EventFdReadwrite$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Eventrwflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Eventrwflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Eventrwflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Eventrwflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags : java/lang/Enum {
+	public static final field FD_READWRITE_HANGUP Lat/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Eventtype : java/lang/Enum {
+	public static final field CLOCK Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Eventtype$Companion;
+	public static final field FD_READ Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public static final field FD_WRITE Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Eventtype;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Eventtype;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Eventtype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/ExitCode {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/ExitCode$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/wasi/preview1/type/ExitCode;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getRawValue-pVg5ArA ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/wasi/preview1/type/ExitCode$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdExtKt {
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Fd$Companion;)Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdFlags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FdFlags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/FdFlags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdFlags$Flags : java/lang/Enum {
+	public static final field APPEND Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static final field DSYNC Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static final field NONBLOCK Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static final field RSYNC Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static final field SYNC Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdStat {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FdStat$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/Filetype;SJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public final fun component2-gAkrBNM ()S
+	public final fun component3-_AmXvW0 ()J
+	public final fun component4-_AmXvW0 ()J
+	public final fun copy-d8Fgj6Q (Lat/released/weh/host/wasi/preview1/type/Filetype;SJJ)Lat/released/weh/host/wasi/preview1/type/FdStat;
+	public static synthetic fun copy-d8Fgj6Q$default (Lat/released/weh/host/wasi/preview1/type/FdStat;Lat/released/weh/host/wasi/preview1/type/Filetype;SJJILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FdStat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFsFiletype ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public final fun getFsFlags-gAkrBNM ()S
+	public final fun getFsRightsBase-_AmXvW0 ()J
+	public final fun getFsRightsInheriting-_AmXvW0 ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FdStat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FileDelta {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FileDelta$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/FileDelta;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FileDelta$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FileSize {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FileSize$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/FileSize;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/FileSize$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Filestat {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Filestat$Companion;
+	public synthetic fun <init> (JJLat/released/weh/host/wasi/preview1/type/Filetype;JJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-lBV1za4 ()J
+	public final fun component2-zPocmrw ()J
+	public final fun component3 ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public final fun component4-13676UE ()J
+	public final fun component5-OUdTjDQ ()J
+	public final fun component6-s-V_6mc ()J
+	public final fun component7-s-V_6mc ()J
+	public final fun component8-s-V_6mc ()J
+	public final fun copy-unIyBdQ (JJLat/released/weh/host/wasi/preview1/type/Filetype;JJJJJ)Lat/released/weh/host/wasi/preview1/type/Filestat;
+	public static synthetic fun copy-unIyBdQ$default (Lat/released/weh/host/wasi/preview1/type/Filestat;JJLat/released/weh/host/wasi/preview1/type/Filetype;JJJJJILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Filestat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAtim-s-V_6mc ()J
+	public final fun getCtim-s-V_6mc ()J
+	public final fun getDev-lBV1za4 ()J
+	public final fun getFileType ()Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public final fun getIno-zPocmrw ()J
+	public final fun getMtim-s-V_6mc ()J
+	public final fun getNlink-13676UE ()J
+	public final fun getSize-OUdTjDQ ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Filestat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Filetype : java/lang/Enum {
+	public static final field BLOCK_DEVICE Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field CHARACTER_DEVICE Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Filetype$Companion;
+	public static final field DIRECTORY Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field REGULAR_FILE Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field SOCKET_DGRAM Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field SOCKET_STREAM Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field SYMBOLIC_LINK Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static final field UNKNOWN Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Filetype;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Filetype;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Filetype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Fstflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Fstflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Fstflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Fstflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Fstflags$Fstflags : java/lang/Enum {
+	public static final field ATIM Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+	public static final field ATIM_NOW Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+	public static final field MTIM Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+	public static final field MTIM_NOW Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Inode {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Inode$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Inode;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Inode$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Iovec {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Iovec$Companion;
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-CbBLMKg ()I
+	public final fun component2-3_9_CwU ()I
+	public final fun copy-NymWZfM (II)Lat/released/weh/host/wasi/preview1/type/Iovec;
+	public static synthetic fun copy-NymWZfM$default (Lat/released/weh/host/wasi/preview1/type/Iovec;IIILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Iovec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuf-CbBLMKg ()I
+	public final fun getBufLen-3_9_CwU ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Iovec$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/IovecArray {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/IovecArray$Companion;
+	public static final synthetic fun box-impl (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/IovecArray;
+	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
+	public final fun getIovecList ()Ljava/util/List;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/List;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/List;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/IovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Linkcount {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Linkcount$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Linkcount;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Linkcount$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/LookupFlags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/LookupFlags$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/wasi/preview1/type/LookupFlags;
+	public static fun constructor-impl (I)I
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag;)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getRawMask-pVg5ArA ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/wasi/preview1/type/LookupFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag : java/lang/Enum {
+	public static final field SYMLINK_FOLLOW Lat/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-pVg5ArA ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Oflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Oflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Oflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Oflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Oflags$Oflags : java/lang/Enum {
+	public static final field CREAT Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+	public static final field DIRECTORY Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+	public static final field EXCL Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+	public static final field TRUNC Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Oflags$Oflags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Preopentype : java/lang/Enum {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Preopentype$Companion;
+	public static final field DIR Lat/released/weh/host/wasi/preview1/type/Preopentype;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue-pVg5ArA ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Preopentype;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Preopentype;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Preopentype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public abstract class at/released/weh/host/wasi/preview1/type/Prestat {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Prestat$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/Preopentype;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getTag ()Lat/released/weh/host/wasi/preview1/type/Preopentype;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Prestat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Prestat$Dir : at/released/weh/host/wasi/preview1/type/Prestat {
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/PrestatDir;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/PrestatDir;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/PrestatDir;)Lat/released/weh/host/wasi/preview1/type/Prestat$Dir;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Prestat$Dir;Lat/released/weh/host/wasi/preview1/type/PrestatDir;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Prestat$Dir;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrestatDir ()Lat/released/weh/host/wasi/preview1/type/PrestatDir;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/PrestatDir {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/PrestatDir$Companion;
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-3_9_CwU ()I
+	public final fun copy-qaN5AX8 (I)Lat/released/weh/host/wasi/preview1/type/PrestatDir;
+	public static synthetic fun copy-qaN5AX8$default (Lat/released/weh/host/wasi/preview1/type/PrestatDir;IILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/PrestatDir;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrNameLen-3_9_CwU ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/PrestatDir$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Riflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Riflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Riflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Riflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue : java/lang/Enum {
+	public static final field RECV_PEEK Lat/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue;
+	public static final field RECV_WAITALL Lat/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Rights {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Rights$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Rights;
+	public static fun constructor-impl (J)J
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Rights$Flags;)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getMask-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Rights$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Rights$Flags : java/lang/Enum {
+	public static final field FD_ADVISE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_ALLOCATE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_DATASYNC Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_FDSTAT_SET_FLAGS Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_FILESTAT_GET Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_FILESTAT_SET_SIZE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_READ Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_READDIR Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_SEEK Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_SYNC Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_TELL Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field FD_WRITE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_CREATE_DIRECTORY Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_CREATE_FILE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_FILESTAT_GET Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_FILESTAT_SET_SIZE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_LINK_SOURCE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_LINK_TARGET Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_OPEN Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_READLINK Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_REMOVE_DIRECTORY Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_RENAME_SOURCE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_RENAME_TARGET Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_SYMLINK Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field PATH_UNLINK_FILE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field POLL_FD_READWRITE Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field SOCK_ACCEPT Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static final field SOCK_SHUTDOWN Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-s-VKNKU ()J
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Roflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Roflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Roflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Roflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue : java/lang/Enum {
+	public static final field RECV_DATA_TRUNCATED Lat/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Sdflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Sdflags$Companion;
+	public static final synthetic fun box-impl (B)Lat/released/weh/host/wasi/preview1/type/Sdflags;
+	public static fun constructor-impl (B)B
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Sdflags$Sdflags;)B
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (BLjava/lang/Object;)Z
+	public static final fun equals-impl0 (BB)Z
+	public final fun getRawMask-w2LRezQ ()B
+	public fun hashCode ()I
+	public static fun hashCode-impl (B)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (B)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()B
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Sdflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Sdflags$Sdflags : java/lang/Enum {
+	public static final field RD Lat/released/weh/host/wasi/preview1/type/Sdflags$Sdflags;
+	public static final field WR Lat/released/weh/host/wasi/preview1/type/Sdflags$Sdflags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-w2LRezQ ()B
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Sdflags$Sdflags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Sdflags$Sdflags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SiFlags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/SiFlags$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/wasi/preview1/type/SiFlags;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getRawValue-pVg5ArA ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SiFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Signal : java/lang/Enum {
+	public static final field ABRT Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field ALRM Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field BUS Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field CHLD Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field CONT Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Signal$Companion;
+	public static final field FPE Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field HUP Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field ILL Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field INT Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field KILL Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field NONE Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field PIPE Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field POLL Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field PROF Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field PWR Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field QUIT Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field SEGV Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field STOP Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field SYS Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field TERM Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field TRAP Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field TSTP Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field TTIN Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field TTOU Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field URG Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field USR1 Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field USR2 Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field VTALRM Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field WINCH Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field XCPU Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static final field XFSZ Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Signal;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Signal;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Signal$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Size {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Size$Companion;
+	public static final synthetic fun box-impl (I)Lat/released/weh/host/wasi/preview1/type/Size;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getValue-pVg5ArA ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Size$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Subclockflags {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Subclockflags$Companion;
+	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Subclockflags;
+	public static fun constructor-impl (S)S
+	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags;)S
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (SLjava/lang/Object;)Z
+	public static final fun equals-impl0 (SS)Z
+	public final fun getRawMask-Mh2AYeg ()S
+	public fun hashCode ()I
+	public static fun hashCode-impl (S)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (S)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()S
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Subclockflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags : java/lang/Enum {
+	public static final field SUBSCRIPTION_CLOCK_ABSTIME Lat/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMask-Mh2AYeg ()S
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags;
+	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Subscription {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Subscription$Companion;
+	public synthetic fun <init> (JLat/released/weh/host/wasi/preview1/type/SubscriptionU;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-J4zpkRc ()J
+	public final fun component2 ()Lat/released/weh/host/wasi/preview1/type/SubscriptionU;
+	public final fun copy-_ePQ8pI (JLat/released/weh/host/wasi/preview1/type/SubscriptionU;)Lat/released/weh/host/wasi/preview1/type/Subscription;
+	public static synthetic fun copy-_ePQ8pI$default (Lat/released/weh/host/wasi/preview1/type/Subscription;JLat/released/weh/host/wasi/preview1/type/SubscriptionU;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Subscription;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getU ()Lat/released/weh/host/wasi/preview1/type/SubscriptionU;
+	public final fun getUserdata-J4zpkRc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Subscription$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/SubscriptionClock$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/ClockId;JJSLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public final fun component2-s-V_6mc ()J
+	public final fun component3-s-V_6mc ()J
+	public final fun component4-4-ks080 ()S
+	public final fun copy-b-5GK7A (Lat/released/weh/host/wasi/preview1/type/ClockId;JJS)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public static synthetic fun copy-b-5GK7A$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;Lat/released/weh/host/wasi/preview1/type/ClockId;JJSILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFlags-4-ks080 ()S
+	public final fun getId ()Lat/released/weh/host/wasi/preview1/type/ClockId;
+	public final fun getPrecision-s-V_6mc ()J
+	public final fun getTimeout-s-V_6mc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite$Companion;
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-XfleyX0 ()I
+	public final fun copy-jdnj7sY (I)Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public static synthetic fun copy-jdnj7sY$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;IILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFileDescriptor-XfleyX0 ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public abstract class at/released/weh/host/wasi/preview1/type/SubscriptionU {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/SubscriptionU$Companion;
+	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/Eventtype;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEventType ()Lat/released/weh/host/wasi/preview1/type/Eventtype;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$Clock : at/released/weh/host/wasi/preview1/type/SubscriptionU {
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$Clock;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionU$Clock;Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$Clock;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSubscriptionClock ()Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$FdRead : at/released/weh/host/wasi/preview1/type/SubscriptionU {
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdRead;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdRead;Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdRead;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSubscriptionFdReadwrite ()Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$FdWrite : at/released/weh/host/wasi/preview1/type/SubscriptionU {
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;)V
+	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdWrite;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdWrite;Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionU$FdWrite;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSubscriptionFdReadwrite ()Lat/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Timestamp {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Timestamp$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Timestamp$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Userdata {
+	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Userdata$Companion;
+	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Userdata;
+	public static fun constructor-impl (J)J
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public final fun getRawValue-s-VKNKU ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class at/released/weh/host/wasi/preview1/type/Userdata$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public abstract interface class at/released/weh/host/wasi/preview1/type/WasiTypename {
+	public abstract fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/WasiValueTypes {
+	public static final field INSTANCE Lat/released/weh/host/wasi/preview1/type/WasiValueTypes;
+	public final fun getHandle-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getS32-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getS64-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getU16-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getU32-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getU64-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getU8-VeGrqVg ()Ljava/lang/Byte;
+}
+
+public final class at/released/weh/host/wasi/preview1/type/WhenceExtKt {
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Whence$Companion;)Ljava/lang/Byte;
+}
+

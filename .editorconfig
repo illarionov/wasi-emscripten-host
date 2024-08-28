@@ -1,0 +1,42 @@
+root = true
+
+# Keep in sync with config/detekt.yml
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+tab_width = 4
+ij_continuation_indent_size = 8
+
+[{*.bat,*.cmd}]
+end_of_line = crlf
+
+[{*.kt,*.kts}]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_import_nested_classes = true
+ij_kotlin_imports_layout = *, java.**, javax.**, kotlin.**, ^
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+ij_kotlin_name_count_to_use_star_import = 199
+ij_kotlin_name_count_to_use_star_import_for_members = 199
+
+[{*.markdown,*.md}]
+trim_trailing_whitespace = false
+
+[{*.yaml,*.yml}]
+indent_size = 2
+
+[*.xml]
+ij_continuation_indent_size = 4
+
+[{*.bash,*.sh,*.zsh}]
+indent_size = 2
+tab_width = 2
+
+[{Makefile, *.mk}]
+indent_style = tab

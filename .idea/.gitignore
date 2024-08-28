@@ -1,0 +1,9 @@
+# Default ignored files
+/*
+!/.gitignore
+!/IntelliLang.xml
+!/codeInsightSettings.xml
+!/copyright
+!/detekt.xml
+!/dictionaries
+!/jsonSchemas.xml

@@ -1,0 +1,19 @@
+name: submit-dependency-snapshot
+
+on:
+  workflow_run:
+    workflows: ['build']
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  submit-snapshots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve dependency graph artifact and submit
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: download-and-submit

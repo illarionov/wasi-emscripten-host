@@ -1,0 +1,9 @@
+#
+# https://help.github.com/articles/dealing-with-line-endings/
+#
+# These are explicitly windows files and should use crlf
+*.bat           text eol=crlf
+*.api                               linguist-vendored
+*.pro                               linguist-language=Proguard
+*.properties                        linguist-language=Java-Properties
+gradle/verification-metadata.xml    linguist-vendored

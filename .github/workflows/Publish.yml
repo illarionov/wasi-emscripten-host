@@ -1,0 +1,90 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      upload_to_s3:
+        description: 'Publish to maven.pixnews.ru'
+        type: boolean
+        default: true
+      create_github_release:
+        description: 'Create release on Github'
+        type: boolean
+        default: true
+
+env:
+  CI: true
+  TERM: dumb
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs="-Xmx3G -XX:MaxMetaspaceSize=1g -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1"
+    -Dorg.gradle.dependency.verification.console=verbose
+  KOTLIN_DAEMON_JVMARGS: >-
+    -Xmx2G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
+
+jobs:
+  publish:
+    name: Assemble, publish to S3
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: generate
+
+      - name: Restore Kotlin Native Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+          restore-keys: ${{ runner.os }}-konan-
+
+      - name: Assemble, run tests, publish
+        env:
+          YANDEX_S3_ACCESS_KEY_ID: ${{ secrets.YANDEX_S3_ACCESS_KEY_ID }}
+          YANDEX_S3_SECRET_ACCESS_KEY: ${{ secrets.YANDEX_S3_SECRET_ACCESS_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: FCF62075
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+        run: >
+          ./gradlew --scan -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
+          --no-configuration-cache
+          build
+          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'packageMavenDistribution' || '' }}
+          ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
+          --stacktrace
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: build-outputs
+          path: '**/build/outputs'
+
+      - name: Create release on Github
+        uses: softprops/action-gh-release@v2
+        if: ${{ github.event_name == 'push' || inputs.create_github_release }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: Build №${{ github.run_number }}
+          draft: true
+          prerelease: true

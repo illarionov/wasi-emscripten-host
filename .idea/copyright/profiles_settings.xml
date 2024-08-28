@@ -1,0 +1,7 @@
+<component name="CopyrightManager">
+  <settings default="wasi-emscripten-host">
+    <module2copyright>
+      <element module="Project Files" copyright="wasi-emscripten-host" />
+    </module2copyright>
+  </settings>
+</component>
