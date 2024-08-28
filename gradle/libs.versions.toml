@@ -14,7 +14,7 @@ kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0-RC"
 kotlinx-binary-compatibility-validator = "0.16.2"
 kotlinx-datetime = "0.6.0"
-kotlinx-io ="0.5.2"
+kotlinx-io ="0.5.3"
 kermit = "2.0.4"
 spotless = "7.0.0.BETA2"
 
