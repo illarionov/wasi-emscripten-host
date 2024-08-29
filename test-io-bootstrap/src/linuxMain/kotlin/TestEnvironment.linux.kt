@@ -18,7 +18,7 @@ import platform.posix.stdout
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
-public actual fun setupInputStreamBuffering() {
+public actual fun setupStdioBuffering() {
     listOf(stdout, stderr).forEach {
         check(setvbuf(it, null, _IONBF, 0U) == 0)
     }
@@ -27,7 +27,7 @@ public actual fun setupInputStreamBuffering() {
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
-public actual fun flushBuffers() {
+public actual fun flushStdioBuffers() {
     listOf(stdout, stderr).forEach {
         fflush(it)
     }

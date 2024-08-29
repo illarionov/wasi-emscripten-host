@@ -1,0 +1,12 @@
+public final class at/released/weh/test/io/bootstrap/TestEnvironment {
+	public static final field INSTANCE Lat/released/weh/test/io/bootstrap/TestEnvironment;
+	public final fun cleanup ()V
+	public final fun prepare ()V
+	public final fun use (Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class at/released/weh/test/io/bootstrap/TestEnvironment_jvmKt {
+	public static final fun flushStdioBuffers ()V
+	public static final fun setupStdioBuffering ()V
+}
+

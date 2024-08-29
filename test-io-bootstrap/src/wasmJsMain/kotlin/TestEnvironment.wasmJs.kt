@@ -6,22 +6,16 @@
 
 package at.released.weh.test.io.bootstrap
 
-public object TestEnv {
-    public fun prepare() {
-        setupInputStreamBuffering()
-    }
-
-    public fun cleanup() {
-        flushBuffers()
-    }
+/**
+ * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
+ */
+public actual fun setupStdioBuffering() {
+    // Not verified, assume it is not required
 }
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
-public expect fun setupInputStreamBuffering()
-
-/**
- * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
- */
-public expect fun flushBuffers()
+public actual fun flushStdioBuffers() {
+    // Not verified, assume it is not required
+}

@@ -7,10 +7,16 @@
 @file:Suppress("OPT_IN_USAGE")
 
 plugins {
+    id("at.released.weh.gradle.lint.binary-compatibility-validator")
     id("at.released.weh.gradle.multiplatform.kotlin")
+    id("at.released.weh.gradle.multiplatform.publish")
 }
 
 group = "at.released.weh"
+version = wehVersions.getSubmoduleVersionProvider(
+    propertiesFileKey = "weh_test_io_bootstrap_version",
+    envVariableName = "WEH_TEST_IO_BOOTSTRAP_VERSION",
+).get()
 
 kotlin {
     jvm()

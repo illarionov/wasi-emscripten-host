@@ -9,13 +9,13 @@ package at.released.weh.test.io.bootstrap
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
-public actual fun setupInputStreamBuffering() {
+public actual fun setupStdioBuffering() {
     // Not verified, assume it is not required
 }
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
-public actual fun flushBuffers() {
+public actual fun flushStdioBuffers() {
     // Not verified, assume it is not required
 }
