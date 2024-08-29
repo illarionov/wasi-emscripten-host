@@ -588,7 +588,7 @@ public final class at/released/weh/host/include/FcntlExtKt {
 	public static final fun oMaskToString-Qn1smSk (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
 }
 
-public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/UintBitMask {
 	public static final field Companion Lat/released/weh/host/include/FileAccessibilityCheck$Companion;
 	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/FileAccessibilityCheck;
 	public static fun constructor-impl (I)I
@@ -762,7 +762,7 @@ public final class at/released/weh/host/include/sys/StructStatExtKt {
 	public static final fun packTo (Lat/released/weh/filesystem/op/stat/StructStat;Lkotlinx/io/Sink;)V
 }
 
-public final class at/released/weh/host/include/sys/SysMmanMapFlags : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/host/include/sys/SysMmanMapFlags : at/released/weh/common/api/UintBitMask {
 	public static final field Companion Lat/released/weh/host/include/sys/SysMmanMapFlags$Companion;
 	public static final field MAP_HUGE_MASK I
 	public static final field MAP_HUGE_SHIFT I
@@ -816,7 +816,7 @@ public final class at/released/weh/host/include/sys/SysMmanMapFlags$Companion {
 	public final fun getMAP_TYPE-6HN-XAE ()I
 }
 
-public final class at/released/weh/host/include/sys/SysMmanProt : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/host/include/sys/SysMmanProt : at/released/weh/common/api/UintBitMask {
 	public static final field Companion Lat/released/weh/host/include/sys/SysMmanProt$Companion;
 	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanProt;
 	public static fun constructor-impl (I)I

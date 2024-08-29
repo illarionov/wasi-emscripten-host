@@ -6,7 +6,7 @@
 
 package at.released.weh.host.include
 
-import at.released.weh.common.api.SqliteUintBitMask
+import at.released.weh.common.api.UintBitMask
 import at.released.weh.common.api.or
 import kotlin.jvm.JvmInline
 
@@ -16,7 +16,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 public value class FileAccessibilityCheck(
     public override val mask: UInt,
-) : SqliteUintBitMask<FileAccessibilityCheck> {
+) : UintBitMask<FileAccessibilityCheck> {
     override val newInstance: (UInt) -> FileAccessibilityCheck get() = ::FileAccessibilityCheck
 
     override fun toString(): String = "0${mask.toString(8)}"
