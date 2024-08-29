@@ -5,10 +5,16 @@
  */
 
 plugins {
+    id("at.released.weh.gradle.lint.binary-compatibility-validator")
     id("at.released.weh.gradle.multiplatform.kotlin")
+    id("at.released.weh.gradle.multiplatform.publish")
 }
 
 group = "at.released.weh"
+version = wehVersions.getSubmoduleVersionProvider(
+    propertiesFileKey = "weh_filesystem_test_fixtures_version",
+    envVariableName = "WEH_FILESYSTEM_TEST_FIXTURES_VERSION",
+).get()
 
 kotlin {
     iosSimulatorArm64()

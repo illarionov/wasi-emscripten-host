@@ -15,8 +15,8 @@ plugins {
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_filesystem_core_version",
-    envVariableName = "WEH_FILESYSTEM_CORE_VERSION",
+    propertiesFileKey = "weh_filesystem_version",
+    envVariableName = "WEH_FILESYSTEM_VERSION",
 ).get()
 
 kotlin {

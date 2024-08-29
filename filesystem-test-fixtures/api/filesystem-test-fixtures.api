@@ -1,0 +1,12 @@
+public class at/released/weh/filesystem/test/fixtures/TestFileSystem : at/released/weh/filesystem/FileSystem {
+	public fun <init> ()V
+	public fun close ()V
+	public fun execute (Lat/released/weh/filesystem/op/FileSystemOperation;Ljava/lang/Object;)Larrow/core/Either;
+	public fun isOperationSupported (Lat/released/weh/filesystem/op/FileSystemOperation;)Z
+	public final fun onOperation (Lat/released/weh/filesystem/op/FileSystemOperation;Lat/released/weh/filesystem/test/fixtures/TestFileSystem$OperationHandler;)V
+}
+
+public abstract interface class at/released/weh/filesystem/test/fixtures/TestFileSystem$OperationHandler {
+	public abstract fun invoke (Ljava/lang/Object;)Larrow/core/Either;
+}
+
