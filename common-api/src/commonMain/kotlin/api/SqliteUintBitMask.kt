@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package at.released.weh.common.api
 
 public interface SqliteUintBitMask<T : SqliteUintBitMask<T>> {

@@ -49,7 +49,7 @@ jobs:
           java-version: '22'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
           dependency-graph: generate
@@ -115,7 +115,7 @@ jobs:
           java-version: '22'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
           dependency-graph: generate
@@ -185,7 +185,7 @@ jobs:
           java-version: '22'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
           dependency-graph: generate
