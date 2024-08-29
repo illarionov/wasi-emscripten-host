@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils
+package at.released.weh.test.logger
 
-internal actual val currentThreadId: ULong = 0U
-internal actual val currentTimestamp: ULong get() = 0U
+@Suppress("DEPRECATION")
+internal actual val currentThreadId: ULong get() = Thread.currentThread().id.toULong()
+internal actual val currentTimestamp: ULong get() = System.currentTimeMillis().toULong()

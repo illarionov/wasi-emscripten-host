@@ -19,10 +19,10 @@ import at.released.weh.host.EmbedderHost.SystemEnvProvider
 import at.released.weh.host.EmbedderHost.TimeZoneInfoProvider
 import at.released.weh.host.include.StructTm
 import at.released.weh.host.include.TimeZoneInfo
-import at.released.weh.test.utils.KermitLogger
+import at.released.weh.test.logger.TestLogger
 
 public open class TestEmbedderHost(
-    override var rootLogger: Logger = KermitLogger(),
+    override var rootLogger: Logger = TestLogger(),
     override var systemEnvProvider: SystemEnvProvider = SystemEnvProvider { emptyMap() },
     override var commandArgsProvider: CommandArgsProvider = CommandArgsProvider { emptyList() },
     override var fileSystem: FileSystem = TestFileSystem(),

@@ -6,7 +6,7 @@
 
 @file:Suppress("OPT_IN_USAGE")
 
-package at.released.weh.test.utils
+package at.released.weh.test.logger
 
 import kotlin.native.concurrent.Worker
 

@@ -29,11 +29,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.testUtils)
-            implementation(projects.filesystem)
-            implementation(libs.assertk)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.io)
+            api(projects.filesystem)
         }
     }
 }

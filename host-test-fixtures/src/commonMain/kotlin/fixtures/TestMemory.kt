@@ -15,14 +15,14 @@ import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
 import at.released.weh.host.base.memory.Memory
-import at.released.weh.test.utils.KermitLogger
+import at.released.weh.test.logger.TestLogger
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 
 public open class TestMemory(
     public val size: Int = 1_048_576,
     public val fileSystem: FileSystem = TestFileSystem(),
-    public val logger: Logger = KermitLogger(),
+    public val logger: Logger = TestLogger(),
 ) : Memory {
     public val bytes: ByteArray = ByteArray(size) { 0xdc.toByte() }
     public val memoryReader: DefaultWasiMemoryReader = DefaultWasiMemoryReader(this, fileSystem, logger)
