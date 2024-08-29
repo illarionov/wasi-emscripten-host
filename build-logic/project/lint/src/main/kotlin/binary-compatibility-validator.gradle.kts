@@ -14,5 +14,5 @@ plugins {
 }
 
 apiValidation {
-    nonPublicMarkers.add("at.released.weh.common.InternalWasiEmscriptenHostApi")
+    nonPublicMarkers.add("at.released.weh.common.api.InternalWasiEmscriptenHostApi")
 }

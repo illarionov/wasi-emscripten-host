@@ -14,8 +14,8 @@ import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.writeNullTerminatedString
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.host.test.fixtures.TestMemory
+import at.released.weh.test.logger.BaseLogger
 import at.released.weh.test.utils.TestEnv
-import at.released.weh.test.utils.TestLogger
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -39,7 +39,7 @@ class EmscriptenConsoleErrorFunctionHandleTest {
         var errorLogged = false
         var loggedThrowable: Throwable? = null
         var loggedMessage: String? = null
-        host.rootLogger = object : TestLogger() {
+        host.rootLogger = object : BaseLogger() {
             override fun e(throwable: Throwable?, message: () -> String) {
                 errorLogged = true
                 loggedThrowable = throwable

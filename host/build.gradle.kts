@@ -12,8 +12,8 @@ plugins {
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_host_core_version",
-    envVariableName = "WEH_HOST_CORE_VERSION",
+    propertiesFileKey = "weh_host_version",
+    envVariableName = "WEH_HOST_VERSION",
 ).get()
 
 kotlin {
@@ -37,9 +37,10 @@ kotlin {
             implementation(projects.commonUtil)
         }
         commonTest.dependencies {
-            implementation(projects.testUtils)
-            implementation(projects.hostTestFixtures)
             implementation(projects.filesystemTestFixtures)
+            implementation(projects.hostTestFixtures)
+            implementation(projects.testLogger)
+            implementation(projects.testUtils)
             implementation(kotlin("test"))
             implementation(libs.assertk)
         }

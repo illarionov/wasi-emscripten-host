@@ -4,7 +4,6 @@ public abstract interface class at/released/weh/filesystem/FileSystem : java/lan
 }
 
 public abstract interface class at/released/weh/filesystem/FileSystemEngine {
-	public abstract fun create (Lat/released/weh/filesystem/dsl/FileSystemCommonConfig;Lkotlin/jvm/functions/Function1;)Lat/released/weh/filesystem/FileSystem;
 }
 
 public abstract interface class at/released/weh/filesystem/FileSystemInterceptor {
@@ -20,17 +19,6 @@ public abstract interface class at/released/weh/filesystem/FileSystemInterceptor
 public final class at/released/weh/filesystem/FileSystemKt {
 	public static final fun FileSystem (Lat/released/weh/filesystem/FileSystemEngine;Lkotlin/jvm/functions/Function1;)Lat/released/weh/filesystem/FileSystem;
 	public static synthetic fun FileSystem$default (Lat/released/weh/filesystem/FileSystemEngine;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/filesystem/FileSystem;
-}
-
-public final class at/released/weh/filesystem/NotImplementedFileSystem : at/released/weh/filesystem/FileSystem {
-	public static final field INSTANCE Lat/released/weh/filesystem/NotImplementedFileSystem;
-	public fun close ()V
-	public fun execute (Lat/released/weh/filesystem/op/FileSystemOperation;Ljava/lang/Object;)Larrow/core/Either;
-	public fun isOperationSupported (Lat/released/weh/filesystem/op/FileSystemOperation;)Z
-}
-
-public abstract interface class at/released/weh/filesystem/dsl/FileSystemCommonConfig {
-	public abstract fun getInterceptors ()Ljava/util/List;
 }
 
 public final class at/released/weh/filesystem/dsl/FileSystemConfigBlock {
@@ -486,11 +474,6 @@ public abstract interface class at/released/weh/filesystem/error/UnlinkError : a
 public abstract interface class at/released/weh/filesystem/error/WriteError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
-public final class at/released/weh/filesystem/ext/NioReadWriteExtKt {
-	public static final fun readCatching (Lkotlin/jvm/functions/Function0;)Larrow/core/Either;
-	public static final fun writeCatching (Lkotlin/jvm/functions/Function0;)Larrow/core/Either;
-}
-
 public final class at/released/weh/filesystem/logging/LoggingFileSystemInterceptor : at/released/weh/filesystem/FileSystemInterceptor {
 	public static final field Companion Lat/released/weh/filesystem/logging/LoggingFileSystemInterceptor$Companion;
 	public fun <init> (Lkotlin/jvm/functions/Function1;Lat/released/weh/filesystem/logging/LoggingFileSystemInterceptor$LoggingEvents;Ljava/util/Map;)V
@@ -746,7 +729,6 @@ public final class at/released/weh/filesystem/model/Whence$Companion {
 
 public final class at/released/weh/filesystem/nio/NioFileSystem : at/released/weh/filesystem/FileSystemEngine {
 	public static final field INSTANCE Lat/released/weh/filesystem/nio/NioFileSystem;
-	public fun create (Lat/released/weh/filesystem/dsl/FileSystemCommonConfig;Lkotlin/jvm/functions/Function1;)Lat/released/weh/filesystem/FileSystem;
 }
 
 public final class at/released/weh/filesystem/nio/NioFileSystemConfig : at/released/weh/filesystem/dsl/FileSystemEngineConfig {

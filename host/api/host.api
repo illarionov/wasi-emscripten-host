@@ -68,32 +68,6 @@ public final class at/released/weh/host/base/WasmModules {
 	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
 }
 
-public final class at/released/weh/host/base/WasmPtr {
-	public static final field Companion Lat/released/weh/host/base/WasmPtr$Companion;
-	public static final field WASM_SIZEOF_PTR I
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/base/WasmPtr;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public final fun getAddr ()I
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/host/base/WasmPtr$Companion {
-	public final fun getSQLITE3_NULL-CbBLMKg ()I
-	public final fun sqlite3Null-CbBLMKg ()I
-}
-
-public final class at/released/weh/host/base/WasmPtrKt {
-	public static final fun isSqlite3Null-e-C6Vng (I)Z
-	public static final fun plus-N0MNGDA (II)I
-}
-
 public final class at/released/weh/host/base/WasmValueType {
 	public static final field WebAssemblyTypes Lat/released/weh/host/base/WasmValueType$WebAssemblyTypes;
 	public static final synthetic fun box-impl (Ljava/lang/Byte;)Lat/released/weh/host/base/WasmValueType;
@@ -129,21 +103,6 @@ public final class at/released/weh/host/base/WasmValueTypeExtKt {
 
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
 	public abstract fun getFunctionBinding-vD0Ly1k (I)Lat/released/weh/host/base/binding/WasmFunctionBinding;
-}
-
-public abstract interface class at/released/weh/host/base/binding/WasmFunctionBinding {
-	public abstract fun executeForDouble ([Ljava/lang/Object;)D
-	public abstract fun executeForFloat ([Ljava/lang/Object;)F
-	public abstract fun executeForInt ([Ljava/lang/Object;)I
-	public abstract fun executeForLong ([Ljava/lang/Object;)J
-	public abstract fun executeForPtr-EeN2TRI ([Ljava/lang/Object;)I
-	public abstract fun executeVoid ([Ljava/lang/Object;)V
-}
-
-public final class at/released/weh/host/base/binding/WasmFunctionBindingKt {
-	public static final fun executeForUInt (Lat/released/weh/host/base/binding/WasmFunctionBinding;[Ljava/lang/Object;)I
-	public static final fun executeForULong (Lat/released/weh/host/base/binding/WasmFunctionBinding;[Ljava/lang/Object;)J
-	public static final fun getBINDING_NOT_INITIALIZED ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 }
 
 public abstract interface class at/released/weh/host/base/function/HostFunction {
@@ -197,45 +156,6 @@ public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at
 	public fun write-wFsMmWo (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
-public abstract interface class at/released/weh/host/base/memory/Memory : at/released/weh/host/base/memory/ReadOnlyMemory {
-	public abstract fun sink-Z5Htsd4 (II)Lkotlinx/io/RawSink;
-	public abstract fun writeI32-N0MNGDA (II)V
-	public abstract fun writeI64-N0MNGDA (IJ)V
-	public abstract fun writeI8-N0MNGDA (IB)V
-}
-
-public final class at/released/weh/host/base/memory/MemoryKt {
-	public static final fun sinkWithMaxSize-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;II)Lkotlinx/io/RawSink;
-	public static final fun writeNullTerminatedString-ilh_Uvc (Lat/released/weh/host/base/memory/Memory;ILjava/lang/String;)I
-	public static final fun writePtr-J5BecxI (Lat/released/weh/host/base/memory/Memory;II)V
-	public static final fun writeU32-HYIQ7S8 (Lat/released/weh/host/base/memory/Memory;II)V
-	public static final fun writeU64-rzvJL5c (Lat/released/weh/host/base/memory/Memory;IJ)V
-	public static final fun writeU8-DunHRgs (Lat/released/weh/host/base/memory/Memory;IB)V
-}
-
-public abstract class at/released/weh/host/base/memory/MemoryRawSink : kotlinx/io/RawSink {
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun close ()V
-	public fun flush ()V
-	protected final fun getBaseAddr-CbBLMKg ()I
-	protected final fun getEndAddressOrThrow (J)J
-	protected final fun getToAddrExclusive-CbBLMKg ()I
-	protected final fun setBaseAddr-e-C6Vng (I)V
-	public fun write (Lkotlinx/io/Buffer;J)V
-	protected abstract fun writeBytesToMemory-ilh_Uvc (Lkotlinx/io/Buffer;IJ)V
-}
-
-public abstract class at/released/weh/host/base/memory/MemoryRawSource : kotlinx/io/RawSource {
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun close ()V
-	protected final fun getBaseAddr-CbBLMKg ()I
-	protected final fun getBytesLeft ()J
-	protected final fun getToAddrExclusive-CbBLMKg ()I
-	public fun readAtMostTo (Lkotlinx/io/Buffer;J)J
-	protected abstract fun readBytesFromMemory-8A16jWI (ILkotlinx/io/Buffer;I)V
-	protected final fun setBaseAddr-e-C6Vng (I)V
-}
-
 public final class at/released/weh/host/base/memory/Pages {
 	public static final synthetic fun box-impl (J)Lat/released/weh/host/base/memory/Pages;
 	public static fun constructor-impl (J)J
@@ -256,23 +176,6 @@ public final class at/released/weh/host/base/memory/PagesKt {
 	public static final fun getWASM_MEMORY_32_MAX_PAGES ()J
 	public static final fun getWASM_MEMORY_64_MAX_PAGES ()J
 	public static final fun getWASM_MEMORY_SQLITE_MAX_PAGES ()J
-}
-
-public abstract interface class at/released/weh/host/base/memory/ReadOnlyMemory {
-	public abstract fun readI32-e-C6Vng (I)I
-	public abstract fun readI64-e-C6Vng (I)J
-	public abstract fun readI8-e-C6Vng (I)B
-	public abstract fun source-Z5Htsd4 (II)Lkotlinx/io/RawSource;
-}
-
-public final class at/released/weh/host/base/memory/ReadOnlyMemoryKt {
-	public static final fun readNullTerminatedString-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)Ljava/lang/String;
-	public static final fun readNullableNullTerminatedString-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)Ljava/lang/String;
-	public static final fun readPtr-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
-	public static final fun readU32-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
-	public static final fun readU64-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)J
-	public static final fun readU8-XZvYtOA (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)B
-	public static final fun sourceWithMaxSize-ilh_Uvc (Lat/released/weh/host/base/memory/ReadOnlyMemory;II)Lkotlinx/io/RawSource;
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
@@ -366,13 +269,6 @@ public final class at/released/weh/host/emscripten/export/EmscriptenRuntime$Comp
 	public final fun emscriptenSingleThreadedRuntime (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/common/api/Logger;)Lat/released/weh/host/emscripten/export/EmscriptenRuntime;
 }
 
-public final class at/released/weh/host/emscripten/export/memory/DynamicMemory {
-	public fun <init> (Lat/released/weh/host/emscripten/export/memory/DynamicMemoryExports;)V
-	public final fun allocOrThrow-ycCjXRU (I)I
-	public final fun free-e-C6Vng (I)V
-	public final fun getExports ()Lat/released/weh/host/emscripten/export/memory/DynamicMemoryExports;
-}
-
 public final class at/released/weh/host/emscripten/export/memory/DynamicMemory$OutOfMemoryException : java/lang/RuntimeException {
 	public fun <init> ()V
 }
@@ -380,10 +276,6 @@ public final class at/released/weh/host/emscripten/export/memory/DynamicMemory$O
 public abstract interface class at/released/weh/host/emscripten/export/memory/DynamicMemoryExports {
 	public abstract fun getFree ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 	public abstract fun getMalloc ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-}
-
-public final class at/released/weh/host/emscripten/export/memory/DynamicMemoryKt {
-	public static final fun freeSilent-XZvYtOA (Lat/released/weh/host/emscripten/export/memory/DynamicMemory;I)Ljava/lang/Object;
 }
 
 public final class at/released/weh/host/emscripten/export/pthread/EmscriptenPthread {
@@ -635,21 +527,6 @@ public final class at/released/weh/host/emscripten/function/SyscallUtimensatFunc
 public final class at/released/weh/host/emscripten/function/TzsetJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute-_dmkrqI (Lat/released/weh/host/base/memory/Memory;IIII)V
-}
-
-public final class at/released/weh/host/ext/BaseDirectoryExtKt {
-	public static final fun fromRawDirFd (Lat/released/weh/filesystem/model/BaseDirectory$Companion;I)Lat/released/weh/filesystem/model/BaseDirectory;
-}
-
-public final class at/released/weh/host/ext/NullTerminatedStringExtKt {
-	public static final fun encodeToNullTerminatedBuffer (Ljava/lang/String;I)Lkotlinx/io/Buffer;
-	public static synthetic fun encodeToNullTerminatedBuffer$default (Ljava/lang/String;IILjava/lang/Object;)Lkotlinx/io/Buffer;
-	public static final fun encodedNullTerminatedStringLength (Ljava/lang/String;)I
-}
-
-public final class at/released/weh/host/ext/SinkExtKt {
-	public static final fun writeNullTerminatedString (Lkotlinx/io/Sink;Ljava/lang/String;I)I
-	public static synthetic fun writeNullTerminatedString$default (Lkotlinx/io/Sink;Ljava/lang/String;IILjava/lang/Object;)I
 }
 
 public final class at/released/weh/host/include/Fcntl {

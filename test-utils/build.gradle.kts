@@ -10,7 +10,7 @@ plugins {
     id("at.released.weh.gradle.multiplatform.kotlin")
 }
 
-group = "at.releaed.weh"
+group = "at.released.weh"
 
 kotlin {
     jvm()
@@ -35,7 +35,6 @@ kotlin {
         commonMain.dependencies {
             api(kotlin("test"))
             api(libs.assertk)
-            api(libs.kermit)
             api(libs.kotlinx.io)
             api(projects.commonApi)
         }

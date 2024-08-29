@@ -6,8 +6,9 @@
 
 @file:Suppress("IDENTIFIER_LENGTH")
 
-package at.released.weh.test.utils
+package at.released.weh.test.logger
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.common.api.Logger
 import co.touchlab.kermit.LogWriter
 import co.touchlab.kermit.Message
@@ -19,8 +20,9 @@ import co.touchlab.kermit.Logger as KermitLogger
 internal expect val currentTimestamp: ULong
 internal expect val currentThreadId: ULong
 
-public open class KermitLogger(
-    tag: String = "WSOH",
+@InternalWasiEmscriptenHostApi
+public open class TestLogger(
+    tag: String = "WEH",
     private val minSeverity: Severity = Severity.Verbose,
 ) : Logger {
     private val delegate: KermitLogger = KermitLogger.apply {
@@ -39,7 +41,7 @@ public open class KermitLogger(
         override fun formatTag(tag: Tag): String = "${tag.tag}:"
     }
 
-    override fun withTag(tag: String): Logger = KermitLogger(tag, minSeverity)
+    override fun withTag(tag: String): Logger = TestLogger(tag, minSeverity)
 
     override fun v(throwable: Throwable?, message: () -> String) {
         delegate.v(message(), throwable)

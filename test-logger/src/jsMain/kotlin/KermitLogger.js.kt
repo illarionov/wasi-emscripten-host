@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils
+package at.released.weh.test.logger
 
 import kotlin.js.Date
 
