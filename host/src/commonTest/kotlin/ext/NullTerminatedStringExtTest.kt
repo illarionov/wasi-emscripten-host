@@ -9,7 +9,7 @@ package at.released.weh.host.ext
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.test.utils.TestEnv
+import at.released.weh.test.io.bootstrap.TestEnv
 import kotlinx.io.readByteArray
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -18,7 +18,7 @@ import kotlin.test.assertFailsWith
 class NullTerminatedStringExtTest {
     @BeforeTest
     fun setup() {
-        TestEnv.prepareTestEnvBeforeTest()
+        TestEnv.prepare()
     }
 
     @Test

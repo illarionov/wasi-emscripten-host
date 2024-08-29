@@ -14,8 +14,8 @@ import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.writeNullTerminatedString
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.host.test.fixtures.TestMemory
+import at.released.weh.test.io.bootstrap.TestEnv
 import at.released.weh.test.logger.BaseLogger
-import at.released.weh.test.utils.TestEnv
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -26,12 +26,12 @@ class EmscriptenConsoleErrorFunctionHandleTest {
 
     @BeforeTest
     fun setup() {
-        TestEnv.prepareTestEnvBeforeTest()
+        TestEnv.prepare()
     }
 
     @AfterTest
     fun cleanup() {
-        TestEnv.afterTest()
+        TestEnv.cleanup()
     }
 
     @Test

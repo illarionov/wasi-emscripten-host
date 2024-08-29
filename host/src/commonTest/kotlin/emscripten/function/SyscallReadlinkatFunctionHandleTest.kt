@@ -22,7 +22,7 @@ import at.released.weh.host.test.assertions.byteAt
 import at.released.weh.host.test.assertions.hasBytesAt
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.host.test.fixtures.TestMemory
-import at.released.weh.test.utils.TestEnv
+import at.released.weh.test.io.bootstrap.TestEnv
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -35,12 +35,12 @@ class SyscallReadlinkatFunctionHandleTest {
 
     @BeforeTest
     fun setup() {
-        TestEnv.prepareTestEnvBeforeTest()
+        TestEnv.prepare()
     }
 
     @AfterTest
     fun cleanup() {
-        TestEnv.afterTest()
+        TestEnv.cleanup()
     }
 
     @Test

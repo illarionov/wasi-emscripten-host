@@ -40,6 +40,7 @@ kotlin {
             implementation(projects.filesystemTestFixtures)
             implementation(projects.hostTestFixtures)
             implementation(projects.testLogger)
+            implementation(projects.testIoBootstrap)
             implementation(projects.testUtils)
             implementation(kotlin("test"))
             implementation(libs.assertk)

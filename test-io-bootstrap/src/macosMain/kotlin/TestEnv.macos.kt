@@ -4,31 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:OptIn(ExperimentalForeignApi::class)
-
-package at.released.weh.test.utils
-
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.posix._IONBF
-import platform.posix.fflush
-import platform.posix.setvbuf
-import platform.posix.stderr
-import platform.posix.stdout
+package at.released.weh.test.io.bootstrap
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
 public actual fun setupInputStreamBuffering() {
-    listOf(stdout, stderr).forEach {
-        check(setvbuf(it, null, _IONBF, 0U) == 0)
-    }
+    // Not verified, assume it is not required
 }
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
 public actual fun flushBuffers() {
-    listOf(stdout, stderr).forEach {
-        fflush(it)
-    }
+    // Not verified, assume it is not required
 }

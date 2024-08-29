@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils
+package at.released.weh.test.io.bootstrap
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
 public actual fun setupInputStreamBuffering() {
-    // Not verified, assume it is not required
+    // Not required
 }
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
  */
 public actual fun flushBuffers() {
-    // Not verified, assume it is not required
+    // Not required
 }

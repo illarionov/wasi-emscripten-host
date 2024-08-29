@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils
+package at.released.weh.test.io.bootstrap
 
 /**
  * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
