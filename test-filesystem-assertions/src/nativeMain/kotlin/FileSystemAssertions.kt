@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils.assertions
+package at.released.weh.test.filesystem.assertions
 
 import assertk.Assert
 import assertk.assertions.support.appendName

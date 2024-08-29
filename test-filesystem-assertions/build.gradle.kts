@@ -36,7 +36,6 @@ kotlin {
             api(kotlin("test"))
             api(libs.assertk)
             api(libs.kotlinx.io)
-            api(projects.commonApi)
         }
     }
 }

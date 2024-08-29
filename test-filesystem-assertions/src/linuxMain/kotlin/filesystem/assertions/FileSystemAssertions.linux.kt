@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.test.utils.assertions
+package at.released.weh.test.filesystem.assertions
 
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -22,6 +22,6 @@ internal actual fun Path.getFileMode(): UInt {
         if (resultCode != 0) {
             fail("Can not stat `$absolutePath`: error $errno")
         }
-        statBuf.st_mode.toUInt()
+        statBuf.st_mode
     }
 }
