@@ -39,8 +39,10 @@ kotlin {
         commonTest.dependencies {
             implementation(projects.filesystemTestFixtures)
             implementation(projects.hostTestFixtures)
+            implementation(projects.testFilesystemAssertions)
+            implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
-            implementation(projects.testUtils)
+            implementation(projects.testTempfolder)
             implementation(kotlin("test"))
             implementation(libs.assertk)
         }
