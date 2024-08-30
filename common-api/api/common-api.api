@@ -28,16 +28,16 @@ public final class at/released/weh/common/api/Logger$Companion : at/released/weh
 	public fun withTag (Ljava/lang/String;)Lat/released/weh/common/api/Logger;
 }
 
-public abstract interface class at/released/weh/common/api/SqliteUintBitMask {
+public abstract interface class at/released/weh/common/api/UintBitMask {
 	public abstract fun getMask-pVg5ArA ()I
 	public abstract fun getNewInstance ()Lkotlin/jvm/functions/Function1;
 }
 
-public final class at/released/weh/common/api/SqliteUintBitMaskKt {
-	public static final fun and (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
-	public static final fun clear (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
-	public static final fun contains (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Z
-	public static final fun or (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
-	public static final fun xor (Lat/released/weh/common/api/SqliteUintBitMask;Lat/released/weh/common/api/SqliteUintBitMask;)Lat/released/weh/common/api/SqliteUintBitMask;
+public final class at/released/weh/common/api/UintBitMaskKt {
+	public static final fun and (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Lat/released/weh/common/api/UintBitMask;
+	public static final fun clear (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Lat/released/weh/common/api/UintBitMask;
+	public static final fun contains (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Z
+	public static final fun or (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Lat/released/weh/common/api/UintBitMask;
+	public static final fun xor (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Lat/released/weh/common/api/UintBitMask;
 }
 

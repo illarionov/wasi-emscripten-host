@@ -678,7 +678,7 @@ public final class at/released/weh/filesystem/model/Fd {
 public final class at/released/weh/filesystem/model/Fd$Companion {
 }
 
-public final class at/released/weh/filesystem/model/FileMode : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/filesystem/model/FileMode : at/released/weh/common/api/UintBitMask {
 	public static final field Companion Lat/released/weh/filesystem/model/FileMode$Companion;
 	public static final field S_IRGRP I
 	public static final field S_IROTH I
@@ -1003,7 +1003,7 @@ public final class at/released/weh/filesystem/op/opencreate/Open$Companion : at/
 	public fun getTag ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/op/opencreate/OpenFileFlags : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/filesystem/op/opencreate/OpenFileFlags : at/released/weh/common/api/UintBitMask {
 	public static final field O_ACCMODE I
 	public static final field O_APPEND I
 	public static final field O_ASYNC I
@@ -1192,7 +1192,7 @@ public final class at/released/weh/filesystem/op/settimestamp/SetTimestampFd$Com
 	public fun getTag ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/op/stat/FileModeType : at/released/weh/common/api/SqliteUintBitMask {
+public final class at/released/weh/filesystem/op/stat/FileModeType : at/released/weh/common/api/UintBitMask {
 	public static final field Companion Lat/released/weh/filesystem/op/stat/FileModeType$Companion;
 	public static final field S_IFBLK I
 	public static final field S_IFCHR I

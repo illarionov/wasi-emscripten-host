@@ -8,27 +8,27 @@
 
 package at.released.weh.common.api
 
-public interface SqliteUintBitMask<T : SqliteUintBitMask<T>> {
+public interface UintBitMask<T : UintBitMask<T>> {
     public val newInstance: (UInt) -> T
     public val mask: UInt
 }
 
-public inline fun SqliteUintBitMask<*>.contains(flags: SqliteUintBitMask<*>): Boolean {
+public inline fun UintBitMask<*>.contains(flags: UintBitMask<*>): Boolean {
     return this.mask and flags.mask == flags.mask
 }
 
-public inline infix fun <T : SqliteUintBitMask<T>> SqliteUintBitMask<T>.and(flags: SqliteUintBitMask<*>): T {
+public inline infix fun <T : UintBitMask<T>> UintBitMask<T>.and(flags: UintBitMask<*>): T {
     return newInstance(mask and flags.mask)
 }
 
-public inline infix fun <T : SqliteUintBitMask<T>> SqliteUintBitMask<T>.or(flags: SqliteUintBitMask<*>): T {
+public inline infix fun <T : UintBitMask<T>> UintBitMask<T>.or(flags: UintBitMask<*>): T {
     return newInstance(mask or flags.mask)
 }
 
-public inline infix fun <T : SqliteUintBitMask<T>> SqliteUintBitMask<T>.xor(flags: SqliteUintBitMask<*>): T {
+public inline infix fun <T : UintBitMask<T>> UintBitMask<T>.xor(flags: UintBitMask<*>): T {
     return newInstance(mask xor flags.mask)
 }
 
-public inline infix fun <T : SqliteUintBitMask<T>> SqliteUintBitMask<T>.clear(flags: SqliteUintBitMask<*>): T {
+public inline infix fun <T : UintBitMask<T>> UintBitMask<T>.clear(flags: UintBitMask<*>): T {
     return newInstance(mask and flags.mask.inv())
 }

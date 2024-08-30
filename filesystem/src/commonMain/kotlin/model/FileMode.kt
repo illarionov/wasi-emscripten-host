@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.model
 
-import at.released.weh.common.api.SqliteUintBitMask
+import at.released.weh.common.api.UintBitMask
 import kotlin.jvm.JvmInline
 
 /**
@@ -15,7 +15,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 public value class FileMode(
     public override val mask: UInt,
-) : SqliteUintBitMask<FileMode> {
+) : UintBitMask<FileMode> {
     override val newInstance: (UInt) -> FileMode get() = ::FileMode
     override fun toString(): String = fileModeTypeToString(mask)
 

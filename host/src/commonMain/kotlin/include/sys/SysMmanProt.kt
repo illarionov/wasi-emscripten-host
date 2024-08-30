@@ -6,7 +6,7 @@
 
 package at.released.weh.host.include.sys
 
-import at.released.weh.common.api.SqliteUintBitMask
+import at.released.weh.common.api.UintBitMask
 import kotlin.jvm.JvmInline
 
 /**
@@ -17,7 +17,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 public value class SysMmanProt(
     public override val mask: UInt,
-) : SqliteUintBitMask<SysMmanProt> {
+) : UintBitMask<SysMmanProt> {
     override val newInstance: (UInt) -> SysMmanProt get() = ::SysMmanProt
 
     public companion object {

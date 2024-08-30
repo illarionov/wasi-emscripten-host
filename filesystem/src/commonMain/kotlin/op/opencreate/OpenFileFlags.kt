@@ -6,14 +6,14 @@
 
 package at.released.weh.filesystem.op.opencreate
 
-import at.released.weh.common.api.SqliteUintBitMask
+import at.released.weh.common.api.UintBitMask
 import at.released.weh.common.ext.maskToString
 import kotlin.jvm.JvmInline
 
 @JvmInline
 public value class OpenFileFlags(
     public override val mask: UInt,
-) : SqliteUintBitMask<OpenFileFlags> {
+) : UintBitMask<OpenFileFlags> {
     override val newInstance: (UInt) -> OpenFileFlags get() = ::OpenFileFlags
 
     override fun toString(): String {
