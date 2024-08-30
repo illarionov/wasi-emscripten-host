@@ -31,8 +31,8 @@ kotlin {
         commonMain.dependencies {
             api(projects.commonApi)
             api(projects.filesystem)
-            api(libs.arrow.core)
-            api(libs.kotlinx.io)
+            implementation(libs.arrow.core)
+            implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)
             implementation(projects.commonUtil)
         }

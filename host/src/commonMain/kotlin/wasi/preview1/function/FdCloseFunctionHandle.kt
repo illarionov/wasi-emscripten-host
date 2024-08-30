@@ -11,7 +11,7 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.wasi.WasiHostFunction
+import at.released.weh.host.wasi.preview1.WasiHostFunction
 
 public class FdCloseFunctionHandle(
     host: EmbedderHost,
@@ -19,9 +19,6 @@ public class FdCloseFunctionHandle(
     public fun execute(
         fd: Fd,
     ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd))
-        .onLeft { error ->
-            logger.i { "fd_close() error: $error" }
-        }
         .fold(
             ifLeft = { it.errno },
             ifRight = { Errno.SUCCESS },

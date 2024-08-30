@@ -6,6 +6,7 @@
 
 package at.released.weh.host.emscripten.export
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.common.api.Logger
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
@@ -31,6 +32,7 @@ public open class EmscriptenRuntime protected constructor(
     }
 
     public companion object {
+        @InternalWasiEmscriptenHostApi
         public fun emscriptenSingleThreadedRuntime(
             mainExports: EmscriptenMainExports,
             stackExports: EmscriptenStackExports,

@@ -15,7 +15,7 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
-import at.released.weh.host.wasi.WasiHostFunction
+import at.released.weh.host.wasi.preview1.WasiHostFunction
 
 public class FdSeekFunctionHandle(
     host: EmbedderHost,
@@ -31,9 +31,7 @@ public class FdSeekFunctionHandle(
         return host.fileSystem.execute(
             SeekFd,
             SeekFd(fd = fd, fileDelta = offset, whence = whence),
-        ).onLeft { error ->
-            logger.i { "fdSeek() error: $error" }
-        }.onRight { newPosition ->
+        ).onRight { newPosition ->
             memory.writeI64(pNewOffset, newPosition)
         }.fold(
             ifLeft = SeekError::errno,

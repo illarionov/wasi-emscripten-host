@@ -8,6 +8,5 @@ package at.released.weh.host.base
 
 public object WasmModules {
     public const val ENV_MODULE_NAME: String = "env"
-    public const val SQLITE3_CALLBACK_MANAGER_MODULE_NAME: String = "sqlite3-callback-manager"
     public const val WASI_SNAPSHOT_PREVIEW1_MODULE_NAME: String = "wasi_snapshot_preview1"
 }

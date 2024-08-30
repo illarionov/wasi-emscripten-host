@@ -1,6 +1,6 @@
-# Instead of compiling the Linux x64 header files, we use copies of only the parts we need so that project can be
-# build on any platform
-# Original license: GPL-2.0 WITH Linux-syscall-note
+# Rather than compiling the Linux x64 header files, we use copies of only the required function declarations from
+# the system headers. This keeps the generated interop layer small and allows the project to be built on any platform.
+# Original license of the system headers: GPL-2.0 WITH Linux-syscall-note
 
 headerFilter = linux/openat2.h fcntl.h sys/stat.h
 compilerOpts = -D_ANSI_SOURCE -D_POSIX_C_SOURCE=199309 -D_BSD_SOURCE -D_XOPEN_SOURCE=700

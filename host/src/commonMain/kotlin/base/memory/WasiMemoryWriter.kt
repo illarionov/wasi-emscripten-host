@@ -7,7 +7,6 @@
 package at.released.weh.host.base.memory
 
 import arrow.core.Either
-import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.model.Fd
@@ -29,11 +28,8 @@ public fun interface WasiMemoryWriter {
 public class DefaultWasiMemoryWriter(
     private val memory: ReadOnlyMemory,
     private val fileSystem: FileSystem,
-    logger: Logger,
 ) : WasiMemoryWriter {
-    private val logger: Logger = logger.withTag("DefaultWasiMemoryWriter")
     override fun write(fd: Fd, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
-        logger.v { "write($fd, ${cioVecs.ciovecList.map { it.bufLen.value }})" }
         val bufs = cioVecs.toByteBuffers(memory)
         return fileSystem.execute(WriteFd, WriteFd(fd, bufs, strategy))
     }

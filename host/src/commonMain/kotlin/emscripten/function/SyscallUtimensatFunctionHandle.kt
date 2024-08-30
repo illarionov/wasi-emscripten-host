@@ -11,7 +11,7 @@ import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.isSqlite3Null
+import at.released.weh.host.base.isNull
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.readNullTerminatedString
 import at.released.weh.host.base.plus
@@ -41,7 +41,7 @@ public class SyscallUtimensatFunctionHandle(
         var atimeNs: Long?
         val mtimeNs: Long?
         @Suppress("MagicNumber")
-        if (times.isSqlite3Null()) {
+        if (times.isNull()) {
             atimeNs = host.clock.getCurrentTimeEpochMilliseconds()
             mtimeNs = atimeNs
         } else {

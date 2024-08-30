@@ -8,7 +8,7 @@ package at.released.weh.host.emscripten.export.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.isSqlite3Null
+import at.released.weh.host.base.isNull
 
 @InternalWasiEmscriptenHostApi
 public class DynamicMemory(
@@ -20,7 +20,7 @@ public class DynamicMemory(
             functionNotExported("malloc")
         }.executeForPtr(len.toInt())
 
-        if (mem.isSqlite3Null()) {
+        if (mem.isNull()) {
             throw OutOfMemoryException()
         }
 

@@ -25,8 +25,8 @@ public open class TestMemory(
     public val logger: Logger = TestLogger(),
 ) : Memory {
     public val bytes: ByteArray = ByteArray(size) { 0xdc.toByte() }
-    public val memoryReader: DefaultWasiMemoryReader = DefaultWasiMemoryReader(this, fileSystem, logger)
-    public val memoryWriter: DefaultWasiMemoryWriter = DefaultWasiMemoryWriter(this, fileSystem, logger)
+    public val memoryReader: DefaultWasiMemoryReader = DefaultWasiMemoryReader(this, fileSystem)
+    public val memoryWriter: DefaultWasiMemoryWriter = DefaultWasiMemoryWriter(this, fileSystem)
 
     public fun fill(value: Byte) {
         bytes.fill(value)

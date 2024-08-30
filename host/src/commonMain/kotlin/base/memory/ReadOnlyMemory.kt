@@ -8,7 +8,7 @@ package at.released.weh.host.base.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.isSqlite3Null
+import at.released.weh.host.base.isNull
 import kotlinx.io.Buffer
 import kotlinx.io.RawSource
 import kotlinx.io.readString
@@ -37,7 +37,7 @@ public fun <T : Any, P : WasmPtr<T>> ReadOnlyMemory.readPtr(addr: WasmPtr<P>): P
 
 @InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readNullableNullTerminatedString(offset: WasmPtr<Byte>): String? {
-    return if (!offset.isSqlite3Null()) {
+    return if (!offset.isNull()) {
         readNullTerminatedString(offset)
     } else {
         null
