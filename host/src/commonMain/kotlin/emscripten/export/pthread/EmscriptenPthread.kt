@@ -27,7 +27,7 @@ public class EmscriptenPthread(
         startRoutine: IndirectFunctionTableIndex,
         arg: WasmPtr<*>,
     ): pthread_t {
-        var threadIdRef: WasmPtr<pthread_t> = WasmPtr.sqlite3Null()
+        var threadIdRef: WasmPtr<pthread_t> = WasmPtr.cNull()
         try {
             threadIdRef = dynamicMemory.allocOrThrow(8U)
 

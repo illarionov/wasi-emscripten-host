@@ -26,7 +26,6 @@ public class TzsetJsFunctionHandle(
         dstName: WasmPtr<Byte>,
     ) {
         val tzInfo = host.timeZoneInfo.getTimeZoneInfo()
-        logger.v { "tzsetJs() TZ info: $tzInfo" }
         memory.writeI32(timezone, tzInfo.timeZone.toInt())
         memory.writeI32(daylight, tzInfo.daylight)
 

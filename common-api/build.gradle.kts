@@ -38,9 +38,6 @@ kotlin {
     mingwX64()
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.io)
-        }
         commonTest.dependencies {
             implementation(kotlin("test"))
         }

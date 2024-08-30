@@ -32,6 +32,7 @@ kotlin {
             api(projects.host)
             api(projects.filesystemTestFixtures)
             api(libs.assertk)
+            implementation(libs.kotlinx.io)
             implementation(projects.testLogger)
         }
     }

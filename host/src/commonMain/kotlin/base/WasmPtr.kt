@@ -7,7 +7,7 @@
 package at.released.weh.host.base
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.WasmPtr.Companion.SQLITE3_NULL
+import at.released.weh.host.base.WasmPtr.Companion.C_NULL
 import kotlin.jvm.JvmInline
 
 @InternalWasiEmscriptenHostApi
@@ -21,13 +21,13 @@ public value class WasmPtr<out P : Any?>(
     @InternalWasiEmscriptenHostApi
     public companion object {
         public const val WASM_SIZEOF_PTR: UInt = 4U
-        public val SQLITE3_NULL: WasmPtr<*> = WasmPtr<Unit>(0)
-        public fun <P> sqlite3Null(): WasmPtr<P> = SQLITE3_NULL as WasmPtr<P>
+        public val C_NULL: WasmPtr<*> = WasmPtr<Unit>(0)
+        public fun <P> cNull(): WasmPtr<P> = C_NULL as WasmPtr<P>
     }
 }
 
 @InternalWasiEmscriptenHostApi
-public fun WasmPtr<*>.isSqlite3Null(): Boolean = this == SQLITE3_NULL
+public fun WasmPtr<*>.isNull(): Boolean = this == C_NULL
 
 @InternalWasiEmscriptenHostApi
 public operator fun <P> WasmPtr<P>.plus(bytes: Int): WasmPtr<P> = WasmPtr(addr + bytes)

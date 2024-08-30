@@ -10,7 +10,7 @@ import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Errno.SUCCESS
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.wasi.WasiHostFunction.SCHED_YIELD
+import at.released.weh.host.wasi.preview1.WasiHostFunction.SCHED_YIELD
 
 public class SchedYieldFunctionHandle(
     host: EmbedderHost,

@@ -13,7 +13,7 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.wasi.WasiHostFunction
+import at.released.weh.host.wasi.preview1.WasiHostFunction
 
 public class FdSyncSyscallFdatasyncFunctionHandle private constructor(
     host: EmbedderHost,
@@ -23,9 +23,6 @@ public class FdSyncSyscallFdatasyncFunctionHandle private constructor(
     public fun execute(
         fd: Fd,
     ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, syncMetadata))
-        .onLeft { error ->
-            logger.i { "sync() error: $error" }
-        }
         .fold(
             ifLeft = { it.errno },
             ifRight = { Errno.SUCCESS },

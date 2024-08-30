@@ -24,7 +24,6 @@ public class SyscallGetcwdFunctionHandle(
         dst: WasmPtr<Byte>,
         size: Int,
     ): Int {
-        logger.v { "getCwd(dst: $dst size: $size)" }
         if (size == 0) {
             return -Errno.INVAL.code
         }

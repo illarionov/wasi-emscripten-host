@@ -26,8 +26,6 @@ public class LocaltimeJsFunctionHandle(
         timePtr: WasmPtr<StructTm>,
     ) {
         val localTime = host.localTimeFormatter.format(timeSeconds)
-        logger.v { "localtimeJs($timeSeconds): $localTime" }
-
         memory.sinkWithMaxSize(timePtr, STRUCT_TM_PACKED_SIZE).buffered().use {
             localTime.packTo(it)
         }

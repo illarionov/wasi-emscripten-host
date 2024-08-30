@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("MagicNumber")
-
-package at.released.weh.host.wasi
+package at.released.weh.host.wasi.preview1
 
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
@@ -14,7 +12,6 @@ import at.released.weh.filesystem.model.Whence
 import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I32
 import at.released.weh.host.base.function.HostFunction
-import at.released.weh.host.base.function.HostFunction.HostFunctionType
 import at.released.weh.host.base.pointer
 import at.released.weh.host.wasi.preview1.type.Advice
 import at.released.weh.host.wasi.preview1.type.CiovecArray
@@ -41,7 +38,7 @@ import at.released.weh.host.wasi.preview1.type.Signal
 import at.released.weh.host.wasi.preview1.type.Size
 import at.released.weh.host.wasi.preview1.type.Subscription
 import at.released.weh.host.wasi.preview1.type.Timestamp
-import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U32
+import at.released.weh.host.wasi.preview1.type.WasiValueTypes
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.host.wasi.preview1.type.wasmValueType
 
@@ -52,7 +49,7 @@ import at.released.weh.host.wasi.preview1.type.wasmValueType
  */
 public enum class WasiHostFunction(
     public override val wasmName: String,
-    public override val type: HostFunctionType,
+    public override val type: HostFunction.HostFunctionType,
 ) : HostFunction {
     /**
      * Read command-line argument data.
@@ -1151,7 +1148,7 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             Fd.wasmValueType, // fd
             IovecArray.wasmValueType, // ri_data
-            U32, // ri_data_len
+            WasiValueTypes.U32, // ri_data_len
             Riflags.wasmValueType,
             Size.pointer, // expected size
             Roflags.wasmValueType, // expected roflags
@@ -1181,7 +1178,7 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             Fd.wasmValueType, // fd
             CiovecArray.wasmValueType, // si_data
-            U32, // si_data size
+            WasiValueTypes.U32, // si_data size
             SiFlags.wasmValueType, // si_flags
             Size.pointer, // expected $size
         ),
@@ -1217,7 +1214,7 @@ public enum class WasiHostFunction(
         retType: WasmValueType? = null,
     ) : this(
         wasmName = wasmName,
-        type = HostFunctionType(
+        type = HostFunction.HostFunctionType(
             params = paramTypes,
             returnTypes = if (retType != null) {
                 listOf(retType)

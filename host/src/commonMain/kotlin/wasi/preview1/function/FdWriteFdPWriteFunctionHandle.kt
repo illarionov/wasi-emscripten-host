@@ -19,7 +19,7 @@ import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.base.memory.readPtr
 import at.released.weh.host.base.plus
-import at.released.weh.host.wasi.WasiHostFunction
+import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.host.wasi.preview1.type.CioVec
 import at.released.weh.host.wasi.preview1.type.CiovecArray
 import at.released.weh.host.wasi.preview1.type.Size
