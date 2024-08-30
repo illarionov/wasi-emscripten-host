@@ -22,16 +22,18 @@ import io.github.charlietap.chasm.executor.memory.write.MemoryInstanceIntWriterI
 import io.github.charlietap.chasm.executor.memory.write.MemoryInstanceLongWriterImpl
 import io.github.charlietap.chasm.executor.runtime.error.InvocationError
 import io.github.charlietap.chasm.executor.runtime.ext.memory
+import io.github.charlietap.chasm.executor.runtime.instance.MemoryInstance
 import io.github.charlietap.chasm.executor.runtime.store.Address
 import io.github.charlietap.chasm.executor.runtime.store.Store
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 
-internal class ChasmMemoryAdapter(
+public class ChasmMemoryAdapter(
     private val store: Store,
     private val memoryAddress: Address.Memory,
 ) : Memory {
-    val memoryInstance get() = store.memory(memoryAddress).getOrThrow { ChasmModuleRuntimeErrorException(it) }
+    public val memoryInstance: MemoryInstance
+        get() = store.memory(memoryAddress).getOrThrow { ChasmModuleRuntimeErrorException(it) }
 
     override fun readI8(addr: WasmPtr<*>): Byte {
         return readMemory(store, memoryAddress, addr.addr).orThrow()
@@ -65,7 +67,7 @@ internal class ChasmMemoryAdapter(
         return ChasmMemoryRawSink(store, memoryAddress, fromAddr, toAddrExclusive)
     }
 
-    fun grow(pagesToAdd: Int): Int {
+    public fun grow(pagesToAdd: Int): Int {
         val oldPages = memoryInstance.data.min.amount
         return MemoryGrowerImpl(memoryInstance, pagesToAdd).fold(
             { newMemoryInstance ->

@@ -1,8 +1,8 @@
 public final class at/released/weh/bindings/chasm/ChasmHostFunctionInstaller {
 	public static final field Companion Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$Companion;
 	public synthetic fun <init> (Lio/github/charlietap/chasm/executor/runtime/store/Store;ILat/released/weh/host/EmbedderHost;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun setupEmscriptenFunctions (Lat/released/weh/host/EmbedderHost;Ljava/lang/String;)Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$ChasmEmscriptenInstaller;
-	public static synthetic fun setupEmscriptenFunctions$default (Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller;Lat/released/weh/host/EmbedderHost;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$ChasmEmscriptenInstaller;
+	public final fun setupEmscriptenFunctions (Ljava/lang/String;)Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$ChasmEmscriptenInstaller;
+	public static synthetic fun setupEmscriptenFunctions$default (Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$ChasmEmscriptenInstaller;
 	public final fun setupWasiPreview1HostFunctions (Ljava/lang/String;)Ljava/util/List;
 	public static synthetic fun setupWasiPreview1HostFunctions$default (Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
 }
@@ -44,5 +44,19 @@ public final class at/released/weh/bindings/chasm/exception/ChasmModuleRuntimeEr
 	public fun <init> (Lio/github/charlietap/chasm/executor/runtime/error/InvocationError;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Lio/github/charlietap/chasm/executor/runtime/error/InvocationError;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getError ()Lio/github/charlietap/chasm/executor/runtime/error/InvocationError;
+}
+
+public final class at/released/weh/bindings/chasm/memory/ChasmMemoryAdapter : at/released/weh/host/base/memory/Memory {
+	public synthetic fun <init> (Lio/github/charlietap/chasm/executor/runtime/store/Store;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getMemoryInstance ()Lio/github/charlietap/chasm/executor/runtime/instance/MemoryInstance;
+	public final fun grow (I)I
+	public fun readI32-e-C6Vng (I)I
+	public fun readI64-e-C6Vng (I)J
+	public fun readI8-e-C6Vng (I)B
+	public fun sink-Z5Htsd4 (II)Lkotlinx/io/RawSink;
+	public fun source-Z5Htsd4 (II)Lkotlinx/io/RawSource;
+	public fun writeI32-N0MNGDA (II)V
+	public fun writeI64-N0MNGDA (IJ)V
+	public fun writeI8-N0MNGDA (IB)V
 }
 
