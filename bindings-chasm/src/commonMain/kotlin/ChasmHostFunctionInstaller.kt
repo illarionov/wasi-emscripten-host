@@ -48,7 +48,6 @@ public class ChasmHostFunctionInstaller private constructor(
     }
 
     public fun setupEmscriptenFunctions(
-        host: EmbedderHost,
         moduleName: String = ENV_MODULE_NAME,
     ): ChasmEmscriptenInstaller {
         return ChasmEmscriptenInstaller(store, memory, host.rootLogger).apply {
