@@ -12,36 +12,20 @@ plugins {
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_bindings_chasm_version",
-    envVariableName = "WEH_BINDINGS_CHASM_VERSION",
+    propertiesFileKey = "weh_bindings_chicory_version",
+    envVariableName = "WEH_BINDINGS_CHICORY_VERSION",
 ).get()
 
 kotlin {
     jvm()
-    iosSimulatorArm64()
-    iosArm64()
-    iosX64()
-    linuxArm64()
-    linuxX64()
-    macosArm64()
-    macosX64()
-    mingwX64 {
-        binaries.all {
-            linkerOpts("-lole32")
-        }
-    }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.host)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
-            api(libs.chasm)
-            compileOnly(libs.chasm.decoder)
-            compileOnly(libs.chasm.instantiator)
-            compileOnly(libs.chasm.memory)
-            compileOnly(libs.chasm.runtime)
-            compileOnly(libs.chasm.validator)
+            api(libs.chicory.runtime)
+            implementation(libs.kotlinx.io)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

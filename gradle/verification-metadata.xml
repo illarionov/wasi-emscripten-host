@@ -60,6 +60,7 @@
          <trusted-key id="DBD744ACE7ADE6AA50DD591F66B50994442D2D40" group="^com[.]squareup($|([.].*))" regex="true"/>
          <trusted-key id="E7DC75FC24FB3C8DFE8086AD3D5839A2262CBBFB" group="org.jetbrains.kotlinx"/>
          <trusted-key id="FA7929F83AD44C4590F6CC6815C71C0A4E0B8EDD" group="net.java.dev.jna"/>
+         <trusted-key id="FC22B1D003762F7336CE946C1C300EDE197A9487" group="com.dylibso.chicory"/>
          <trusted-key id="FF6E2C001948C5F2F38B0CC385911F425EC61B51" group="^org[.]junit($|([.].*))" regex="true"/>
       </trusted-keys>
    </configuration>

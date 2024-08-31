@@ -7,6 +7,7 @@ atomicfu = "0.25.0"
 arrow = "2.0.0-alpha.3"
 assertk = "0.28.1"
 chasm = "0.7.1"
+chicory = "0.0.12"
 detekt = "1.23.6"
 diktat = "2.0.0"
 dokka = "1.9.20"
@@ -27,6 +28,8 @@ chasm-instantiator = { group = "io.github.charlietap.chasm", name = "instantiato
 chasm-memory = { group = "io.github.charlietap.chasm", name = "memory", version.ref = "chasm" }
 chasm-runtime = { group = "io.github.charlietap.chasm", name = "runtime", version.ref = "chasm" }
 chasm-validator = { group = "io.github.charlietap.chasm", name = "validator", version.ref = "chasm" }
+chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
+chicory-aot = { group = "com.dylibso.chicory", name = "aot", version.ref = "chicory" }
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
