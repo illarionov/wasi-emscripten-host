@@ -1,0 +1,31 @@
+public abstract interface annotation class at/released/weh/bindings/chicory/ChicoryBindingsDsl : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller {
+	public static final field Companion Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion;
+	public final fun setupEmscriptenFunctions ()Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+	public final fun setupEmscriptenFunctions (Ljava/lang/String;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+	public static synthetic fun setupEmscriptenFunctions$default (Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+	public final fun setupWasiPreview1HostFunctions ()Ljava/util/List;
+	public final fun setupWasiPreview1HostFunctions (Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun setupWasiPreview1HostFunctions$default (Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+}
+
+public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Builder {
+	public fun <init> (Lat/released/weh/host/base/memory/Memory;)V
+	public final fun build ()Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
+	public final fun getMemory ()Lat/released/weh/host/base/memory/Memory;
+	public final fun setHost (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Builder;
+	public final synthetic fun setHost (Lat/released/weh/host/EmbedderHost;)V
+}
+
+public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller {
+	public final fun finalize (Lcom/dylibso/chicory/runtime/Instance;)Lat/released/weh/host/emscripten/export/EmscriptenRuntime;
+}
+
+public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion {
+	public final synthetic fun invoke (Lat/released/weh/host/base/memory/Memory;Lkotlin/jvm/functions/Function1;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+	public static synthetic fun invoke$default (Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion;Lat/released/weh/host/base/memory/Memory;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
+}
+

@@ -25,6 +25,7 @@ buildscript {
 rootProject.name = "wasi-emscripten-host"
 
 include("bindings-chasm")
+include("bindings-chicory")
 include("common-api")
 include("common-util")
 include("filesystem")
