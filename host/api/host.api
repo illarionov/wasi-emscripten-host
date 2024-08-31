@@ -174,7 +174,7 @@ public final class at/released/weh/host/base/memory/PagesKt {
 	public static final field WASM_MEMORY_PAGE_SIZE J
 	public static final fun getWASM_MEMORY_32_MAX_PAGES ()J
 	public static final fun getWASM_MEMORY_64_MAX_PAGES ()J
-	public static final fun getWASM_MEMORY_SQLITE_MAX_PAGES ()J
+	public static final fun getWASM_MEMORY_DEFAULT_MAX_PAGES ()J
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {

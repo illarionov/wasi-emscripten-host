@@ -26,6 +26,7 @@ rootProject.name = "wasi-emscripten-host"
 
 include("bindings-chasm")
 include("bindings-chicory")
+include("bindings-graalvm240")
 include("common-api")
 include("common-util")
 include("filesystem")

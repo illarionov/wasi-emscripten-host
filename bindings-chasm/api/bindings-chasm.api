@@ -17,9 +17,6 @@ public final class at/released/weh/bindings/chasm/ChasmHostFunctionInstaller$Com
 	public static synthetic fun invoke$default (Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller$Companion;Lio/github/charlietap/chasm/executor/runtime/store/Store;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/chasm/ChasmHostFunctionInstaller;
 }
 
-public abstract interface annotation class at/released/weh/bindings/chasm/dsl/ChasmBindingsDsl : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/bindings/chasm/dsl/ChasmHostFunctionInstallerDsl {
 	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
 	public final fun getMemoryAddress-5v8MX4s ()I

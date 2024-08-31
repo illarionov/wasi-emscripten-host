@@ -6,11 +6,19 @@
 
 package at.released.weh.bindings.chasm.dsl
 
+import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.executor.runtime.store.Address
 
-@ChasmBindingsDsl
+@WasiEmscriptenHostDsl
 public class ChasmHostFunctionInstallerDsl internal constructor() {
+    /**
+     * Implementation of a host object that provides access from the WebAssembly to external host resources.
+     */
     public var host: EmbedderHost? = null
+
+    /**
+     * Sets the address of the memory in the Chasm WebAssembly Store used for all operations. For multi-memory scenarios
+     */
     public var memoryAddress: Address.Memory = Address.Memory(0)
 }
