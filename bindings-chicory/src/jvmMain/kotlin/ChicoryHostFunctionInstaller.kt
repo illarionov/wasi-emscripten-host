@@ -101,7 +101,7 @@ public class ChicoryHostFunctionInstaller private constructor(
 
     @ChicoryBindingsDsl
     public class Builder(
-        public val memory: Memory,
+        public val memory: ChicoryMemory,
     ) {
         @set:JvmSynthetic
         public var host: EmbedderHost? = null
@@ -110,18 +110,18 @@ public class ChicoryHostFunctionInstaller private constructor(
             this.host = host
         }
 
-        public fun build(): ChicoryEmscriptenInstaller {
+        public fun build(): ChicoryHostFunctionInstaller {
             val host = host ?: EmbedderHost.Builder().build()
-            return ChicoryEmscriptenInstaller(host, memory)
+            return ChicoryHostFunctionInstaller(host, memory)
         }
     }
 
     public companion object {
         @JvmSynthetic
         public operator fun invoke(
-            memory: Memory,
+            memory: ChicoryMemory,
             block: Builder.() -> Unit = {},
-        ): ChicoryEmscriptenInstaller {
+        ): ChicoryHostFunctionInstaller {
             return Builder(memory).apply(block).build()
         }
     }
