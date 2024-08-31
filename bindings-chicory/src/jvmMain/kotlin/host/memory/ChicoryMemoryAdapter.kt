@@ -13,7 +13,7 @@ import kotlinx.io.RawSource
 import com.dylibso.chicory.runtime.Memory as ChicoryMemory
 
 @Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
-internal class ChicoryMemoryAdapter(
+public class ChicoryMemoryAdapter(
     internal val wasmMemory: ChicoryMemory,
 ) : Memory {
     override fun readI8(addr: WasmPtr<*>): Byte {

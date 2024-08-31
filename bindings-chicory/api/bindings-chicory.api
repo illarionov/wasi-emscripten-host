@@ -29,3 +29,15 @@ public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller
 	public static synthetic fun invoke$default (Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion;Lat/released/weh/host/base/memory/Memory;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller;
 }
 
+public final class at/released/weh/bindings/chicory/host/memory/ChicoryMemoryAdapter : at/released/weh/host/base/memory/Memory {
+	public fun <init> (Lcom/dylibso/chicory/runtime/Memory;)V
+	public fun readI32-e-C6Vng (I)I
+	public fun readI64-e-C6Vng (I)J
+	public fun readI8-e-C6Vng (I)B
+	public fun sink-Z5Htsd4 (II)Lkotlinx/io/RawSink;
+	public fun source-Z5Htsd4 (II)Lkotlinx/io/RawSource;
+	public fun writeI32-N0MNGDA (II)V
+	public fun writeI64-N0MNGDA (IJ)V
+	public fun writeI8-N0MNGDA (IB)V
+}
+
