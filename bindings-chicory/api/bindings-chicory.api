@@ -23,6 +23,7 @@ public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller
 
 public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$ChicoryEmscriptenInstaller {
 	public final fun finalize (Lcom/dylibso/chicory/runtime/Instance;)Lat/released/weh/host/emscripten/export/EmscriptenRuntime;
+	public final fun getEmscriptenFunctions ()Ljava/util/List;
 }
 
 public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion {

@@ -69,7 +69,7 @@ public class ChicoryHostFunctionInstaller private constructor(
         private val host: EmbedderHost,
         private val memoryAdapter: Memory,
     ) {
-        private var emscriptenFunctions: List<HostFunction> = emptyList()
+        public var emscriptenFunctions: List<HostFunction> = emptyList()
             private set
         private var _emscriptenStack: EmscriptenStack? = null
         private val emscriptenStack: EmscriptenStack
