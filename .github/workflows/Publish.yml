@@ -30,7 +30,7 @@ env:
 
 jobs:
   publish:
-    name: Assemble, publish to S3
+    name: Assemble, publish
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:
@@ -74,7 +74,6 @@ jobs:
           ./gradlew --scan -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           --no-configuration-cache
           build
-          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'packageMavenDistribution' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_mavencentral) && 'publishAllPublicationsToMavenCentralRepository' || '' }}
           --stacktrace
