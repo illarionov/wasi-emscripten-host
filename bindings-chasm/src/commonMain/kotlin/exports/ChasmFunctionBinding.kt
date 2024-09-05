@@ -7,23 +7,22 @@
 package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.bindings.chasm.exception.ChasmErrorException
+import at.released.weh.bindings.chasm.ext.asInt
+import at.released.weh.bindings.chasm.ext.asLong
+import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.ext.orThrow
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.WasmFunctionBinding
+import io.github.charlietap.chasm.embedding.error.ChasmError
 import io.github.charlietap.chasm.embedding.invoke
-import io.github.charlietap.chasm.error.ChasmError
-import io.github.charlietap.chasm.executor.runtime.instance.ModuleInstance
-import io.github.charlietap.chasm.executor.runtime.store.Store
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.F32
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.F64
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I64
-import io.github.charlietap.chasm.fold
+import io.github.charlietap.chasm.embedding.shapes.Instance
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.embedding.shapes.fold
 
 internal class ChasmFunctionBinding(
     private val store: Store,
-    private val instance: ModuleInstance,
+    private val instance: Instance,
     private val name: String,
 ) : WasmFunctionBinding {
     override fun executeVoid(vararg args: Any?) {
@@ -32,47 +31,53 @@ internal class ChasmFunctionBinding(
 
     override fun executeForInt(vararg args: Any?): Int = invoke(store, instance, name, args.argsToValues())
         .fold(
-            { (it[0] as I32).value },
+            { it[0].asInt() },
             ::throwOnError,
         )
 
     override fun executeForLong(vararg args: Any?): Long = invoke(store, instance, name, args.argsToValues())
         .fold(
-            { (it[0] as I64).value },
+            { it[0].asLong() },
             ::throwOnError,
         )
 
     override fun executeForFloat(vararg args: Any?): Float = invoke(store, instance, name, args.argsToValues())
         .fold(
-            { (it[0] as F32).value },
+            {
+                @Suppress("UNCHECKED_CAST")
+                (it[0] as Value.Number<Float>).value
+            },
             ::throwOnError,
         )
 
     override fun executeForDouble(vararg args: Any?): Double = invoke(store, instance, name, args.argsToValues())
         .fold(
-            { (it[0] as F64).value },
+            {
+                @Suppress("UNCHECKED_CAST")
+                (it[0] as Value.Number<Double>).value
+            },
             ::throwOnError,
         )
 
     override fun <P> executeForPtr(vararg args: Any?): WasmPtr<P> = invoke(store, instance, name, args.argsToValues())
         .fold(
-            { WasmPtr((it[0] as I32).value) },
+            { it[0].asWasmAddr() },
             ::throwOnError,
         )
 }
 
-private fun Array<out Any?>.argsToValues(): List<ExecutionValue> {
+private fun Array<out Any?>.argsToValues(): List<Value> {
     return if (this.isEmpty()) {
         emptyList()
     } else {
         List(this.size) { idx ->
             when (val arg = this[idx]) {
-                is Int -> I32(arg)
-                is UInt -> I32(arg.toInt())
-                is Long -> I64(arg.toLong())
-                is ULong -> I64(arg.toLong())
-                is Float -> F32(arg.toFloat())
-                is Double -> F64(arg.toDouble())
+                is Int -> Value.Number.I32(arg)
+                is UInt -> Value.Number.I32(arg.toInt())
+                is Long -> Value.Number.I64(arg.toLong())
+                is ULong -> Value.Number.I64(arg.toLong())
+                is Float -> Value.Number.F32(arg.toFloat())
+                is Double -> Value.Number.F64(arg.toDouble())
                 else -> error("Unsupported argument type $arg")
             }
         }

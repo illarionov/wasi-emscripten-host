@@ -7,9 +7,9 @@
 package at.released.weh.bindings.chasm.ext
 
 import at.released.weh.bindings.chasm.exception.ChasmErrorException
-import io.github.charlietap.chasm.ChasmResult
-import io.github.charlietap.chasm.error.ChasmError
-import io.github.charlietap.chasm.fold
+import io.github.charlietap.chasm.embedding.error.ChasmError
+import io.github.charlietap.chasm.embedding.shapes.ChasmResult
+import io.github.charlietap.chasm.embedding.shapes.fold
 
 internal fun <S, E : ChasmError> ChasmResult<S, E>.orThrow(
     message: (() -> String?)? = null,

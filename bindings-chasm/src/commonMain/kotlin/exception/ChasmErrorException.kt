@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.chasm.exception
 
-import io.github.charlietap.chasm.error.ChasmError
+import io.github.charlietap.chasm.embedding.error.ChasmError
 
 public class ChasmErrorException(
     public val error: ChasmError,

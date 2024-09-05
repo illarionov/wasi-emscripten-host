@@ -8,12 +8,12 @@ package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
-import io.github.charlietap.chasm.executor.runtime.instance.ModuleInstance
-import io.github.charlietap.chasm.executor.runtime.store.Store
+import io.github.charlietap.chasm.embedding.shapes.Instance
+import io.github.charlietap.chasm.embedding.shapes.Store
 
 internal class ChasmEmscriptenStackExports(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ) : EmscriptenStackExports {
     override var __stack_pointer: Int by intGlobalMember(store, instance)
     override var __stack_end: Int? by optionalIntGlobalMember(store, instance)

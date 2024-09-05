@@ -20,17 +20,17 @@ import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
 import at.released.weh.host.emscripten.export.EmscriptenRuntime
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
-import io.github.charlietap.chasm.executor.runtime.instance.ModuleInstance
-import io.github.charlietap.chasm.executor.runtime.store.Address
-import io.github.charlietap.chasm.executor.runtime.store.Store
-import io.github.charlietap.chasm.import.Import
+import io.github.charlietap.chasm.embedding.shapes.Import
+import io.github.charlietap.chasm.embedding.shapes.Memory
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
 
 public class ChasmHostFunctionInstaller private constructor(
     private val store: Store,
-    memoryAddress: Address.Memory,
+    memoryProvider: (Store.() -> Memory)?,
     private val host: EmbedderHost,
 ) {
-    private val memory = ChasmMemoryAdapter(store, memoryAddress)
+    private val memory = ChasmMemoryAdapter(store, memoryProvider)
 
     public fun setupWasiPreview1HostFunctions(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
@@ -80,7 +80,7 @@ public class ChasmHostFunctionInstaller private constructor(
             )
         }
 
-        public fun finalize(instance: ModuleInstance): EmscriptenRuntime {
+        public fun finalize(instance: ChasmInstance): EmscriptenRuntime {
             val emscriptenRuntime = EmscriptenRuntime.emscriptenSingleThreadedRuntime(
                 mainExports = ChasmEmscriptenMainExports(store, instance),
                 stackExports = ChasmEmscriptenStackExports(store, instance),
@@ -100,7 +100,7 @@ public class ChasmHostFunctionInstaller private constructor(
             val config = ChasmHostFunctionInstallerDsl().apply(block)
             return ChasmHostFunctionInstaller(
                 store = store,
-                memoryAddress = config.memoryAddress,
+                memoryProvider = config.memoryProvider,
                 host = config.host ?: EmbedderHost.Builder().build(),
             )
         }

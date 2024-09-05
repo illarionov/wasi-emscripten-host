@@ -8,25 +8,24 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.SyscallChmodFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class SyscallChmod(
     host: EmbedderHost,
     private val memory: ReadOnlyMemory,
-) : EmscriptenHostFunctionHandle {
+) : HostFunction {
     private val handle = SyscallChmodFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+    override fun invoke(args: List<Value>): List<Value> {
         val result: Int = handle.execute(
             memory,
             args[0].asWasmAddr(),
             args[1].asUInt(),
         )
-        return listOf(I32(result))
+        return listOf(Value.Number.I32(result))
     }
 }

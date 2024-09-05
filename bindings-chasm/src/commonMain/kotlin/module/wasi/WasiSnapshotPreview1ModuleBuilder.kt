@@ -34,10 +34,11 @@ import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_SEEK
 import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_SYNC
 import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_WRITE
 import io.github.charlietap.chasm.embedding.function
-import io.github.charlietap.chasm.executor.runtime.store.Store
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
-import io.github.charlietap.chasm.import.Import
-import io.github.charlietap.chasm.executor.runtime.instance.HostFunction as ChasmHostFunction
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.embedding.shapes.HostFunction as ChasmHostFunction
+import io.github.charlietap.chasm.embedding.shapes.Import as ChasmImport
 
 internal fun createWasiPreview1HostFunctions(
     store: Store,
@@ -46,10 +47,10 @@ internal fun createWasiPreview1HostFunctions(
     wasiMemoryWriter: WasiMemoryWriter,
     host: EmbedderHost,
     moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
-): List<Import> {
+): List<ChasmImport> {
     val functionTypes = WasiHostFunction.entries.map(WasiHostFunction::type).toChasmFunctionTypes()
     return WasiHostFunction.entries.map { wasiFunc ->
-        Import(
+        ChasmImport(
             moduleName = moduleName,
             entityName = wasiFunc.wasmName,
             value = function(
@@ -62,8 +63,8 @@ internal fun createWasiPreview1HostFunctions(
     }
 }
 
-private fun WasiHostFunctionHandle.toChasmHostFunction(): ChasmHostFunction = { args ->
-    listOf(I32(this.invoke(args).code))
+private fun WasiHostFunctionHandle.toChasmHostFunction(): ChasmHostFunction = HostFunction { args ->
+    listOf(Value.Number.I32(this@toChasmHostFunction(args).code))
 }
 
 private fun WasiHostFunction.createWasiHostFunctionHandle(

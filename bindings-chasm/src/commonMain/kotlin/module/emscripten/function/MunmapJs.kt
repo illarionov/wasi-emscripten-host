@@ -10,22 +10,22 @@ import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asULong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
 import at.released.weh.host.include.sys.SysMmanMapFlags
 import at.released.weh.host.include.sys.SysMmanProt
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
 
 internal class MunmapJs(
     host: EmbedderHost,
-) : EmscriptenHostFunctionHandle {
+) : HostFunction {
     private val handle = MunapJsFunctionHandle(host)
 
     @Suppress("MagicNumber")
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+    override fun invoke(args: List<Value>): List<Value> {
         val result: Int = handle.execute(
             args[0].asWasmAddr(),
             args[1].asInt(),
@@ -34,6 +34,6 @@ internal class MunmapJs(
             Fd(args[4].asInt()),
             args[5].asULong(),
         )
-        return listOf(I32(result))
+        return listOf(Value.Number.I32(result))
     }
 }

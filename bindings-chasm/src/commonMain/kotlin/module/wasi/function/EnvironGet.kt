@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.wasi.preview1.function.EnvironGetFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class EnvironGet(
     host: EmbedderHost,
@@ -20,7 +20,7 @@ internal class EnvironGet(
 ) : WasiHostFunctionHandle {
     private val handle = EnvironGetFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): Errno {
+    override operator fun invoke(args: List<Value>): Errno {
         return handle.execute(memory, args[0].asWasmAddr(), args[1].asWasmAddr())
     }
 }

@@ -8,7 +8,8 @@ package at.released.weh.bindings.chasm.dsl
 
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
-import io.github.charlietap.chasm.executor.runtime.store.Address
+import io.github.charlietap.chasm.embedding.shapes.Memory
+import io.github.charlietap.chasm.embedding.shapes.Store
 
 @WasiEmscriptenHostDsl
 public class ChasmHostFunctionInstallerDsl internal constructor() {
@@ -18,7 +19,7 @@ public class ChasmHostFunctionInstallerDsl internal constructor() {
     public var host: EmbedderHost? = null
 
     /**
-     * Sets the address of the memory in the Chasm WebAssembly Store used for all operations. For multi-memory scenarios
+     * Sets memory in the Chasm WebAssembly Store used for all operations. For multi-memory scenarios.
      */
-    public var memoryAddress: Address.Memory = Address.Memory(0)
+    public var memoryProvider: (Store.() -> Memory)? = null
 }

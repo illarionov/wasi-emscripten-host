@@ -10,15 +10,15 @@ import at.released.weh.bindings.chasm.exception.ChasmErrorException
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.common.SinglePropertyLazyValue
 import at.released.weh.host.base.binding.WasmFunctionBinding
+import io.github.charlietap.chasm.embedding.exports
 import io.github.charlietap.chasm.embedding.global.readGlobal
 import io.github.charlietap.chasm.embedding.global.writeGlobal
-import io.github.charlietap.chasm.executor.runtime.instance.ExternalValue
-import io.github.charlietap.chasm.executor.runtime.instance.ModuleInstance
-import io.github.charlietap.chasm.executor.runtime.store.Address
-import io.github.charlietap.chasm.executor.runtime.store.Store
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
-import io.github.charlietap.chasm.fold
-import io.github.charlietap.chasm.onError
+import io.github.charlietap.chasm.embedding.shapes.Global
+import io.github.charlietap.chasm.embedding.shapes.Instance
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.embedding.shapes.fold
+import io.github.charlietap.chasm.embedding.shapes.onError
 import kotlin.concurrent.Volatile
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
@@ -26,12 +26,12 @@ import kotlin.reflect.KProperty
 
 internal fun functionMember(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ): ReadOnlyProperty<Any?, WasmFunctionBinding> {
     return object : ReadOnlyProperty<Any?, WasmFunctionBinding> {
         @Volatile
         private var binding: SinglePropertyLazyValue<WasmFunctionBinding> = SinglePropertyLazyValue { propertyName ->
-            instance.exports.find { it.name.name == propertyName }
+            exports(instance).find { it.name == propertyName }
                 ?: error("Property $propertyName not found")
             ChasmFunctionBinding(store, instance, propertyName)
         }
@@ -44,12 +44,12 @@ internal fun functionMember(
 
 internal fun optionalFunctionMember(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ): ReadOnlyProperty<Any?, WasmFunctionBinding?> {
     return object : ReadOnlyProperty<Any?, WasmFunctionBinding?> {
         @Volatile
         private var binding: SinglePropertyLazyValue<WasmFunctionBinding?> = SinglePropertyLazyValue { propertyName ->
-            if (instance.exports.find { it.name.name == propertyName } != null) {
+            if (exports(instance).find { it.name == propertyName } != null) {
                 ChasmFunctionBinding(store, instance, propertyName)
             } else {
                 null
@@ -64,14 +64,14 @@ internal fun optionalFunctionMember(
 
 internal fun intGlobalMember(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ): ReadWriteProperty<Any?, Int> {
     return object : ReadWriteProperty<Any?, Int> {
         @Volatile
-        private var address = SinglePropertyLazyValue { propertyName ->
-            instance.exports.firstNotNullOfOrNull {
-                if (it.name.name == propertyName && it.value is ExternalValue.Global) {
-                    (it.value as ExternalValue.Global).address
+        private var address: SinglePropertyLazyValue<Global> = SinglePropertyLazyValue { propertyName ->
+            exports(instance).firstNotNullOfOrNull {
+                if (it.name == propertyName && it.value is Global) {
+                    it.value as Global
                 } else {
                     null
                 }
@@ -80,13 +80,16 @@ internal fun intGlobalMember(
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
             return readGlobal(store, address.get(property)).fold(
-                onSuccess = { it.asInt() },
+                onSuccess = { value: Value ->
+                    @Suppress("UNCHECKED_CAST")
+                    (value as Value.Number<Int>).value
+                },
                 onError = { error -> throw ChasmErrorException(error) },
             )
         }
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
-            writeGlobal(store, address.get(property), I32(value))
+            writeGlobal(store, address.get(property), Value.Number.I32(value))
                 .onError { error -> throw ChasmErrorException(error) }
         }
     }
@@ -94,14 +97,14 @@ internal fun intGlobalMember(
 
 internal fun optionalIntGlobalMember(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ): ReadWriteProperty<Any?, Int?> {
     return object : ReadWriteProperty<Any?, Int?> {
         @Volatile
-        private var address = SinglePropertyLazyValue { propertyName ->
-            instance.exports.firstNotNullOfOrNull {
-                if (it.name.name == propertyName && it.value is ExternalValue.Global) {
-                    (it.value as ExternalValue.Global).address
+        private var address: SinglePropertyLazyValue<Global?> = SinglePropertyLazyValue { propertyName ->
+            exports(instance).firstNotNullOfOrNull {
+                if (it.name == propertyName && it.value is Global) {
+                    it.value as Global
                 } else {
                     null
                 }
@@ -109,7 +112,7 @@ internal fun optionalIntGlobalMember(
         }
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int? {
-            return address.get(property)?.let { address: Address.Global ->
+            return address.get(property)?.let { address: Global ->
                 readGlobal(store, address).fold(
                     onSuccess = { it.asInt() },
                     onError = { error -> throw ChasmErrorException(error) },
@@ -119,8 +122,8 @@ internal fun optionalIntGlobalMember(
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int?) {
             require(value != null)
-            address.get(property)?.let { address: Address.Global ->
-                writeGlobal(store, address, I32(value))
+            address.get(property)?.let { address: Global ->
+                writeGlobal(store, address, Value.Number.I32(value))
                     .onError { error -> throw ChasmErrorException(error) }
             }
         }

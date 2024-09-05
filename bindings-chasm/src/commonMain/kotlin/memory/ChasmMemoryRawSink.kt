@@ -8,21 +8,23 @@ package at.released.weh.bindings.chasm.memory
 
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSink
-import io.github.charlietap.chasm.embedding.memory.writeMemory
-import io.github.charlietap.chasm.executor.runtime.store.Address
-import io.github.charlietap.chasm.executor.runtime.store.Store
+import io.github.charlietap.chasm.embedding.memory.writeBytes
+import io.github.charlietap.chasm.embedding.shapes.Memory
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.onError
 import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
 
 internal class ChasmMemoryRawSink(
     private val store: Store,
-    private val memoryAddress: Address.Memory,
+    private val memoryAddress: Memory,
     baseAddr: WasmPtr<*>,
     toAddrExclusive: WasmPtr<*>,
 ) : MemoryRawSink(baseAddr, toAddrExclusive) {
     override fun writeBytesToMemory(source: Buffer, toAddr: WasmPtr<*>, byteCount: Long) {
-        for (addr in baseAddr.addr..<(baseAddr.addr + byteCount).toInt()) {
-            val byte = source.readByte()
-            writeMemory(store, memoryAddress, addr, byte)
+        val bytes = source.readByteArray(byteCount.toInt())
+        writeBytes(store, memoryAddress, toAddr.addr, bytes).onError { executionError ->
+            throw IllegalStateException("Write to memory failed: ${executionError.error}")
         }
     }
 }

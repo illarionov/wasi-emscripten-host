@@ -78,8 +78,9 @@ import at.released.weh.host.emscripten.EmscriptenHostFunction.SYSCALL_UTIMENSAT
 import at.released.weh.host.emscripten.EmscriptenHostFunction.TZSET_JS
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import io.github.charlietap.chasm.embedding.function
-import io.github.charlietap.chasm.executor.runtime.store.Store
-import io.github.charlietap.chasm.import.Import as ChasmImport
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.Import as ChasmImport
 
 @Suppress("LAMBDA_IS_NOT_LAST_PARAMETER")
 internal fun createEmscriptenHostFunctions(
@@ -108,7 +109,7 @@ private fun EmscriptenHostFunction.createChasmHostFunction(
     host: EmbedderHost,
     memory: ChasmMemoryAdapter,
     emscriptenStackRef: () -> EmscriptenStack,
-): EmscriptenHostFunctionHandle = when (this) {
+): HostFunction = when (this) {
     ABORT_JS -> AbortJs(host)
     ASSERT_FAIL -> AssertFail(host, memory)
     EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD -> EmscriptenAsmConstAsyncOnMainThread(host)

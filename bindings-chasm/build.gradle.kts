@@ -34,14 +34,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.host)
+            api(libs.chasm)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
-            api(libs.chasm)
-            compileOnly(libs.chasm.decoder)
-            compileOnly(libs.chasm.instantiator)
+            implementation(libs.kotlinx.io)
             compileOnly(libs.chasm.memory)
             compileOnly(libs.chasm.runtime)
-            compileOnly(libs.chasm.validator)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

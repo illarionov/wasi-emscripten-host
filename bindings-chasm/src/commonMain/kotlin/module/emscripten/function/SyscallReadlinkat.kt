@@ -8,20 +8,19 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.SyscallReadlinkatFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class SyscallReadlinkat(
     host: EmbedderHost,
     private val memory: Memory,
-) : EmscriptenHostFunctionHandle {
+) : HostFunction {
     private val handle = SyscallReadlinkatFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+    override fun invoke(args: List<Value>): List<Value> {
         val sizeOrErrno = handle.execute(
             memory,
             rawDirFd = args[0].asInt(),
@@ -29,6 +28,6 @@ internal class SyscallReadlinkat(
             buf = args[2].asWasmAddr(),
             bufSize = args[3].asInt(),
         )
-        return listOf(I32(sizeOrErrno))
+        return listOf(Value.Number.I32(sizeOrErrno))
     }
 }
