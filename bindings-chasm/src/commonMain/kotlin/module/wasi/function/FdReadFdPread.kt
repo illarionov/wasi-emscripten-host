@@ -17,14 +17,14 @@ import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.host.wasi.preview1.type.Iovec
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class FdReadFdPread private constructor(
     private val memory: Memory,
     private val memoryReader: WasiMemoryReader,
     private val handle: FdReadFdPreadFunctionHandle,
 ) : WasiHostFunctionHandle {
-    override fun invoke(args: List<ExecutionValue>): Errno {
+    override operator fun invoke(args: List<Value>): Errno {
         val fd = Fd(args[0].asInt())
         val pIov: WasmPtr<Iovec> = args[1].asWasmAddr()
         val iovCnt = args[2].asInt()

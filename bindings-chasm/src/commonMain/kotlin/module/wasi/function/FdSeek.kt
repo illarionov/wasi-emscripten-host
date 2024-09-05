@@ -18,7 +18,7 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.wasi.preview1.function.FdSeekFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class FdSeek(
     host: EmbedderHost,
@@ -26,7 +26,7 @@ internal class FdSeek(
 ) : WasiHostFunctionHandle {
     private val handle = FdSeekFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): Errno {
+    override operator fun invoke(args: List<Value>): Errno {
         val fd = Fd(args[0].asInt())
         val offset = args[1].asLong()
         val whenceInt = args[2].asInt()

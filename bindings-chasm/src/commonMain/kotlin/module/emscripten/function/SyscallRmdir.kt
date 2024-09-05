@@ -7,24 +7,23 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.SyscallRmdirFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue.I32
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class SyscallRmdir(
     host: EmbedderHost,
     private val memory: ReadOnlyMemory,
-) : EmscriptenHostFunctionHandle {
+) : HostFunction {
     private val handle = SyscallRmdirFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+    override fun invoke(args: List<Value>): List<Value> {
         val result = handle.execute(
             memory,
             args[0].asWasmAddr(),
         )
-        return listOf(I32(result))
+        return listOf(Value.Number.I32(result))
     }
 }

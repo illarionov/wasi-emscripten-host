@@ -19,6 +19,6 @@ internal class ChicoryMemoryRawSink(
 ) : MemoryRawSink(baseAddr, toAddrExclusive) {
     override fun writeBytesToMemory(source: Buffer, toAddr: WasmPtr<*>, byteCount: Long) {
         val data = source.readByteArray(byteCount.toInt())
-        wasmMemory.write(baseAddr.addr, data)
+        wasmMemory.write(toAddr.addr, data)
     }
 }

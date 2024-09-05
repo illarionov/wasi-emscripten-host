@@ -8,12 +8,12 @@ package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.host.emscripten.export.EmscriptenMainExports
-import io.github.charlietap.chasm.executor.runtime.instance.ModuleInstance
-import io.github.charlietap.chasm.executor.runtime.store.Store
+import io.github.charlietap.chasm.embedding.shapes.Instance
+import io.github.charlietap.chasm.embedding.shapes.Store
 
 internal class ChasmEmscriptenMainExports(
     store: Store,
-    instance: ModuleInstance,
+    instance: Instance,
 ) : EmscriptenMainExports {
     override val _initialize: WasmFunctionBinding? by optionalFunctionMember(store, instance)
     override val __errno_location: WasmFunctionBinding by functionMember(store, instance)

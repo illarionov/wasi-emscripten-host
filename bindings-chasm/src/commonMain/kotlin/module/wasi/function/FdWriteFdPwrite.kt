@@ -17,14 +17,14 @@ import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
 import at.released.weh.host.wasi.preview1.type.CioVec
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class FdWriteFdPwrite private constructor(
     private val memory: Memory,
     private val wasiMemoryWriter: WasiMemoryWriter,
     private val handle: FdWriteFdPWriteFunctionHandle,
 ) : WasiHostFunctionHandle {
-    override fun invoke(args: List<ExecutionValue>): Errno {
+    override operator fun invoke(args: List<Value>): Errno {
         val fd = Fd(args[0].asInt())
         val pCiov: WasmPtr<CioVec> = args[1].asWasmAddr()
         val cIovCnt = args[2].asInt()

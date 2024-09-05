@@ -7,17 +7,17 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.host.emscripten.function.HandleStackOverflowFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class HandleStackOverflow(
     host: EmbedderHost,
     private val stackBindingsRef: () -> EmscriptenStack,
-) : EmscriptenHostFunctionHandle {
+) : HostFunction {
     private val handle = HandleStackOverflowFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): Nothing = handle.execute(stackBindingsRef(), args[0].asWasmAddr())
+    override fun invoke(args: List<Value>): Nothing = handle.execute(stackBindingsRef(), args[0].asWasmAddr())
 }

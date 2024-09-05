@@ -4,74 +4,108 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("MagicNumber")
+
 package at.released.weh.bindings.chasm.memory
 
-import at.released.weh.bindings.chasm.exception.ChasmModuleRuntimeErrorException
 import at.released.weh.bindings.chasm.ext.orThrow
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
-import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.fold
-import com.github.michaelbull.result.getOrThrow
-import io.github.charlietap.chasm.embedding.memory.readMemory
-import io.github.charlietap.chasm.embedding.memory.writeMemory
+import io.github.charlietap.chasm.embedding.memory.readByte
+import io.github.charlietap.chasm.embedding.memory.readBytes
+import io.github.charlietap.chasm.embedding.memory.writeByte
+import io.github.charlietap.chasm.embedding.memory.writeBytes
+import io.github.charlietap.chasm.embedding.shapes.Limits
+import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.executor.memory.grow.MemoryGrowerImpl
-import io.github.charlietap.chasm.executor.memory.read.MemoryInstanceIntReaderImpl
-import io.github.charlietap.chasm.executor.memory.read.MemoryInstanceLongReaderImpl
-import io.github.charlietap.chasm.executor.memory.write.MemoryInstanceIntWriterImpl
-import io.github.charlietap.chasm.executor.memory.write.MemoryInstanceLongWriterImpl
-import io.github.charlietap.chasm.executor.runtime.error.InvocationError
-import io.github.charlietap.chasm.executor.runtime.ext.memory
+import io.github.charlietap.chasm.executor.runtime.instance.ExternalValue
 import io.github.charlietap.chasm.executor.runtime.instance.MemoryInstance
 import io.github.charlietap.chasm.executor.runtime.store.Address
-import io.github.charlietap.chasm.executor.runtime.store.Store
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource
+import io.github.charlietap.chasm.embedding.shapes.Memory as ChasmMemory
 
 public class ChasmMemoryAdapter(
     private val store: Store,
-    private val memoryAddress: Address.Memory,
+    memoryProvider: (Store.() -> ChasmMemory)?,
 ) : Memory {
-    public val memoryInstance: MemoryInstance
-        get() = store.memory(memoryAddress).getOrThrow { ChasmModuleRuntimeErrorException(it) }
+    private val memoryProvider: (Store) -> ChasmMemory = memoryProvider ?: Store::defaultMemory
+
+    public val memoryInstance: ChasmMemory
+        get() = memoryProvider(store)
+
+    // XXX: rewrite without using internal APIs
+    @Suppress("INVISIBLE_MEMBER")
+    public val limits: Limits
+        get() {
+            val rawMemoryAddress = memoryInstance.reference.address
+            val rawInstanceData = store.store.memories[rawMemoryAddress.address].data
+            return Limits(
+                min = rawInstanceData.min.amount.toUInt(),
+                max = rawInstanceData.max?.amount?.toUInt(),
+            )
+        }
 
     override fun readI8(addr: WasmPtr<*>): Byte {
-        return readMemory(store, memoryAddress, addr.addr).orThrow()
+        return readByte(store, memoryInstance, addr.addr).orThrow()
     }
 
     override fun readI32(addr: WasmPtr<*>): Int {
-        return MemoryInstanceIntReaderImpl(memoryInstance, addr.addr, 4).getOrThrow()
+        val bytes = readBytes(store, memoryInstance, addr.addr, 4).orThrow()
+        return (bytes[0].toInt() and 0xff) or
+                ((bytes[1].toInt() and 0xff) shl 8) or
+                ((bytes[2].toInt() and 0xff) shl 16) or
+                ((bytes[3].toInt() and 0xff) shl 24)
     }
 
     override fun readI64(addr: WasmPtr<*>): Long {
-        return MemoryInstanceLongReaderImpl(memoryInstance, addr.addr, 8).getOrThrow()
+        val bytes = readBytes(store, memoryInstance, addr.addr, 8).orThrow()
+        return (bytes[0].toLong() and 0xffL) or
+                (bytes[1].toLong() and 0xffL shl 8) or
+                (bytes[2].toLong() and 0xffL shl 16) or
+                (bytes[3].toLong() and 0xffL shl 24) or
+                (bytes[4].toLong() and 0xffL shl 32) or
+                (bytes[5].toLong() and 0xffL shl 40) or
+                (bytes[6].toLong() and 0xffL shl 48) or
+                (bytes[7].toLong() and 0xffL shl 56)
     }
 
     override fun source(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSource {
-        return ChasmMemoryRawSource(store, memoryAddress, fromAddr, toAddrExclusive)
+        return ChasmMemoryRawSource(store, memoryInstance, fromAddr, toAddrExclusive)
     }
 
     override fun writeI8(addr: WasmPtr<*>, data: Byte) {
-        writeMemory(store, memoryAddress, addr.addr, data).orThrow()
+        writeByte(store, memoryInstance, addr.addr, data).orThrow()
     }
 
     override fun writeI32(addr: WasmPtr<*>, data: Int) {
-        return MemoryInstanceIntWriterImpl(memoryInstance, data, addr.addr, 4).getOrThrow()
+        val bytes = ByteArray(4) {
+            (data ushr 8 * it and 0xff).toByte()
+        }
+        writeBytes(store, memoryInstance, addr.addr, bytes).orThrow()
     }
 
     override fun writeI64(addr: WasmPtr<*>, data: Long) {
-        return MemoryInstanceLongWriterImpl(memoryInstance, data, addr.addr, 8).getOrThrow()
+        val bytes = ByteArray(8) {
+            (data ushr 8 * it and 0xff).toByte()
+        }
+        writeBytes(store, memoryInstance, addr.addr, bytes).orThrow()
     }
 
     override fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink {
-        return ChasmMemoryRawSink(store, memoryAddress, fromAddr, toAddrExclusive)
+        return ChasmMemoryRawSink(store, memoryInstance, fromAddr, toAddrExclusive)
     }
 
+    // XX: should be removed
+    @Suppress("INVISIBLE_MEMBER")
     public fun grow(pagesToAdd: Int): Int {
-        val oldPages = memoryInstance.data.min.amount
-        return MemoryGrowerImpl(memoryInstance, pagesToAdd).fold(
+        val rawMemoryAddress = memoryInstance.reference.address
+        val rawInstance: MemoryInstance = store.store.memories[rawMemoryAddress.address]
+        val oldPages = rawInstance.data.min.amount
+        return MemoryGrowerImpl(rawInstance, pagesToAdd).fold(
             { newMemoryInstance ->
-                store.memories[memoryAddress.address] = newMemoryInstance
+                store.store.memories[rawMemoryAddress.address] = newMemoryInstance
                 oldPages
             },
         ) {
@@ -80,6 +114,7 @@ public class ChasmMemoryAdapter(
     }
 }
 
-private fun <T : Any, E : InvocationError> Result<T, E>.getOrThrow(): T = getOrThrow {
-    ChasmModuleRuntimeErrorException(it)
+private fun Store.defaultMemory(): ChasmMemory {
+    @Suppress("INVISIBLE_MEMBER")
+    return ChasmMemory(ExternalValue.Memory(Address.Memory(0)))
 }

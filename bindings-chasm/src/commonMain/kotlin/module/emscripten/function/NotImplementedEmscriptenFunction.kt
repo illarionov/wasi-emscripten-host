@@ -6,14 +6,13 @@
 
 package at.released.weh.bindings.chasm.module.emscripten.function
 
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.base.function.HostFunction
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class NotImplementedEmscriptenFunction(
     private val function: HostFunction,
-) : EmscriptenHostFunctionHandle {
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+) : io.github.charlietap.chasm.embedding.shapes.HostFunction {
+    override fun invoke(args: List<Value>): List<Value> {
         error("Function `$function` not implemented")
     }
 }

@@ -6,10 +6,10 @@
 
 package at.released.weh.bindings.chasm.exception
 
-import io.github.charlietap.chasm.executor.runtime.error.InvocationError
+import io.github.charlietap.chasm.embedding.error.ChasmError.ExecutionError
 
 public class ChasmModuleRuntimeErrorException(
-    public val error: InvocationError,
+    public val error: ExecutionError,
     message: String? = null,
     cause: Throwable? = null,
 ) : ChasmException(message, cause)

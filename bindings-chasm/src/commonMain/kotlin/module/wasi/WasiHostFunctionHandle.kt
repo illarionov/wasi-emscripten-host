@@ -7,8 +7,8 @@
 package at.released.weh.bindings.chasm.module.wasi
 
 import at.released.weh.filesystem.model.Errno
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal fun interface WasiHostFunctionHandle {
-    fun invoke(args: List<ExecutionValue>): Errno
+    operator fun invoke(args: List<Value>): Errno
 }

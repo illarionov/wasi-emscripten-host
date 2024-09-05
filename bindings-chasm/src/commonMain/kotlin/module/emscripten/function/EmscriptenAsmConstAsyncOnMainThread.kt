@@ -7,15 +7,16 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
-import at.released.weh.bindings.chasm.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenAsmConstAsyncOnMainThreadFunctionHandle
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Value
 
-internal class EmscriptenAsmConstAsyncOnMainThread(host: EmbedderHost) : EmscriptenHostFunctionHandle {
+internal class EmscriptenAsmConstAsyncOnMainThread(host: EmbedderHost) :
+    HostFunction {
     private val handle = EmscriptenAsmConstAsyncOnMainThreadFunctionHandle(host)
 
-    override fun invoke(args: List<ExecutionValue>): List<ExecutionValue> {
+    override fun invoke(args: List<Value>): List<Value> {
         handle.execute(
             emAsmAddr = args[0].asWasmAddr(),
             sigPtr = args[1].asWasmAddr(),
