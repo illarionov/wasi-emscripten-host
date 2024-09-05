@@ -9,6 +9,7 @@ package at.released.weh.gradle.multiplatform
 import at.released.weh.gradle.multiplatform.publish.createWehVersionsExtension
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.gradle.DokkaTask
 
 /*
@@ -30,6 +31,7 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 private val publishedMavenLocalRoot = project.rootProject.layout.buildDirectory.dir("localMaven")
 
 mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     publishing {
         repositories {
             maven {
