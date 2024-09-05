@@ -41,3 +41,6 @@ public final class at/released/weh/common/api/UintBitMaskKt {
 	public static final fun xor (Lat/released/weh/common/api/UintBitMask;Lat/released/weh/common/api/UintBitMask;)Lat/released/weh/common/api/UintBitMask;
 }
 
+public abstract interface annotation class at/released/weh/common/api/WasiEmscriptenHostDsl : java/lang/annotation/Annotation {
+}
+

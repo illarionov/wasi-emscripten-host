@@ -1,6 +1,3 @@
-public abstract interface annotation class at/released/weh/bindings/chicory/ChicoryBindingsDsl : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/bindings/chicory/ChicoryHostFunctionInstaller {
 	public static final field Companion Lat/released/weh/bindings/chicory/ChicoryHostFunctionInstaller$Companion;
 	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lcom/dylibso/chicory/runtime/Memory;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

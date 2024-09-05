@@ -13,6 +13,7 @@ import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryReader
 import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryWriter
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenEnvFunctionsBuilder
 import at.released.weh.bindings.chicory.host.module.wasi.WasiSnapshotPreview1ModuleBuilder
+import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
@@ -99,13 +100,19 @@ public class ChicoryHostFunctionInstaller private constructor(
         }
     }
 
-    @ChicoryBindingsDsl
+    @WasiEmscriptenHostDsl
     public class Builder(
         public val memory: ChicoryMemory,
     ) {
+        /**
+         * Implementation of a host object that provides access from the WebAssembly to external host resources.
+         */
         @set:JvmSynthetic
         public var host: EmbedderHost? = null
 
+        /**
+         * Sets the host object that provides access from the WebAssembly to external host resources.
+         */
         public fun setHost(host: EmbedderHost?): Builder = apply {
             this.host = host
         }

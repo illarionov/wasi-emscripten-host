@@ -11,6 +11,7 @@ chicory = "0.0.12"
 detekt = "1.23.6"
 diktat = "2.0.0"
 dokka = "1.9.20"
+graalvm240 = "24.0.2"
 gradle-maven-publish-plugin = "0.29.0"
 kotlin = "2.0.20"
 kotlinx-binary-compatibility-validator = "0.16.3"
@@ -30,6 +31,11 @@ chasm-runtime = { group = "io.github.charlietap.chasm", name = "runtime", versio
 chasm-validator = { group = "io.github.charlietap.chasm", name = "validator", version.ref = "chasm" }
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 chicory-aot = { group = "com.dylibso.chicory", name = "aot", version.ref = "chicory" }
+graalvm240-polyglot-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm240" }
+graalvm240-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm-community", version.ref = "graalvm240" }
+graalvm240-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm240" }
+graalvm240-truffle-dsl-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm240" }
+graalvm240-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm240" }
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
