@@ -248,9 +248,13 @@ public final class at/released/weh/host/emscripten/EmscriptenHostFunction$Compan
 }
 
 public abstract interface class at/released/weh/host/emscripten/export/EmscriptenMainExports {
+	public static final field Companion Lat/released/weh/host/emscripten/export/EmscriptenMainExports$Companion;
 	public abstract fun get__errno_location ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 	public abstract fun get__wasm_call_ctors ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 	public abstract fun get_initialize ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+}
+
+public final class at/released/weh/host/emscripten/export/EmscriptenMainExports$Companion {
 }
 
 public class at/released/weh/host/emscripten/export/EmscriptenRuntime {
@@ -350,6 +354,7 @@ public final class at/released/weh/host/emscripten/export/stack/EmscriptenStack 
 }
 
 public abstract interface class at/released/weh/host/emscripten/export/stack/EmscriptenStackExports {
+	public static final field Companion Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports$Companion;
 	public abstract fun getEmscripten_stack_get_base ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 	public abstract fun getEmscripten_stack_get_current ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
 	public abstract fun getEmscripten_stack_get_end ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
@@ -365,6 +370,9 @@ public abstract interface class at/released/weh/host/emscripten/export/stack/Ems
 	public abstract fun set__stack_base (Ljava/lang/Integer;)V
 	public abstract fun set__stack_end (Ljava/lang/Integer;)V
 	public abstract fun set__stack_pointer (I)V
+}
+
+public final class at/released/weh/host/emscripten/export/stack/EmscriptenStackExports$Companion {
 }
 
 public final class at/released/weh/host/emscripten/function/AbortJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {

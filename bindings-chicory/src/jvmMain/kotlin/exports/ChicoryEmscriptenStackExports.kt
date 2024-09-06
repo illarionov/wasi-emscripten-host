@@ -6,25 +6,27 @@
 
 package at.released.weh.bindings.chicory.exports
 
-import at.released.weh.bindings.chicory.ext.functionMember
-import at.released.weh.bindings.chicory.ext.intGlobalMember
-import at.released.weh.bindings.chicory.ext.optionalFunctionMember
-import at.released.weh.bindings.chicory.ext.optionalIntGlobalMember
+import at.released.weh.bindings.chicory.ext.ChasmIntGlobalsBindings
+import at.released.weh.bindings.chicory.ext.ChicoryFunctionBindings
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
+import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
+import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
 import com.dylibso.chicory.runtime.Instance
 
 internal class ChicoryEmscriptenStackExports(instance: Instance) : EmscriptenStackExports {
-    override var __stack_pointer: Int by instance.intGlobalMember()
-    override var __stack_end: Int? by instance.optionalIntGlobalMember()
-    override var __stack_base: Int? by instance.optionalIntGlobalMember()
-    override val __set_stack_limits: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val emscripten_stack_init by instance.optionalFunctionMember()
-    override val emscripten_stack_get_free: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val emscripten_stack_get_base: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val emscripten_stack_get_end: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val emscripten_stack_get_current: WasmFunctionBinding by instance.functionMember()
-    override val emscripten_stack_set_limits: WasmFunctionBinding by instance.functionMember()
-    override val _emscripten_stack_alloc: WasmFunctionBinding by instance.functionMember()
-    override val _emscripten_stack_restore: WasmFunctionBinding by instance.functionMember()
+    private val functionBindings = ChicoryFunctionBindings(instance, EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES)
+    private val globalBindings = ChasmIntGlobalsBindings(instance, EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES)
+    override var __stack_pointer: Int by globalBindings.required
+    override var __stack_end: Int? by globalBindings.optional
+    override var __stack_base: Int? by globalBindings.optional
+    override val __set_stack_limits: WasmFunctionBinding? by functionBindings.optional
+    override val emscripten_stack_init by functionBindings.optional
+    override val emscripten_stack_get_free by functionBindings.optional
+    override val emscripten_stack_get_base by functionBindings.optional
+    override val emscripten_stack_get_end by functionBindings.optional
+    override val emscripten_stack_get_current by functionBindings.required
+    override val emscripten_stack_set_limits by functionBindings.optional
+    override val _emscripten_stack_alloc by functionBindings.required
+    override val _emscripten_stack_restore by functionBindings.required
 }

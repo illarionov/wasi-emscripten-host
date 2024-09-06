@@ -9,6 +9,8 @@
 package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
+import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
+import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
 import io.github.charlietap.chasm.embedding.shapes.Instance
 import io.github.charlietap.chasm.embedding.shapes.Store
 
@@ -19,26 +21,12 @@ internal class ChasmEmscriptenStackExports(
     private val globalsBindings = ChasmIntGlobalsBindings(
         store = store,
         instance = instance,
-        exportNames = setOf(
-            "__stack_pointer",
-            "__stack_end",
-            "__stack_base",
-        ),
+        exportNames = EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES,
     )
     private val functionBindings = ChasmFunctionBindings(
         store = store,
         instance = instance,
-        exportNames = setOf(
-            "__set_stack_limits",
-            "emscripten_stack_init",
-            "emscripten_stack_get_free",
-            "emscripten_stack_get_base",
-            "emscripten_stack_get_end",
-            "emscripten_stack_get_current",
-            "emscripten_stack_set_limits",
-            "_emscripten_stack_alloc",
-            "_emscripten_stack_restore",
-        ),
+        exportNames = EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES,
     )
     override var __stack_pointer by globalsBindings.required
     override var __stack_end by globalsBindings.optional

@@ -8,6 +8,7 @@
 
 package at.released.weh.host.emscripten.export.stack
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.binding.WasmFunctionBinding
 
 /**
@@ -44,4 +45,26 @@ public interface EmscriptenStackExports {
     public val emscripten_stack_set_limits: WasmFunctionBinding?
     public val _emscripten_stack_alloc: WasmFunctionBinding
     public val _emscripten_stack_restore: WasmFunctionBinding
+
+    public companion object {
+        @InternalWasiEmscriptenHostApi
+        public val EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES: Set<String> = setOf(
+            "__stack_pointer",
+            "__stack_end",
+            "__stack_base",
+        )
+
+        @InternalWasiEmscriptenHostApi
+        public val EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES: Set<String> = setOf(
+            "__set_stack_limits",
+            "emscripten_stack_init",
+            "emscripten_stack_get_free",
+            "emscripten_stack_get_base",
+            "emscripten_stack_get_end",
+            "emscripten_stack_get_current",
+            "emscripten_stack_set_limits",
+            "_emscripten_stack_alloc",
+            "_emscripten_stack_restore",
+        )
+    }
 }
