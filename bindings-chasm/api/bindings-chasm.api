@@ -37,12 +37,6 @@ public class at/released/weh/bindings/chasm/exception/ChasmException : java/lang
 	public fun <init> (Ljava/lang/Throwable;)V
 }
 
-public final class at/released/weh/bindings/chasm/exception/ChasmModuleRuntimeErrorException : at/released/weh/bindings/chasm/exception/ChasmException {
-	public synthetic fun <init> (Lio/github/charlietap/chasm/executor/runtime/error/ModuleTrapError;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Lio/github/charlietap/chasm/executor/runtime/error/ModuleTrapError;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getError-rzxgJic ()Lio/github/charlietap/chasm/executor/runtime/error/ModuleTrapError;
-}
-
 public final class at/released/weh/bindings/chasm/memory/ChasmMemoryAdapter : at/released/weh/host/base/memory/Memory {
 	public fun <init> (Lio/github/charlietap/chasm/embedding/shapes/Store;Lkotlin/jvm/functions/Function1;)V
 	public final fun getLimits ()Lio/github/charlietap/chasm/embedding/shapes/Limits;
