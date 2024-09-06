@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("NULLABLE_PROPERTY_TYPE")
+
 package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.host.base.binding.WasmFunctionBinding
@@ -15,7 +17,16 @@ internal class ChasmEmscriptenMainExports(
     store: Store,
     instance: Instance,
 ) : EmscriptenMainExports {
-    override val _initialize: WasmFunctionBinding? by optionalFunctionMember(store, instance)
-    override val __errno_location: WasmFunctionBinding by functionMember(store, instance)
-    override val __wasm_call_ctors: WasmFunctionBinding by functionMember(store, instance)
+    private val functionBindings = ChasmFunctionBindings(
+        store = store,
+        instance = instance,
+        exportNames = setOf(
+            "_initialize",
+            "__errno_location",
+            "__wasm_call_ctors",
+        ),
+    )
+    override val _initialize: WasmFunctionBinding? by functionBindings.optional
+    override val __errno_location: WasmFunctionBinding? by functionBindings.optional
+    override val __wasm_call_ctors: WasmFunctionBinding by functionBindings.required
 }

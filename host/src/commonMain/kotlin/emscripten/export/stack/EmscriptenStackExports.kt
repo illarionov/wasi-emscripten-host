@@ -41,7 +41,7 @@ public interface EmscriptenStackExports {
      *
      * See [stack_limits.S](https://github.com/emscripten-core/emscripten/blob/3.1.61/system/lib/compiler-rt/stack_limits.S)
      */
-    public val emscripten_stack_set_limits: WasmFunctionBinding
+    public val emscripten_stack_set_limits: WasmFunctionBinding?
     public val _emscripten_stack_alloc: WasmFunctionBinding
     public val _emscripten_stack_restore: WasmFunctionBinding
 }

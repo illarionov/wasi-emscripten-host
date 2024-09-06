@@ -15,6 +15,6 @@ import at.released.weh.host.base.binding.WasmFunctionBinding
  */
 public interface EmscriptenMainExports {
     public val _initialize: WasmFunctionBinding?
-    public val __errno_location: WasmFunctionBinding
+    public val __errno_location: WasmFunctionBinding?
     public val __wasm_call_ctors: WasmFunctionBinding
 }

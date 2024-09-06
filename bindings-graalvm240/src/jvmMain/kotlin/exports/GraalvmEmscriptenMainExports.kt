@@ -16,6 +16,6 @@ internal class GraalvmEmscriptenMainExports(
     mainBindings: () -> Value,
 ) : EmscriptenMainExports {
     override val _initialize: WasmFunctionBinding? by mainBindings.optionalFunctionMember()
-    override val __errno_location: WasmFunctionBinding by mainBindings.functionMember()
+    override val __errno_location: WasmFunctionBinding? by mainBindings.optionalFunctionMember()
     override val __wasm_call_ctors: WasmFunctionBinding by mainBindings.functionMember()
 }

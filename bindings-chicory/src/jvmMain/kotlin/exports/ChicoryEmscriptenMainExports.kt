@@ -14,6 +14,6 @@ import com.dylibso.chicory.runtime.Instance
 
 internal class ChicoryEmscriptenMainExports(instance: Instance) : EmscriptenMainExports {
     override val _initialize: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val __errno_location: WasmFunctionBinding by instance.functionMember()
+    override val __errno_location: WasmFunctionBinding? by instance.optionalFunctionMember()
     override val __wasm_call_ctors: WasmFunctionBinding by instance.functionMember()
 }
