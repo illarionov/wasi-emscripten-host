@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chicory.ext
 
 import at.released.weh.bindings.chicory.exports.ChicoryWasmFunctionBinding
-import at.released.weh.common.SinglePropertyLazyValue
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import com.dylibso.chicory.runtime.ExportFunction
 import com.dylibso.chicory.runtime.Instance
@@ -17,70 +16,71 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-internal fun Instance.functionMember(): ReadOnlyProperty<Any?, WasmFunctionBinding> {
-    return object : ReadOnlyProperty<Any?, WasmFunctionBinding> {
-        private val binding: SinglePropertyLazyValue<WasmFunctionBinding> = SinglePropertyLazyValue {
-            try {
-                val export = this@functionMember.export(it)
-                ChicoryWasmFunctionBinding(export)
-            } catch (ce: ChicoryException) {
-                throw IllegalStateException("No member $it", ce)
-            }
+internal class ChicoryFunctionBindings(
+    private val instance: Instance,
+    exportNames: Set<String>,
+) {
+    private val exports: Map<String, WasmFunctionBinding> = exportNames.mapNotNull { exportName ->
+        try {
+            instance.export(exportName)
+        } catch (@Suppress("SwallowedException") ex: ChicoryException) {
+            null
+        }?.let { exportFunction ->
+            exportName to ChicoryWasmFunctionBinding(exportFunction)
         }
+    }.toMap()
+    val optional: ReadOnlyProperty<Any?, WasmFunctionBinding?> = ReadOnlyProperty { _, property ->
+        exports[property.name]
+    }
+    val required: ReadOnlyProperty<Any?, WasmFunctionBinding> = ReadOnlyProperty { _, property ->
+        getValue(property.name)
+    }
 
-        override fun getValue(thisRef: Any?, property: KProperty<*>): WasmFunctionBinding = binding.get(property)
+    operator fun get(name: String): WasmFunctionBinding? = exports[name]
+
+    fun getValue(name: String): WasmFunctionBinding = exports.getOrElse(name) {
+        error("Required export `$name` not found")
     }
 }
 
-internal fun Instance.optionalFunctionMember(): ReadOnlyProperty<Any?, WasmFunctionBinding?> {
-    return object : ReadOnlyProperty<Any?, WasmFunctionBinding?> {
-        private val binding: SinglePropertyLazyValue<WasmFunctionBinding?> = SinglePropertyLazyValue {
-            try {
-                this@optionalFunctionMember.export(it).let(::ChicoryWasmFunctionBinding)
-            } catch (@Suppress("SwallowedException") ce: ChicoryException) {
-                null
-            }
+internal class ChasmIntGlobalsBindings(
+    private val instance: Instance,
+    exportNames: Set<String>,
+) {
+    private val globals: Map<String, ExportFunction> = exportNames.mapNotNull { exportName ->
+        try {
+            instance.export(exportName)
+        } catch (@Suppress("SwallowedException") ex: ChicoryException) {
+            null
+        }?.let { exportFunction ->
+            exportName to exportFunction
         }
+    }.toMap()
+    val optional: ReadWriteProperty<Any?, Int?> = object : ReadWriteProperty<Any?, Int?> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Int? =
+            globals[property.name]?.let { exportFunction ->
+                exportFunction.apply()[0].asInt()
+            }
 
-        override fun getValue(thisRef: Any?, property: KProperty<*>): WasmFunctionBinding? = binding.get(property)
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int?) {
+            checkNotNull(value) { "Can not set global ${property.name} to null" }
+            val functionExport = globals[property.name]
+            functionExport?.apply(Value.i32(value.toLong()))
+        }
     }
-}
-
-internal fun Instance.intGlobalMember(): ReadWriteProperty<Any?, Int> {
-    return object : ReadWriteProperty<Any?, Int> {
-        private val binding: SinglePropertyLazyValue<ExportFunction> = SinglePropertyLazyValue {
-            try {
-                this@intGlobalMember.export(it)
-            } catch (ce: ChicoryException) {
-                throw IllegalStateException("No member $it", ce)
-            }
-        }
+    val required: ReadWriteProperty<Any?, Int> = object : ReadWriteProperty<Any?, Int> {
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-            return binding.get(property).apply()[0].asInt()
+            val exportFunction = getExportedFunction(property.name)
+            return exportFunction.apply()[0].asInt()
         }
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
-            binding.get(property).apply(Value.i32(value.toLong()))
-        }
-    }
-}
-
-internal fun Instance.optionalIntGlobalMember(): ReadWriteProperty<Any?, Int?> {
-    return object : ReadWriteProperty<Any?, Int?> {
-        private val binding = SinglePropertyLazyValue {
-            try {
-                this@optionalIntGlobalMember.export(it)
-            } catch (@Suppress("SwallowedException") ce: ChicoryException) {
-                null
-            }
-        }
-        override fun getValue(thisRef: Any?, property: KProperty<*>): Int? {
-            return binding.get(property)?.let { it.apply()[0].asInt() }
+            val global = getExportedFunction(property.name)
+            global.apply(Value.i32(value.toLong()))
         }
 
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int?) {
-            requireNotNull(value)
-            binding.get(property)?.apply(Value.i32(value.toLong()))
+        private fun getExportedFunction(name: String): ExportFunction = globals.getOrElse(name) {
+            error("Export $name not found")
         }
     }
 }

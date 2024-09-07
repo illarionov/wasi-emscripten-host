@@ -67,7 +67,9 @@ public class EmscriptenStack(
      * Binding for `void emscripten_stack_set_limits(void* base, void* end)`
      */
     public fun emscriptenStackSetLimits(base: WasmPtr<Unit>, end: WasmPtr<Unit>) {
-        exports.emscripten_stack_set_limits.executeVoid(base.addr, end.addr)
+        requireNotNull(exports.emscripten_stack_set_limits) {
+            "emscripten_stack_set_limits not exported"
+        }.executeVoid(base.addr, end.addr)
     }
 
     /**

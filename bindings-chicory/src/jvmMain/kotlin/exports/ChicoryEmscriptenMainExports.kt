@@ -6,14 +6,15 @@
 
 package at.released.weh.bindings.chicory.exports
 
-import at.released.weh.bindings.chicory.ext.functionMember
-import at.released.weh.bindings.chicory.ext.optionalFunctionMember
+import at.released.weh.bindings.chicory.ext.ChicoryFunctionBindings
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.host.emscripten.export.EmscriptenMainExports
+import at.released.weh.host.emscripten.export.EmscriptenMainExports.Companion.EMSCRIPTEN_MAIN_EXPORT_NAMES
 import com.dylibso.chicory.runtime.Instance
 
 internal class ChicoryEmscriptenMainExports(instance: Instance) : EmscriptenMainExports {
-    override val _initialize: WasmFunctionBinding? by instance.optionalFunctionMember()
-    override val __errno_location: WasmFunctionBinding by instance.functionMember()
-    override val __wasm_call_ctors: WasmFunctionBinding by instance.functionMember()
+    private val functionBindings = ChicoryFunctionBindings(instance, EMSCRIPTEN_MAIN_EXPORT_NAMES)
+    override val _initialize: WasmFunctionBinding? by functionBindings.optional
+    override val __errno_location: WasmFunctionBinding? by functionBindings.optional
+    override val __wasm_call_ctors: WasmFunctionBinding by functionBindings.required
 }

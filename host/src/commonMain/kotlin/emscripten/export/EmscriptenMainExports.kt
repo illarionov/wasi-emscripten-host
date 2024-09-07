@@ -8,6 +8,7 @@
 
 package at.released.weh.host.emscripten.export
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.binding.WasmFunctionBinding
 
 /**
@@ -15,6 +16,15 @@ import at.released.weh.host.base.binding.WasmFunctionBinding
  */
 public interface EmscriptenMainExports {
     public val _initialize: WasmFunctionBinding?
-    public val __errno_location: WasmFunctionBinding
+    public val __errno_location: WasmFunctionBinding?
     public val __wasm_call_ctors: WasmFunctionBinding
+
+    public companion object {
+        @InternalWasiEmscriptenHostApi
+        public val EMSCRIPTEN_MAIN_EXPORT_NAMES: Set<String> = setOf(
+            "_initialize",
+            "__errno_location",
+            "__wasm_call_ctors",
+        )
+    }
 }

@@ -26,7 +26,7 @@ internal class GraalvmEmscriptenStackExports(
     override val emscripten_stack_get_base by mainBindings.optionalFunctionMember()
     override val emscripten_stack_get_end by mainBindings.optionalFunctionMember()
     override val emscripten_stack_get_current by mainBindings.functionMember()
-    override val emscripten_stack_set_limits by mainBindings.functionMember()
+    override val emscripten_stack_set_limits by mainBindings.optionalFunctionMember()
     override val _emscripten_stack_alloc by mainBindings.functionMember()
     override val _emscripten_stack_restore by mainBindings.functionMember()
 }
