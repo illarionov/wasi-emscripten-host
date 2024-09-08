@@ -11,6 +11,7 @@ chicory = "0.0.12"
 detekt = "1.23.6"
 diktat = "2.0.0"
 dokka = "1.9.20"
+dokkatoo = "2.3.1"
 graalvm240 = "24.0.2"
 gradle-maven-publish-plugin = "0.29.0"
 kotlin = "2.0.20"
@@ -47,7 +48,7 @@ atomicfu-plugin = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plu
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
-dokka-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+dokkatoo-plugin = { group = "dev.adamko.dokkatoo", name = "dokkatoo-plugin", version.ref = "dokkatoo" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradle-maven-publish-plugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-binary-compatibility-validator-plugin = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "kotlinx-binary-compatibility-validator" }

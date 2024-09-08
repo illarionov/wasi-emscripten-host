@@ -10,15 +10,14 @@ import at.released.weh.gradle.multiplatform.publish.createWehVersionsExtension
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.dokka.gradle.DokkaTask
 
 /*
  * Convention plugin with publishing defaults
  */
 plugins {
+    id("at.released.weh.gradle.multiplatform.documentation.subproject")
     id("org.jetbrains.kotlin.multiplatform")
     id("com.vanniktech.maven.publish.base")
-    id("org.jetbrains.dokka")
 }
 
 createWehVersionsExtension()
@@ -52,7 +51,9 @@ mavenPublishing {
     signAllPublications()
 
     configure(
-        KotlinMultiplatform(javadocJar = JavadocJar.Dokka("dokkaGfm")),
+        KotlinMultiplatform(
+            javadocJar = JavadocJar.Empty(),
+        ),
     )
 
     pom {
@@ -81,12 +82,5 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com:illarionov/wasi-emscripten-host.git")
             url.set("https://github.com/illarionov/wasi-emscripten-host")
         }
-    }
-}
-
-tasks.withType<DokkaTask> {
-    notCompatibleWithConfigurationCache("https://github.com/Kotlin/dokka/issues/2231")
-    dokkaSourceSets.configureEach {
-        skipDeprecated.set(true)
     }
 }

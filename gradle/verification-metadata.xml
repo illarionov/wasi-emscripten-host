@@ -176,6 +176,11 @@
             <pgp value="0CC641C3A62453AB390066C4A41F13C999945293"/>
          </artifact>
       </component>
+      <component group="dev.adamko.dokkatoo" name="dokkatoo-plugin" version="2.3.1">
+         <artifact name="dokkatoo-plugin-2.3.1.jar">
+            <pgp value="CB764D538CF417822B4108341CF69814023DEDE9"/>
+         </artifact>
+      </component>
       <component group="dev.equo.ide" name="solstice" version="1.7.7">
          <artifact name="solstice-1.7.7.jar">
             <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
