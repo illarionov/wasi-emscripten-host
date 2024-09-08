@@ -16,6 +16,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.5.2")
         classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0.BETA2")
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
+        classpath("dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.25.0")
@@ -24,6 +25,7 @@ buildscript {
 
 rootProject.name = "wasi-emscripten-host"
 
+include("aggregate-documentation")
 include("bindings-chasm")
 include("bindings-chicory")
 include("bindings-graalvm240")

@@ -11,7 +11,7 @@ package at.released.weh.test.io.bootstrap
  * Sets up stdout and stderr buffering so that test runner can capture full test output.
  * Used with tests that print something to standard output or stderr.
  *
- * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
+ * Workaround for [https://youtrack.jetbrains.com/issue/KT-69709/](https://youtrack.jetbrains.com/issue/KT-69709/)
  */
 public object TestEnvironment {
     /**
@@ -41,18 +41,18 @@ public object TestEnvironment {
 }
 
 /**
- * Turns off buffering of standard input/output. Intended to be called иуащку each test.
+ * Turns off buffering of standard input/output. Intended to be called before each test.
  *
  * Can be used as an additional level of protection, or as an alternative to calling [flushStdioBuffers] after each
  * test (assuming that buffering will not be turned back on in the test code).
  *
- * May be used as a workaround for https://youtrack.jetbrains.com/issue/KT-69709/
+ * May be used as a workaround for [https://youtrack.jetbrains.com/issue/KT-69709/](https://youtrack.jetbrains.com/issue/KT-69709/)
  */
 public expect fun setupStdioBuffering()
 
 /**
  * Flushes the standard output and standard error. Intended to be called after each test.
  *
- * Workaround for https://youtrack.jetbrains.com/issue/KT-69709/
+ * Workaround for [https://youtrack.jetbrains.com/issue/KT-69709/](https://youtrack.jetbrains.com/issue/KT-69709/)
  */
 public expect fun flushStdioBuffers()
