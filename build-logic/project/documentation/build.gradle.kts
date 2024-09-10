@@ -4,14 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.documentation
-
-/*
- * Convention plugin responsible for generating documentation for the module
- */
 plugins {
-    id("at.released.weh.gradle.multiplatform.documentation.base")
+    `kotlin-dsl`
 }
 
-dokkatoo {
+group = "at.released.weh.gradle.documentation"
+
+dependencies {
+    implementation(libs.dokkatoo.plugin)
+    implementation(libs.node.plugin)
 }

@@ -40,5 +40,6 @@ private val excludedDirectories = setOf(
     ".idea",
     "build",
     "generated",
+    "node_modules",
     "out",
 )

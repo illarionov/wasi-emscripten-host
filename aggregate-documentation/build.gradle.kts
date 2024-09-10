@@ -5,13 +5,26 @@
  */
 
 /*
- * Module responsible for aggregating documentation from subprojects and creating final HTML documentation
+ * Module responsible for aggregating API reference from subprojects and creating final HTML documentation
  */
 plugins {
-    id("at.released.weh.gradle.multiplatform.documentation.aggregate")
+    id("at.released.weh.gradle.documentation.dokkatoo.aggregate")
+    id("at.released.weh.gradle.documentation.docusaurus.website")
 }
 
 group = "at.released.weh"
+
+private val websiteOutputDirectory = layout.buildDirectory.dir("outputs/website")
+private val apiReferenceDirectory = tasks.named("dokkatooGeneratePublicationHtml")
+private val docusaurusWebsiteDirectory = tasks.named("buildDocusaurusWebsite")
+
+tasks.register<Sync>("buildWebsite") {
+    from(docusaurusWebsiteDirectory)
+    from(apiReferenceDirectory) {
+        into("api")
+    }
+    into(websiteOutputDirectory)
+}
 
 dependencies {
     dokkatoo(projects.bindingsChasm)

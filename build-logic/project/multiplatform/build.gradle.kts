@@ -12,9 +12,9 @@ group = "at.released.weh.gradle.multiplatform"
 
 dependencies {
     implementation(project(":lint"))
+    implementation(project(":documentation"))
     implementation(libs.agp.plugin.api)
     implementation(libs.atomicfu.plugin)
-    implementation(libs.dokkatoo.plugin)
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
     runtimeOnly(libs.agp.plugin)

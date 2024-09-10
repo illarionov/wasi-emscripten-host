@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.documentation
+package at.released.weh.gradle.documentation.dokkatoo
 
 /*
- * Convention plugin responsible for generating aggregated documentation
+ * Convention plugin responsible for generating aggregated Dokkatoo documentation
  */
 plugins {
-    id("at.released.weh.gradle.multiplatform.documentation.base")
+    id("at.released.weh.gradle.documentation.dokkatoo.base")
 }
 
 dokkatoo {
