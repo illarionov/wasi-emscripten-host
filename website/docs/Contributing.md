@@ -1,3 +1,8 @@
+---
+sidebar_label: 'Contributing'
+sidebar_position: 5
+---
+
 # How to Contribute
 
 All types of contributions are encouraged and valued.
