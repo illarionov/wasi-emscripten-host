@@ -28,6 +28,12 @@ public abstract class BuildDocusaurusWebsiteTask : NpmTask() {
     abstract val outputDirectory: DirectoryProperty
 
     companion object {
+        internal val DOCUSAURUS_BUILD_DIRECTORIES = listOf(
+            "node_modules",
+            ".docusaurus",
+            "build",
+        )
+
         fun Project.registerBuildWebsiteTask(
             websiteDirectory: Provider<Directory>,
             outputDirectory: Provider<Directory>,
@@ -41,11 +47,7 @@ public abstract class BuildDocusaurusWebsiteTask : NpmTask() {
 
             websiteFiles.from(
                 fileTree(websiteDirectory) {
-                    exclude(
-                        "node_modules",
-                        ".docusaurus",
-                        "build",
-                    )
+                    exclude(DOCUSAURUS_BUILD_DIRECTORIES)
                 },
             )
             this.outputDirectory.set(outputDirectory)

@@ -37,9 +37,8 @@
          <trusted-key id="7B121B76A7ED6CE6E60AD51784E913A8E3A748C0" group="org.bouncycastle"/>
          <trusted-key id="7B72C18D9C362314BF8E981B0CAEBC0883C5BB65" group="com.vanniktech"/>
          <trusted-key id="7B79ADD11F8A779FE90FD3D0893A028475557671">
-            <trusting group="com.gradle" name="develocity-gradle-plugin"/>
-            <trusting group="com.gradle" name="gradle-enterprise-gradle-plugin"/>
-            <trusting group="org.gradle" name="github-dependency-graph-gradle-plugin"/>
+            <trusting group="com.gradle"/>
+            <trusting group="org.gradle"/>
          </trusted-key>
          <trusted-key id="7D90CFFEC86BA5513FE48B9943C2E6B56905B362" group="com.michael-bull.kotlin-result"/>
          <trusted-key id="7E22D50A7EBD9D2CD269B2D4056ACA74D46000BF" group="io.netty"/>

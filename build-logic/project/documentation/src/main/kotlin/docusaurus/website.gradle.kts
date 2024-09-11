@@ -8,6 +8,7 @@
 
 package at.released.weh.gradle.documentation.docusaurus
 
+import at.released.weh.gradle.documentation.docusaurus.BuildDocusaurusWebsiteTask.Companion.DOCUSAURUS_BUILD_DIRECTORIES
 import at.released.weh.gradle.documentation.docusaurus.BuildDocusaurusWebsiteTask.Companion.registerBuildWebsiteTask
 import com.github.gradle.node.npm.task.NpmInstallTask
 
@@ -28,13 +29,11 @@ node {
 
 val prepareNodePackageTask: TaskProvider<Sync> = tasks.register<Sync>("prepareNodePackage") {
     from(websiteExtension.websiteDirectory) {
-        include("package-lock.json")
-        include("package.json")
+        exclude(DOCUSAURUS_BUILD_DIRECTORIES)
     }
     into(websiteNodePackageDir)
     preserve {
-        include("node_modules")
-        include(".docusaurus")
+        include(DOCUSAURUS_BUILD_DIRECTORIES)
     }
 }
 
@@ -44,7 +43,7 @@ npmInstallTask.configure {
 }
 
 registerBuildWebsiteTask(
-    websiteDirectory = websiteExtension.websiteDirectory,
+    websiteDirectory = websiteNodePackageDir,
     outputDirectory = websiteExtension.outputDirectory,
 ).configure {
     dependsOn(npmInstallTask)
