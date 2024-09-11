@@ -19,6 +19,7 @@ kotlinx-binary-compatibility-validator = "0.16.3"
 kotlinx-datetime = "0.6.1"
 kotlinx-io ="0.5.3"
 kermit = "2.0.4"
+node-plugin = "7.0.2"
 spotless = "7.0.0.BETA2"
 
 [libraries]
@@ -49,6 +50,7 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
 dokkatoo-plugin = { group = "dev.adamko.dokkatoo", name = "dokkatoo-plugin", version.ref = "dokkatoo" }
+node-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "node-plugin" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradle-maven-publish-plugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-binary-compatibility-validator-plugin = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "kotlinx-binary-compatibility-validator" }

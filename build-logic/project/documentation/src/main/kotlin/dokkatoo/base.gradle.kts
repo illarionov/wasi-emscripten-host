@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.documentation
+package at.released.weh.gradle.documentation.dokkatoo
 
 /*
  * Base configuration of dokkatoo
@@ -36,12 +36,15 @@ dokkatoo {
     }
 
     versions.apply {
-        jetbrainsDokka.set(versionCatalogs.named("libs").findVersion("dokka").get().toString())
+        // XXX: named("libs") fails with "Catalog named libs doesn't exist" for some unknown reason,
+        versionCatalogs.find("libs").ifPresent {
+            jetbrainsDokka.set(it.findVersion("dokka").get().toString())
+        }
     }
 
     pluginsConfiguration.html {
         templatesDir.set(rootProject.layout.projectDirectory.dir("aggregate-documentation-resources/templates"))
-        homepageLink.set("https://github.com/illarionov/wasi-emscripten-host")
+        homepageLink.set("https://weh.released.at")
         footerMessage.set("(C) wasi-emscripten-host project authors and contributors")
     }
 }

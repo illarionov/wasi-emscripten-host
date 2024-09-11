@@ -8,7 +8,7 @@ package at.released.weh.gradle.settings.repository
 
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 
-internal fun RepositoryHandler.googleFiltered() {
+public fun RepositoryHandler.googleFiltered() {
     google {
         mavenContent {
             // https://maven.google.com/web/index.html
