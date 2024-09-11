@@ -1,0 +1,74 @@
+name: publish documentation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  CI: true
+  TERM: dumb
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs="-Xmx3G -XX:MaxMetaspaceSize=1g -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1"
+    -Dorg.gradle.dependency.verification.console=verbose
+  KOTLIN_DAEMON_JVMARGS: >-
+    -Xmx2G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
+
+jobs:
+  build:
+    name: Build published artifact
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLEENCRYPTIONKEY }}
+          dependency-graph: generate
+
+      - name: Restore Kotlin Native Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+          restore-keys: ${{ runner.os }}-konan-
+
+      - name: Build website
+        run: >
+          ./gradlew --scan -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
+          aggregate-documentation:buildWebsite
+          --stacktrace
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'aggregate-documentation/build/outputs/website/'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
