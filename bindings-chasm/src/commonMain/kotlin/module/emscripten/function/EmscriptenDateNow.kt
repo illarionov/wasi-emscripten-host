@@ -6,14 +6,15 @@
 
 package at.released.weh.bindings.chasm.module.emscripten.function
 
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenDateNowFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 
-internal class EmscriptenDateNow(host: EmbedderHost) : HostFunction {
+internal class EmscriptenDateNow(host: EmbedderHost) : HostFunctionProvider {
     private val handle = EmscriptenDateNowFunctionHandle(host)
-    override fun invoke(args: List<Value>): List<Value> {
-        return listOf(Value.Number.F64(handle.execute()))
+    override val function: HostFunction = {
+        listOf(Value.Number.F64(handle.execute()))
     }
 }

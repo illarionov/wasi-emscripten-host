@@ -8,20 +8,19 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.LocaltimeJsFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class LocaltimeJs(
     host: EmbedderHost,
     private val memory: Memory,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = LocaltimeJsFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         handle.execute(memory, args[0].asLong(), args[1].asWasmAddr())
-        return emptyList()
+        emptyList()
     }
 }

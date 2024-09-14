@@ -6,12 +6,14 @@
 
 package at.released.weh.bindings.chasm.module.emscripten.function
 
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.AbortJsFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
 
-internal class AbortJs(host: EmbedderHost) : HostFunction {
+internal class AbortJs(host: EmbedderHost) : HostFunctionProvider {
     private val handle = AbortJsFunctionHandle(host)
-    override fun invoke(args: List<Value>): List<Value> = handle.execute()
+    override val function: HostFunction = {
+        handle.execute()
+    }
 }

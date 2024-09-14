@@ -4,10 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("EXTENSION_FUNCTION_SAME_SIGNATURE")
+
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.model.Errno.NOMEM
 import at.released.weh.host.EmbedderHost
@@ -16,14 +19,18 @@ import at.released.weh.host.base.memory.WASM_MEMORY_32_MAX_PAGES
 import at.released.weh.host.emscripten.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32
 
 internal class EmscriptenResizeHeap(
     host: EmbedderHost,
     private val memory: ChasmMemoryAdapter,
-) : HostFunction {
+) : HostFunctionProvider {
     private val logger: Logger = host.rootLogger.withTag("wasm-func:emscripten_resize_heap")
+    override val function: HostFunction = { resizeHeap(it) }
 
-    override fun invoke(args: List<Value>): List<Value> {
+    private fun resizeHeap(
+        args: List<Value>,
+    ): List<Value> {
         val requestedSize = args[0].asInt().toLong()
 
         val chasmMemoryLimits = memory.limits
@@ -42,8 +49,8 @@ internal class EmscriptenResizeHeap(
                 "Cannot enlarge memory, requested $newSizePages pages, but the limit is " +
                         "$maxPages pages!"
             }
-            return listOf(Value.Number.I32(-NOMEM.code))
+            return listOf(I32(-NOMEM.code))
         }
-        return listOf(Value.Number.I32(1))
+        return listOf(I32(1))
     }
 }

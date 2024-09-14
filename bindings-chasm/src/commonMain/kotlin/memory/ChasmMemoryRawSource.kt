@@ -22,7 +22,8 @@ internal class ChasmMemoryRawSource(
     toAddrExclusive: WasmPtr<*>,
 ) : MemoryRawSource(baseAddr, toAddrExclusive) {
     override fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
-        readBytes(store, memory, srcAddr.addr, readBytes).fold(
+        val buffer = ByteArray(readBytes)
+        readBytes(store, memory, buffer, srcAddr.addr, readBytes).fold(
             onSuccess = { bytes ->
                 sink.write(bytes)
                 sink.emit()

@@ -8,6 +8,7 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.GetentropyFunctionHandle
@@ -17,15 +18,14 @@ import io.github.charlietap.chasm.embedding.shapes.Value
 internal class Getentropy(
     host: EmbedderHost,
     private val memory: Memory,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = GetentropyFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         val code = handle.execute(
             memory,
             args[0].asWasmAddr(),
             args[1].asInt(),
         )
-        return listOf(Value.Number.I32(code))
+        listOf(Value.Number.I32(code))
     }
 }
