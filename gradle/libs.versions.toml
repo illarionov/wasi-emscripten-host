@@ -2,11 +2,10 @@
 androidMinSdk = "26"
 androidCompileSdk = "34"
 
-agp = "8.5.2"
 atomicfu = "0.25.0"
 arrow = "2.0.0-alpha.3"
 assertk = "0.28.1"
-chasm = "0.9.0"
+chasm = "0.9.1"
 chicory = "0.0.12"
 detekt = "1.23.6"
 diktat = "2.0.0"
@@ -26,11 +25,8 @@ spotless = "7.0.0.BETA2"
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }
-chasm-decoder = { group = "io.github.charlietap.chasm", name = "decoder", version.ref = "chasm" }
-chasm-instantiator = { group = "io.github.charlietap.chasm", name = "instantiator", version.ref = "chasm" }
 chasm-memory = { group = "io.github.charlietap.chasm", name = "memory", version.ref = "chasm" }
 chasm-runtime = { group = "io.github.charlietap.chasm", name = "runtime", version.ref = "chasm" }
-chasm-validator = { group = "io.github.charlietap.chasm", name = "validator", version.ref = "chasm" }
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 chicory-aot = { group = "com.dylibso.chicory", name = "aot", version.ref = "chicory" }
 graalvm240-polyglot-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm240" }
@@ -43,8 +39,6 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 
 # Dependencies of the included build-logic
-agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-agp-plugin-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 atomicfu-plugin = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }

@@ -10,6 +10,7 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.SyscallGetcwdFunctionHandle
@@ -19,15 +20,14 @@ import io.github.charlietap.chasm.embedding.shapes.Value
 internal class SyscallGetcwd(
     host: EmbedderHost,
     private val memory: Memory,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = SyscallGetcwdFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             memory,
             args[0].asWasmAddr(),
             args[1].asInt(),
         )
-        return listOf(Value.Number.I32(result))
+        listOf(Value.Number.I32(result))
     }
 }

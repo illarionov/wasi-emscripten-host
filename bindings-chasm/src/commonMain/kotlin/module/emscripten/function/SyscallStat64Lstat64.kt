@@ -9,6 +9,7 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.SyscallStatLstat64FunctionHandle
@@ -18,25 +19,23 @@ import io.github.charlietap.chasm.embedding.shapes.Value
 internal fun syscallStat64(
     host: EmbedderHost,
     memory: Memory,
-): HostFunction =
-    SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallStat64(host))
+): HostFunctionProvider = SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallStat64(host))
 
 internal fun syscallLstat64(
     host: EmbedderHost,
     memory: Memory,
-): HostFunction =
-    SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallLstat64(host))
+): HostFunctionProvider = SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallLstat64(host))
 
 internal class SyscallStat64Lstat64(
     private val memory: Memory,
     private val handle: SyscallStatLstat64FunctionHandle,
-) : HostFunction {
-    override fun invoke(args: List<Value>): List<Value> {
+) : HostFunctionProvider {
+    override val function: HostFunction = { args ->
         val result = handle.execute(
             memory,
             args[0].asWasmAddr(),
             args[1].asWasmAddr(),
         )
-        return listOf(Value.Number.I32(result))
+        listOf(Value.Number.I32(result))
     }
 }

@@ -4,15 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-plugins {
-    `kotlin-dsl`
-}
+package at.released.weh.bindings.chasm.module.emscripten
 
-group = "at.released.weh.gradle.lint"
+import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
-dependencies {
-    implementation(libs.detekt.plugin)
-    implementation(libs.diktat.plugin)
-    implementation(libs.kotlinx.binary.compatibility.validator.plugin)
-    implementation(libs.spotless.plugin)
+internal interface HostFunctionProvider {
+    val function: HostFunction
 }

@@ -8,6 +8,7 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asUInt
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchmodFunctionHandle
@@ -16,14 +17,13 @@ import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class SyscallFchmod(
     host: EmbedderHost,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = SyscallFchmodFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             Fd(args[0].asInt()),
             args[1].asUInt(),
         )
-        return listOf(Value.Number.I32(result))
+        listOf(Value.Number.I32(result))
     }
 }

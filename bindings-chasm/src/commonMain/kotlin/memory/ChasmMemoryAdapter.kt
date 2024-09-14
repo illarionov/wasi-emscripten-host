@@ -52,7 +52,8 @@ public class ChasmMemoryAdapter(
     }
 
     override fun readI32(addr: WasmPtr<*>): Int {
-        val bytes = readBytes(store, memoryInstance, addr.addr, 4).orThrow()
+        val buffer = ByteArray(4)
+        val bytes = readBytes(store, memoryInstance, buffer, addr.addr, 4).orThrow()
         return (bytes[0].toInt() and 0xff) or
                 ((bytes[1].toInt() and 0xff) shl 8) or
                 ((bytes[2].toInt() and 0xff) shl 16) or
@@ -60,7 +61,8 @@ public class ChasmMemoryAdapter(
     }
 
     override fun readI64(addr: WasmPtr<*>): Long {
-        val bytes = readBytes(store, memoryInstance, addr.addr, 8).orThrow()
+        val buffer = ByteArray(8)
+        val bytes = readBytes(store, memoryInstance, buffer, addr.addr, 8).orThrow()
         return (bytes[0].toLong() and 0xffL) or
                 (bytes[1].toLong() and 0xffL shl 8) or
                 (bytes[2].toLong() and 0xffL shl 16) or

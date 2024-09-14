@@ -8,19 +8,18 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.AssertFailFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class AssertFail(
     host: EmbedderHost,
     private val memory: ReadOnlyMemory,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = AssertFailFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         handle.execute(
             memory = memory,
             condition = args[0].asWasmAddr(),

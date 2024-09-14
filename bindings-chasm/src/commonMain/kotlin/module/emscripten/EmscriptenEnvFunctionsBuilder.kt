@@ -143,4 +143,4 @@ private fun EmscriptenHostFunction.createChasmHostFunction(
     SYSCALL_UTIMENSAT -> SyscallUtimensat(host, memory)
     TZSET_JS -> TzsetJs(host, memory)
     else -> NotImplementedEmscriptenFunction(this)
-}
+}.function

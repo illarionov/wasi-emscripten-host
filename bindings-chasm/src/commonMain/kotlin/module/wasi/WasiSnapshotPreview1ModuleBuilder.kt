@@ -34,7 +34,6 @@ import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_SEEK
 import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_SYNC
 import at.released.weh.host.wasi.preview1.WasiHostFunction.FD_WRITE
 import io.github.charlietap.chasm.embedding.function
-import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.HostFunction as ChasmHostFunction
@@ -63,7 +62,7 @@ internal fun createWasiPreview1HostFunctions(
     }
 }
 
-private fun WasiHostFunctionHandle.toChasmHostFunction(): ChasmHostFunction = HostFunction { args ->
+private fun WasiHostFunctionHandle.toChasmHostFunction(): ChasmHostFunction = { args ->
     listOf(Value.Number.I32(this@toChasmHostFunction(args).code))
 }
 

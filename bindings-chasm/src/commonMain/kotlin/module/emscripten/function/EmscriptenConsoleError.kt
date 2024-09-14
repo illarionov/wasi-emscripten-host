@@ -7,23 +7,23 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
+import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.EmscriptenConsoleErrorFunctionHandle
+import io.github.charlietap.chasm.embedding.memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class EmscriptenConsoleError(
     host: EmbedderHost,
     private val memory: ReadOnlyMemory,
-) : HostFunction {
+) : HostFunctionProvider {
     private val handle = EmscriptenConsoleErrorFunctionHandle(host)
-
-    override fun invoke(args: List<Value>): List<Value> {
+    override val function: HostFunction = { args ->
         handle.execute(
             memory = memory,
             messagePtr = args[0].asWasmAddr(),
         )
-        return emptyList()
+        emptyList()
     }
 }
