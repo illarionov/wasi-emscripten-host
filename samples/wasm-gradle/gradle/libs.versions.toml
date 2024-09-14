@@ -1,0 +1,20 @@
+[versions]
+kotlin = "2.0.20"
+
+chasm = "0.9.0"
+chicory = "0.0.12"
+graalvm = "24.0.2"
+weh = "0.1-alpha01"
+
+[libraries]
+chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }
+chicory = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
+graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
+graalvm-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
+weh-chasm = { group = "at.released.weh", name = "bindings-chasm", version.ref = "weh" }
+weh-chicory = { group = "at.released.weh", name = "bindings-chicory", version.ref = "weh" }
+weh-graalvm = { group = "at.released.weh", name = "bindings-graalvm240", version.ref = "weh" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

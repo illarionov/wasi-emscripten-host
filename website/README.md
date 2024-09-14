@@ -32,5 +32,5 @@ The static version of the site is built using Gradle and deployed using GitHub A
 $ ./gradlew aggregate-documentation:buildWebsite
 ```
 
-This command, run from the root of the project, builds the site for deployment into the 
+This command, executed from the root of the project, builds the site for deployment into the 
 `aggregate-documentation/build/outputs/website/` directory.
