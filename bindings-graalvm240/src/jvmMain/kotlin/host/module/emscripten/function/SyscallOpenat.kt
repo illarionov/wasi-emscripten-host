@@ -7,10 +7,10 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
@@ -41,7 +41,7 @@ internal class SyscallOpenat(
             memory,
             rawDirFd = args.getArgAsInt(0),
             pathnamePtr = args.getArgAsWasmPtr(1),
-            flags = args.getArgAsUint(2),
+            flags = args.getArgAsInt(2),
             rawMode = mode,
         )
         return fdOrErrno
@@ -52,7 +52,7 @@ internal class SyscallOpenat(
         memory: WasmMemory,
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        flags: UInt,
+        @OpenFileFlags flags: Int,
         @FileMode rawMode: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, flags, rawMode)
 }

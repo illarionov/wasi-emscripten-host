@@ -8,8 +8,10 @@ package at.released.weh.host.include
 
 import at.released.weh.common.ext.maskToString
 
-public fun Fcntl.oMaskToString(mask: UInt): String {
-    val startNames = if (mask.and(O_ACCMODE) == 0U) {
+public fun Fcntl.oMaskToString(
+    mask: Int,
+): String {
+    val startNames = if (mask.and(O_ACCMODE) == 0) {
         listOf(Fcntl::O_RDONLY.name)
     } else {
         emptyList()

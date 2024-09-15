@@ -496,7 +496,7 @@ public final class at/released/weh/host/emscripten/function/SyscallMkdiratFuncti
 
 public final class at/released/weh/host/emscripten/function/SyscallOpenatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-fT4Le30 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute-muPLT4w (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallReadlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -591,7 +591,7 @@ public final class at/released/weh/host/include/Fcntl {
 }
 
 public final class at/released/weh/host/include/FcntlExtKt {
-	public static final fun oMaskToString-Qn1smSk (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
+	public static final fun oMaskToString (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
 }
 
 public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/UintBitMask {

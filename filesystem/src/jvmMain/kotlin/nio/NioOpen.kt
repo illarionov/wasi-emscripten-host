@@ -21,8 +21,8 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags.OpenFileFlag
 import com.sun.nio.file.ExtendedOpenOption
 import java.io.IOException
 import java.nio.channels.FileChannel
@@ -78,71 +78,71 @@ private fun Throwable.toOpenError(path: Path): OpenError = when (this) {
 
 @Suppress("CyclomaticComplexMethod", "LOCAL_VARIABLE_EARLY_DECLARATION", "LongMethod")
 private fun getOpenOptions(
-    flags: OpenFileFlags,
+    @OpenFileFlags flags: Int,
 ): GetOpenOptionsResult {
     val options: MutableSet<OpenOption> = mutableSetOf()
     var ignoredFlags = 0U
     var notImplementedFlags = 0U
 
-    if (flags.mask and OpenFileFlag.O_WRONLY != 0U) {
+    if (flags and OpenFileFlag.O_WRONLY != 0) {
         options += StandardOpenOption.WRITE
-    } else if (flags.mask and OpenFileFlag.O_RDWR != 0U) {
+    } else if (flags and OpenFileFlag.O_RDWR != 0) {
         options += StandardOpenOption.READ
         options += StandardOpenOption.WRITE
     }
 
-    if (flags.mask and OpenFileFlag.O_APPEND != 0U) {
+    if (flags and OpenFileFlag.O_APPEND != 0) {
         options += StandardOpenOption.APPEND
     }
 
-    if (flags.mask and OpenFileFlag.O_CREAT != 0U) {
-        options += if (flags.mask and OpenFileFlag.O_EXCL != 0U) {
+    if (flags and OpenFileFlag.O_CREAT != 0) {
+        options += if (flags and OpenFileFlag.O_EXCL != 0) {
             StandardOpenOption.CREATE_NEW
         } else {
             StandardOpenOption.CREATE
         }
     }
 
-    if (flags.mask and OpenFileFlag.O_TRUNC != 0U) {
+    if (flags and OpenFileFlag.O_TRUNC != 0) {
         options += StandardOpenOption.TRUNCATE_EXISTING
     }
 
-    if (flags.mask and OpenFileFlag.O_NONBLOCK != 0U) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_NONBLOCK
+    if (flags and OpenFileFlag.O_NONBLOCK != 0) {
+        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_NONBLOCK.toUInt()
     }
 
-    if (flags.mask and OpenFileFlag.O_ASYNC != 0U) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_ASYNC
+    if (flags and OpenFileFlag.O_ASYNC != 0) {
+        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_ASYNC.toUInt()
     }
 
-    if (flags.mask and (OpenFileFlag.O_DSYNC or OpenFileFlag.O_SYNC) != 0U) {
+    if (flags and (OpenFileFlag.O_DSYNC or OpenFileFlag.O_SYNC) != 0) {
         options += StandardOpenOption.SYNC
     }
 
-    if (flags.mask and OpenFileFlag.O_DIRECT != 0U) {
+    if (flags and OpenFileFlag.O_DIRECT != 0) {
         options += ExtendedOpenOption.DIRECT
     }
 
-    if (flags.mask and OpenFileFlag.O_DIRECTORY != 0U) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_DIRECTORY
+    if (flags and OpenFileFlag.O_DIRECTORY != 0) {
+        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_DIRECTORY.toUInt()
     }
 
-    if (flags.mask and OpenFileFlag.O_NOFOLLOW != 0U) {
+    if (flags and OpenFileFlag.O_NOFOLLOW != 0) {
         options += LinkOption.NOFOLLOW_LINKS
     }
-    if (flags.mask and OpenFileFlag.O_NOATIME != 0U) {
-        ignoredFlags = ignoredFlags and OpenFileFlag.O_NOATIME
+    if (flags and OpenFileFlag.O_NOATIME != 0) {
+        ignoredFlags = ignoredFlags and OpenFileFlag.O_NOATIME.toUInt()
     }
-    if (flags.mask and OpenFileFlag.O_CLOEXEC != 0U) {
-        ignoredFlags = ignoredFlags and OpenFileFlag.O_CLOEXEC
-    }
-
-    if (flags.mask and OpenFileFlag.O_PATH != 0U) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_PATH
+    if (flags and OpenFileFlag.O_CLOEXEC != 0) {
+        ignoredFlags = ignoredFlags and OpenFileFlag.O_CLOEXEC.toUInt()
     }
 
-    if (flags.mask and OpenFileFlag.O_TMPFILE != 0U) {
-        ignoredFlags = ignoredFlags and OpenFileFlag.O_TMPFILE
+    if (flags and OpenFileFlag.O_PATH != 0) {
+        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_PATH.toUInt()
+    }
+
+    if (flags and OpenFileFlag.O_TMPFILE != 0) {
+        ignoredFlags = ignoredFlags and OpenFileFlag.O_TMPFILE.toUInt()
         options += StandardOpenOption.DELETE_ON_CLOSE
     }
 
