@@ -678,8 +678,11 @@ public final class at/released/weh/filesystem/model/Fd {
 public final class at/released/weh/filesystem/model/Fd$Companion {
 }
 
-public final class at/released/weh/filesystem/model/FileMode : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/filesystem/model/FileMode$Companion;
+public abstract interface annotation class at/released/weh/filesystem/model/FileMode : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/filesystem/model/FileModeBit {
+	public static final field INSTANCE Lat/released/weh/filesystem/model/FileModeBit;
 	public static final field S_IRGRP I
 	public static final field S_IROTH I
 	public static final field S_IRUSR I
@@ -695,22 +698,6 @@ public final class at/released/weh/filesystem/model/FileMode : at/released/weh/c
 	public static final field S_IXGRP I
 	public static final field S_IXOTH I
 	public static final field S_IXUSR I
-	public static final synthetic fun box-impl (I)Lat/released/weh/filesystem/model/FileMode;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/filesystem/model/FileMode$Companion {
 }
 
 public final class at/released/weh/filesystem/model/Whence : java/lang/Enum {
@@ -790,18 +777,18 @@ public final class at/released/weh/filesystem/op/checkaccess/FileAccessibilityCh
 
 public final class at/released/weh/filesystem/op/chmod/Chmod {
 	public static final field Companion Lat/released/weh/filesystem/op/chmod/Chmod$Companion;
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)V
 	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component3-9bZA8H8 ()I
+	public final fun component3 ()I
 	public final fun component4 ()Z
-	public final fun copy-MbR31W4 (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/chmod/Chmod;
-	public static synthetic fun copy-MbR31W4$default (Lat/released/weh/filesystem/op/chmod/Chmod;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/Chmod;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/chmod/Chmod;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/chmod/Chmod;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/Chmod;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
-	public final fun getMode-9bZA8H8 ()I
+	public final fun getMode ()I
 	public final fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -815,12 +802,12 @@ public final class at/released/weh/filesystem/op/chmod/ChmodFd {
 	public static final field Companion Lat/released/weh/filesystem/op/chmod/ChmodFd$Companion;
 	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-XfleyX0 ()I
-	public final fun component2-9bZA8H8 ()I
-	public final fun copy-sD-ANZI (II)Lat/released/weh/filesystem/op/chmod/ChmodFd;
-	public static synthetic fun copy-sD-ANZI$default (Lat/released/weh/filesystem/op/chmod/ChmodFd;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/ChmodFd;
+	public final fun component2 ()I
+	public final fun copy-e25n4c0 (II)Lat/released/weh/filesystem/op/chmod/ChmodFd;
+	public static synthetic fun copy-e25n4c0$default (Lat/released/weh/filesystem/op/chmod/ChmodFd;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/ChmodFd;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFd-XfleyX0 ()I
-	public final fun getMode-9bZA8H8 ()I
+	public final fun getMode ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -961,16 +948,16 @@ public final class at/released/weh/filesystem/op/lock/RemoveAdvisoryLockFd$Compa
 
 public final class at/released/weh/filesystem/op/mkdir/Mkdir {
 	public static final field Companion Lat/released/weh/filesystem/op/mkdir/Mkdir$Companion;
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;I)V
 	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component3-9bZA8H8 ()I
-	public final fun copy-2QU-iPM (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;I)Lat/released/weh/filesystem/op/mkdir/Mkdir;
-	public static synthetic fun copy-2QU-iPM$default (Lat/released/weh/filesystem/op/mkdir/Mkdir;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Object;)Lat/released/weh/filesystem/op/mkdir/Mkdir;
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;I)Lat/released/weh/filesystem/op/mkdir/Mkdir;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/mkdir/Mkdir;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Object;)Lat/released/weh/filesystem/op/mkdir/Mkdir;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getMode-9bZA8H8 ()I
+	public final fun getMode ()I
 	public final fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -987,13 +974,13 @@ public final class at/released/weh/filesystem/op/opencreate/Open {
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3-JsNxjIE ()I
-	public final fun component4-9bZA8H8 ()I
-	public final fun copy-Shm55WI (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)Lat/released/weh/filesystem/op/opencreate/Open;
-	public static synthetic fun copy-Shm55WI$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public final fun component4 ()I
+	public final fun copy-9ZpZO20 (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)Lat/released/weh/filesystem/op/opencreate/Open;
+	public static synthetic fun copy-9ZpZO20$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFlags-JsNxjIE ()I
-	public final fun getMode-9bZA8H8 ()I
+	public final fun getMode ()I
 	public final fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1208,7 +1195,7 @@ public final class at/released/weh/filesystem/op/stat/FileModeType : at/released
 	public static fun equals-impl (ILjava/lang/Object;)Z
 	public static final fun equals-impl0 (II)Z
 	public fun getMask-pVg5ArA ()I
-	public static final fun getMode-9bZA8H8 (I)I
+	public static final fun getMode-impl (I)I
 	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
 	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
 	public static final fun getType-impl (I)Lat/released/weh/filesystem/op/stat/Filetype;

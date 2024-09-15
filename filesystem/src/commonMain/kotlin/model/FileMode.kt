@@ -6,37 +6,66 @@
 
 package at.released.weh.filesystem.model
 
-import at.released.weh.common.api.UintBitMask
-import kotlin.jvm.JvmInline
+import androidx.annotation.IntDef
+import at.released.weh.filesystem.model.FileModeBit.S_IRGRP
+import at.released.weh.filesystem.model.FileModeBit.S_IROTH
+import at.released.weh.filesystem.model.FileModeBit.S_IRUSR
+import at.released.weh.filesystem.model.FileModeBit.S_IRWXG
+import at.released.weh.filesystem.model.FileModeBit.S_IRWXU
+import at.released.weh.filesystem.model.FileModeBit.S_ISGID
+import at.released.weh.filesystem.model.FileModeBit.S_ISUID
+import at.released.weh.filesystem.model.FileModeBit.S_ISVTX
+import at.released.weh.filesystem.model.FileModeBit.S_IWGRP
+import at.released.weh.filesystem.model.FileModeBit.S_IWOTH
+import at.released.weh.filesystem.model.FileModeBit.S_IWUSR
+import at.released.weh.filesystem.model.FileModeBit.S_IXGRP
+import at.released.weh.filesystem.model.FileModeBit.S_IXOTH
+import at.released.weh.filesystem.model.FileModeBit.S_IXUSR
+import kotlin.annotation.AnnotationRetention.SOURCE
+import kotlin.jvm.JvmStatic
 
 /**
  * File mode bits (mode_t)
  */
-@JvmInline
-public value class FileMode(
-    public override val mask: UInt,
-) : UintBitMask<FileMode> {
-    override val newInstance: (UInt) -> FileMode get() = ::FileMode
-    override fun toString(): String = fileModeTypeToString(mask)
+@Retention(SOURCE)
+@IntDef(
+    flag = true,
+    value = [
+        S_ISUID,
+        S_ISGID,
+        S_ISVTX,
+        S_IRUSR,
+        S_IWUSR,
+        S_IXUSR,
+        S_IRWXU,
+        S_IRGRP,
+        S_IWGRP,
+        S_IXGRP,
+        S_IRWXG,
+        S_IROTH,
+        S_IWOTH,
+        S_IXOTH,
+    ],
+)
+public annotation class FileMode
 
-    // Constants from Emscripten include/sys/stat.h
-    public companion object {
-        public const val S_ISUID: UInt = 0b100_000_000_000U
-        public const val S_ISGID: UInt = 0b010_000_000_000U
-        public const val S_ISVTX: UInt = 0b001_000_000_000U
-        public const val S_IRUSR: UInt = 0b000_100_000_000U
-        public const val S_IWUSR: UInt = 0b000_010_000_000U
-        public const val S_IXUSR: UInt = 0b000_001_000_000U
-        public const val S_IRWXU: UInt = 0b000_111_000_000U
-        public const val S_IRGRP: UInt = 0b000_000_100_000U
-        public const val S_IWGRP: UInt = 0b000_000_010_000U
-        public const val S_IXGRP: UInt = 0b000_000_001_000U
-        public const val S_IRWXG: UInt = 0b000_000_111_000U
-        public const val S_IROTH: UInt = 0b000_000_000_100U
-        public const val S_IWOTH: UInt = 0b000_000_000_010U
-        public const val S_IXOTH: UInt = 0b000_000_000_001U
-        public const val S_IRWXO: UInt = 0b000_000_000_111U
-    }
+public object FileModeBit {
+    public const val S_ISUID: Int = 0b100_000_000_000
+    public const val S_ISGID: Int = 0b010_000_000_000
+    public const val S_ISVTX: Int = 0b001_000_000_000
+    public const val S_IRUSR: Int = 0b000_100_000_000
+    public const val S_IWUSR: Int = 0b000_010_000_000
+    public const val S_IXUSR: Int = 0b000_001_000_000
+    public const val S_IRWXU: Int = 0b000_111_000_000
+    public const val S_IRGRP: Int = 0b000_000_100_000
+    public const val S_IWGRP: Int = 0b000_000_010_000
+    public const val S_IXGRP: Int = 0b000_000_001_000
+    public const val S_IRWXG: Int = 0b000_000_111_000
+    public const val S_IROTH: Int = 0b000_000_000_100
+    public const val S_IWOTH: Int = 0b000_000_000_010
+    public const val S_IXOTH: Int = 0b000_000_000_001
+    public const val S_IRWXO: Int = 0b000_000_000_111
+
+    @JvmStatic
+    internal fun fileModeTypeToString(mask: Int): String = "0${mask.toString(8)}"
 }
-
-internal fun fileModeTypeToString(mask: UInt): String = "0${mask.toString(8)}"

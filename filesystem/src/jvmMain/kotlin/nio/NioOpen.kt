@@ -15,7 +15,7 @@ import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
-import at.released.weh.filesystem.ext.toPosixFilePermissions
+import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
@@ -49,7 +49,7 @@ internal class NioOpen(
                 ),
             )
         }
-        val fileAttributes = input.mode.toPosixFilePermissions().asFileAttribute()
+        val fileAttributes = input.mode.fileModeToPosixFilePermissions().asFileAttribute()
         fsState.fsLock.withLock {
             val nioChannel = Either.catch {
                 FileChannel.open(path, openOptionsResult.options, fileAttributes)

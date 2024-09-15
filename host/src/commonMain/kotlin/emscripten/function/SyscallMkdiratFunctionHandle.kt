@@ -25,7 +25,7 @@ public class SyscallMkdiratFunctionHandle(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        rawMode: UInt,
+        @FileMode rawMode: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
         return host.fileSystem.execute(
@@ -33,7 +33,7 @@ public class SyscallMkdiratFunctionHandle(
             input = Mkdir(
                 path = path,
                 baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
-                mode = FileMode(rawMode),
+                mode = rawMode,
             ),
         ).negativeErrnoCode()
     }

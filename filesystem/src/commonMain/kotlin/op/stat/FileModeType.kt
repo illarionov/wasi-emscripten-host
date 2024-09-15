@@ -8,7 +8,7 @@ package at.released.weh.filesystem.op.stat
 
 import at.released.weh.common.api.UintBitMask
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.model.fileModeTypeToString
+import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import kotlin.jvm.JvmInline
 
 /**
@@ -19,8 +19,10 @@ public value class FileModeType(
     public override val mask: UInt,
 ) : UintBitMask<FileModeType> {
     override val newInstance: (UInt) -> FileModeType get() = ::FileModeType
-    public val mode: FileMode
-        get() = FileMode(mask and 0xfffU)
+
+    @FileMode
+    public val mode: Int
+        get() = (mask and 0xfffU).toInt()
 
     public val type: Filetype
         get() = when (mask and S_IFMT) {
@@ -34,7 +36,7 @@ public value class FileModeType(
             else -> Filetype.UNKNOWN
         }
 
-    override fun toString(): String = fileModeTypeToString(mask)
+    override fun toString(): String = fileModeTypeToString(mask.toInt())
 
     // Constants from Emscripten include/sys/stat.h
     @Suppress("NoMultipleSpaces", "TOO_MANY_CONSECUTIVE_SPACES")

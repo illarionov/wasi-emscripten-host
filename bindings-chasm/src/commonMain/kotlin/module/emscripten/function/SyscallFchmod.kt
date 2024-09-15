@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
@@ -22,7 +21,7 @@ internal class SyscallFchmod(
     override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             Fd(args[0].asInt()),
-            args[1].asUInt(),
+            args[1].asInt(),
         )
         listOf(Value.Number.I32(result))
     }

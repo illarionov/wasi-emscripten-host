@@ -7,9 +7,9 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
+import at.released.weh.filesystem.model.FileMode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallMkdiratFunctionHandle
@@ -32,7 +32,7 @@ internal class SyscallMkdirat(
             memory(frame),
             args.getArgAsInt(0),
             args.getArgAsWasmPtr(1),
-            args.getArgAsUint(2),
+            args.getArgAsInt(2),
         )
     }
 
@@ -42,6 +42,6 @@ internal class SyscallMkdirat(
         memory: WasmMemory,
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        rawMode: UInt,
+        @FileMode rawMode: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, rawMode)
 }

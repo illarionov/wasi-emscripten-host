@@ -14,7 +14,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
-import at.released.weh.filesystem.ext.toPosixFilePermissions
+import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
@@ -32,7 +32,7 @@ internal class NioMkdir(
             .mapLeft(ResolvePathError::toCommonError)
             .getOrElse { return it.left() }
         return Either.catch {
-            Files.createDirectory(path, input.mode.toPosixFilePermissions().asFileAttribute())
+            Files.createDirectory(path, input.mode.fileModeToPosixFilePermissions().asFileAttribute())
             Unit
         }.mapLeft {
             when (it) {

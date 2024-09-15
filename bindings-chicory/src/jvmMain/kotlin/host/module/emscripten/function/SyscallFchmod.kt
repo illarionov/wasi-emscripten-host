@@ -19,7 +19,7 @@ internal class SyscallFchmod(host: EmbedderHost) : EmscriptenHostFunctionHandle 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
             Fd(args[0].asInt()),
-            args[1].asUInt().toUInt(),
+            args[1].asInt(),
         )
         return Value.i32(result.toLong())
     }

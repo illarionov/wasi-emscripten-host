@@ -39,7 +39,7 @@ import platform.posix.fchmod
 
 internal object LinuxChmodFd : FileSystemOperationHandler<ChmodFd, ChmodError, Unit> {
     override fun invoke(input: ChmodFd): Either<ChmodError, Unit> {
-        val resultCode = fchmod(input.fd.fd, input.mode.mask)
+        val resultCode = fchmod(input.fd.fd, input.mode.toUInt())
         return if (resultCode == 0) {
             Unit.right()
         } else {

@@ -14,7 +14,7 @@ import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.PermissionDenied
-import at.released.weh.filesystem.ext.toPosixFilePermissions
+import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
@@ -37,9 +37,9 @@ internal class NioChmod(
     companion object {
         fun setPosixFilePermissions(
             path: Path,
-            mode: FileMode,
+            @FileMode mode: Int,
         ): Either<ChmodError, Unit> = Either.catch {
-            path.setPosixFilePermissions(mode.toPosixFilePermissions())
+            path.setPosixFilePermissions(mode.fileModeToPosixFilePermissions())
             Unit
         }.mapLeft {
             when (it) {
