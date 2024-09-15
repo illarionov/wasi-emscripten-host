@@ -8,6 +8,7 @@
 
 plugins {
     id("at.released.weh.gradle.lint.binary-compatibility-validator")
+    id("at.released.weh.gradle.lint.android-lint-noagp")
     id("at.released.weh.gradle.multiplatform.kotlin")
     id("at.released.weh.gradle.multiplatform.publish")
 }
