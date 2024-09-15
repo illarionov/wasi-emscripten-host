@@ -7,6 +7,7 @@
 @file:Suppress("OPT_IN_USAGE")
 
 plugins {
+    id("at.released.weh.gradle.lint.android-lint-noagp")
     id("at.released.weh.gradle.multiplatform.kotlin")
 }
 
