@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
@@ -26,7 +25,7 @@ internal class SyscallMkdirat(
             memory,
             args[0].asInt(),
             args[1].asWasmAddr(),
-            args[2].asUInt(),
+            args[2].asInt(),
         )
         listOf(Value.Number.I32(result))
     }

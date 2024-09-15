@@ -10,6 +10,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
 
 /**
@@ -25,13 +26,15 @@ public data class Open(
     public val path: String,
     public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
     public val flags: OpenFileFlags,
-    public val mode: FileMode = FileMode(0U),
+
+    @FileMode
+    public val mode: Int = 0,
 ) {
     override fun toString(): String = "Open(" +
             "path=$path, " +
             "baseDirectory=$baseDirectory, " +
             "flags=$flags, " +
-            "mode=$mode" +
+            "mode=${fileModeTypeToString(mode)}" +
             ")"
 
     public companion object : FileSystemOperation<Open, OpenError, Fd> {

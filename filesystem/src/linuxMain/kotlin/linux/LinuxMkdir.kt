@@ -46,7 +46,7 @@ internal object LinuxMkdir : FileSystemOperationHandler<Mkdir, MkdirError, Unit>
         val resultCode = mkdirat(
             input.baseDirectory.toDirFd(),
             input.path,
-            input.mode.mask,
+            input.mode.toUInt(),
         )
         return if (resultCode == 0) {
             Unit.right()

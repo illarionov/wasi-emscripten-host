@@ -28,11 +28,10 @@ public class SyscallOpenatFunctionHandle(
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
         rawFlags: UInt,
-        rawMode: UInt,
+        @FileMode rawMode: Int,
     ): Int {
         val fs = host.fileSystem
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
-        val mode = FileMode(rawMode)
         val flags = OpenFileFlags(rawFlags)
         val path = memory.readNullTerminatedString(pathnamePtr)
 
@@ -40,7 +39,7 @@ public class SyscallOpenatFunctionHandle(
             path = path,
             baseDirectory = baseDirectory,
             flags = flags,
-            mode = mode,
+            mode = rawMode,
         )
         return fs.execute(Open, fsOperation)
             .fold(

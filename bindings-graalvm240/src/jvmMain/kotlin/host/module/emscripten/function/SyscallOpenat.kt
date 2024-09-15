@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
+import at.released.weh.filesystem.model.FileMode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
@@ -31,9 +32,9 @@ internal class SyscallOpenat(
         val args = frame.arguments
         val memory = memory(frame)
         val mode = if (WasmArguments.getArgumentCount(args) >= 4) {
-            memory.load_i32(this, args.getArgAsInt(3).toLong()).toUInt()
+            memory.load_i32(this, args.getArgAsInt(3).toLong())
         } else {
-            0U
+            0
         }
 
         val fdOrErrno = openAt(
@@ -52,6 +53,6 @@ internal class SyscallOpenat(
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
         flags: UInt,
-        rawMode: UInt,
+        @FileMode rawMode: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, flags, rawMode)
 }

@@ -10,13 +10,20 @@ import at.released.weh.filesystem.error.MkdirError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class Mkdir(
     public val path: String,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
-    public val mode: FileMode,
+
+    @FileMode
+    public val mode: Int,
 ) {
+    override fun toString(): String {
+        return "Mkdir(path='$path', baseDirectory=$baseDirectory, mode=${fileModeTypeToString(mode)})"
+    }
+
     public companion object : FileSystemOperation<Mkdir, MkdirError, Unit> {
         override val tag: String = "mkdir"
     }

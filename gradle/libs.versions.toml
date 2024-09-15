@@ -5,6 +5,7 @@ androidCompileSdk = "34"
 agp = "8.5.2"
 atomicfu = "0.25.0"
 arrow = "2.0.0-alpha.3"
+android-annotation = "1.9.0-alpha03"
 assertk = "0.28.1"
 chasm = "0.9.1"
 chicory = "0.0.12"
@@ -23,6 +24,7 @@ node-plugin = "7.0.2"
 spotless = "7.0.0.BETA2"
 
 [libraries]
+android-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "android-annotation" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }

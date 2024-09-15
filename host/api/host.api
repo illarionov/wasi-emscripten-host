@@ -461,7 +461,7 @@ public final class at/released/weh/host/emscripten/function/SyscallFaccessatFunc
 
 public final class at/released/weh/host/emscripten/function/SyscallFchmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-PMWNU24 (II)I
+	public final fun execute-e25n4c0 (II)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallFchown32FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -491,12 +491,12 @@ public final class at/released/weh/host/emscripten/function/SyscallGetcwdFunctio
 
 public final class at/released/weh/host/emscripten/function/SyscallMkdiratFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-gO_FNhg (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+	public final fun execute-qyLkX4k (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallOpenatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-G6HztX0 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute-fT4Le30 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallReadlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {

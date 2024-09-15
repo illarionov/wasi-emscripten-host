@@ -52,7 +52,7 @@ internal class LinuxOpen(
             val openHow: open_how = alloc<open_how> {
                 memset(ptr, 0, sizeOf<open_how>().toULong())
                 flags = input.flags.toLinuxMask()
-                mode = input.mode.mask.toULong()
+                mode = input.mode.toULong()
                 resolve = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS).toResolveMask()
             }
             syscall(

@@ -7,7 +7,6 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
-import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.chmod.Chmod
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
@@ -25,7 +24,7 @@ public class SyscallChmodFunctionHandle(
         pathnamePtr: WasmPtr<Byte>,
         mode: UInt,
     ): Int {
-        val fileMode = FileMode(mode)
+        val fileMode = mode.toInt()
         val path = memory.readNullTerminatedString(pathnamePtr)
         return host.fileSystem.execute(
             Chmod,

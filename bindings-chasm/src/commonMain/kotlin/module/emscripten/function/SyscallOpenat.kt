@@ -14,7 +14,6 @@ import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readU32
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
@@ -26,9 +25,9 @@ internal class SyscallOpenat(
     private val handle: SyscallOpenatFunctionHandle = SyscallOpenatFunctionHandle(host)
     override val function: HostFunction = { args ->
         val mode = if (args.lastIndex == 3) {
-            memory.readU32(args[3].asWasmAddr<Unit>())
+            memory.readI32(args[3].asWasmAddr<Unit>())
         } else {
-            0U
+            0
         }
         val fdOrErrno = handle.execute(
             memory,

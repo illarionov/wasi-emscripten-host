@@ -7,7 +7,6 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
@@ -28,7 +27,7 @@ internal class SyscallFchmod(
         val args = frame.arguments
         return syscallFchmod(
             args.getArgAsInt(0),
-            args.getArgAsUint(1),
+            args.getArgAsInt(1),
         )
     }
 
@@ -36,6 +35,6 @@ internal class SyscallFchmod(
     @Suppress("MemberNameEqualsClassName")
     private fun syscallFchmod(
         fd: Int,
-        mode: UInt,
+        mode: Int,
     ): Int = handle.execute(Fd(fd), mode)
 }

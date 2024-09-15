@@ -38,6 +38,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.commonApi)
+            api(libs.android.annotation)
             api(libs.arrow.core)
             implementation(projects.commonUtil)
         }

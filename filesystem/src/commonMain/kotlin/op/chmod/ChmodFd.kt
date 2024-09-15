@@ -9,12 +9,17 @@ package at.released.weh.filesystem.op.chmod
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class ChmodFd(
     public val fd: Fd,
-    public val mode: FileMode,
+
+    @FileMode
+    public val mode: Int,
 ) {
+    override fun toString(): String = "ChmodFd(fd=$fd, mode=${fileModeTypeToString(mode)}"
+
     public companion object : FileSystemOperation<ChmodFd, ChmodError, Unit> {
         override val tag: String = "chmodfd"
     }

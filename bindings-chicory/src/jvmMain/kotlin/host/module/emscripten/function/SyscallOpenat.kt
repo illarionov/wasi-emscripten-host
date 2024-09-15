@@ -12,7 +12,6 @@ import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readU32
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
@@ -25,9 +24,9 @@ internal class SyscallOpenat(
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val mode = if (args.lastIndex == 3) {
-            memory.readU32(args[3].asWasmAddr<Unit>())
+            memory.readI32(args[3].asWasmAddr<Unit>())
         } else {
-            0U
+            0
         }
         val fdOrErrno = handle.execute(
             memory,

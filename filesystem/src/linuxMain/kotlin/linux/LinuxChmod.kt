@@ -44,7 +44,7 @@ internal object LinuxChmod : FileSystemOperationHandler<Chmod, ChmodError, Unit>
         val resultCode = fchmodat(
             input.baseDirectory.toDirFd(),
             input.path,
-            input.mode.mask,
+            input.mode.toUInt(),
             input.getChmodFlags(),
         )
         return if (resultCode == 0) {

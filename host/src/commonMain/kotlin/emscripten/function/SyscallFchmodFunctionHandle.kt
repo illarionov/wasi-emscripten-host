@@ -17,7 +17,7 @@ import at.released.weh.host.ext.negativeErrnoCode
 public class SyscallFchmodFunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_FCHMOD, host) {
-    public fun execute(fd: Fd, mode: UInt): Int {
-        return host.fileSystem.execute(ChmodFd, ChmodFd(fd, FileMode(mode))).negativeErrnoCode()
+    public fun execute(fd: Fd, @FileMode mode: Int): Int {
+        return host.fileSystem.execute(ChmodFd, ChmodFd(fd, mode)).negativeErrnoCode()
     }
 }

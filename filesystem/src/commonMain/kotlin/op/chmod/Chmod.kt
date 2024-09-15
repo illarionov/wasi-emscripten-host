@@ -10,14 +10,20 @@ import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class Chmod(
     val path: String,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
-    public val mode: FileMode,
+
+    @FileMode
+    public val mode: Int,
     public val followSymlinks: Boolean = true,
 ) {
+    override fun toString(): String = "Chmod(path='$path', baseDirectory=$baseDirectory, " +
+            "mode=${fileModeTypeToString(mode)}, followSymlinks=$followSymlinks)"
+
     public companion object : FileSystemOperation<Chmod, ChmodError, Unit> {
         override val tag: String = "chmod"
     }
