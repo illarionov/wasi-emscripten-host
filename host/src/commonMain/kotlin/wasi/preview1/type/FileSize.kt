@@ -11,7 +11,7 @@ import at.released.weh.host.base.WasmValueType
 /**
  * Non-negative file size or length of a region within a file.
  */
-public class FileSize(
+public data class FileSize(
     public val value: Long,
 ) {
     public companion object : WasiTypename {

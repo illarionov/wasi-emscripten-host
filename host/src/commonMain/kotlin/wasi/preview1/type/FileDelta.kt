@@ -8,15 +8,13 @@ package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.base.WasmValueTypes.I64
-import kotlin.jvm.JvmInline
 
 /**
  * Relative offset within a file.
  *
  * (typename $filedelta s64)
  */
-@JvmInline
-public value class FileDelta(
+public data class FileDelta(
     public val rawValue: Long,
 ) {
     public companion object : WasiTypename {

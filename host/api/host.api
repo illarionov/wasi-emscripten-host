@@ -1194,17 +1194,14 @@ public final class at/released/weh/host/wasi/preview1/type/FdStat$Companion : at
 
 public final class at/released/weh/host/wasi/preview1/type/FileDelta {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FileDelta$Companion;
-	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/FileDelta;
-	public static fun constructor-impl (J)J
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/host/wasi/preview1/type/FileDelta;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/FileDelta;JILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FileDelta;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
 	public final fun getRawValue ()J
 	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()J
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileDelta$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1214,7 +1211,13 @@ public final class at/released/weh/host/wasi/preview1/type/FileDelta$Companion :
 public final class at/released/weh/host/wasi/preview1/type/FileSize {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FileSize$Companion;
 	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/host/wasi/preview1/type/FileSize;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/FileSize;JILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FileSize;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getValue ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileSize$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1223,25 +1226,25 @@ public final class at/released/weh/host/wasi/preview1/type/FileSize$Companion : 
 
 public final class at/released/weh/host/wasi/preview1/type/Filestat {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Filestat$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;JLat/released/weh/host/wasi/preview1/type/FileSize;JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/Linkcount;Lat/released/weh/host/wasi/preview1/type/FileSize;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;)V
 	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/Device;
 	public final fun component2 ()Lat/released/weh/host/wasi/preview1/type/Inode;
 	public final fun component3 ()Lat/released/weh/host/wasi/preview1/type/Filetype;
-	public final fun component4-13676UE ()J
+	public final fun component4 ()Lat/released/weh/host/wasi/preview1/type/Linkcount;
 	public final fun component5 ()Lat/released/weh/host/wasi/preview1/type/FileSize;
-	public final fun component6-s-V_6mc ()J
-	public final fun component7-s-V_6mc ()J
-	public final fun component8-s-V_6mc ()J
-	public final fun copy-05FiarU (Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;JLat/released/weh/host/wasi/preview1/type/FileSize;JJJ)Lat/released/weh/host/wasi/preview1/type/Filestat;
-	public static synthetic fun copy-05FiarU$default (Lat/released/weh/host/wasi/preview1/type/Filestat;Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;JLat/released/weh/host/wasi/preview1/type/FileSize;JJJILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Filestat;
+	public final fun component6 ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun component7 ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun component8 ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/Linkcount;Lat/released/weh/host/wasi/preview1/type/FileSize;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;)Lat/released/weh/host/wasi/preview1/type/Filestat;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Filestat;Lat/released/weh/host/wasi/preview1/type/Device;Lat/released/weh/host/wasi/preview1/type/Inode;Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/Linkcount;Lat/released/weh/host/wasi/preview1/type/FileSize;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Filestat;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAtim-s-V_6mc ()J
-	public final fun getCtim-s-V_6mc ()J
+	public final fun getAtim ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun getCtim ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
 	public final fun getDev ()Lat/released/weh/host/wasi/preview1/type/Device;
 	public final fun getFileType ()Lat/released/weh/host/wasi/preview1/type/Filetype;
 	public final fun getIno ()Lat/released/weh/host/wasi/preview1/type/Inode;
-	public final fun getMtim-s-V_6mc ()J
-	public final fun getNlink-13676UE ()J
+	public final fun getMtim ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun getNlink ()Lat/released/weh/host/wasi/preview1/type/Linkcount;
 	public final fun getSize ()Lat/released/weh/host/wasi/preview1/type/FileSize;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1273,18 +1276,15 @@ public final class at/released/weh/host/wasi/preview1/type/Filetype$Companion : 
 
 public final class at/released/weh/host/wasi/preview1/type/Fstflags {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Fstflags$Companion;
-	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/Fstflags;
-	public static fun constructor-impl (S)S
-	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;)S
+	public fun <init> (S)V
+	public fun <init> ([Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;)V
+	public final fun component1 ()S
+	public final fun copy (S)Lat/released/weh/host/wasi/preview1/type/Fstflags;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Fstflags;SILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Fstflags;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (SLjava/lang/Object;)Z
-	public static final fun equals-impl0 (SS)Z
-	public final fun getRawMask-Mh2AYeg ()S
+	public final fun getRawMask ()S
 	public fun hashCode ()I
-	public static fun hashCode-impl (S)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (S)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()S
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Fstflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1297,7 +1297,7 @@ public final class at/released/weh/host/wasi/preview1/type/Fstflags$Fstflags : j
 	public static final field MTIM Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
 	public static final field MTIM_NOW Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getMask-Mh2AYeg ()S
+	public final fun getMask ()S
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
 	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Fstflags$Fstflags;
 }
@@ -1354,17 +1354,14 @@ public final class at/released/weh/host/wasi/preview1/type/IovecArray$Companion 
 
 public final class at/released/weh/host/wasi/preview1/type/Linkcount {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Linkcount$Companion;
-	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Linkcount;
-	public static fun constructor-impl (J)J
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/host/wasi/preview1/type/Linkcount;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Linkcount;JILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Linkcount;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
-	public final fun getRawValue-s-VKNKU ()J
+	public final fun getRawValue ()J
 	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()J
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Linkcount$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1746,18 +1743,18 @@ public final class at/released/weh/host/wasi/preview1/type/Subscription$Companio
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/SubscriptionClock$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/ClockId;JJSLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/ClockId;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;SLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/ClockId;
-	public final fun component2-s-V_6mc ()J
-	public final fun component3-s-V_6mc ()J
+	public final fun component2 ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun component3 ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
 	public final fun component4-4-ks080 ()S
-	public final fun copy-b-5GK7A (Lat/released/weh/host/wasi/preview1/type/ClockId;JJS)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
-	public static synthetic fun copy-b-5GK7A$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;Lat/released/weh/host/wasi/preview1/type/ClockId;JJSILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public final fun copy-JAX9GVY (Lat/released/weh/host/wasi/preview1/type/ClockId;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;S)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
+	public static synthetic fun copy-JAX9GVY$default (Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;Lat/released/weh/host/wasi/preview1/type/ClockId;Lat/released/weh/host/wasi/preview1/type/Timestamp;Lat/released/weh/host/wasi/preview1/type/Timestamp;SILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/SubscriptionClock;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFlags-4-ks080 ()S
 	public final fun getId ()Lat/released/weh/host/wasi/preview1/type/ClockId;
-	public final fun getPrecision-s-V_6mc ()J
-	public final fun getTimeout-s-V_6mc ()J
+	public final fun getPrecision ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public final fun getTimeout ()Lat/released/weh/host/wasi/preview1/type/Timestamp;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1827,17 +1824,14 @@ public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$FdWrite
 
 public final class at/released/weh/host/wasi/preview1/type/Timestamp {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Timestamp$Companion;
-	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Timestamp;
-	public static fun constructor-impl (J)J
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/host/wasi/preview1/type/Timestamp;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Timestamp;JILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Timestamp;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
-	public final fun getValue-s-VKNKU ()J
+	public final fun getValue ()J
 	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()J
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Timestamp$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
