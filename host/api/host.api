@@ -594,18 +594,6 @@ public final class at/released/weh/host/include/FcntlExtKt {
 	public static final fun oMaskToString (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/host/include/FileAccessibilityCheck : java/lang/annotation/Annotation {
-}
-
-public final class at/released/weh/host/include/FileAccessibilityCheckFlag {
-	public static final field F_OK I
-	public static final field INSTANCE Lat/released/weh/host/include/FileAccessibilityCheckFlag;
-	public static final field MASK I
-	public static final field R_OK I
-	public static final field W_OK I
-	public static final field X_OK I
-}
-
 public final class at/released/weh/host/include/StructFlock {
 	public static final field Companion Lat/released/weh/host/include/StructFlock$Companion;
 	public static final field STRUCT_FLOCK_SIZE I
