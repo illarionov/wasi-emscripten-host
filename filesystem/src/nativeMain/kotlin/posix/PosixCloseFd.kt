@@ -25,14 +25,14 @@ import platform.posix.ENOSPC
 import platform.posix.close
 import platform.posix.errno
 
-internal expect fun Int.platformSpecificErrnoToCloseError(fd: Fd): CloseError
+internal expect fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError
 
 internal class PosixCloseFd(
     private val fsState: PosixFileSystemState,
 ) : FileSystemOperationHandler<CloseFd, CloseError, Unit> {
     override fun invoke(input: CloseFd): Either<CloseError, Unit> {
         fsState.remove(input.fd)
-        val retval = close(input.fd.fd)
+        val retval = close(input.fd)
         return if (retval == 0) {
             Unit.right()
         } else {
@@ -40,7 +40,7 @@ internal class PosixCloseFd(
         }
     }
 
-    private fun Int.errnoToCloseError(fd: Fd): CloseError = when (this) {
+    private fun Int.errnoToCloseError(@Fd fd: Int): CloseError = when (this) {
         EBADF -> BadFileDescriptor("Bad file descriptor $fd")
         EINTR -> Interrupted("Closing $fd interrupted by signal")
         EIO -> IoError("I/O error while closing $fd")

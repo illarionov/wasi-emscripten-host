@@ -63,10 +63,10 @@ public object Fcntl {
     public const val O_SEARCH: Int = O_PATH
 
     public const val AT_FDCWD: Int = -100
-    public const val AT_SYMLINK_NOFOLLOW: UInt = 0x100U
-    public const val AT_REMOVEDIR: UInt = 0x200U
-    public const val AT_SYMLINK_FOLLOW: UInt = 0x400U
-    public const val AT_EACCESS: UInt = 0x200U
+    public const val AT_SYMLINK_NOFOLLOW: Int = 0x100
+    public const val AT_REMOVEDIR: Int = 0x200
+    public const val AT_SYMLINK_FOLLOW: Int = 0x400
+    public const val AT_EACCESS: Int = 0x200
 
     public const val F_OK: Int = 0
     public const val R_OK: Int = 4

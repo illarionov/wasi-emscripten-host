@@ -7,18 +7,18 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import at.released.weh.host.base.WasmValueTypes.I64
 
 /**
  * Relative offset within a file.
  *
  * (typename $filedelta s64)
  */
-@JvmInline
-public value class FileDelta(
+public data class FileDelta(
     public val rawValue: Long,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I64
+        @WasmValueType
+        public override val wasmValueType: Int = I64
     }
 }

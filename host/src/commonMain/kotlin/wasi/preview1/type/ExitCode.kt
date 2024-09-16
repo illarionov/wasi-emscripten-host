@@ -7,13 +7,12 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
-@JvmInline
-public value class ExitCode(
-    public val rawValue: UInt,
+public class ExitCode(
+    public val rawValue: Int,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

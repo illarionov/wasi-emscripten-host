@@ -11,7 +11,8 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class CloseFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
 ) {
     public companion object : FileSystemOperation<CloseFd, CloseError, Unit> {
         override val tag: String = "closefd"

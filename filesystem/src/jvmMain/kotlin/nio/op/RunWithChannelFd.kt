@@ -14,7 +14,8 @@ import at.released.weh.filesystem.op.FileSystemOperation
 import java.nio.channels.FileChannel
 
 public class RunWithChannelFd<R>(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
     public val block: (
         channel: Either<BadFileDescriptor, FileChannel>,
     ) -> Either<FileSystemOperationError, R>,

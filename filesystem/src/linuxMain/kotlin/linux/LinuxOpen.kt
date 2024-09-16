@@ -46,8 +46,8 @@ import platform.posix.syscall
 
 internal class LinuxOpen(
     private val state: PosixFileSystemState,
-) : FileSystemOperationHandler<Open, OpenError, Fd> {
-    override fun invoke(input: Open): Either<OpenError, Fd> {
+) : FileSystemOperationHandler<Open, OpenError, @Fd Int> {
+    override fun invoke(input: Open): Either<OpenError, @Fd Int> {
         val errorOrFd = memScoped {
             val openHow: open_how = alloc<open_how> {
                 memset(ptr, 0, sizeOf<open_how>().toULong())
@@ -66,7 +66,7 @@ internal class LinuxOpen(
         return if (errorOrFd < 0) {
             errno.errNoToOpenError().left()
         } else {
-            val fd = Fd(errorOrFd.toInt())
+            val fd = errorOrFd.toInt()
             state.add(fd)
             fd.right()
         }

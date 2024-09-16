@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
+import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
@@ -30,7 +30,7 @@ internal class SyscallChmod(
         return syscallChmod(
             memory(frame),
             args.getArgAsWasmPtr(0),
-            args.getArgAsUint(1),
+            args.getArgAsInt(1),
         )
     }
 
@@ -39,6 +39,6 @@ internal class SyscallChmod(
     private fun syscallChmod(
         memory: WasmMemory,
         pathnamePtr: WasmPtr<Byte>,
-        mode: UInt,
+        mode: Int,
     ): Int = handle.execute(memory.toHostMemory(), pathnamePtr, mode)
 }

@@ -23,7 +23,7 @@ import java.nio.file.Path as NioPath
 
 internal class NioFileHandle(
     val fileSystem: NioFileSystemState,
-    val fd: Fd,
+    @Fd val fd: Int,
     val path: NioPath,
     val channel: FileChannel,
 ) {

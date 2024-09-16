@@ -40,6 +40,7 @@ public enum class ClockId(
     ;
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

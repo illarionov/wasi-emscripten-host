@@ -8,7 +8,7 @@
 
 package at.released.weh.bindings.chicory.host.module.wasi
 
-import at.released.weh.bindings.chicory.ext.chicory
+import at.released.weh.bindings.chicory.ext.wasmValueTypeToChicoryValueType
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdClose
@@ -22,7 +22,6 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.base.memory.WasiMemoryWriter
@@ -58,8 +57,8 @@ internal class WasiSnapshotPreview1ModuleBuilder(
                 WasiHostFunctionAdapter(functionHandle),
                 moduleName,
                 wasiFunc.wasmName,
-                wasiFunc.type.paramTypes.map(WasmValueType::chicory),
-                wasiFunc.type.returnTypes.map(WasmValueType::chicory),
+                wasiFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
+                wasiFunc.type.returnTypes.map(::wasmValueTypeToChicoryValueType),
             )
         }
     }

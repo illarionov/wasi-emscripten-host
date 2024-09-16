@@ -14,9 +14,10 @@ import at.released.weh.filesystem.op.FileSystemOperation
  * Retrieves information about the currently opened file [fd].
  */
 public data class StatFd(
-    val fd: Fd,
+    @Fd
+    val fd: Int,
 ) {
-   public companion object : FileSystemOperation<StatFd, StatError, StructStat> {
-       override val tag: String = "statfd"
-   }
+    public companion object : FileSystemOperation<StatFd, StatError, StructStat> {
+        override val tag: String = "statfd"
+    }
 }

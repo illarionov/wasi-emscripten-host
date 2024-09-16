@@ -7,23 +7,21 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * Flags determining the method of how paths are resolved.
  */
-@JvmInline
-public value class LookupFlags(
-    public val rawMask: UInt,
+public data class LookupFlags(
+    public val rawMask: Int,
 ) {
     public constructor(
         vararg flags: LookupFlag,
     ) : this(
-        flags.fold(0U) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class LookupFlag(
-        public val mask: UInt,
+        public val mask: Int,
     ) {
         /**
          * As long as the resolved path corresponds to a symbolic link, it is expanded.
@@ -32,10 +30,11 @@ public value class LookupFlags(
 
         ;
 
-        constructor(bit: Byte) : this(1U.shl(bit.toInt()))
+        constructor(bit: Byte) : this(1.shl(bit.toInt()))
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

@@ -1,7 +1,7 @@
 public final class at/released/weh/host/test/assertions/MemoryAssertionsKt {
-	public static final fun byteAt-XZvYtOA (Lassertk/Assert;I)Lassertk/Assert;
-	public static final fun bytesAt-ilh_Uvc (Lassertk/Assert;II)Lassertk/Assert;
-	public static final fun hasBytesAt-ilh_Uvc (Lassertk/Assert;I[B)V
+	public static final fun byteAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;)Lassertk/Assert;
+	public static final fun bytesAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;I)Lassertk/Assert;
+	public static final fun hasBytesAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;[B)V
 }
 
 public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/weh/host/EmbedderHost {
@@ -39,18 +39,18 @@ public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/hos
 	public final fun getMemoryReader ()Lat/released/weh/host/base/memory/DefaultWasiMemoryReader;
 	public final fun getMemoryWriter ()Lat/released/weh/host/base/memory/DefaultWasiMemoryWriter;
 	public final fun getSize ()I
-	public fun readI32-e-C6Vng (I)I
-	public fun readI64-e-C6Vng (I)J
-	public fun readI8-e-C6Vng (I)B
-	public fun sink-Z5Htsd4 (II)Lkotlinx/io/RawSink;
-	public fun source-Z5Htsd4 (II)Lkotlinx/io/RawSource;
+	public fun readI32 (Lat/released/weh/host/base/WasmPtr;)I
+	public fun readI64 (Lat/released/weh/host/base/WasmPtr;)J
+	public fun readI8 (Lat/released/weh/host/base/WasmPtr;)B
+	public fun sink (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)Lkotlinx/io/RawSink;
+	public fun source (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)Lkotlinx/io/RawSource;
 	public fun toString ()Ljava/lang/String;
-	public fun writeI32-N0MNGDA (II)V
-	public fun writeI64-N0MNGDA (IJ)V
-	public fun writeI8-N0MNGDA (IB)V
+	public fun writeI32 (Lat/released/weh/host/base/WasmPtr;I)V
+	public fun writeI64 (Lat/released/weh/host/base/WasmPtr;J)V
+	public fun writeI8 (Lat/released/weh/host/base/WasmPtr;B)V
 }
 
 public final class at/released/weh/host/test/fixtures/TestMemoryRawSource : at/released/weh/host/base/memory/MemoryRawSource {
-	public synthetic fun <init> (Lat/released/weh/host/test/fixtures/TestMemory;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lat/released/weh/host/test/fixtures/TestMemory;Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)V
 }
 

@@ -40,7 +40,7 @@ public data class Open(
             "mode=${fileModeTypeToString(mode)}" +
             ")"
 
-    public companion object : FileSystemOperation<Open, OpenError, Fd> {
+    public companion object : FileSystemOperation<Open, OpenError, @Fd Int> {
         override val tag: String = "open"
     }
 }

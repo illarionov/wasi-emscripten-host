@@ -13,16 +13,17 @@ import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
  * Identifiers for preopened capabilities.
  */
 public enum class Preopentype(
-    public val value: UInt,
+    public val value: Int,
 ) {
     /**
      * A pre-opened directory.
      */
-    DIR(0U),
+    DIR(0),
 
     ;
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = U8
+        @WasmValueType
+        override val wasmValueType: Int = U8
     }
 }

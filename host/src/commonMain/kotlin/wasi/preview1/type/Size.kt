@@ -7,13 +7,12 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
-@JvmInline
-public value class Size(
-    public val value: UInt,
+public data class Size(
+    public val value: Int,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

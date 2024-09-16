@@ -10,7 +10,6 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.function.FdSeekFunctionHandle
@@ -46,5 +45,5 @@ internal class FdSeek(
         offset: Long,
         whenceInt: Int,
         pNewOffset: WasmPtr<Long>,
-    ): Int = handle.execute(memory.toHostMemory(), Fd(fd), offset, whenceInt, pNewOffset).code
+    ): Int = handle.execute(memory.toHostMemory(), fd, offset, whenceInt, pNewOffset).code
 }

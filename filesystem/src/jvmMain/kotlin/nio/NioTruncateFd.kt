@@ -27,7 +27,7 @@ internal class NioTruncateFd(
         val channel = fsState.fileDescriptors.get(input.fd)
             ?: return BadFileDescriptor(fileDescriptorNotOpenedMessage(input.fd)).left()
         return Either.catch {
-            channel.channel.truncate(input.length.toLong())
+            channel.channel.truncate(input.length)
             // TODO: extend file size to length?
             Unit
         }.mapLeft { error ->
@@ -35,7 +35,7 @@ internal class NioTruncateFd(
         }
     }
 
-    private fun Throwable.toTruncateError(fd: Fd): TruncateError = when (this) {
+    private fun Throwable.toTruncateError(@Fd fd: Int): TruncateError = when (this) {
         is NonReadableChannelException -> InvalidArgument("Read-only channel")
         is ClosedChannelException -> BadFileDescriptor(fileDescriptorNotOpenedMessage(fd))
         is IllegalArgumentException -> InvalidArgument("Negative length")

@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * File attributes.
@@ -64,6 +65,7 @@ public data class Filestat(
     val ctim: Timestamp, // (field $ctim $timestamp)
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        public override val wasmValueType: Int = I32
     }
 }

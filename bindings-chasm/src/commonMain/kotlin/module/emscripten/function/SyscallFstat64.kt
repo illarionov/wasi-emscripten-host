@@ -9,7 +9,6 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.SyscallFstat64FunctionHandle
@@ -24,7 +23,7 @@ internal class SyscallFstat64(
     override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             memory,
-            Fd(args[0].asInt()),
+            args[0].asInt(),
             args[1].asWasmAddr(),
         )
         listOf(Value.Number.I32(result))

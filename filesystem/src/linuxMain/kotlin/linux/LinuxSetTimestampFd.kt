@@ -37,7 +37,7 @@ internal object LinuxSetTimestampFd : FileSystemOperationHandler<SetTimestampFd,
         timespec[1].set(input.mtimeNanoseconds)
 
         val resultCode = futimens(
-            input.fd.fd,
+            input.fd,
             timespec,
         )
         return if (resultCode == 0) {

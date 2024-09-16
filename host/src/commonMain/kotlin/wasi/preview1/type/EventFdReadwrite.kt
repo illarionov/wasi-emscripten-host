@@ -21,6 +21,7 @@ public data class EventFdReadwrite(
     val flags: Eventrwflags, // field $flags $eventrwflags)
 ) {
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

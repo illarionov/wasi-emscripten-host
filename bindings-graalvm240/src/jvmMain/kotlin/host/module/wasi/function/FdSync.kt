@@ -10,7 +10,6 @@ package at.released.weh.bindings.graalvm240.host.module.wasi.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -51,5 +50,5 @@ private class FdSync(
 
     @TruffleBoundary
     @Suppress("MemberNameEqualsClassName")
-    private fun fdSync(fd: Int): Int = handle.execute(Fd(fd)).code
+    private fun fdSync(fd: Int): Int = handle.execute(fd).code
 }

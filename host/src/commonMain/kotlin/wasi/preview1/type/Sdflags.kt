@@ -8,23 +8,22 @@ package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * Which channels on a socket to shut down.
  */
-@JvmInline
-public value class Sdflags(
-    public val rawMask: UByte,
+public data class Sdflags(
+    public val rawMask: Byte,
 ) {
     public constructor(
         vararg flags: Sdflags,
     ) : this(
-        flags.fold(0.toUByte()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toByte()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Sdflags(
-        public val mask: UByte,
+        public val mask: Byte,
     ) {
         /**
          * Disables further receive operations.
@@ -38,10 +37,11 @@ public value class Sdflags(
 
         ;
 
-        constructor(bit: Int) : this(1U.shl(bit).toUByte())
+        constructor(bit: Int) : this(1.shl(bit).toByte())
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = U8
+        @WasmValueType
+        override val wasmValueType: Int = U8
     }
 }

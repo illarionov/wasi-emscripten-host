@@ -49,17 +49,17 @@ import platform.posix.writev
 internal object LinuxWriteFd : FileSystemOperationHandler<WriteFd, WriteError, ULong> {
     override fun invoke(input: WriteFd): Either<WriteError, ULong> {
         return when (input.strategy) {
-            CHANGE_POSITION -> callReadWrite(input.fd, input.cIovecs) { fd: Fd, iovecs: CPointer<iovec>, size: Int ->
-                writev(fd.fd, iovecs, size)
+            CHANGE_POSITION -> callReadWrite(input.fd, input.cIovecs) { fd: Int, iovecs: CPointer<iovec>, size: Int ->
+                writev(fd, iovecs, size)
             }.mapLeft { errNo -> errNo.errnoToWriteError(input.fd, input.cIovecs) }
 
             DO_NOT_CHANGE_POSITION -> {
-                val currentPosition = lseek(input.fd.fd, 0, SEEK_CUR)
+                val currentPosition = lseek(input.fd, 0, SEEK_CUR)
                 if (currentPosition < 0) {
                     errno.errnoSeekToWriteError(input.fd).left()
                 } else {
-                    callReadWrite(input.fd, input.cIovecs) { fd: Fd, iovecs: CPointer<iovec>, size: Int ->
-                        pwritev(fd.fd, iovecs, size, currentPosition)
+                    callReadWrite(input.fd, input.cIovecs) { fd: Int, iovecs: CPointer<iovec>, size: Int ->
+                        pwritev(fd, iovecs, size, currentPosition)
                     }.mapLeft { errNo -> errNo.errnoToWriteError(input.fd, input.cIovecs) }
                 }
             }
@@ -67,7 +67,7 @@ internal object LinuxWriteFd : FileSystemOperationHandler<WriteFd, WriteError, U
     }
 
     private fun Int.errnoToWriteError(
-        fd: Fd,
+        @Fd fd: Int,
         iovecs: List<FileSystemByteBuffer>,
     ): WriteError = when (this) {
         EAGAIN -> Again("Blocking write on non-blocking descriptor")
@@ -84,7 +84,7 @@ internal object LinuxWriteFd : FileSystemOperationHandler<WriteFd, WriteError, U
     }
 
     private fun Int.errnoSeekToWriteError(
-        fd: Fd,
+        @Fd fd: Int,
     ): WriteError = when (this) {
         EBADF -> BadFileDescriptor("Cannot seek on $fd: bad file descriptor")
         EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")

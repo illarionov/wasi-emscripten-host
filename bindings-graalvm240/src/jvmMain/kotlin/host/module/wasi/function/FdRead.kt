@@ -10,7 +10,6 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.memory.GraalInputStreamWasiMemoryReader
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.WasiMemoryReader
@@ -71,6 +70,6 @@ private class FdRead(
     ): Int {
         val hostMemory = memory.toHostMemory()
         val wasiMemoryReader: WasiMemoryReader = GraalInputStreamWasiMemoryReader(hostMemory, handle.host.fileSystem)
-        return handle.execute(hostMemory, wasiMemoryReader, Fd(fd), pIov, iovCnt, pNum).code
+        return handle.execute(hostMemory, wasiMemoryReader, fd, pIov, iovCnt, pNum).code
     }
 }

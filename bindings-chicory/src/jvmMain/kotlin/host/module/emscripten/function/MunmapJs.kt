@@ -8,7 +8,6 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
 import com.dylibso.chicory.runtime.Instance
@@ -24,8 +23,8 @@ internal class MunmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
             args[1].asInt(),
             args[2].asInt(),
             args[3].asInt(),
-            Fd(args[4].asInt()),
-            args[5].asLong().toULong(),
+            args[4].asInt(),
+            args[5].asLong(),
         )
         return Value.i32(result.toLong())
     }

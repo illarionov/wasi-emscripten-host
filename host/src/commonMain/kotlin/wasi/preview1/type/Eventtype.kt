@@ -38,6 +38,7 @@ public enum class Eventtype(
     constructor(id: Long) : this(id.toInt())
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = U8
+        @WasmValueType
+        override val wasmValueType: Int = U8
     }
 }

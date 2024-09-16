@@ -16,7 +16,7 @@ import at.released.weh.host.ext.negativeErrnoCode
 public class SyscallFchown32FunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_FCHOWN32, host) {
-    public fun execute(fd: Fd, owner: Int, group: Int): Int = host.fileSystem.execute(
+    public fun execute(@Fd fd: Int, owner: Int, group: Int): Int = host.fileSystem.execute(
         ChownFd,
         ChownFd(fd, owner, group),
     ).negativeErrnoCode()

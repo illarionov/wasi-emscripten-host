@@ -9,11 +9,10 @@ package at.released.weh.host.ext
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.include.Fcntl
 
 @InternalWasiEmscriptenHostApi
 public fun BaseDirectory.Companion.fromRawDirFd(rawDirFd: Int): BaseDirectory = when (rawDirFd) {
     Fcntl.AT_FDCWD -> CurrentWorkingDirectory
-    else -> BaseDirectory.DirectoryFd(Fd(rawDirFd))
+    else -> BaseDirectory.DirectoryFd(rawDirFd)
 }

@@ -48,16 +48,16 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     override fun invoke(input: ReadFd): Either<ReadError, ULong> {
         return when (input.strategy) {
             CHANGE_POSITION -> callReadWrite(input.fd, input.iovecs) { fd, iovecs, size ->
-                readv(fd.fd, iovecs, size)
+                readv(fd, iovecs, size)
             }.mapLeft { errNo -> errNo.errnoToReadError(input.fd, input.iovecs) }
 
             DO_NOT_CHANGE_POSITION -> {
-                val currentPosition = lseek(input.fd.fd, 0, SEEK_CUR)
+                val currentPosition = lseek(input.fd, 0, SEEK_CUR)
                 if (currentPosition < 0) {
                     errno.errnoSeekToReadError(input.fd).left()
                 } else {
                     callReadWrite(input.fd, input.iovecs) { fd, iovecs, size ->
-                        preadv(fd.fd, iovecs, size, currentPosition)
+                        preadv(fd, iovecs, size, currentPosition)
                     }.mapLeft { errNo -> errNo.errnoToReadError(input.fd, input.iovecs) }
                 }
             }
@@ -65,9 +65,9 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     internal fun callReadWrite(
-        fd: Fd,
+        @Fd fd: Int,
         iovecs: List<FileSystemByteBuffer>,
-        block: (fd: Fd, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
+        block: (fd: Int, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
     ): Either<Int, ULong> {
         if (iovecs.isEmpty()) {
             return 0UL.right()
@@ -109,7 +109,7 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     private fun Int.errnoToReadError(
-        fd: Fd,
+        @Fd fd: Int,
         iovecs: List<FileSystemByteBuffer>,
     ): ReadError = when (this) {
         EAGAIN -> NotSupported("Non-blocking read would block. Request: `$fd, $iovecs`")
@@ -122,7 +122,7 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     private fun Int.errnoSeekToReadError(
-        fd: Fd,
+        @Fd fd: Int,
     ): ReadError = when (this) {
         EBADF -> BadFileDescriptor("Can not seek on $fd")
         EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")

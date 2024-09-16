@@ -23,7 +23,7 @@ internal expect fun platformFstatFd(fd: Int): Either<Int, StructStat>
 
 internal object LinuxStatFd : FileSystemOperationHandler<StatFd, StatError, StructStat> {
     override fun invoke(input: StatFd): Either<StatError, StructStat> {
-        return platformFstatFd(input.fd.fd).mapLeft {
+        return platformFstatFd(input.fd).mapLeft {
             it.errnoToStatFdError(input)
         }
     }

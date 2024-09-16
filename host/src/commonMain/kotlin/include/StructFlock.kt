@@ -18,8 +18,8 @@ import kotlinx.io.readShortLe
 public data class StructFlock(
     val l_type: Short,
     val l_whence: Short,
-    val l_start: off_t,
-    val l_len: off_t,
+    val l_start: Long,
+    val l_len: Long,
     val l_pid: pid_t,
 ) {
     public companion object {
@@ -39,8 +39,8 @@ public data class StructFlock(
             return StructFlock(
                 l_type = type,
                 l_whence = whence,
-                l_start = start.toULong(),
-                l_len = len.toULong(),
+                l_start = start,
+                l_len = len,
                 l_pid = pid,
             )
         }

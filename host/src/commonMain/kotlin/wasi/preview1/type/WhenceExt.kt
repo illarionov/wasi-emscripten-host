@@ -9,4 +9,5 @@ package at.released.weh.host.wasi.preview1.type
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.host.base.WasmValueType
 
-public val Whence.Companion.wasmValueType: WasmValueType get() = WasiValueTypes.U8
+@WasmValueType
+public val Whence.Companion.wasmValueType: Int get() = WasiValueTypes.U8

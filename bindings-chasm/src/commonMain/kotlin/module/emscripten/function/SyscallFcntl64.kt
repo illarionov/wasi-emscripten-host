@@ -8,7 +8,6 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.SyscallFcntl64FunctionHandle
@@ -23,7 +22,7 @@ internal class SyscallFcntl64(
     override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             memory,
-            Fd(args[0].asInt()),
+            args[0].asInt(),
             args[1].asInt(),
             args[2].asInt(),
         )

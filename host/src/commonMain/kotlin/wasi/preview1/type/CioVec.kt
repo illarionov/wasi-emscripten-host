@@ -21,7 +21,7 @@ public data class CioVec(
     val bufLen: Size, // (field $buf_len $size)
 ) {
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType =
-            WasiValueTypes.U32
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

@@ -7,23 +7,22 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * Flags returned by `sock_recv`.
  */
-@JvmInline
-public value class Roflags(
-    public val rawMask: UShort,
+public data class Roflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: RoflagsValue,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class RoflagsValue(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * Returned by `sock_recv`: Message data has been truncated.
@@ -32,10 +31,11 @@ public value class Roflags(
 
         ;
 
-        constructor(bit: Int) : this(1.shl(bit).toUShort())
+        constructor(bit: Int) : this(1.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U16
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U16
     }
 }

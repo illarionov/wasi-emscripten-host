@@ -10,7 +10,6 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
@@ -34,7 +33,7 @@ internal class MmapJs(
             args.getArgAsInt(1),
             args.getArgAsInt(2),
             args.getArgAsInt(3),
-            args.getArgAsLong(4).toULong(),
+            args.getArgAsLong(4),
             args.getArgAsWasmPtr(5),
             args.getArgAsWasmPtr(6),
         )
@@ -47,8 +46,8 @@ internal class MmapJs(
         prot: Int,
         flags: Int,
         fd: Int,
-        offset: ULong,
+        offset: Long,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
-    ): Int = handle.execute(len, prot, flags, Fd(fd), offset, pAllocated, pAddr)
+    ): Int = handle.execute(len, prot, flags, fd, offset, pAllocated, pAddr)
 }

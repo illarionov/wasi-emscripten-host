@@ -7,7 +7,6 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
@@ -34,8 +33,8 @@ internal class SyscallFaccessat(
             memory,
             rawDirFd = args.getArgAsInt(0),
             pathnamePtr = args.getArgAsWasmPtr(1),
-            amode = args.getArgAsUint(2),
-            flags = args.getArgAsUint(3),
+            amode = args.getArgAsInt(2),
+            flags = args.getArgAsInt(3),
         )
         return fdOrErrno
     }
@@ -45,7 +44,7 @@ internal class SyscallFaccessat(
         memory: WasmMemory,
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        amode: UInt,
-        flags: UInt,
+        amode: Int,
+        flags: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, amode, flags)
 }

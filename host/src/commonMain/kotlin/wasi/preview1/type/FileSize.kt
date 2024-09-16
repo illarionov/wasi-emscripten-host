@@ -7,16 +7,15 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * Non-negative file size or length of a region within a file.
  */
-@JvmInline
-public value class FileSize(
-    public val value: ULong,
+public data class FileSize(
+    public val value: Long,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U64
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U64
     }
 }

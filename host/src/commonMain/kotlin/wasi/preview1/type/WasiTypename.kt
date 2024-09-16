@@ -9,5 +9,6 @@ package at.released.weh.host.wasi.preview1.type
 import at.released.weh.host.base.WasmValueType
 
 public interface WasiTypename {
-    public val wasmValueType: WasmValueType
+    @WasmValueType
+    public val wasmValueType: Int
 }

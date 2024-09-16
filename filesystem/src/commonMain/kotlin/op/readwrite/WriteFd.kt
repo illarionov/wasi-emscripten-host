@@ -11,7 +11,8 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class WriteFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
     public val cIovecs: List<FileSystemByteBuffer>,
     public val strategy: ReadWriteStrategy = ReadWriteStrategy.CHANGE_POSITION,
 ) {

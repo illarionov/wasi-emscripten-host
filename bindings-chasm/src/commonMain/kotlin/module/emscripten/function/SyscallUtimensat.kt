@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
@@ -27,7 +26,7 @@ internal class SyscallUtimensat(
             args[0].asInt(),
             args[1].asWasmAddr(),
             args[2].asWasmAddr(),
-            args[3].asUInt(),
+            args[3].asInt(),
         )
         listOf(Value.Number.I32(result))
     }

@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchown32FunctionHandle
 import com.dylibso.chicory.runtime.Instance
@@ -18,7 +17,7 @@ internal class SyscallFchown32(host: EmbedderHost) : EmscriptenHostFunctionHandl
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
-            Fd(args[0].asInt()),
+            args[0].asInt(),
             args[1].asInt(),
             args[2].asInt(),
         )

@@ -39,8 +39,8 @@ internal class WasmModuleMemoryHelper(
             memory.moduleName,
             memory.memoryName,
             index,
-            memory.spec.minSizePages,
-            memory.spec.maxSizePages,
+            memory.spec.minSize.count,
+            memory.spec.maxSize.count,
             memory.spec.supportMemory64,
             memory.spec.sharedMemory,
             false,
@@ -57,8 +57,8 @@ internal class WasmModuleMemoryHelper(
             val memoryIndex = memoryCount()
             allocateMemory(
                 memoryIndex,
-                memory.spec.minSizePages,
-                memory.spec.maxSizePages,
+                memory.spec.minSize.count,
+                memory.spec.maxSize.count,
                 memory.spec.supportMemory64,
                 memory.spec.sharedMemory,
                 false,

@@ -22,7 +22,7 @@ public class FdSeekFunctionHandle(
 ) : HostFunctionHandle(WasiHostFunction.FD_SEEK, host) {
     public fun execute(
         memory: Memory,
-        fd: Fd,
+        @Fd fd: Int,
         offset: Long,
         whenceInt: Int,
         pNewOffset: WasmPtr<Long>,

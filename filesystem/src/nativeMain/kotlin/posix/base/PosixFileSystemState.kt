@@ -13,17 +13,17 @@ import kotlinx.atomicfu.locks.withLock
 
 internal class PosixFileSystemState : AutoCloseable {
     private val lock: ReentrantLock = reentrantLock()
-    private val openFileDescriptors: MutableSet<Fd> = mutableSetOf()
+    private val openFileDescriptors: MutableSet<@Fd Int> = mutableSetOf()
 
     fun add(
-        fd: Fd,
+        @Fd fd: Int,
     ): Unit = lock.withLock {
         val added = openFileDescriptors.add(fd)
         require(added) { "File descriptor $fd already been allocated" }
     }
 
     fun remove(
-        fd: Fd,
+        @Fd fd: Int,
     ): Unit = lock.withLock {
         openFileDescriptors.remove(fd)
     }
@@ -33,7 +33,7 @@ internal class PosixFileSystemState : AutoCloseable {
             openFileDescriptors.toList()
         }
         for (fd in fileDescriptors) {
-            val errNo = platform.posix.close(fd.fd)
+            val errNo = platform.posix.close(fd)
             if (errNo != 0) {
                 // close($fd) failed with errno $errNo. Ignore.
             }

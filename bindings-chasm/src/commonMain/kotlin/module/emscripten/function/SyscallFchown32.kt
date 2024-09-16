@@ -8,7 +8,6 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchown32FunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
@@ -20,7 +19,7 @@ internal class SyscallFchown32(
     private val handle = SyscallFchown32FunctionHandle(host)
     override val function: HostFunction = { args ->
         val result: Int = handle.execute(
-            Fd(args[0].asInt()),
+            args[0].asInt(),
             args[1].asInt(),
             args[2].asInt(),
         )

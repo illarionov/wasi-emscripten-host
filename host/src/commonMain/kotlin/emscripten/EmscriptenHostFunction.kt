@@ -8,16 +8,15 @@
 
 package at.released.weh.host.emscripten
 
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.F64
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I32
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I64
+import at.released.weh.host.base.WasmValueTypes.F64
+import at.released.weh.host.base.WasmValueTypes.I32
+import at.released.weh.host.base.WasmValueTypes.I64
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
-import at.released.weh.host.base.pointer
+import at.released.weh.host.base.pointerToType
+import at.released.weh.host.wasi.preview1.type.FdWasmValueType
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
-import at.released.weh.host.wasi.preview1.type.wasmValueType
 
 public enum class EmscriptenHostFunction(
     public override val wasmName: String,
@@ -30,26 +29,26 @@ public enum class EmscriptenHostFunction(
     ASSERT_FAIL(
         wasmName = "__assert_fail",
         paramTypes = listOf(
-            U8.pointer, // pCondition
-            U8.pointer, // filename
+            pointerToType(U8), // pCondition
+            pointerToType(U8), // filename
             I32, // line
-            U8.pointer, // func
+            pointerToType(U8), // func
         ),
     ),
     EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD(
         wasmName = "emscripten_asm_const_async_on_main_thread",
         paramTypes = listOf(
-            U8.pointer, // emAsmAddr
-            U8.pointer, // sigPtr
-            U8.pointer, // argbuf,
+            pointerToType(U8), // emAsmAddr
+            pointerToType(U8), // sigPtr
+            pointerToType(U8), // argbuf,
         ),
     ),
     EMSCRIPTEN_ASM_CONST_INT(
         wasmName = "emscripten_asm_const_int",
         paramTypes = listOf(
-            U8.pointer, // emAsmAddr
-            U8.pointer, // sigPtr
-            U8.pointer, // argbuf
+            pointerToType(U8), // emAsmAddr
+            pointerToType(U8), // sigPtr
+            pointerToType(U8), // argbuf
         ),
         retType = I32,
     ),
@@ -59,7 +58,7 @@ public enum class EmscriptenHostFunction(
     ),
     EMSCRIPTEN_CONSOLE_ERROR(
         wasmName = "emscripten_console_error",
-        paramTypes = listOf(U8.pointer),
+        paramTypes = listOf(pointerToType(U8)),
     ),
     EMSCRIPTEN_DATE_NOW(
         wasmName = "emscripten_date_now",
@@ -123,7 +122,7 @@ public enum class EmscriptenHostFunction(
     GETENTROPY(
         wasmName = "getentropy",
         paramTypes = listOf(
-            U8.pointer, // buffer
+            pointerToType(U8), // buffer
             I32, // size
         ),
         retType = I32,
@@ -171,7 +170,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FCHOWN32(
         wasmName = "__syscall_fchown32",
         paramTypes = listOf(
-            Fd.wasmValueType, // fd
+            FdWasmValueType, // fd
             I32, // owner,
             I32, // group,
         ),
@@ -194,8 +193,8 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FSTAT64(
         wasmName = "__syscall_fstat64",
         paramTypes = listOf(
-            Fd.wasmValueType,
-            U8.pointer, // statbuf
+            FdWasmValueType,
+            pointerToType(U8), // statbuf
         ),
         retType = I32,
     ),
@@ -207,7 +206,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_GETCWD(
         wasmName = "__syscall_getcwd",
         paramTypes = listOf(
-            U8.pointer, // buf
+            pointerToType(U8), // buf
             I32, // size
         ),
         retType = I32,
@@ -235,8 +234,8 @@ public enum class EmscriptenHostFunction(
     SYSCALL_OPENAT(
         wasmName = "__syscall_openat",
         paramTypes = listOf(
-            Fd.wasmValueType, // dirfd
-            U8.pointer, // pathname
+            FdWasmValueType, // dirfd
+            pointerToType(U8), // pathname
             I32, // flags
             I32, // mode / varargs
         ),
@@ -245,9 +244,9 @@ public enum class EmscriptenHostFunction(
     SYSCALL_READLINKAT(
         wasmName = "__syscall_readlinkat",
         paramTypes = listOf(
-            Fd.wasmValueType, // dirfd
-            U8.pointer, // pathname
-            U8.pointer, // buf
+            FdWasmValueType, // dirfd
+            pointerToType(U8), // pathname
+            pointerToType(U8), // buf
             I32, // bufsiz
         ),
         retType = I32,
@@ -271,8 +270,8 @@ public enum class EmscriptenHostFunction(
         wasmName = "__syscall_utimensat",
         paramTypes = listOf(
             I32, // dirfd
-            U8.pointer, // pathname
-            U8.pointer, // times
+            pointerToType(U8), // pathname
+            pointerToType(U8), // times
             I32, // flags
         ),
         retType = I32,
@@ -285,8 +284,8 @@ public enum class EmscriptenHostFunction(
 
     constructor(
         wasmName: String,
-        paramTypes: List<WasmValueType>,
-        retType: WasmValueType? = null,
+        paramTypes: List<@WasmValueType Int>,
+        @WasmValueType retType: Int? = null,
     ) : this(
         wasmName = wasmName,
         type = HostFunctionType(

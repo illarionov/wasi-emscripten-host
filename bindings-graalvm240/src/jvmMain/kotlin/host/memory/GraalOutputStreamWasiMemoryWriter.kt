@@ -20,7 +20,7 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
 import at.released.weh.host.base.memory.WasiMemoryWriter
-import at.released.weh.host.wasi.preview1.type.CiovecArray
+import at.released.weh.host.wasi.preview1.type.CioVec
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
 
@@ -33,7 +33,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
     private val wasmMemory = memory.wasmMemory
     private val defaultMemoryWriter = DefaultWasiMemoryWriter(memory, fileSystem)
 
-    override fun write(fd: Fd, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
+    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: List<CioVec>): Either<WriteError, ULong> {
         return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
                 fd = fd,
@@ -48,9 +48,9 @@ internal class GraalOutputStreamWasiMemoryWriter(
 
     private fun writeChangePosition(
         channelResult: Either<BadFileDescriptor, FileChannel>,
-        cioVecs: CiovecArray,
+        cioVecs: List<CioVec>,
     ): Either<WriteError, ULong> {
-        logger.v { "writeChangePosition($channelResult, ${cioVecs.ciovecList.map { it.bufLen.value }})" }
+        logger.v { "writeChangePosition($channelResult, ${cioVecs.map { it.bufLen.value }})" }
         val channel = channelResult.mapLeft {
             BadFileDescriptor(it.message)
         }.getOrElse {
@@ -60,7 +60,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
         return writeCatching {
             var totalBytesWritten: ULong = 0U
             val outputStream = Channels.newOutputStream(channel).buffered()
-            for (vec in cioVecs.ciovecList) {
+            for (vec in cioVecs) {
                 val limit = vec.bufLen.value.toInt()
                 wasmMemory.copyToStream(memory.node, outputStream, vec.buf.addr, limit)
                 totalBytesWritten += limit.toUInt()

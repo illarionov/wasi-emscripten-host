@@ -6,9 +6,27 @@
 
 package at.released.weh.host.base.function
 
-import kotlin.jvm.JvmInline
-
-@JvmInline
-public value class IndirectFunctionTableIndex(
+public class IndirectFunctionTableIndex(
     public val funcId: Int,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || this::class != other::class) {
+            return false
+        }
+
+        other as IndirectFunctionTableIndex
+
+        return funcId == other.funcId
+    }
+
+    override fun hashCode(): Int {
+        return funcId
+    }
+
+    override fun toString(): String {
+        return "IndirectFunctionTableIndex(funcId=$funcId)"
+    }
+}

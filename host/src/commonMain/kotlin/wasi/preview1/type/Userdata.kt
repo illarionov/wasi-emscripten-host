@@ -7,17 +7,16 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * User-provided value that may be attached to objects that is retained when
  * extracted from the implementation.
  */
-@JvmInline
-public value class Userdata(
-    public val rawValue: ULong,
+public class Userdata(
+    public val rawValue: Long,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U64
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U64
     }
 }

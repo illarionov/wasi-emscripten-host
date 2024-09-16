@@ -7,7 +7,6 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
@@ -32,7 +31,7 @@ internal class SyscallUnlinkat(
             memory(frame),
             args.getArgAsInt(0),
             args.getArgAsWasmPtr(1),
-            args.getArgAsUint(2),
+            args.getArgAsInt(2),
         )
     }
 
@@ -42,6 +41,6 @@ internal class SyscallUnlinkat(
         memory: WasmMemory,
         rawDirfd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        flags: UInt,
+        flags: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirfd, pathnamePtr, flags)
 }

@@ -11,7 +11,6 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.FileTooBig
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
@@ -42,10 +41,7 @@ import platform.posix.ftruncate
 
 internal object LinuxTruncateFd : FileSystemOperationHandler<TruncateFd, TruncateError, Unit> {
     override fun invoke(input: TruncateFd): Either<TruncateError, Unit> {
-        if (input.length > Long.MAX_VALUE.toULong()) {
-            return FileTooBig("Argument length is large than the maximum file size").left()
-        }
-        val resultCode = ftruncate(input.fd.fd, input.length.toLong())
+        val resultCode = ftruncate(input.fd, input.length)
         return if (resultCode == 0) {
             Unit.right()
         } else {

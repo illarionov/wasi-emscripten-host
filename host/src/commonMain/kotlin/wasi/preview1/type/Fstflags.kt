@@ -7,23 +7,22 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  *  Which file time attributes to adjust.
  */
-@JvmInline
-public value class Fstflags(
-    public val rawMask: UShort,
+public data class Fstflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: Fstflags,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Fstflags(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * Adjust the last data access timestamp to the value stored in `filestat::atim`.
@@ -47,10 +46,11 @@ public value class Fstflags(
 
         ;
 
-        constructor(bit: Int) : this(1UL.shl(bit).toUShort())
+        constructor(bit: Int) : this(1L.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U16
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U16
     }
 }

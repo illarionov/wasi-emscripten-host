@@ -32,13 +32,13 @@ public class FdReadFdPreadFunctionHandle private constructor(
     public fun execute(
         memory: Memory,
         bulkReader: WasiMemoryReader,
-        fd: Fd,
+        @Fd fd: Int,
         pIov: WasmPtr<Iovec>,
         iovCnt: Int,
         pNum: WasmPtr<Int>,
     ): Errno {
         val ioVecs: IovecArray = readIovecs(memory, pIov, iovCnt)
-        return bulkReader.read(fd, strategy, ioVecs)
+        return bulkReader.read(fd, strategy, ioVecs.iovecList)
             .onRight { readBytes -> memory.writeI32(pNum, readBytes.toInt()) }
             .fold(
                 ifLeft = FileSystemOperationError::errno,
@@ -73,7 +73,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
                 val pIovec: WasmPtr<*> = pIov + 8 * idx
                 Iovec(
                     buf = memory.readPtr(pIovec as WasmPtr<WasmPtr<Byte>>),
-                    bufLen = Size(memory.readI32(pIovec + 4).toUInt()),
+                    bufLen = Size(memory.readI32(pIovec + 4)),
                 )
             }
             return IovecArray(iovecs)

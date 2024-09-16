@@ -13,7 +13,8 @@ import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 public data class ChmodFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
 
     @FileMode
     public val mode: Int,

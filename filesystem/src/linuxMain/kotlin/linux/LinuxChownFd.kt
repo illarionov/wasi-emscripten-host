@@ -37,7 +37,7 @@ import platform.posix.fchown
 
 internal object LinuxChownFd : FileSystemOperationHandler<ChownFd, ChownError, Unit> {
     override fun invoke(input: ChownFd): Either<ChownError, Unit> {
-        val resultCode = fchown(input.fd.fd, input.owner.toUInt(), input.group.toUInt())
+        val resultCode = fchown(input.fd, input.owner.toUInt(), input.group.toUInt())
         return if (resultCode == 0) {
             Unit.right()
         } else {

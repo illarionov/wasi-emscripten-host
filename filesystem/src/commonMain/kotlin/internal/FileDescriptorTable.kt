@@ -14,10 +14,10 @@ import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.model.Fd
 
 internal class FileDescriptorTable<V : Any> {
-    private val fds: MutableMap<Fd, V> = mutableMapOf()
+    private val fds: MutableMap<@Fd Int, V> = mutableMapOf()
 
     fun allocate(
-        resourceFactory: (Fd) -> V,
+        resourceFactory: (@Fd Int) -> V,
     ): Either<Nfile, V> = getFreeFd()
         .map { fd ->
             val channel = resourceFactory(fd)
@@ -26,9 +26,9 @@ internal class FileDescriptorTable<V : Any> {
             channel
         }
 
-    operator fun get(fd: Fd): V? = fds[fd]
+    operator fun get(@Fd fd: Int): V? = fds[fd]
 
-    fun release(fd: Fd): Either<BadFileDescriptor, V> {
+    fun release(@Fd fd: Int): Either<BadFileDescriptor, V> {
         return fds.remove(fd)?.right() ?: BadFileDescriptor("Trying to remove already disposed file descriptor").left()
     }
 
@@ -38,10 +38,10 @@ internal class FileDescriptorTable<V : Any> {
         return values
     }
 
-    private fun getFreeFd(): Either<Nfile, Fd> {
+    private fun getFreeFd(): Either<Nfile, @Fd Int> {
         for (no in MIN_FD..MAX_FD) {
-            if (!fds.containsKey(Fd(no))) {
-                return Fd(no).right()
+            if (!fds.containsKey(no)) {
+                return no.right()
             }
         }
         return Nfile("file descriptor limit exhausted").left()

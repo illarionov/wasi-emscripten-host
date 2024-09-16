@@ -9,17 +9,32 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
+import at.released.weh.host.base.WasmValueTypes.I64
 
 /**
  * Type names used by low-level WASI interfaces.
  * https://raw.githubusercontent.com/WebAssembly/WASI/main/legacy/preview1/witx/typenames.witx
  */
 public object WasiValueTypes {
-    public val U8: WasmValueType = WasmValueType.I32
-    public val U16: WasmValueType = WasmValueType.I32
-    public val S32: WasmValueType = WasmValueType.I32
-    public val U32: WasmValueType = WasmValueType.I32
-    public val S64: WasmValueType = WasmValueType.I64
-    public val U64: WasmValueType = WasmValueType.I64
-    public val Handle: WasmValueType = WasmValueType.I32
+    @WasmValueType
+    public const val U8: Int = I32
+
+    @WasmValueType
+    public const val U16: Int = I32
+
+    @WasmValueType
+    public const val S32: Int = I32
+
+    @WasmValueType
+    public const val U32: Int = I32
+
+    @WasmValueType
+    public const val S64: Int = I64
+
+    @WasmValueType
+    public const val U64: Int = I64
+
+    @WasmValueType
+    public const val HANDLE: Int = I32
 }

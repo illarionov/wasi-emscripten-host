@@ -26,7 +26,7 @@ public class SyscallUnlinkatFunctionHandle(
         memory: ReadOnlyMemory,
         rawDirfd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        flags: UInt,
+        flags: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirfd)

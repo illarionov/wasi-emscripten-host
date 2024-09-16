@@ -32,13 +32,13 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
     public fun execute(
         memory: Memory,
         bulkWriter: WasiMemoryWriter,
-        fd: Fd,
+        @Fd fd: Int,
         pCiov: WasmPtr<CioVec>,
         cIovCnt: Int,
         pNum: WasmPtr<Int>,
     ): Errno {
         val cioVecs: CiovecArray = readCiovecs(memory, pCiov, cIovCnt)
-        return bulkWriter.write(fd, strategy, cioVecs)
+        return bulkWriter.write(fd, strategy, cioVecs.ciovecList)
             .onRight { writtenBytes ->
                 memory.writeI32(pNum, writtenBytes.toInt())
             }.fold(
@@ -74,7 +74,7 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
                 val pCiovec: WasmPtr<*> = pCiov + 8 * idx
                 CioVec(
                     buf = memory.readPtr(pCiovec as WasmPtr<WasmPtr<Byte>>),
-                    bufLen = Size(memory.readI32(pCiovec + 4).toUInt()),
+                    bufLen = Size(memory.readI32(pCiovec + 4)),
                 )
             }
             return CiovecArray(iovecs)

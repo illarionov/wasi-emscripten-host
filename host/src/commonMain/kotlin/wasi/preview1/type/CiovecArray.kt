@@ -7,14 +7,13 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 // (typename $ciovec_array (list $ciovec))
-@JvmInline
-public value class CiovecArray(
+public data class CiovecArray(
     public val ciovecList: List<CioVec>,
 ) {
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

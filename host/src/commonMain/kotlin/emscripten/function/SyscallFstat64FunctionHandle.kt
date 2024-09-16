@@ -25,7 +25,7 @@ public class SyscallFstat64FunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_FSTAT64, host) {
     public fun execute(
         memory: Memory,
-        fd: Fd,
+        @Fd fd: Int,
         dst: WasmPtr<StructStat>,
     ): Int = host.fileSystem.execute(StatFd, StatFd(fd))
         .map { stat: StructStat ->

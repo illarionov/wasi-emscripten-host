@@ -74,10 +74,10 @@ public final class at/released/weh/bindings/graalvm240/MemorySource$ImportedMemo
 
 public final class at/released/weh/bindings/graalvm240/MemorySpec {
 	public static final field Companion Lat/released/weh/bindings/graalvm240/MemorySpec$Companion;
-	public synthetic fun <init> (JJZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/base/memory/Pages;Lat/released/weh/host/base/memory/Pages;ZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getMaxSizePages ()J
-	public final fun getMinSizePages ()J
+	public final fun getMaxSize ()Lat/released/weh/host/base/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/host/base/memory/Pages;
 	public final fun getSharedMemory ()Z
 	public final fun getSupportMemory64 ()Z
 	public final fun getUseUnsafeMemory ()Z
@@ -87,15 +87,15 @@ public final class at/released/weh/bindings/graalvm240/MemorySpec {
 public final class at/released/weh/bindings/graalvm240/MemorySpec$Builder {
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/bindings/graalvm240/MemorySpec;
-	public final fun getMaxSizePages ()J
-	public final fun getMinSizePages ()J
+	public final fun getMaxSize ()Lat/released/weh/host/base/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/host/base/memory/Pages;
 	public final fun getShared ()Z
 	public final fun getSupportMemory64 ()Z
 	public final fun getUseUnsafe ()Z
-	public final fun setMaxSizePages (J)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
-	public final synthetic fun setMaxSizePages (J)V
-	public final fun setMinSizePages (J)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
-	public final synthetic fun setMinSizePages (J)V
+	public final fun setMaxSize (Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
+	public final synthetic fun setMaxSize (Lat/released/weh/host/base/memory/Pages;)V
+	public final fun setMinSize (Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
+	public final synthetic fun setMinSize (Lat/released/weh/host/base/memory/Pages;)V
 	public final fun setShared (Z)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
 	public final synthetic fun setShared (Z)V
 	public final fun setSupportMemory64 (Z)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
@@ -113,7 +113,7 @@ public final class at/released/weh/bindings/graalvm240/host/GraalvmEmscriptenRun
 	public static final field Companion Lat/released/weh/bindings/graalvm240/host/GraalvmEmscriptenRuntime$Companion;
 	public fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)V
 	public fun initMainThread ()V
-	public final fun initWorkerThread-e-C6Vng (I)V
+	public final fun initWorkerThread (Lat/released/weh/host/base/WasmPtr;)V
 	public fun isMultiThread ()Z
 }
 
@@ -127,14 +127,14 @@ public final class at/released/weh/bindings/graalvm240/host/pthread/GraalvmPthre
 	public final fun createWasmPthreadForThread-I7RO_PI (Ljava/lang/Thread;)J
 	public final fun joinThreads-LRDsOJo (J)V
 	public static synthetic fun joinThreads-LRDsOJo$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;JILjava/lang/Object;)V
-	public final fun spawnThread-mbdt81g (IIII)I
-	public final fun unregisterManagedThread-8A16jWI (ILjava/lang/Thread;Ljava/lang/Throwable;)V
-	public static synthetic fun unregisterManagedThread-8A16jWI$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;ILjava/lang/Thread;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun spawnThread (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;ILat/released/weh/host/base/WasmPtr;)I
+	public final fun unregisterManagedThread (Lat/released/weh/host/base/WasmPtr;Ljava/lang/Thread;Ljava/lang/Throwable;)V
+	public static synthetic fun unregisterManagedThread$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;Lat/released/weh/host/base/WasmPtr;Ljava/lang/Thread;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
 public abstract interface class at/released/weh/bindings/graalvm240/host/pthread/ManagedThreadInitializer {
 	public abstract fun destroyThreadLocalGraalvmAgent ()V
 	public abstract fun initThreadLocalGraalvmAgent ()V
-	public abstract fun initWorkerThread-e-C6Vng (I)V
+	public abstract fun initWorkerThread (Lat/released/weh/host/base/WasmPtr;)V
 }
 

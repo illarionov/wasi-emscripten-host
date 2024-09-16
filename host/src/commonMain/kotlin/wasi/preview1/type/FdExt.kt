@@ -6,10 +6,10 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.base.WasmValueType
 
 /**
  * A file descriptor handle.
  */
-public val Fd.Companion.wasmValueType: WasmValueType get() = WasiValueTypes.Handle
+@WasmValueType
+public val FdWasmValueType: Int get() = WasiValueTypes.HANDLE

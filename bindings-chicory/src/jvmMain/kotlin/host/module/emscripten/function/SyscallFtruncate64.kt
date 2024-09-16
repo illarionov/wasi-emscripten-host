@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFtruncate64FunctionHandle
 import com.dylibso.chicory.runtime.Instance
@@ -18,8 +17,8 @@ internal class SyscallFtruncate64(host: EmbedderHost) : EmscriptenHostFunctionHa
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
-            Fd(args[0].asInt()),
-            args[1].asLong().toULong(),
+            args[0].asInt(),
+            args[1].asLong(),
         )
         return Value.i32(result.toLong())
     }
