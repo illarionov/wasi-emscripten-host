@@ -13,7 +13,7 @@ import at.released.weh.filesystem.op.FileSystemOperation
 public data class TruncateFd(
     @Fd
     public val fd: Int,
-    public val length: ULong,
+    public val length: Long,
 ) {
     public companion object : FileSystemOperation<TruncateFd, TruncateError, Unit> {
         override val tag: String = "truncatefd"

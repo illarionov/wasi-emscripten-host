@@ -27,7 +27,7 @@ internal class NioTruncateFd(
         val channel = fsState.fileDescriptors.get(input.fd)
             ?: return BadFileDescriptor(fileDescriptorNotOpenedMessage(input.fd)).left()
         return Either.catch {
-            channel.channel.truncate(input.length.toLong())
+            channel.channel.truncate(input.length)
             // TODO: extend file size to length?
             Unit
         }.mapLeft { error ->

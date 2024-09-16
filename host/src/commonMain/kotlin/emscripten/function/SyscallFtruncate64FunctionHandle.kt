@@ -16,7 +16,7 @@ import at.released.weh.host.emscripten.EmscriptenHostFunction
 public class SyscallFtruncate64FunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_FTRUNCATE64, host) {
-    public fun execute(@Fd fd: Int, length: ULong): Int = host.fileSystem.execute(
+    public fun execute(@Fd fd: Int, length: Long): Int = host.fileSystem.execute(
         TruncateFd,
         TruncateFd(fd, length),
     ).fold(

@@ -468,7 +468,7 @@ public final class at/released/weh/host/emscripten/function/SyscallFstat64Functi
 
 public final class at/released/weh/host/emscripten/function/SyscallFtruncate64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-2TYgG_w (IJ)I
+	public final fun execute (IJ)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallGetcwdFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {

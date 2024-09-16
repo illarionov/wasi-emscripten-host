@@ -18,7 +18,7 @@ internal class SyscallFtruncate64(host: EmbedderHost) : EmscriptenHostFunctionHa
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
             args[0].asInt(),
-            args[1].asLong().toULong(),
+            args[1].asLong(),
         )
         return Value.i32(result.toLong())
     }

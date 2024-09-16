@@ -21,7 +21,7 @@ internal class SyscallFtruncate64(
     override val function: HostFunction = { args ->
         val result: Int = handle.execute(
             args[0].asInt(),
-            args[1].asLong().toULong(),
+            args[1].asLong(),
         )
         listOf(Value.Number.I32(result))
     }
