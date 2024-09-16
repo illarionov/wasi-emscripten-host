@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.op.stat
 
+import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
+
 /**
  * <sys/stat.h> struct stat
  *
@@ -26,7 +28,7 @@ package at.released.weh.filesystem.op.stat
 public data class StructStat(
     val deviceId: ULong,
     val inode: ULong,
-    val mode: FileModeType,
+    @FileModeType val mode: Int,
     val links: ULong,
     val usedId: ULong,
     val groupId: ULong,
@@ -39,7 +41,8 @@ public data class StructStat(
     val changeStatusTime: StructTimespec,
 ) {
     override fun toString(): String {
-        return "StructStat($deviceId/$specialFileDeviceId $inode $links; $mode $usedId $groupId; " +
+        return "StructStat($deviceId/$specialFileDeviceId $inode $links; " +
+                "${fileModeTypeToString(mode)} $usedId $groupId; " +
                 "$size $blockSize $blocks; " +
                 "${accessTime.seconds}:${accessTime.nanoseconds} " +
                 "${modificationTime.seconds}:${modificationTime.nanoseconds} " +

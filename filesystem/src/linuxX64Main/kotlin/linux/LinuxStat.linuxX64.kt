@@ -10,7 +10,6 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.linux.ext.toStructTimespec
-import at.released.weh.filesystem.op.stat.FileModeType
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.platform.linux.fstatat
 import kotlinx.cinterop.alloc
@@ -41,7 +40,7 @@ internal actual fun platformFstatat(
 internal fun stat.toStructStat(): StructStat = StructStat(
     deviceId = st_dev,
     inode = st_ino,
-    mode = FileModeType.fromLinuxModeType(st_mode),
+    mode = fileModeTypeFromLinuxModeType(st_mode),
     links = st_nlink,
     usedId = st_uid.toULong(),
     groupId = st_gid.toULong(),

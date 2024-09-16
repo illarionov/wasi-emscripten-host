@@ -6,15 +6,15 @@
 
 package at.released.weh.filesystem.ext
 
-import at.released.weh.filesystem.model.FileModeBit.S_IRGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IROTH
-import at.released.weh.filesystem.model.FileModeBit.S_IRUSR
-import at.released.weh.filesystem.model.FileModeBit.S_IWGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IWOTH
-import at.released.weh.filesystem.model.FileModeBit.S_IWUSR
-import at.released.weh.filesystem.model.FileModeBit.S_IXGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IXOTH
-import at.released.weh.filesystem.model.FileModeBit.S_IXUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IRGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IROTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IRUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IWGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IWOTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IWUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IXGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IXOTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IXUSR
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions

@@ -7,22 +7,21 @@
 package at.released.weh.filesystem.model
 
 import androidx.annotation.IntDef
-import at.released.weh.filesystem.model.FileModeBit.S_IRGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IROTH
-import at.released.weh.filesystem.model.FileModeBit.S_IRUSR
-import at.released.weh.filesystem.model.FileModeBit.S_IRWXG
-import at.released.weh.filesystem.model.FileModeBit.S_IRWXU
-import at.released.weh.filesystem.model.FileModeBit.S_ISGID
-import at.released.weh.filesystem.model.FileModeBit.S_ISUID
-import at.released.weh.filesystem.model.FileModeBit.S_ISVTX
-import at.released.weh.filesystem.model.FileModeBit.S_IWGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IWOTH
-import at.released.weh.filesystem.model.FileModeBit.S_IWUSR
-import at.released.weh.filesystem.model.FileModeBit.S_IXGRP
-import at.released.weh.filesystem.model.FileModeBit.S_IXOTH
-import at.released.weh.filesystem.model.FileModeBit.S_IXUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IRGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IROTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IRUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
+import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
+import at.released.weh.filesystem.model.FileModeFlag.S_ISGID
+import at.released.weh.filesystem.model.FileModeFlag.S_ISUID
+import at.released.weh.filesystem.model.FileModeFlag.S_ISVTX
+import at.released.weh.filesystem.model.FileModeFlag.S_IWGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IWOTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IWUSR
+import at.released.weh.filesystem.model.FileModeFlag.S_IXGRP
+import at.released.weh.filesystem.model.FileModeFlag.S_IXOTH
+import at.released.weh.filesystem.model.FileModeFlag.S_IXUSR
 import kotlin.annotation.AnnotationRetention.SOURCE
-import kotlin.jvm.JvmStatic
 
 /**
  * File mode bits (mode_t)
@@ -49,7 +48,7 @@ import kotlin.jvm.JvmStatic
 )
 public annotation class FileMode
 
-public object FileModeBit {
+public object FileModeFlag {
     public const val S_ISUID: Int = 0b100_000_000_000
     public const val S_ISGID: Int = 0b010_000_000_000
     public const val S_ISVTX: Int = 0b001_000_000_000
@@ -65,7 +64,4 @@ public object FileModeBit {
     public const val S_IWOTH: Int = 0b000_000_000_010
     public const val S_IXOTH: Int = 0b000_000_000_001
     public const val S_IRWXO: Int = 0b000_000_000_111
-
-    @JvmStatic
-    internal fun fileModeTypeToString(mask: Int): String = "0${mask.toString(8)}"
 }
