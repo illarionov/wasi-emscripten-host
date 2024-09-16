@@ -21,13 +21,16 @@ public class MmapJsFunctionHandle(
     public fun execute(
         len: Int,
         @SysMmanProt prot: Int,
-        flags: SysMmanMapFlags,
+        @SysMmanMapFlags flags: Int,
         fd: Fd,
         offset: ULong,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
     ): Int {
-        logger.v { "mmapJs($fd, $len, $prot, $flags, $fd, $offset, $pAllocated, $pAddr): Not implemented" }
+        logger.v {
+            "mmapJs($fd, $len, 0x${prot.toString(16)}, 0x${flags.toString(16)}, $fd, " +
+                    "$offset, $pAllocated, $pAddr): Not implemented"
+        }
         return -Errno.INVAL.code // Not Supported
     }
 }

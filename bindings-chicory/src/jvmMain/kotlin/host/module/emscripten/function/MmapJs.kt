@@ -23,7 +23,7 @@ internal class MmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
         val result: Int = handle.execute(
             args[0].asInt(),
             args[1].asInt(),
-            SysMmanMapFlags(args[2].asUInt().toUInt()),
+            args[2].asInt(),
             Fd(args[3].asInt()),
             args[4].asLong().toULong(),
             args[5].asWasmAddr(),

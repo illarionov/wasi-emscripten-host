@@ -6,57 +6,89 @@
 
 package at.released.weh.host.include.sys
 
-import at.released.weh.common.api.UintBitMask
-import kotlin.jvm.JvmInline
+import androidx.annotation.IntDef
 
 /**
  * Mmap flags
  *
  * <sys/mman.h>
  */
-@JvmInline
-public value class SysMmanMapFlags(
-    public override val mask: UInt,
-) : UintBitMask<SysMmanMapFlags> {
-    override val newInstance: (UInt) -> SysMmanMapFlags get() = ::SysMmanMapFlags
+@IntDef(
+    flag = true,
+    value = [
+        MmapFlag.MAP_HUGE_MASK,
+        MmapFlag.MAP_SHARED,
+        MmapFlag.MAP_PRIVATE,
+        MmapFlag.MAP_SHARED_VALIDATE,
+        MmapFlag.MAP_TYPE,
+        MmapFlag.MAP_FIXED,
+        MmapFlag.MAP_ANON,
+        MmapFlag.MAP_ANONYMOUS,
+        MmapFlag.MAP_NORESERVE,
+        MmapFlag.MAP_GROWSDOWN,
+        MmapFlag.MAP_DENYWRITE,
+        MmapFlag.MAP_EXECUTABLE,
+        MmapFlag.MAP_LOCKED,
+        MmapFlag.MAP_POPULATE,
+        MmapFlag.MAP_NONBLOCK,
+        MmapFlag.MAP_STACK,
+        MmapFlag.MAP_HUGETLB,
+        MmapFlag.MAP_SYNC,
+        MmapFlag.MAP_FIXED_NOREPLACE,
+        MmapFlag.MAP_FILE,
+        MmapFlag.MAP_HUGE_16KB,
+        MmapFlag.MAP_HUGE_64KB,
+        MmapFlag.MAP_HUGE_512KB,
+        MmapFlag.MAP_HUGE_1MB,
+        MmapFlag.MAP_HUGE_2MB,
+        MmapFlag.MAP_HUGE_8MB,
+        MmapFlag.MAP_HUGE_16MB,
+        MmapFlag.MAP_HUGE_32MB,
+        MmapFlag.MAP_HUGE_256MB,
+        MmapFlag.MAP_HUGE_512MB,
+        MmapFlag.MAP_HUGE_1GB,
+        MmapFlag.MAP_HUGE_2GB,
+        MmapFlag.MAP_HUGE_16GB,
+    ],
+)
+public annotation class SysMmanMapFlags
 
-    @Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
-    public companion object {
-        public const val MAP_HUGE_SHIFT: UInt = 26U
-        public const val MAP_HUGE_MASK: UInt = 0x3fU
+@Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
+public object MmapFlag {
+    public const val MAP_HUGE_SHIFT: Int = 26
+    public const val MAP_HUGE_MASK: Int = 0x3f
 
-        public val MAP_SHARED: SysMmanMapFlags = SysMmanMapFlags(0x01U)
-        public val MAP_PRIVATE: SysMmanMapFlags = SysMmanMapFlags(0x02U)
-        public val MAP_SHARED_VALIDATE: SysMmanMapFlags = SysMmanMapFlags(0x03U)
-        public val MAP_TYPE: SysMmanMapFlags = SysMmanMapFlags(0x0fU)
-        public val MAP_FIXED: SysMmanMapFlags = SysMmanMapFlags(0x10U)
-        public val MAP_ANON: SysMmanMapFlags = SysMmanMapFlags(0x20U)
-        public val MAP_ANONYMOUS: SysMmanMapFlags = MAP_ANON
-        public val MAP_NORESERVE: SysMmanMapFlags = SysMmanMapFlags(0x4000U)
-        public val MAP_GROWSDOWN: SysMmanMapFlags = SysMmanMapFlags(0x0100U)
-        public val MAP_DENYWRITE: SysMmanMapFlags = SysMmanMapFlags(0x0800U)
-        public val MAP_EXECUTABLE: SysMmanMapFlags = SysMmanMapFlags(0x1000U)
-        public val MAP_LOCKED: SysMmanMapFlags = SysMmanMapFlags(0x2000U)
-        public val MAP_POPULATE: SysMmanMapFlags = SysMmanMapFlags(0x8000U)
-        public val MAP_NONBLOCK: SysMmanMapFlags = SysMmanMapFlags(0x10000U)
-        public val MAP_STACK: SysMmanMapFlags = SysMmanMapFlags(0x20000U)
-        public val MAP_HUGETLB: SysMmanMapFlags = SysMmanMapFlags(0x40000U)
-        public val MAP_SYNC: SysMmanMapFlags = SysMmanMapFlags(0x80000U)
-        public val MAP_FIXED_NOREPLACE: SysMmanMapFlags = SysMmanMapFlags(0x100000U)
-        public val MAP_FILE: SysMmanMapFlags = SysMmanMapFlags(0U)
+    public const val MAP_SHARED: Int = 0x01
+    public const val MAP_PRIVATE: Int = 0x02
+    public const val MAP_SHARED_VALIDATE: Int = 0x03
+    public const val MAP_TYPE: Int = 0x0f
+    public const val MAP_FIXED: Int = 0x10
+    public const val MAP_ANON: Int = 0x20
+    public const val MAP_ANONYMOUS: Int = MAP_ANON
+    public const val MAP_NORESERVE: Int = 0x4000
+    public const val MAP_GROWSDOWN: Int = 0x0100
+    public const val MAP_DENYWRITE: Int = 0x0800
+    public const val MAP_EXECUTABLE: Int = 0x1000
+    public const val MAP_LOCKED: Int = 0x2000
+    public const val MAP_POPULATE: Int = 0x8000
+    public const val MAP_NONBLOCK: Int = 0x10000
+    public const val MAP_STACK: Int = 0x20000
+    public const val MAP_HUGETLB: Int = 0x40000
+    public const val MAP_SYNC: Int = 0x80000
+    public const val MAP_FIXED_NOREPLACE: Int = 0x100000
+    public const val MAP_FILE: Int = 0
 
-        public val MAP_HUGE_16KB: SysMmanMapFlags = SysMmanMapFlags((14U.shl(26)))
-        public val MAP_HUGE_64KB: SysMmanMapFlags = SysMmanMapFlags((16U.shl(26)))
-        public val MAP_HUGE_512KB: SysMmanMapFlags = SysMmanMapFlags((19U.shl(26)))
-        public val MAP_HUGE_1MB: SysMmanMapFlags = SysMmanMapFlags((20U.shl(26)))
-        public val MAP_HUGE_2MB: SysMmanMapFlags = SysMmanMapFlags((21U.shl(26)))
-        public val MAP_HUGE_8MB: SysMmanMapFlags = SysMmanMapFlags((23U.shl(26)))
-        public val MAP_HUGE_16MB: SysMmanMapFlags = SysMmanMapFlags((24U.shl(26)))
-        public val MAP_HUGE_32MB: SysMmanMapFlags = SysMmanMapFlags((25U.shl(26)))
-        public val MAP_HUGE_256MB: SysMmanMapFlags = SysMmanMapFlags((28U.shl(26)))
-        public val MAP_HUGE_512MB: SysMmanMapFlags = SysMmanMapFlags((29U.shl(26)))
-        public val MAP_HUGE_1GB: SysMmanMapFlags = SysMmanMapFlags((30U.shl(26)))
-        public val MAP_HUGE_2GB: SysMmanMapFlags = SysMmanMapFlags((31U.shl(26)))
-        public val MAP_HUGE_16GB: SysMmanMapFlags = SysMmanMapFlags((34U.shl(26)))
-    }
+    public const val MAP_HUGE_16KB: Int = 14.shl(26)
+    public const val MAP_HUGE_64KB: Int = 16.shl(26)
+    public const val MAP_HUGE_512KB: Int = 19.shl(26)
+    public const val MAP_HUGE_1MB: Int = 20.shl(26)
+    public const val MAP_HUGE_2MB: Int = 21.shl(26)
+    public const val MAP_HUGE_8MB: Int = 23.shl(26)
+    public const val MAP_HUGE_16MB: Int = 24.shl(26)
+    public const val MAP_HUGE_32MB: Int = 25.shl(26)
+    public const val MAP_HUGE_256MB: Int = 28.shl(26)
+    public const val MAP_HUGE_512MB: Int = 29.shl(26)
+    public const val MAP_HUGE_1GB: Int = 30.shl(26)
+    public const val MAP_HUGE_2GB: Int = 31.shl(26)
+    public const val MAP_HUGE_16GB: Int = 34.shl(26)
 }

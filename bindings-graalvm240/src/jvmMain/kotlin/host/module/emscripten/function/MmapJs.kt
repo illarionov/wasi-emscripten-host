@@ -8,14 +8,12 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsLong
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
-import at.released.weh.host.include.sys.SysMmanMapFlags
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -34,7 +32,7 @@ internal class MmapJs(
         return mmapJs(
             args.getArgAsInt(0),
             args.getArgAsInt(1),
-            args.getArgAsUint(2),
+            args.getArgAsInt(2),
             args.getArgAsInt(3),
             args.getArgAsLong(4).toULong(),
             args.getArgAsWasmPtr(5),
@@ -47,10 +45,10 @@ internal class MmapJs(
     private fun mmapJs(
         len: Int,
         prot: Int,
-        flags: UInt,
+        flags: Int,
         fd: Int,
         offset: ULong,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
-    ): Int = handle.execute(len, prot, SysMmanMapFlags(flags), Fd(fd), offset, pAllocated, pAddr)
+    ): Int = handle.execute(len, prot, flags, Fd(fd), offset, pAllocated, pAddr)
 }

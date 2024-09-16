@@ -7,14 +7,12 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asULong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
-import at.released.weh.host.include.sys.SysMmanMapFlags
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 
@@ -29,7 +27,7 @@ internal class MunmapJs(
             args[0].asWasmAddr(),
             args[1].asInt(),
             args[2].asInt(),
-            SysMmanMapFlags(args[3].asUInt()),
+            args[3].asInt(),
             Fd(args[4].asInt()),
             args[5].asULong(),
         )

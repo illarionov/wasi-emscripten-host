@@ -22,11 +22,14 @@ public class MunapJsFunctionHandle(
         addr: WasmPtr<Byte>,
         len: Int,
         @SysMmanProt prot: Int,
-        flags: SysMmanMapFlags,
+        @SysMmanMapFlags flags: Int,
         fd: Fd,
         offset: ULong,
     ): Int {
-        logger.v { "munmapJs($addr, $len, 0x${prot.toString(16)}, $flags, $fd, $offset): Not implemented" }
+        logger.v {
+            "munmapJs($addr, $len, 0x${prot.toString(16)}, 0x${flags.toString(16)}," +
+                    " $fd, $offset): Not implemented"
+        }
         return -Errno.INVAL.code // Not Supported
     }
 }
