@@ -12,21 +12,28 @@ import kotlin.reflect.KProperty0
 @InternalWasiEmscriptenHostApi
 public fun maskToString(
     mask: UInt,
-    maskProperties: List<KProperty0<UInt>>,
+    maskProperties: List<KProperty0<Int>>,
+    initialFlagsSet: List<String> = emptyList(),
+): String = maskToString(mask.toInt(), maskProperties, initialFlagsSet)
+
+@InternalWasiEmscriptenHostApi
+public fun maskToString(
+    mask: Int,
+    maskProperties: List<KProperty0<Int>>,
     initialFlagsSet: List<String> = emptyList(),
 ): String {
     var left = mask
     val names = initialFlagsSet.toMutableList()
-    maskProperties.forEach { prop: KProperty0<UInt> ->
-        val propMask: UInt = prop.get()
-        if (left.and(propMask) != 0U) {
+    maskProperties.forEach { prop: KProperty0<Int> ->
+        val propMask: Int = prop.get()
+        if (left.and(propMask) != 0) {
             names.add(prop.name)
             left = left.and(propMask.inv())
         }
     }
     return buildString {
         names.joinTo(this, ",")
-        if (left != 0U) {
+        if (left != 0) {
             append("0")
             append(left.toString(8))
         }

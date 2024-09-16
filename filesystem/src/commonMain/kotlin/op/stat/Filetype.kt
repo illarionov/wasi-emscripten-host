@@ -52,8 +52,4 @@ public enum class Filetype(
      * The file refers to a symbolic link inode.
      */
     SYMBOLIC_LINK(7),
-
-    ;
-
-    public companion object
 }

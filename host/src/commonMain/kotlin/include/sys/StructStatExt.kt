@@ -17,7 +17,7 @@ import kotlinx.io.writeLongLe
 
 public fun StructStat.packTo(sink: Sink): Unit = sink.run {
     writeIntLe(deviceId.toInt()) // 0
-    writeIntLe(mode.mask.toInt()) // 4
+    writeIntLe(mode) // 4
     writeIntLe(links.toInt()) // 8
     writeIntLe(usedId.toInt()) // 12
     writeIntLe(groupId.toInt()) // 16

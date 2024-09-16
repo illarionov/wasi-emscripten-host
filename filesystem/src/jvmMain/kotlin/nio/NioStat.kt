@@ -17,6 +17,9 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
+import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
+import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.op.stat.FileModeType
 import at.released.weh.filesystem.op.stat.Stat
@@ -86,7 +89,9 @@ internal class NioStat(
             val dev: ULong = (unixAttrs[ATTR_UNI_DEV] as? Long)?.toULong() ?: 1UL
             val ino: ULong = (unixAttrs[ATTR_UNI_INO] as? Long)?.toULong()
                 ?: basicFileAttrs.fileKey().hashCode().toULong()
-            val mode: FileModeType = getModeType(basicFileAttrs, unixAttrs)
+
+            @FileModeType
+            val mode: Int = getModeType(basicFileAttrs, unixAttrs)
             val nlink: ULong = (unixAttrs[ATTR_UNI_NLINK] as? Int)?.toULong() ?: 1UL
             val uid: ULong = (unixAttrs[ATTR_UNI_UID] as? Int)?.toULong() ?: 0UL
             val gid: ULong = (unixAttrs[ATTR_UNI_GID] as? Int)?.toULong() ?: 0UL
@@ -118,19 +123,20 @@ internal class NioStat(
             )
         }
 
+        @FileModeType
         private fun getModeType(
             @Suppress("UnusedParameter") basicAttrs: BasicFileAttributes,
             unixAttrs: Map<String, Any?>,
-        ): FileModeType {
+        ): Int {
             val unixMode = unixAttrs[ATTR_UNI_MODE] as? Int
             if (unixMode != null) {
-                return FileModeType(unixMode.toUInt())
+                return unixMode
             }
 
             // TODO: guess from Basic mode?
             // TODO: Add type
 
-            return FileModeType("777".toUInt(radix = 8))
+            return S_IRWXU or S_IRWXG or S_IRWXO
         }
 
         private fun FileTime.toTimeSpec(): StructTimespec = toInstant().run {

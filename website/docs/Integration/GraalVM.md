@@ -38,6 +38,13 @@ dependencies {
 
     <TabItem value="maven" label="Maven">
 ```xml
+<repositories>
+    <repository>
+        <id>Google</id>
+        <url>https://maven.google.com</url>
+    </repository>
+</repositories>
+
 <dependencies>
     <dependency>
         <groupId>org.graalvm.polyglot</groupId>

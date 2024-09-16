@@ -6,48 +6,80 @@
 
 package at.released.weh.filesystem.op.stat
 
-import at.released.weh.common.api.UintBitMask
+import androidx.annotation.IntDef
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
-import kotlin.jvm.JvmInline
+import at.released.weh.filesystem.model.FileModeFlag
+import kotlin.annotation.AnnotationRetention.SOURCE
+import kotlin.jvm.JvmStatic
 
 /**
  * File mode and file type bits
  */
-@JvmInline
-public value class FileModeType(
-    public override val mask: UInt,
-) : UintBitMask<FileModeType> {
-    override val newInstance: (UInt) -> FileModeType get() = ::FileModeType
+@Retention(SOURCE)
+@IntDef(
+    flag = true,
+    value = [
+        FileTypeFlag.S_IFMT,
+        FileTypeFlag.S_IFDIR,
+        FileTypeFlag.S_IFCHR,
+        FileTypeFlag.S_IFBLK,
+        FileTypeFlag.S_IFREG,
+        FileTypeFlag.S_IFIFO,
+        FileTypeFlag.S_IFLNK,
+        FileTypeFlag.S_IFSOCK,
+        FileModeFlag.S_ISUID,
+        FileModeFlag.S_ISGID,
+        FileModeFlag.S_ISVTX,
+        FileModeFlag.S_IRUSR,
+        FileModeFlag.S_IWUSR,
+        FileModeFlag.S_IXUSR,
+        FileModeFlag.S_IRWXU,
+        FileModeFlag.S_IRGRP,
+        FileModeFlag.S_IWGRP,
+        FileModeFlag.S_IXGRP,
+        FileModeFlag.S_IRWXG,
+        FileModeFlag.S_IROTH,
+        FileModeFlag.S_IWOTH,
+        FileModeFlag.S_IXOTH,
+    ],
+)
+public annotation class FileModeType
 
+// Constants from Emscripten include/sys/stat.h
+@Suppress("NoMultipleSpaces", "TOO_MANY_CONSECUTIVE_SPACES")
+public object FileTypeFlag {
+    public const val S_IFMT:   Int = 0b000_001_111_000_000_000_000
+    public const val S_IFDIR:  Int = 0b000_000_100_000_000_000_000
+    public const val S_IFCHR:  Int = 0b000_000_010_000_000_000_000
+    public const val S_IFBLK:  Int = 0b000_000_110_000_000_000_000
+    public const val S_IFREG:  Int = 0b000_001_000_000_000_000_000
+    public const val S_IFIFO:  Int = 0b000_000_001_000_000_000_000
+    public const val S_IFLNK:  Int = 0b000_001_010_000_000_000_000
+    public const val S_IFSOCK: Int = 0b000_001_100_000_000_000_000
+
+    @JvmStatic
+    internal fun fileModeTypeToString(
+        @FileModeType mask: Int,
+    ): String = "0${mask.toString(8)}"
+
+    @JvmStatic
     @FileMode
-    public val mode: Int
-        get() = (mask and 0xfffU).toInt()
+    @Suppress("MagicNumber")
+    internal fun fileModeTypeToFileMode(
+        @FileModeType mask: Int,
+    ): Int = mask and 0xfff
 
-    public val type: Filetype
-        get() = when (mask and S_IFMT) {
-            S_IFDIR -> Filetype.DIRECTORY
-            S_IFCHR -> Filetype.CHARACTER_DEVICE
-            S_IFBLK -> Filetype.BLOCK_DEVICE
-            S_IFREG -> Filetype.REGULAR_FILE
-            S_IFIFO -> Filetype.UNKNOWN
-            S_IFLNK -> Filetype.SYMBOLIC_LINK
-            S_IFSOCK -> Filetype.SOCKET_STREAM // XXX
-            else -> Filetype.UNKNOWN
-        }
-
-    override fun toString(): String = fileModeTypeToString(mask.toInt())
-
-    // Constants from Emscripten include/sys/stat.h
-    @Suppress("NoMultipleSpaces", "TOO_MANY_CONSECUTIVE_SPACES")
-    public companion object {
-        public const val S_IFMT:   UInt = 0b000_001_111_000_000_000_000U
-        public const val S_IFDIR:  UInt = 0b000_000_100_000_000_000_000U
-        public const val S_IFCHR:  UInt = 0b000_000_010_000_000_000_000U
-        public const val S_IFBLK:  UInt = 0b000_000_110_000_000_000_000U
-        public const val S_IFREG:  UInt = 0b000_001_000_000_000_000_000U
-        public const val S_IFIFO:  UInt = 0b000_000_001_000_000_000_000U
-        public const val S_IFLNK:  UInt = 0b000_001_010_000_000_000_000U
-        public const val S_IFSOCK: UInt = 0b000_001_100_000_000_000_000U
+    @JvmStatic
+    internal fun fileModeTypeToFileType(
+        @FileModeType mask: Int,
+    ): Filetype = when (mask and S_IFMT) {
+        S_IFDIR -> Filetype.DIRECTORY
+        S_IFCHR -> Filetype.CHARACTER_DEVICE
+        S_IFBLK -> Filetype.BLOCK_DEVICE
+        S_IFREG -> Filetype.REGULAR_FILE
+        S_IFIFO -> Filetype.UNKNOWN
+        S_IFLNK -> Filetype.SYMBOLIC_LINK
+        S_IFSOCK -> Filetype.SOCKET_STREAM // XXX
+        else -> Filetype.UNKNOWN
     }
 }

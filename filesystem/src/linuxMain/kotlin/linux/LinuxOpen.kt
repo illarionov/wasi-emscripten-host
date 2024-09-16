@@ -18,9 +18,9 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.ext.toDirFd
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ACCMODE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags.OpenFileFlag
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags.OpenFileFlag.O_ACCMODE
 import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
 import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
 import at.released.weh.filesystem.platform.linux.RESOLVE_IN_ROOT
@@ -51,7 +51,7 @@ internal class LinuxOpen(
         val errorOrFd = memScoped {
             val openHow: open_how = alloc<open_how> {
                 memset(ptr, 0, sizeOf<open_how>().toULong())
-                flags = input.flags.toLinuxMask()
+                flags = openFileFlagsToLinuxMask(input.flags)
                 mode = input.mode.toULong()
                 resolve = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS).toResolveMask()
             }
@@ -99,10 +99,10 @@ internal class LinuxOpen(
         )
 
         @Suppress("CyclomaticComplexMethod")
-        internal fun OpenFileFlags.toLinuxMask(): ULong {
-            val openFlagsMask: UInt = this.mask
-
-            var mask = when (val mode = openFlagsMask and O_ACCMODE) {
+        internal fun openFileFlagsToLinuxMask(
+            @OpenFileFlags openFlags: Int,
+        ): ULong {
+            var mask = when (val mode = (openFlags and O_ACCMODE)) {
                 OpenFileFlag.O_RDONLY -> platform.posix.O_RDONLY
                 OpenFileFlag.O_WRONLY -> platform.posix.O_WRONLY
                 OpenFileFlag.O_RDWR -> platform.posix.O_RDWR
@@ -110,7 +110,7 @@ internal class LinuxOpen(
             }
 
             openFileFlagsMaskToPosixMask.forEach { (testMask, posixMask) ->
-                if (openFlagsMask and testMask == testMask) {
+                if (openFlags and testMask == testMask) {
                     mask = mask or posixMask
                 }
             }

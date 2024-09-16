@@ -37,7 +37,7 @@ public class SyscallFaccessatFunctionHandle(
             CheckAccess(
                 path = path,
                 baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
-                mode = rawModeToFileAccessibilityCheck(amode),
+                mode = rawModeToFileAccessibilityCheck(amode.toInt()),
                 useEffectiveUserId = flags and AT_EACCESS == AT_EACCESS,
                 allowEmptyPath = false,
                 followSymlinks = flags and AT_SYMLINK_NOFOLLOW != AT_SYMLINK_NOFOLLOW,
@@ -46,7 +46,7 @@ public class SyscallFaccessatFunctionHandle(
     }
 
     private companion object {
-        fun rawModeToFileAccessibilityCheck(amode: UInt): Set<FileAccessibilityCheck> {
+        fun rawModeToFileAccessibilityCheck(amode: Int): Set<FileAccessibilityCheck> {
             return buildSet {
                 if (amode and Fcntl.R_OK == Fcntl.R_OK) {
                     add(FileAccessibilityCheck.READABLE)

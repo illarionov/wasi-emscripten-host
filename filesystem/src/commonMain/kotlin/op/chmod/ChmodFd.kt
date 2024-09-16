@@ -9,8 +9,8 @@ package at.released.weh.filesystem.op.chmod
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 public data class ChmodFd(
     public val fd: Fd,

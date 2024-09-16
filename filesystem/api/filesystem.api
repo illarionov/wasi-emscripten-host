@@ -681,8 +681,8 @@ public final class at/released/weh/filesystem/model/Fd$Companion {
 public abstract interface annotation class at/released/weh/filesystem/model/FileMode : java/lang/annotation/Annotation {
 }
 
-public final class at/released/weh/filesystem/model/FileModeBit {
-	public static final field INSTANCE Lat/released/weh/filesystem/model/FileModeBit;
+public final class at/released/weh/filesystem/model/FileModeFlag {
+	public static final field INSTANCE Lat/released/weh/filesystem/model/FileModeFlag;
 	public static final field S_IRGRP I
 	public static final field S_IROTH I
 	public static final field S_IRUSR I
@@ -969,17 +969,17 @@ public final class at/released/weh/filesystem/op/mkdir/Mkdir$Companion : at/rele
 
 public final class at/released/weh/filesystem/op/opencreate/Open {
 	public static final field Companion Lat/released/weh/filesystem/op/opencreate/Open$Companion;
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)V
 	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component3-JsNxjIE ()I
+	public final fun component3 ()I
 	public final fun component4 ()I
-	public final fun copy-9ZpZO20 (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)Lat/released/weh/filesystem/op/opencreate/Open;
-	public static synthetic fun copy-9ZpZO20$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)Lat/released/weh/filesystem/op/opencreate/Open;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getFlags-JsNxjIE ()I
+	public final fun getFlags ()I
 	public final fun getMode ()I
 	public final fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -990,7 +990,8 @@ public final class at/released/weh/filesystem/op/opencreate/Open$Companion : at/
 	public fun getTag ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/op/opencreate/OpenFileFlags : at/released/weh/common/api/UintBitMask {
+public final class at/released/weh/filesystem/op/opencreate/OpenFileFlag {
+	public static final field INSTANCE Lat/released/weh/filesystem/op/opencreate/OpenFileFlag;
 	public static final field O_ACCMODE I
 	public static final field O_APPEND I
 	public static final field O_ASYNC I
@@ -1014,23 +1015,9 @@ public final class at/released/weh/filesystem/op/opencreate/OpenFileFlags : at/r
 	public static final field O_TMPFILE I
 	public static final field O_TRUNC I
 	public static final field O_WRONLY I
-	public static final field OpenFileFlag Lat/released/weh/filesystem/op/opencreate/OpenFileFlags$OpenFileFlag;
-	public static final synthetic fun box-impl (I)Lat/released/weh/filesystem/op/opencreate/OpenFileFlags;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
 }
 
-public final class at/released/weh/filesystem/op/opencreate/OpenFileFlags$OpenFileFlag {
+public abstract interface annotation class at/released/weh/filesystem/op/opencreate/OpenFileFlags : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/filesystem/op/readlink/ReadLink {
@@ -1179,8 +1166,11 @@ public final class at/released/weh/filesystem/op/settimestamp/SetTimestampFd$Com
 	public fun getTag ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/op/stat/FileModeType : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/filesystem/op/stat/FileModeType$Companion;
+public abstract interface annotation class at/released/weh/filesystem/op/stat/FileModeType : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/filesystem/op/stat/FileTypeFlag {
+	public static final field INSTANCE Lat/released/weh/filesystem/op/stat/FileTypeFlag;
 	public static final field S_IFBLK I
 	public static final field S_IFCHR I
 	public static final field S_IFDIR I
@@ -1189,30 +1179,11 @@ public final class at/released/weh/filesystem/op/stat/FileModeType : at/released
 	public static final field S_IFMT I
 	public static final field S_IFREG I
 	public static final field S_IFSOCK I
-	public static final synthetic fun box-impl (I)Lat/released/weh/filesystem/op/stat/FileModeType;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public static final fun getMode-impl (I)I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public static final fun getType-impl (I)Lat/released/weh/filesystem/op/stat/Filetype;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/filesystem/op/stat/FileModeType$Companion {
 }
 
 public final class at/released/weh/filesystem/op/stat/Filetype : java/lang/Enum {
 	public static final field BLOCK_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
 	public static final field CHARACTER_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field Companion Lat/released/weh/filesystem/op/stat/Filetype$Companion;
 	public static final field DIRECTORY Lat/released/weh/filesystem/op/stat/Filetype;
 	public static final field REGULAR_FILE Lat/released/weh/filesystem/op/stat/Filetype;
 	public static final field SOCKET_DGRAM Lat/released/weh/filesystem/op/stat/Filetype;
@@ -1223,9 +1194,6 @@ public final class at/released/weh/filesystem/op/stat/Filetype : java/lang/Enum 
 	public final fun getId ()I
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/op/stat/Filetype;
 	public static fun values ()[Lat/released/weh/filesystem/op/stat/Filetype;
-}
-
-public final class at/released/weh/filesystem/op/stat/Filetype$Companion {
 }
 
 public final class at/released/weh/filesystem/op/stat/Stat {
@@ -1273,15 +1241,15 @@ public final class at/released/weh/filesystem/op/stat/StructStat {
 	public final fun component12 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun component13 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun component2-s-VKNKU ()J
-	public final fun component3-QuhVtvM ()I
+	public final fun component3 ()I
 	public final fun component4-s-VKNKU ()J
 	public final fun component5-s-VKNKU ()J
 	public final fun component6-s-VKNKU ()J
 	public final fun component7-s-VKNKU ()J
 	public final fun component8-s-VKNKU ()J
 	public final fun component9-s-VKNKU ()J
-	public final fun copy-elMcQns (JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)Lat/released/weh/filesystem/op/stat/StructStat;
-	public static synthetic fun copy-elMcQns$default (Lat/released/weh/filesystem/op/stat/StructStat;JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;ILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/StructStat;
+	public final fun copy-QuW3fis (JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)Lat/released/weh/filesystem/op/stat/StructStat;
+	public static synthetic fun copy-QuW3fis$default (Lat/released/weh/filesystem/op/stat/StructStat;JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;ILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/StructStat;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessTime ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun getBlockSize-s-VKNKU ()J
@@ -1291,7 +1259,7 @@ public final class at/released/weh/filesystem/op/stat/StructStat {
 	public final fun getGroupId-s-VKNKU ()J
 	public final fun getInode-s-VKNKU ()J
 	public final fun getLinks-s-VKNKU ()J
-	public final fun getMode-QuhVtvM ()I
+	public final fun getMode ()I
 	public final fun getModificationTime ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun getSize-s-VKNKU ()J
 	public final fun getSpecialFileDeviceId-s-VKNKU ()J

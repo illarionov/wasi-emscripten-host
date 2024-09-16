@@ -9,7 +9,6 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asUInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
@@ -33,7 +32,7 @@ internal class SyscallOpenat(
             memory,
             rawDirFd = args[0].asInt(),
             pathnamePtr = args[1].asWasmAddr(),
-            rawFlags = args[2].asUInt(),
+            rawFlags = args[2].asInt(),
             rawMode = mode,
         )
         listOf(Value.Number.I32(fdOrErrno))

@@ -10,8 +10,9 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.model.FileModeBit.fileModeTypeToString
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToString
+import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 /**
  * Open or create a	file.
@@ -25,7 +26,9 @@ import at.released.weh.filesystem.op.FileSystemOperation
 public data class Open(
     public val path: String,
     public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
-    public val flags: OpenFileFlags,
+
+    @OpenFileFlags
+    public val flags: Int,
 
     @FileMode
     public val mode: Int = 0,
@@ -33,7 +36,7 @@ public data class Open(
     override fun toString(): String = "Open(" +
             "path=$path, " +
             "baseDirectory=$baseDirectory, " +
-            "flags=$flags, " +
+            "flags=${openFileFlagsToString(flags)}, " +
             "mode=${fileModeTypeToString(mode)}" +
             ")"
 

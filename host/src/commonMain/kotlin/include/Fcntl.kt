@@ -37,30 +37,30 @@ public object Fcntl {
     public const val F_WRLCK: Short = 1
     public const val F_UNLCK: Short = 2
 
-    public const val O_RDONLY: UInt = 0x0U
-    public const val O_WRONLY: UInt = 0x1U
-    public const val O_RDWR: UInt = 0x2U
-    public const val O_ACCMODE: UInt = 0x3U
+    public const val O_RDONLY: Int = 0x0
+    public const val O_WRONLY: Int = 0x1
+    public const val O_RDWR: Int = 0x2
+    public const val O_ACCMODE: Int = 0x3
 
-    public const val O_CREAT: UInt = 0x40U
-    public const val O_EXCL: UInt = 0x80U
-    public const val O_NOCTTY: UInt = 0x100U
-    public const val O_TRUNC: UInt = 0x200U
-    public const val O_APPEND: UInt = 0x400U
-    public const val O_NONBLOCK: UInt = 0x800U
-    public const val O_NDELAY: UInt = O_NONBLOCK
-    public const val O_DSYNC: UInt = 0x1000U
-    public const val O_ASYNC: UInt = 0x2000U
-    public const val O_DIRECT: UInt = 0x4000U
-    public const val O_LARGEFILE: UInt = 0x8000U
-    public const val O_DIRECTORY: UInt = 0x10000U
-    public const val O_NOFOLLOW: UInt = 0x20000U
-    public const val O_NOATIME: UInt = 0x40000U
-    public const val O_CLOEXEC: UInt = 0x80000U
-    public const val O_SYNC: UInt = 0x101000U
-    public const val O_PATH: UInt = 0x200000U
-    public const val O_TMPFILE: UInt = 0x410000U
-    public const val O_SEARCH: UInt = O_PATH
+    public const val O_CREAT: Int = 0x40
+    public const val O_EXCL: Int = 0x80
+    public const val O_NOCTTY: Int = 0x100
+    public const val O_TRUNC: Int = 0x200
+    public const val O_APPEND: Int = 0x400
+    public const val O_NONBLOCK: Int = 0x800
+    public const val O_NDELAY: Int = O_NONBLOCK
+    public const val O_DSYNC: Int = 0x1000
+    public const val O_ASYNC: Int = 0x2000
+    public const val O_DIRECT: Int = 0x4000
+    public const val O_LARGEFILE: Int = 0x8000
+    public const val O_DIRECTORY: Int = 0x10000
+    public const val O_NOFOLLOW: Int = 0x20000
+    public const val O_NOATIME: Int = 0x40000
+    public const val O_CLOEXEC: Int = 0x80000
+    public const val O_SYNC: Int = 0x101000
+    public const val O_PATH: Int = 0x200000
+    public const val O_TMPFILE: Int = 0x410000
+    public const val O_SEARCH: Int = O_PATH
 
     public const val AT_FDCWD: Int = -100
     public const val AT_SYMLINK_NOFOLLOW: UInt = 0x100U
@@ -68,8 +68,8 @@ public object Fcntl {
     public const val AT_SYMLINK_FOLLOW: UInt = 0x400U
     public const val AT_EACCESS: UInt = 0x200U
 
-    public const val F_OK: UInt = 0U
-    public const val R_OK: UInt = 4U
-    public const val W_OK: UInt = 2U
-    public const val X_OK: UInt = 1U
+    public const val F_OK: Int = 0
+    public const val R_OK: Int = 4
+    public const val W_OK: Int = 2
+    public const val X_OK: Int = 1
 }

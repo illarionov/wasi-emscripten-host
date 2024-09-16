@@ -21,12 +21,15 @@ public class MunapJsFunctionHandle(
     public fun execute(
         addr: WasmPtr<Byte>,
         len: Int,
-        prot: SysMmanProt,
-        flags: SysMmanMapFlags,
+        @SysMmanProt prot: Int,
+        @SysMmanMapFlags flags: Int,
         fd: Fd,
         offset: ULong,
     ): Int {
-        logger.v { "munmapJs($addr, $len, $prot, $flags, $fd, $offset): Not implemented" }
+        logger.v {
+            "munmapJs($addr, $len, 0x${prot.toString(16)}, 0x${flags.toString(16)}," +
+                    " $fd, $offset): Not implemented"
+        }
         return -Errno.INVAL.code // Not Supported
     }
 }

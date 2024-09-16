@@ -441,12 +441,12 @@ public final class at/released/weh/host/emscripten/function/LocaltimeJsFunctionH
 
 public final class at/released/weh/host/emscripten/function/MmapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-gtSjiHw (IIIIJII)I
+	public final fun execute-cwuGRU4 (IIIIJII)I
 }
 
 public final class at/released/weh/host/emscripten/function/MunapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-92Yz8zk (IIIIIJ)I
+	public final fun execute-XitExeQ (IIIIIJ)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallChmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -496,7 +496,7 @@ public final class at/released/weh/host/emscripten/function/SyscallMkdiratFuncti
 
 public final class at/released/weh/host/emscripten/function/SyscallOpenatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-fT4Le30 (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute-muPLT4w (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallReadlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -591,32 +591,7 @@ public final class at/released/weh/host/include/Fcntl {
 }
 
 public final class at/released/weh/host/include/FcntlExtKt {
-	public static final fun oMaskToString-Qn1smSk (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
-}
-
-public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/host/include/FileAccessibilityCheck$Companion;
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/FileAccessibilityCheck;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/host/include/FileAccessibilityCheck$Companion {
-	public final fun getF_OK-8QPWET8 ()I
-	public final fun getMASK-8QPWET8 ()I
-	public final fun getR_OK-8QPWET8 ()I
-	public final fun getW_OK-8QPWET8 ()I
-	public final fun getX_OK-8QPWET8 ()I
+	public static final fun oMaskToString (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
 }
 
 public final class at/released/weh/host/include/StructFlock {
@@ -762,90 +737,64 @@ public final class at/released/weh/host/include/TimeZoneInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/host/include/sys/MemoryProtectionFlag {
+	public static final field INSTANCE Lat/released/weh/host/include/sys/MemoryProtectionFlag;
+	public static final field PROT_EXEC I
+	public static final field PROT_GROWSDOWN I
+	public static final field PROT_GROWSUP I
+	public static final field PROT_NONE I
+	public static final field PROT_READ I
+	public static final field PROT_WRITE I
+}
+
+public final class at/released/weh/host/include/sys/MmapFlag {
+	public static final field INSTANCE Lat/released/weh/host/include/sys/MmapFlag;
+	public static final field MAP_ANON I
+	public static final field MAP_ANONYMOUS I
+	public static final field MAP_DENYWRITE I
+	public static final field MAP_EXECUTABLE I
+	public static final field MAP_FILE I
+	public static final field MAP_FIXED I
+	public static final field MAP_FIXED_NOREPLACE I
+	public static final field MAP_GROWSDOWN I
+	public static final field MAP_HUGETLB I
+	public static final field MAP_HUGE_16GB I
+	public static final field MAP_HUGE_16KB I
+	public static final field MAP_HUGE_16MB I
+	public static final field MAP_HUGE_1GB I
+	public static final field MAP_HUGE_1MB I
+	public static final field MAP_HUGE_256MB I
+	public static final field MAP_HUGE_2GB I
+	public static final field MAP_HUGE_2MB I
+	public static final field MAP_HUGE_32MB I
+	public static final field MAP_HUGE_512KB I
+	public static final field MAP_HUGE_512MB I
+	public static final field MAP_HUGE_64KB I
+	public static final field MAP_HUGE_8MB I
+	public static final field MAP_HUGE_MASK I
+	public static final field MAP_HUGE_SHIFT I
+	public static final field MAP_LOCKED I
+	public static final field MAP_NONBLOCK I
+	public static final field MAP_NORESERVE I
+	public static final field MAP_POPULATE I
+	public static final field MAP_PRIVATE I
+	public static final field MAP_SHARED I
+	public static final field MAP_SHARED_VALIDATE I
+	public static final field MAP_STACK I
+	public static final field MAP_SYNC I
+	public static final field MAP_TYPE I
+}
+
 public final class at/released/weh/host/include/sys/StructStatExtKt {
 	public static final field STRUCT_SIZE_PACKED_SIZE I
 	public static final fun pack (Lat/released/weh/filesystem/op/stat/StructStat;)Lkotlinx/io/Buffer;
 	public static final fun packTo (Lat/released/weh/filesystem/op/stat/StructStat;Lkotlinx/io/Sink;)V
 }
 
-public final class at/released/weh/host/include/sys/SysMmanMapFlags : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/host/include/sys/SysMmanMapFlags$Companion;
-	public static final field MAP_HUGE_MASK I
-	public static final field MAP_HUGE_SHIFT I
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanMapFlags;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
+public abstract interface annotation class at/released/weh/host/include/sys/SysMmanMapFlags : java/lang/annotation/Annotation {
 }
 
-public final class at/released/weh/host/include/sys/SysMmanMapFlags$Companion {
-	public final fun getMAP_ANON-6HN-XAE ()I
-	public final fun getMAP_ANONYMOUS-6HN-XAE ()I
-	public final fun getMAP_DENYWRITE-6HN-XAE ()I
-	public final fun getMAP_EXECUTABLE-6HN-XAE ()I
-	public final fun getMAP_FILE-6HN-XAE ()I
-	public final fun getMAP_FIXED-6HN-XAE ()I
-	public final fun getMAP_FIXED_NOREPLACE-6HN-XAE ()I
-	public final fun getMAP_GROWSDOWN-6HN-XAE ()I
-	public final fun getMAP_HUGETLB-6HN-XAE ()I
-	public final fun getMAP_HUGE_16GB-6HN-XAE ()I
-	public final fun getMAP_HUGE_16KB-6HN-XAE ()I
-	public final fun getMAP_HUGE_16MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_1GB-6HN-XAE ()I
-	public final fun getMAP_HUGE_1MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_256MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_2GB-6HN-XAE ()I
-	public final fun getMAP_HUGE_2MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_32MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_512KB-6HN-XAE ()I
-	public final fun getMAP_HUGE_512MB-6HN-XAE ()I
-	public final fun getMAP_HUGE_64KB-6HN-XAE ()I
-	public final fun getMAP_HUGE_8MB-6HN-XAE ()I
-	public final fun getMAP_LOCKED-6HN-XAE ()I
-	public final fun getMAP_NONBLOCK-6HN-XAE ()I
-	public final fun getMAP_NORESERVE-6HN-XAE ()I
-	public final fun getMAP_POPULATE-6HN-XAE ()I
-	public final fun getMAP_PRIVATE-6HN-XAE ()I
-	public final fun getMAP_SHARED-6HN-XAE ()I
-	public final fun getMAP_SHARED_VALIDATE-6HN-XAE ()I
-	public final fun getMAP_STACK-6HN-XAE ()I
-	public final fun getMAP_SYNC-6HN-XAE ()I
-	public final fun getMAP_TYPE-6HN-XAE ()I
-}
-
-public final class at/released/weh/host/include/sys/SysMmanProt : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/host/include/sys/SysMmanProt$Companion;
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanProt;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/host/include/sys/SysMmanProt$Companion {
-	public final fun getPROT_EXEC-E0MLoKs ()I
-	public final fun getPROT_GROWSDOWN-E0MLoKs ()I
-	public final fun getPROT_GROWSUP-E0MLoKs ()I
-	public final fun getPROT_NONE-E0MLoKs ()I
-	public final fun getPROT_READ-E0MLoKs ()I
-	public final fun getPROT_WRITE-E0MLoKs ()I
+public abstract interface annotation class at/released/weh/host/include/sys/SysMmanProt : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/host/include/sys/SysStat {
