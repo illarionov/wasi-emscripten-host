@@ -68,8 +68,8 @@ public object Fcntl {
     public const val AT_SYMLINK_FOLLOW: UInt = 0x400U
     public const val AT_EACCESS: UInt = 0x200U
 
-    public const val F_OK: UInt = 0U
-    public const val R_OK: UInt = 4U
-    public const val W_OK: UInt = 2U
-    public const val X_OK: UInt = 1U
+    public const val F_OK: Int = 0
+    public const val R_OK: Int = 4
+    public const val W_OK: Int = 2
+    public const val X_OK: Int = 1
 }

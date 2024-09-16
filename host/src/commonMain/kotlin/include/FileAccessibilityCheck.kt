@@ -6,26 +6,29 @@
 
 package at.released.weh.host.include
 
-import at.released.weh.common.api.UintBitMask
-import at.released.weh.common.api.or
-import kotlin.jvm.JvmInline
+import androidx.annotation.IntDef
+import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
  * File accessibility check(s) (F_OK, R_OK, W_OK, X_OK)
  */
-@JvmInline
-public value class FileAccessibilityCheck(
-    public override val mask: UInt,
-) : UintBitMask<FileAccessibilityCheck> {
-    override val newInstance: (UInt) -> FileAccessibilityCheck get() = ::FileAccessibilityCheck
+@Retention(SOURCE)
+@IntDef(
+    flag = true,
+    value = [
+        FileAccessibilityCheckFlag.F_OK,
+        FileAccessibilityCheckFlag.R_OK,
+        FileAccessibilityCheckFlag.W_OK,
+        FileAccessibilityCheckFlag.X_OK,
+        FileAccessibilityCheckFlag.MASK,
+    ],
+)
+public annotation class FileAccessibilityCheck
 
-    override fun toString(): String = "0${mask.toString(8)}"
-
-    public companion object {
-        public val F_OK: FileAccessibilityCheck = FileAccessibilityCheck(Fcntl.F_OK)
-        public val R_OK: FileAccessibilityCheck = FileAccessibilityCheck(Fcntl.R_OK)
-        public val W_OK: FileAccessibilityCheck = FileAccessibilityCheck(Fcntl.W_OK)
-        public val X_OK: FileAccessibilityCheck = FileAccessibilityCheck(Fcntl.X_OK)
-        public val MASK: FileAccessibilityCheck = F_OK or R_OK or W_OK or X_OK
-    }
+public object FileAccessibilityCheckFlag {
+    public const val F_OK: Int = Fcntl.F_OK
+    public const val R_OK: Int = Fcntl.R_OK
+    public const val W_OK: Int = Fcntl.W_OK
+    public const val X_OK: Int = Fcntl.X_OK
+    public const val MASK: Int = F_OK or R_OK or W_OK or X_OK
 }

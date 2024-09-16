@@ -594,29 +594,16 @@ public final class at/released/weh/host/include/FcntlExtKt {
 	public static final fun oMaskToString (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
 }
 
-public final class at/released/weh/host/include/FileAccessibilityCheck : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/host/include/FileAccessibilityCheck$Companion;
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/FileAccessibilityCheck;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
+public abstract interface annotation class at/released/weh/host/include/FileAccessibilityCheck : java/lang/annotation/Annotation {
 }
 
-public final class at/released/weh/host/include/FileAccessibilityCheck$Companion {
-	public final fun getF_OK-8QPWET8 ()I
-	public final fun getMASK-8QPWET8 ()I
-	public final fun getR_OK-8QPWET8 ()I
-	public final fun getW_OK-8QPWET8 ()I
-	public final fun getX_OK-8QPWET8 ()I
+public final class at/released/weh/host/include/FileAccessibilityCheckFlag {
+	public static final field F_OK I
+	public static final field INSTANCE Lat/released/weh/host/include/FileAccessibilityCheckFlag;
+	public static final field MASK I
+	public static final field R_OK I
+	public static final field W_OK I
+	public static final field X_OK I
 }
 
 public final class at/released/weh/host/include/StructFlock {
