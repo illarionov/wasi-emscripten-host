@@ -8,5 +8,4 @@ Common to all modules public classes.
 
 * [InternalWasiEmscriptenHostApi][at.released.weh.common.api.InternalWasiEmscriptenHostApi]
 * [Logger][at.released.weh.common.api.Logger]
-* [UintBitMask][at.released.weh.common.api.UintBitMask]
 * [WasiEmscriptenHostDsl][at.released.weh.common.api.WasiEmscriptenHostDsl]
