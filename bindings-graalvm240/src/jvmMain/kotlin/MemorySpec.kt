@@ -4,27 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("NO_BRACES_IN_CONDITIONALS_AND_LOOPS")
+
 package at.released.weh.bindings.graalvm240
 
 import at.released.weh.common.api.WasiEmscriptenHostDsl
+import at.released.weh.host.base.memory.Pages
 import at.released.weh.host.base.memory.WASM_MEMORY_DEFAULT_MAX_PAGES
 
 public class MemorySpec private constructor(
-    public val maxSizePages: Long,
-    public val minSizePages: Long,
+    public val maxSize: Pages,
+    public val minSize: Pages,
     public val sharedMemory: Boolean,
     public val useUnsafeMemory: Boolean,
     public val supportMemory64: Boolean,
 ) {
-    @Suppress("NO_BRACES_IN_CONDITIONALS_AND_LOOPS")
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as MemorySpec
 
-        if (maxSizePages != other.maxSizePages) return false
-        if (minSizePages != other.minSizePages) return false
+        if (maxSize != other.maxSize) return false
+        if (minSize != other.minSize) return false
         if (sharedMemory != other.sharedMemory) return false
         if (useUnsafeMemory != other.useUnsafeMemory) return false
         if (supportMemory64 != other.supportMemory64) return false
@@ -32,10 +34,9 @@ public class MemorySpec private constructor(
         return true
     }
 
-    @Suppress("NO_BRACES_IN_CONDITIONALS_AND_LOOPS")
     override fun hashCode(): Int {
-        var result = maxSizePages.hashCode()
-        result = 31 * result + minSizePages.hashCode()
+        var result = maxSize.hashCode()
+        result = 31 * result + minSize.hashCode()
         result = 31 * result + sharedMemory.hashCode()
         result = 31 * result + useUnsafeMemory.hashCode()
         result = 31 * result + supportMemory64.hashCode()
@@ -48,13 +49,13 @@ public class MemorySpec private constructor(
          * Limits of the imported memory: minimum size in pages.
          */
         @set:JvmSynthetic
-        public var minSizePages: Long = 0
+        public var minSize: Pages = Pages(0)
 
         /**
          * Limits of the imported memory: maximum size in pages.
          */
         @set:JvmSynthetic
-        public var maxSizePages: Long = WASM_MEMORY_DEFAULT_MAX_PAGES.count
+        public var maxSize: Pages = WASM_MEMORY_DEFAULT_MAX_PAGES
 
         /**
          * Specifies whether this memory is shared
@@ -75,14 +76,13 @@ public class MemorySpec private constructor(
         @set:JvmSynthetic
         public var supportMemory64: Boolean = false
 
-        public fun setMinSizePages(minSizePages: Long): Builder = apply {
-            require(minSizePages >= 0) { "minSizePages should not be negative" }
-            this.minSizePages = minSizePages
+        public fun setMinSize(minSize: Pages): Builder = apply {
+            this.minSize = minSize
         }
 
-        public fun setMaxSizePages(maxSizePages: Long): Builder = apply {
-            require(maxSizePages > 0) { "maxSizePages should be positive" }
-            this.maxSizePages = maxSizePages
+        public fun setMaxSize(maxSize: Pages): Builder = apply {
+            require(maxSize.count > 0) { "maxSizePages should be positive" }
+            this.maxSize = maxSize
         }
 
         public fun setShared(shared: Boolean): Builder = apply {
@@ -98,11 +98,11 @@ public class MemorySpec private constructor(
         }
 
         public fun build(): MemorySpec {
-            require(minSizePages <= maxSizePages) { "maxSizePages should not be less than minSizePages" }
+            require(minSize.count <= maxSize.count) { "maxSizePages should not be less than minSizePages" }
 
             return MemorySpec(
-                minSizePages = minSizePages,
-                maxSizePages = maxSizePages,
+                minSize = minSize,
+                maxSize = maxSize,
                 sharedMemory = shared,
                 useUnsafeMemory = useUnsafe,
                 supportMemory64 = supportMemory64,

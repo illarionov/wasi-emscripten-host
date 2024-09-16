@@ -74,10 +74,10 @@ public final class at/released/weh/bindings/graalvm240/MemorySource$ImportedMemo
 
 public final class at/released/weh/bindings/graalvm240/MemorySpec {
 	public static final field Companion Lat/released/weh/bindings/graalvm240/MemorySpec$Companion;
-	public synthetic fun <init> (JJZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/base/memory/Pages;Lat/released/weh/host/base/memory/Pages;ZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getMaxSizePages ()J
-	public final fun getMinSizePages ()J
+	public final fun getMaxSize ()Lat/released/weh/host/base/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/host/base/memory/Pages;
 	public final fun getSharedMemory ()Z
 	public final fun getSupportMemory64 ()Z
 	public final fun getUseUnsafeMemory ()Z
@@ -87,15 +87,15 @@ public final class at/released/weh/bindings/graalvm240/MemorySpec {
 public final class at/released/weh/bindings/graalvm240/MemorySpec$Builder {
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/bindings/graalvm240/MemorySpec;
-	public final fun getMaxSizePages ()J
-	public final fun getMinSizePages ()J
+	public final fun getMaxSize ()Lat/released/weh/host/base/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/host/base/memory/Pages;
 	public final fun getShared ()Z
 	public final fun getSupportMemory64 ()Z
 	public final fun getUseUnsafe ()Z
-	public final fun setMaxSizePages (J)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
-	public final synthetic fun setMaxSizePages (J)V
-	public final fun setMinSizePages (J)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
-	public final synthetic fun setMinSizePages (J)V
+	public final fun setMaxSize (Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
+	public final synthetic fun setMaxSize (Lat/released/weh/host/base/memory/Pages;)V
+	public final fun setMinSize (Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
+	public final synthetic fun setMinSize (Lat/released/weh/host/base/memory/Pages;)V
 	public final fun setShared (Z)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;
 	public final synthetic fun setShared (Z)V
 	public final fun setSupportMemory64 (Z)Lat/released/weh/bindings/graalvm240/MemorySpec$Builder;

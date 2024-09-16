@@ -16,6 +16,7 @@ import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
+import at.released.weh.host.base.memory.Pages
 import at.released.weh.host.base.memory.WASM_MEMORY_PAGE_SIZE
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import org.graalvm.polyglot.Context
@@ -131,7 +132,7 @@ public class GraalvmHostFunctionInstaller private constructor(
 
     public companion object {
         internal val DEFAULT_MEMORY_SPEC: MemorySpec = MemorySpec {
-            minSizePages = 50331648L / WASM_MEMORY_PAGE_SIZE
+            minSize = Pages(50331648L / WASM_MEMORY_PAGE_SIZE)
             shared = false
             useUnsafe = false
         }

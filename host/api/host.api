@@ -137,25 +137,19 @@ public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at
 }
 
 public final class at/released/weh/host/base/memory/Pages {
-	public static final synthetic fun box-impl (J)Lat/released/weh/host/base/memory/Pages;
-	public static fun constructor-impl (J)J
+	public fun <init> (J)V
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
 	public final fun getCount ()J
-	public static final fun getInBytes-impl (J)J
+	public final fun getInBytes ()J
 	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()J
 }
 
 public final class at/released/weh/host/base/memory/PagesKt {
 	public static final field WASM_MEMORY_PAGE_SIZE J
-	public static final fun getWASM_MEMORY_32_MAX_PAGES ()J
-	public static final fun getWASM_MEMORY_64_MAX_PAGES ()J
-	public static final fun getWASM_MEMORY_DEFAULT_MAX_PAGES ()J
+	public static final fun getWASM_MEMORY_32_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
+	public static final fun getWASM_MEMORY_64_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
+	public static final fun getWASM_MEMORY_DEFAULT_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
@@ -402,7 +396,7 @@ public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeap
 }
 
 public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeapFunctionHandle$Companion {
-	public final fun calculateNewSizePages-GvQ4lMc (JJJ)J
+	public final fun calculateNewSizePages (JLat/released/weh/host/base/memory/Pages;Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/host/base/memory/Pages;
 }
 
 public final class at/released/weh/host/emscripten/function/GetentropyFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
