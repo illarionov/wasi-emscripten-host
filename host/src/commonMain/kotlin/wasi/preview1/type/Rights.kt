@@ -9,20 +9,18 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
-@JvmInline
-public value class Rights(
-    public val mask: ULong,
+public data class Rights(
+    public val mask: Long,
 ) {
     public constructor(
         vararg flags: Flags,
     ) : this(
-        flags.fold(0UL) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0L) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Flags(
-        public val mask: ULong,
+        public val mask: Long,
     ) {
         /**
          * The right to invoke `fd_datasync`.
@@ -199,7 +197,7 @@ public value class Rights(
 
         ;
 
-        constructor(bit: Int) : this(1UL.shl(bit))
+        constructor(bit: Int) : this(1L.shl(bit))
     }
 
     public companion object : WasiTypename {

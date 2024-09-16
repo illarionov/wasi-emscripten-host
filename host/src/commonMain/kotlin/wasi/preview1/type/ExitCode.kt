@@ -7,7 +7,6 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 public class ExitCode(
     public val rawValue: Int,

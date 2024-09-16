@@ -1143,18 +1143,15 @@ public final class at/released/weh/host/wasi/preview1/type/FdExtKt {
 
 public final class at/released/weh/host/wasi/preview1/type/FdFlags {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FdFlags$Companion;
-	public static final synthetic fun box-impl (S)Lat/released/weh/host/wasi/preview1/type/FdFlags;
-	public static fun constructor-impl (S)S
-	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;)S
+	public fun <init> (S)V
+	public fun <init> ([Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;)V
+	public final fun component1 ()S
+	public final fun copy (S)Lat/released/weh/host/wasi/preview1/type/FdFlags;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/FdFlags;SILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FdFlags;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (SLjava/lang/Object;)Z
-	public static final fun equals-impl0 (SS)Z
-	public final fun getRawMask-Mh2AYeg ()S
+	public final fun getRawMask ()S
 	public fun hashCode ()I
-	public static fun hashCode-impl (S)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (S)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()S
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1168,25 +1165,25 @@ public final class at/released/weh/host/wasi/preview1/type/FdFlags$Flags : java/
 	public static final field RSYNC Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
 	public static final field SYNC Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getMask-Mh2AYeg ()S
+	public final fun getMask ()S
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
 	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/FdFlags$Flags;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdStat {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/FdStat$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/wasi/preview1/type/Filetype;SJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/FdFlags;Lat/released/weh/host/wasi/preview1/type/Rights;Lat/released/weh/host/wasi/preview1/type/Rights;)V
 	public final fun component1 ()Lat/released/weh/host/wasi/preview1/type/Filetype;
-	public final fun component2-gAkrBNM ()S
-	public final fun component3-_AmXvW0 ()J
-	public final fun component4-_AmXvW0 ()J
-	public final fun copy-d8Fgj6Q (Lat/released/weh/host/wasi/preview1/type/Filetype;SJJ)Lat/released/weh/host/wasi/preview1/type/FdStat;
-	public static synthetic fun copy-d8Fgj6Q$default (Lat/released/weh/host/wasi/preview1/type/FdStat;Lat/released/weh/host/wasi/preview1/type/Filetype;SJJILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FdStat;
+	public final fun component2 ()Lat/released/weh/host/wasi/preview1/type/FdFlags;
+	public final fun component3 ()Lat/released/weh/host/wasi/preview1/type/Rights;
+	public final fun component4 ()Lat/released/weh/host/wasi/preview1/type/Rights;
+	public final fun copy (Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/FdFlags;Lat/released/weh/host/wasi/preview1/type/Rights;Lat/released/weh/host/wasi/preview1/type/Rights;)Lat/released/weh/host/wasi/preview1/type/FdStat;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/FdStat;Lat/released/weh/host/wasi/preview1/type/Filetype;Lat/released/weh/host/wasi/preview1/type/FdFlags;Lat/released/weh/host/wasi/preview1/type/Rights;Lat/released/weh/host/wasi/preview1/type/Rights;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/FdStat;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFsFiletype ()Lat/released/weh/host/wasi/preview1/type/Filetype;
-	public final fun getFsFlags-gAkrBNM ()S
-	public final fun getFsRightsBase-_AmXvW0 ()J
-	public final fun getFsRightsInheriting-_AmXvW0 ()J
+	public final fun getFsFlags ()Lat/released/weh/host/wasi/preview1/type/FdFlags;
+	public final fun getFsRightsBase ()Lat/released/weh/host/wasi/preview1/type/Rights;
+	public final fun getFsRightsInheriting ()Lat/released/weh/host/wasi/preview1/type/Rights;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1514,18 +1511,15 @@ public final class at/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue 
 
 public final class at/released/weh/host/wasi/preview1/type/Rights {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/Rights$Companion;
-	public static final synthetic fun box-impl (J)Lat/released/weh/host/wasi/preview1/type/Rights;
-	public static fun constructor-impl (J)J
-	public static fun constructor-impl ([Lat/released/weh/host/wasi/preview1/type/Rights$Flags;)J
+	public fun <init> (J)V
+	public fun <init> ([Lat/released/weh/host/wasi/preview1/type/Rights$Flags;)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/host/wasi/preview1/type/Rights;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/Rights;JILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/Rights;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
-	public final fun getMask-s-VKNKU ()J
+	public final fun getMask ()J
 	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()J
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Rights$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1564,7 +1558,7 @@ public final class at/released/weh/host/wasi/preview1/type/Rights$Flags : java/l
 	public static final field SOCK_ACCEPT Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
 	public static final field SOCK_SHUTDOWN Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getMask-s-VKNKU ()J
+	public final fun getMask ()J
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
 	public static fun values ()[Lat/released/weh/host/wasi/preview1/type/Rights$Flags;
 }
