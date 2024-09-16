@@ -10,7 +10,7 @@ import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I32
+import at.released.weh.host.base.WasmValueType.I32
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.pointer
 import at.released.weh.host.wasi.preview1.type.Advice

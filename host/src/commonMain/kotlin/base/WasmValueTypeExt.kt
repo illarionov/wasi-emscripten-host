@@ -6,7 +6,7 @@
 
 package at.released.weh.host.base
 
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I32
+import at.released.weh.host.base.WasmValueType.I32
 import at.released.weh.host.wasi.preview1.type.WasiTypename
 
 public val POINTER: WasmValueType get() = I32

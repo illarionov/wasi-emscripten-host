@@ -6,23 +6,25 @@
 
 package at.released.weh.host.base
 
-import kotlin.jvm.JvmInline
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 
-// https://webassembly.github.io/spec/core/appendix/index-types.html
-@JvmInline
-public value class WasmValueType(
-    public val opcode: Byte?,
+/**
+ * WebAssembly value types.
+ *
+ * Number types, vector types, or reference types according to the [WebAssembly types](https://webassembly.github.io/spec/core/syntax/types.html#value-types).
+ *
+ * @property opcode Binary Opcode of the type (see [WebAssembly index of types](https://webassembly.github.io/spec/core/appendix/index-types.html))
+ */
+public enum class WasmValueType(
+    public val opcode: Byte,
 ) {
-    @Suppress("VARIABLE_NAME_INCORRECT")
-    public companion object WebAssemblyTypes {
-        public val I32: WasmValueType = WasmValueType(0x7f)
-        public val I64: WasmValueType = WasmValueType(0x7e)
-        public val F32: WasmValueType = WasmValueType(0x7d)
-        public val F64: WasmValueType = WasmValueType(0x7c)
-        public val V128: WasmValueType = WasmValueType(0x7b)
-        public val FuncRef: WasmValueType = WasmValueType(0x70)
-        public val ExternRef: WasmValueType = WasmValueType(0x6f)
-        public val FunctionType: WasmValueType = WasmValueType(0x60)
-        public val ResultType: WasmValueType = WasmValueType(0x40)
-    }
+    I32(0x7f),
+    I64(0x7e),
+    F32(0x7d),
+    F64(0x7c),
+    V128(0x7b),
+    FuncRef(0x70),
+    ExternRef(0x6f),
 }
+
+

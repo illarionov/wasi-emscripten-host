@@ -10,9 +10,9 @@ package at.released.weh.host.emscripten
 
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.F64
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I32
-import at.released.weh.host.base.WasmValueType.WebAssemblyTypes.I64
+import at.released.weh.host.base.WasmValueType.F64
+import at.released.weh.host.base.WasmValueType.I32
+import at.released.weh.host.base.WasmValueType.I64
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
 import at.released.weh.host.base.pointer

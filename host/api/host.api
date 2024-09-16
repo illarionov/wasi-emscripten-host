@@ -67,37 +67,14 @@ public final class at/released/weh/host/base/WasmModules {
 	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
 }
 
-public final class at/released/weh/host/base/WasmValueType {
-	public static final field WebAssemblyTypes Lat/released/weh/host/base/WasmValueType$WebAssemblyTypes;
-	public static final synthetic fun box-impl (Ljava/lang/Byte;)Lat/released/weh/host/base/WasmValueType;
-	public static fun constructor-impl (Ljava/lang/Byte;)Ljava/lang/Byte;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/lang/Byte;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/lang/Byte;Ljava/lang/Byte;)Z
-	public final fun getOpcode ()Ljava/lang/Byte;
-	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/lang/Byte;)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/lang/Byte;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/lang/Byte;
-}
-
-public final class at/released/weh/host/base/WasmValueType$WebAssemblyTypes {
-	public final fun getExternRef-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getF32-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getF64-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getFuncRef-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getFunctionType-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getI32-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getI64-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getResultType-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getV128-VeGrqVg ()Ljava/lang/Byte;
+public abstract interface class at/released/weh/host/base/WasmValueType {
+	public abstract fun getOpcode ()B
 }
 
 public final class at/released/weh/host/base/WasmValueTypeExtKt {
-	public static final fun getPOINTER ()Ljava/lang/Byte;
-	public static final fun getPointer (Lat/released/weh/host/wasi/preview1/type/WasiTypename;)Ljava/lang/Byte;
-	public static final fun getPointer-uY7yA4Y (Ljava/lang/Byte;)Ljava/lang/Byte;
+	public static final fun getPOINTER ()Lat/released/weh/host/base/WasmValueType;
+	public static final fun getPointer (Lat/released/weh/host/base/WasmValueType;)Lat/released/weh/host/base/WasmValueType;
+	public static final fun getPointer (Lat/released/weh/host/wasi/preview1/type/WasiTypename;)Lat/released/weh/host/base/WasmValueType;
 }
 
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
@@ -976,7 +953,7 @@ public final class at/released/weh/host/wasi/preview1/type/Advice : java/lang/En
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Advice$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/CioVec {
@@ -994,7 +971,7 @@ public final class at/released/weh/host/wasi/preview1/type/CioVec {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/CioVec$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/CiovecArray {
@@ -1013,7 +990,7 @@ public final class at/released/weh/host/wasi/preview1/type/CiovecArray {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/CiovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/ClockId : java/lang/Enum {
@@ -1029,7 +1006,7 @@ public final class at/released/weh/host/wasi/preview1/type/ClockId : java/lang/E
 }
 
 public final class at/released/weh/host/wasi/preview1/type/ClockId$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Device {
@@ -1048,7 +1025,7 @@ public final class at/released/weh/host/wasi/preview1/type/Device {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Device$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dircookie {
@@ -1067,7 +1044,7 @@ public final class at/released/weh/host/wasi/preview1/type/Dircookie {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dircookie$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dirent {
@@ -1089,7 +1066,7 @@ public final class at/released/weh/host/wasi/preview1/type/Dirent {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dirent$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dirnamlen {
@@ -1108,11 +1085,11 @@ public final class at/released/weh/host/wasi/preview1/type/Dirnamlen {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Dirnamlen$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/ErrnoExtKt {
-	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Errno$Companion;)Ljava/lang/Byte;
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Errno$Companion;)Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Event {
@@ -1134,7 +1111,7 @@ public final class at/released/weh/host/wasi/preview1/type/Event {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Event$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/EventFdReadwrite {
@@ -1152,7 +1129,7 @@ public final class at/released/weh/host/wasi/preview1/type/EventFdReadwrite {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/EventFdReadwrite$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Eventrwflags {
@@ -1172,7 +1149,7 @@ public final class at/released/weh/host/wasi/preview1/type/Eventrwflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Eventrwflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Eventrwflags$Eventrwflags : java/lang/Enum {
@@ -1195,7 +1172,7 @@ public final class at/released/weh/host/wasi/preview1/type/Eventtype : java/lang
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Eventtype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/ExitCode {
@@ -1214,11 +1191,11 @@ public final class at/released/weh/host/wasi/preview1/type/ExitCode {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/ExitCode$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdExtKt {
-	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Fd$Companion;)Ljava/lang/Byte;
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Fd$Companion;)Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdFlags {
@@ -1238,7 +1215,7 @@ public final class at/released/weh/host/wasi/preview1/type/FdFlags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdFlags$Flags : java/lang/Enum {
@@ -1272,7 +1249,7 @@ public final class at/released/weh/host/wasi/preview1/type/FdStat {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FdStat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileDelta {
@@ -1291,7 +1268,7 @@ public final class at/released/weh/host/wasi/preview1/type/FileDelta {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileDelta$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileSize {
@@ -1310,7 +1287,7 @@ public final class at/released/weh/host/wasi/preview1/type/FileSize {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/FileSize$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Filestat {
@@ -1340,7 +1317,7 @@ public final class at/released/weh/host/wasi/preview1/type/Filestat {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Filestat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Filetype : java/lang/Enum {
@@ -1360,7 +1337,7 @@ public final class at/released/weh/host/wasi/preview1/type/Filetype : java/lang/
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Filetype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Fstflags {
@@ -1380,7 +1357,7 @@ public final class at/released/weh/host/wasi/preview1/type/Fstflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Fstflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Fstflags$Fstflags : java/lang/Enum {
@@ -1410,7 +1387,7 @@ public final class at/released/weh/host/wasi/preview1/type/Inode {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Inode$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Iovec {
@@ -1428,7 +1405,7 @@ public final class at/released/weh/host/wasi/preview1/type/Iovec {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Iovec$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/IovecArray {
@@ -1447,7 +1424,7 @@ public final class at/released/weh/host/wasi/preview1/type/IovecArray {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/IovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Linkcount {
@@ -1466,7 +1443,7 @@ public final class at/released/weh/host/wasi/preview1/type/Linkcount {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Linkcount$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/LookupFlags {
@@ -1486,7 +1463,7 @@ public final class at/released/weh/host/wasi/preview1/type/LookupFlags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/LookupFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/LookupFlags$LookupFlag : java/lang/Enum {
@@ -1514,7 +1491,7 @@ public final class at/released/weh/host/wasi/preview1/type/Oflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Oflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Oflags$Oflags : java/lang/Enum {
@@ -1538,7 +1515,7 @@ public final class at/released/weh/host/wasi/preview1/type/Preopentype : java/la
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Preopentype$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public abstract class at/released/weh/host/wasi/preview1/type/Prestat {
@@ -1548,7 +1525,7 @@ public abstract class at/released/weh/host/wasi/preview1/type/Prestat {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Prestat$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Prestat$Dir : at/released/weh/host/wasi/preview1/type/Prestat {
@@ -1575,7 +1552,7 @@ public final class at/released/weh/host/wasi/preview1/type/PrestatDir {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/PrestatDir$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Riflags {
@@ -1595,7 +1572,7 @@ public final class at/released/weh/host/wasi/preview1/type/Riflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Riflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Riflags$RiFlagsValue : java/lang/Enum {
@@ -1624,7 +1601,7 @@ public final class at/released/weh/host/wasi/preview1/type/Rights {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Rights$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Rights$Flags : java/lang/Enum {
@@ -1681,7 +1658,7 @@ public final class at/released/weh/host/wasi/preview1/type/Roflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Roflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Roflags$RoflagsValue : java/lang/Enum {
@@ -1709,7 +1686,7 @@ public final class at/released/weh/host/wasi/preview1/type/Sdflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Sdflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Sdflags$Sdflags : java/lang/Enum {
@@ -1737,7 +1714,7 @@ public final class at/released/weh/host/wasi/preview1/type/SiFlags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SiFlags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Signal : java/lang/Enum {
@@ -1780,7 +1757,7 @@ public final class at/released/weh/host/wasi/preview1/type/Signal : java/lang/En
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Signal$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Size {
@@ -1799,7 +1776,7 @@ public final class at/released/weh/host/wasi/preview1/type/Size {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Size$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Subclockflags {
@@ -1819,7 +1796,7 @@ public final class at/released/weh/host/wasi/preview1/type/Subclockflags {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Subclockflags$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Subclockflags$Subclockflags : java/lang/Enum {
@@ -1845,7 +1822,7 @@ public final class at/released/weh/host/wasi/preview1/type/Subscription {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Subscription$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock {
@@ -1867,7 +1844,7 @@ public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionClock$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite {
@@ -1883,7 +1860,7 @@ public final class at/released/weh/host/wasi/preview1/type/SubscriptionFdReadwri
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionFdReadwrite$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public abstract class at/released/weh/host/wasi/preview1/type/SubscriptionU {
@@ -1904,7 +1881,7 @@ public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$Clock :
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/SubscriptionU$FdRead : at/released/weh/host/wasi/preview1/type/SubscriptionU {
@@ -1945,7 +1922,7 @@ public final class at/released/weh/host/wasi/preview1/type/Timestamp {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Timestamp$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Userdata {
@@ -1964,25 +1941,25 @@ public final class at/released/weh/host/wasi/preview1/type/Userdata {
 }
 
 public final class at/released/weh/host/wasi/preview1/type/Userdata$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public abstract interface class at/released/weh/host/wasi/preview1/type/WasiTypename {
-	public abstract fun getWasmValueType-VeGrqVg ()Ljava/lang/Byte;
+	public abstract fun getWasmValueType ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/WasiValueTypes {
 	public static final field INSTANCE Lat/released/weh/host/wasi/preview1/type/WasiValueTypes;
-	public final fun getHandle-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getS32-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getS64-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getU16-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getU32-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getU64-VeGrqVg ()Ljava/lang/Byte;
-	public final fun getU8-VeGrqVg ()Ljava/lang/Byte;
+	public final fun getHandle ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getS32 ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getS64 ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getU16 ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getU32 ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getU64 ()Lat/released/weh/host/base/WasmValueType;
+	public final fun getU8 ()Lat/released/weh/host/base/WasmValueType;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/WhenceExtKt {
-	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Whence$Companion;)Ljava/lang/Byte;
+	public static final fun getWasmValueType (Lat/released/weh/filesystem/model/Whence$Companion;)Lat/released/weh/host/base/WasmValueType;
 }
 
