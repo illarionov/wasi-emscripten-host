@@ -23,7 +23,7 @@ public class MmapJsFunctionHandle(
         @SysMmanProt prot: Int,
         @SysMmanMapFlags flags: Int,
         @Fd fd: Int,
-        offset: ULong,
+        offset: Long,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
     ): Int {

@@ -34,7 +34,7 @@ internal class MunapJs(
             args.getArgAsInt(2),
             args.getArgAsInt(3),
             args.getArgAsInt(4),
-            args.getArgAsLong(5).toULong(),
+            args.getArgAsLong(5),
         )
     }
 
@@ -46,6 +46,6 @@ internal class MunapJs(
         prot: Int,
         flags: Int,
         fd: Int,
-        offset: ULong,
+        offset: Long,
     ): Int = handle.execute(addr, len, prot, flags, fd, offset)
 }

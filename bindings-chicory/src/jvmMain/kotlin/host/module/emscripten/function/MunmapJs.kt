@@ -24,7 +24,7 @@ internal class MunmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
             args[2].asInt(),
             args[3].asInt(),
             args[4].asInt(),
-            args[5].asLong().toULong(),
+            args[5].asLong(),
         )
         return Value.i32(result.toLong())
     }

@@ -7,7 +7,7 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.bindings.chasm.ext.asULong
+import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
@@ -26,7 +26,7 @@ internal class MmapJs(
             args[1].asInt(),
             args[2].asInt(),
             args[3].asInt(),
-            args[4].asULong(),
+            args[4].asLong(),
             args[5].asWasmAddr(),
             args[6].asWasmAddr(),
         )

@@ -8,7 +8,6 @@ package at.released.weh.host.base
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.WasmPtr.Companion.C_NULL
-import kotlin.jvm.JvmInline
 
 public class WasmPtr<out P : Any?>(
     public val addr: Int,

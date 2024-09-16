@@ -24,7 +24,7 @@ public class MunapJsFunctionHandle(
         @SysMmanProt prot: Int,
         @SysMmanMapFlags flags: Int,
         @Fd fd: Int,
-        offset: ULong,
+        offset: Long,
     ): Int {
         logger.v {
             "munmapJs($addr, $len, 0x${prot.toString(16)}, 0x${flags.toString(16)}," +

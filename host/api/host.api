@@ -408,12 +408,12 @@ public final class at/released/weh/host/emscripten/function/LocaltimeJsFunctionH
 
 public final class at/released/weh/host/emscripten/function/MmapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-c9L97WU (IIIIJLat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)I
+	public final fun execute (IIIIJLat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)I
 }
 
 public final class at/released/weh/host/emscripten/function/MunapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-CoGd6hE (Lat/released/weh/host/base/WasmPtr;IIIIJ)I
+	public final fun execute (Lat/released/weh/host/base/WasmPtr;IIIIJ)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallChmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {

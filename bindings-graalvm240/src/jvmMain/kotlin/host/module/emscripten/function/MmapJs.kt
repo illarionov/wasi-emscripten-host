@@ -33,7 +33,7 @@ internal class MmapJs(
             args.getArgAsInt(1),
             args.getArgAsInt(2),
             args.getArgAsInt(3),
-            args.getArgAsLong(4).toULong(),
+            args.getArgAsLong(4),
             args.getArgAsWasmPtr(5),
             args.getArgAsWasmPtr(6),
         )
@@ -46,7 +46,7 @@ internal class MmapJs(
         prot: Int,
         flags: Int,
         fd: Int,
-        offset: ULong,
+        offset: Long,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
     ): Int = handle.execute(len, prot, flags, fd, offset, pAllocated, pAddr)

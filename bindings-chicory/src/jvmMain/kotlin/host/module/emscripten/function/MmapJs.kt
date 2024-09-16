@@ -23,7 +23,7 @@ internal class MmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
             args[1].asInt(),
             args[2].asInt(),
             args[3].asInt(),
-            args[4].asLong().toULong(),
+            args[4].asLong(),
             args[5].asWasmAddr(),
             args[6].asWasmAddr(),
         )
