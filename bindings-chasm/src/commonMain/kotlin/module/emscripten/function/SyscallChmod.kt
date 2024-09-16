@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.chasm.module.emscripten.function
 
-import at.released.weh.bindings.chasm.ext.asUInt
+import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
@@ -24,7 +24,7 @@ internal class SyscallChmod(
         val result: Int = handle.execute(
             memory,
             args[0].asWasmAddr(),
-            args[1].asUInt(),
+            args[1].asInt(),
         )
         listOf(Value.Number.I32(result))
     }

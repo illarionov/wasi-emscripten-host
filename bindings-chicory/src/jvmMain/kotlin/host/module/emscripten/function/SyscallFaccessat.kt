@@ -25,8 +25,8 @@ internal class SyscallFaccessat(
             memory,
             args[0].asInt(),
             args[1].asWasmAddr(),
-            args[2].asUInt().toUInt(),
-            args[3].asUInt().toUInt(),
+            args[2].asInt(),
+            args[3].asInt(),
         )
         return Value.i32(result.toLong())
     }

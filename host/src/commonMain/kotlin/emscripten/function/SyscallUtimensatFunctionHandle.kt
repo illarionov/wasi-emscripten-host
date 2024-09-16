@@ -33,10 +33,10 @@ public class SyscallUtimensatFunctionHandle(
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
         times: WasmPtr<Byte>,
-        flags: UInt,
+        flags: Int,
     ): Int {
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
-        val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0U
+        val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0
         val path = memory.readNullTerminatedString(pathnamePtr)
         var atimeNs: Long?
         val mtimeNs: Long?

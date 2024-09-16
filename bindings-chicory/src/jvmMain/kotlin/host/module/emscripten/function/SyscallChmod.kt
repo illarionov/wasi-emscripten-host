@@ -24,7 +24,7 @@ internal class SyscallChmod(
         val result: Int = handle.execute(
             memory,
             args[0].asWasmAddr(),
-            args[1].asUInt().toUInt(),
+            args[1].asInt(),
         )
         return Value.i32(result.toLong())
     }

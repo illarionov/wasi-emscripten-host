@@ -7,7 +7,6 @@
 package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
-import at.released.weh.bindings.graalvm240.ext.getArgAsUint
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
@@ -33,7 +32,7 @@ internal class SyscallUtimensat(
             args.getArgAsInt(0),
             args.getArgAsWasmPtr(1),
             args.getArgAsWasmPtr(2),
-            args.getArgAsUint(3),
+            args.getArgAsInt(3),
         )
     }
 
@@ -44,6 +43,6 @@ internal class SyscallUtimensat(
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
         times: WasmPtr<Byte>,
-        flags: UInt,
+        flags: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, times, flags)
 }

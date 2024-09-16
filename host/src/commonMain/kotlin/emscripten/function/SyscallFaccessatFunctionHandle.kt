@@ -28,8 +28,8 @@ public class SyscallFaccessatFunctionHandle(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
         pathnamePtr: WasmPtr<Byte>,
-        amode: UInt,
-        flags: UInt,
+        amode: Int,
+        flags: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
         return host.fileSystem.execute(
@@ -37,7 +37,7 @@ public class SyscallFaccessatFunctionHandle(
             CheckAccess(
                 path = path,
                 baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
-                mode = rawModeToFileAccessibilityCheck(amode.toInt()),
+                mode = rawModeToFileAccessibilityCheck(amode),
                 useEffectiveUserId = flags and AT_EACCESS == AT_EACCESS,
                 allowEmptyPath = false,
                 followSymlinks = flags and AT_SYMLINK_NOFOLLOW != AT_SYMLINK_NOFOLLOW,
