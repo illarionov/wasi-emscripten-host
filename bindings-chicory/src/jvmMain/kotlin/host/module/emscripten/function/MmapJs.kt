@@ -11,7 +11,6 @@ import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFun
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
-import at.released.weh.host.include.sys.SysMmanMapFlags
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
