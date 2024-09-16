@@ -17,7 +17,7 @@ import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.WasiMemoryReader
-import at.released.weh.host.wasi.preview1.type.IovecArray
+import at.released.weh.host.wasi.preview1.type.Iovec
 import com.dylibso.chicory.runtime.Memory
 import java.lang.reflect.Field
 import java.nio.ByteBuffer
@@ -27,7 +27,7 @@ internal class ChicoryWasiMemoryReader(
     private val fileSystem: FileSystem,
     private val bufferField: Field,
 ) : WasiMemoryReader {
-    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
+    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: List<Iovec>): Either<ReadError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
         check(memoryByteBuffer.hasArray()) { "MemoryBuffer without array" }
@@ -35,14 +35,13 @@ internal class ChicoryWasiMemoryReader(
         return fileSystem.execute(ReadFd, ReadFd(fd, bbufs, strategy))
     }
 
-    private fun IovecArray.toByteBuffers(
+    private fun List<Iovec>.toByteBuffers(
         memoryBuffer: ByteBuffer,
-    ): List<FileSystemByteBuffer> = List(iovecList.size) { iovecNo ->
-        val ioVec = iovecList[iovecNo]
+    ): List<FileSystemByteBuffer> = map { iovec ->
         FileSystemByteBuffer(
             memoryBuffer.array(),
-            memoryBuffer.arrayOffset() + ioVec.buf.addr,
-            ioVec.bufLen.value.toInt(),
+            memoryBuffer.arrayOffset() + iovec.buf.addr,
+            iovec.bufLen.value.toInt(),
         )
     }
 

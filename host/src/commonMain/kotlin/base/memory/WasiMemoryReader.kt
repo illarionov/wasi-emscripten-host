@@ -15,14 +15,13 @@ import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.type.Iovec
-import at.released.weh.host.wasi.preview1.type.IovecArray
 import kotlinx.io.buffered
 
 public fun interface WasiMemoryReader {
     public fun read(
         @Fd fd: Int,
         strategy: ReadWriteStrategy,
-        iovecs: IovecArray,
+        iovecs: List<Iovec>,
     ): Either<ReadError, ULong>
 }
 
@@ -30,10 +29,10 @@ public class DefaultWasiMemoryReader(
     private val memory: Memory,
     private val fileSystem: FileSystem,
 ) : WasiMemoryReader {
-    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
+    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: List<Iovec>): Either<ReadError, ULong> {
         val bbufs: List<FileSystemByteBuffer> = iovecs.createBuffers()
         return fileSystem.execute(ReadFd, ReadFd(fd, bbufs, strategy)).onRight { readBytes ->
-            writeBuffersToMemory(bbufs, iovecs.iovecList, readBytes)
+            writeBuffersToMemory(bbufs, iovecs, readBytes)
         }
     }
 
@@ -62,7 +61,7 @@ public class DefaultWasiMemoryReader(
         }
     }
 
-    private fun IovecArray.createBuffers(): List<FileSystemByteBuffer> = List(iovecList.size) {
-        FileSystemByteBuffer(ByteArray(iovecList[it].bufLen.value.toInt()))
+    private fun List<Iovec>.createBuffers(): List<FileSystemByteBuffer> = map { iovec ->
+        FileSystemByteBuffer(ByteArray(iovec.bufLen.value.toInt()))
     }
 }

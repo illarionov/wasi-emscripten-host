@@ -88,7 +88,7 @@ public final class at/released/weh/host/base/WasmValueTypes {
 }
 
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
-	public abstract fun getFunctionBinding-vD0Ly1k (I)Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/host/base/binding/WasmFunctionBinding;
 }
 
 public abstract interface class at/released/weh/host/base/function/HostFunction {
@@ -119,22 +119,16 @@ public class at/released/weh/host/base/function/HostFunctionHandle {
 }
 
 public final class at/released/weh/host/base/function/IndirectFunctionTableIndex {
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/base/function/IndirectFunctionTableIndex;
-	public static fun constructor-impl (I)I
+	public fun <init> (I)V
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
 	public final fun getFuncId ()I
 	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
 }
 
 public final class at/released/weh/host/base/memory/DefaultWasiMemoryReader : at/released/weh/host/base/memory/WasiMemoryReader {
 	public fun <init> (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/filesystem/FileSystem;)V
-	public fun read-cFMhcws (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+	public fun read (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
 public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at/released/weh/host/base/memory/WasiMemoryWriter {
@@ -165,7 +159,7 @@ public final class at/released/weh/host/base/memory/PagesKt {
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
-	public abstract fun read-cFMhcws (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+	public abstract fun read (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryWriter {
@@ -269,7 +263,7 @@ public abstract interface class at/released/weh/host/emscripten/export/memory/Dy
 
 public final class at/released/weh/host/emscripten/export/pthread/EmscriptenPthread {
 	public fun <init> (Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadExports;Lat/released/weh/host/emscripten/export/memory/DynamicMemory;Lat/released/weh/host/base/memory/ReadOnlyMemory;)V
-	public final fun pthreadCreate-3rF6QEw (III)J
+	public final fun pthreadCreate-_VdhjMs (ILat/released/weh/host/base/function/IndirectFunctionTableIndex;I)J
 	public final fun pthreadExit-e-C6Vng (I)V
 	public final fun pthreadSelf-s-VKNKU ()J
 }

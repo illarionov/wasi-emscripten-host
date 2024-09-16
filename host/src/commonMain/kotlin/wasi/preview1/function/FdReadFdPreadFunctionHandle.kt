@@ -38,7 +38,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
         pNum: WasmPtr<Int>,
     ): Errno {
         val ioVecs: IovecArray = readIovecs(memory, pIov, iovCnt)
-        return bulkReader.read(fd, strategy, ioVecs)
+        return bulkReader.read(fd, strategy, ioVecs.iovecList)
             .onRight { readBytes -> memory.writeI32(pNum, readBytes.toInt()) }
             .fold(
                 ifLeft = FileSystemOperationError::errno,

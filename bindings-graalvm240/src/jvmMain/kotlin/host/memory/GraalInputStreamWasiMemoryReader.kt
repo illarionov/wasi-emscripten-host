@@ -19,7 +19,7 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.WasiMemoryReader
-import at.released.weh.host.wasi.preview1.type.IovecArray
+import at.released.weh.host.wasi.preview1.type.Iovec
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
 
@@ -33,7 +33,7 @@ internal class GraalInputStreamWasiMemoryReader(
     override fun read(
         @Fd fd: Int,
         strategy: ReadWriteStrategy,
-        iovecs: IovecArray,
+        iovecs: List<Iovec>,
     ): Either<ReadError, ULong> {
         return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
@@ -49,7 +49,7 @@ internal class GraalInputStreamWasiMemoryReader(
 
     private fun readChangePosition(
         channelResult: Either<BadFileDescriptor, FileChannel>,
-        iovecs: IovecArray,
+        iovecs: List<Iovec>,
     ): Either<ReadError, ULong> {
         val channel = channelResult.mapLeft {
             BadFileDescriptor(it.message)
@@ -59,7 +59,7 @@ internal class GraalInputStreamWasiMemoryReader(
         return readCatching {
             var totalBytesRead: ULong = 0U
             val inputStream = Channels.newInputStream(channel).buffered()
-            for (vec in iovecs.iovecList) {
+            for (vec in iovecs) {
                 val limit = vec.bufLen.value.toInt()
                 val bytesRead = wasmMemory.copyFromStream(memory.node, inputStream, vec.buf.addr, limit)
                 if (bytesRead > 0) {
