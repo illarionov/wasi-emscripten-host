@@ -141,8 +141,8 @@ internal class NioStat(
 
         private fun FileTime.toTimeSpec(): StructTimespec = toInstant().run {
             StructTimespec(
-                seconds = epochSecond.toULong(),
-                nanoseconds = nano.toULong(),
+                seconds = epochSecond,
+                nanoseconds = nano.toLong(),
             )
         }
 

@@ -7,13 +7,13 @@
 package at.released.weh.filesystem.op.stat
 
 public data class StructTimespec(
-    val seconds: ULong,
-    val nanoseconds: ULong,
+    val seconds: Long,
+    val nanoseconds: Long,
 ) {
     override fun toString(): String {
         return "TS($seconds sec $nanoseconds nsec)"
     }
 }
 
-public val StructTimespec.timeMillis: ULong
-    get(): ULong = seconds * 1000U + nanoseconds / 1_000_000U
+public val StructTimespec.timeMillis: Long
+    get(): Long = seconds * 1000 + nanoseconds / 1_000_000

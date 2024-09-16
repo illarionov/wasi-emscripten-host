@@ -10,6 +10,6 @@ import at.released.weh.filesystem.op.stat.StructTimespec
 import platform.posix.timespec
 
 internal fun timespec.toStructTimespec(): StructTimespec = StructTimespec(
-    seconds = this.tv_sec.toULong(),
-    nanoseconds = this.tv_nsec.toULong(),
+    seconds = this.tv_sec,
+    nanoseconds = this.tv_nsec,
 )
