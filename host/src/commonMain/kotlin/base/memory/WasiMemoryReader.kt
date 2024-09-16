@@ -20,7 +20,7 @@ import kotlinx.io.buffered
 
 public fun interface WasiMemoryReader {
     public fun read(
-        fd: Fd,
+        @Fd fd: Int,
         strategy: ReadWriteStrategy,
         iovecs: IovecArray,
     ): Either<ReadError, ULong>
@@ -30,7 +30,7 @@ public class DefaultWasiMemoryReader(
     private val memory: Memory,
     private val fileSystem: FileSystem,
 ) : WasiMemoryReader {
-    override fun read(fd: Fd, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
+    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
         val bbufs: List<FileSystemByteBuffer> = iovecs.createBuffers()
         return fileSystem.execute(ReadFd, ReadFd(fd, bbufs, strategy)).onRight { readBytes ->
             writeBuffersToMemory(bbufs, iovecs.iovecList, readBytes)

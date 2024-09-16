@@ -24,7 +24,7 @@ internal object LinuxSeekFd : FileSystemOperationHandler<SeekFd, SeekError, Long
             return Overflow("input.fileDelta too big. Request: $input").left()
         }
 
-        val offset = lseek(input.fd.fd, input.fileDelta, input.whence.toPosixWhence())
+        val offset = lseek(input.fd, input.fileDelta, input.whence.toPosixWhence())
 
         return if (offset >= 0) {
             offset.right()

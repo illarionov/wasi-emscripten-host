@@ -11,7 +11,8 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class RemoveAdvisoryLockFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
     public val flock: Advisorylock,
 ) {
     public companion object : FileSystemOperation<RemoveAdvisoryLockFd, AdvisoryLockError, Unit> {

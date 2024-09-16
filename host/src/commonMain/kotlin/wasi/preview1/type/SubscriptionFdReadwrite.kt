@@ -16,7 +16,8 @@ import at.released.weh.host.base.WasmValueTypes.I32
  * @param fileDescriptor The file descriptor on which to wait for it to become ready for reading or writing.
  */
 public data class SubscriptionFdReadwrite(
-    val fileDescriptor: Fd, // (field $file_descriptor $fd)
+    @Fd
+    val fileDescriptor: Int, // (field $file_descriptor $fd)
 ) {
     public companion object : WasiTypename {
         @WasmValueType

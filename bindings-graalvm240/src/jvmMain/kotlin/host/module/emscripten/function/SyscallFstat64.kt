@@ -9,7 +9,6 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
@@ -31,7 +30,7 @@ internal class SyscallFstat64(
         val args = frame.arguments
         return syscallFstat64(
             memory(frame),
-            Fd(args.getArgAsInt(0)),
+            args.getArgAsInt(0),
             args.getArgAsWasmPtr(1),
         )
     }
@@ -40,7 +39,7 @@ internal class SyscallFstat64(
     @Suppress("MemberNameEqualsClassName")
     private fun syscallFstat64(
         memory: WasmMemory,
-        fd: Fd,
+        fd: Int,
         dst: WasmPtr<StructStat>,
     ): Int = handle.execute(memory.toHostMemory(), fd, dst)
 }

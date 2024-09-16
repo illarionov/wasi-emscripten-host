@@ -38,7 +38,7 @@ internal class FcntlHandler(
 
     fun invoke(
         memory: ReadOnlyMemory,
-        fd: Fd,
+        @Fd fd: Int,
         operation: UInt,
         thirdArg: Int?,
     ): Int {
@@ -49,7 +49,7 @@ internal class FcntlHandler(
     internal fun interface FcntlOperationHandler {
         fun invoke(
             memory: ReadOnlyMemory,
-            fd: Fd,
+            @Fd fd: Int,
             varArgs: Int?,
         ): Int
     }
@@ -58,7 +58,7 @@ internal class FcntlHandler(
     internal inner class FcntlSetLockOperation : FcntlOperationHandler {
         override fun invoke(
             memory: ReadOnlyMemory,
-            fd: Fd,
+            @Fd fd: Int,
             varArgs: Int?,
         ): Int {
             val structStatPtr: WasmPtr<StructFlock> = memory.readPtr(WasmPtr(checkNotNull(varArgs)))

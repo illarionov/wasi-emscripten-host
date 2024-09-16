@@ -45,7 +45,7 @@ internal object LinuxTruncateFd : FileSystemOperationHandler<TruncateFd, Truncat
         if (input.length > Long.MAX_VALUE.toULong()) {
             return FileTooBig("Argument length is large than the maximum file size").left()
         }
-        val resultCode = ftruncate(input.fd.fd, input.length.toLong())
+        val resultCode = ftruncate(input.fd, input.length.toLong())
         return if (resultCode == 0) {
             Unit.right()
         } else {

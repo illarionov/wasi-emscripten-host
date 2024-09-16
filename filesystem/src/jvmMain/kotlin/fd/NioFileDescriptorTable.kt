@@ -38,12 +38,12 @@ internal class NioFileDescriptorTable(
         }
     }
 
-    fun remove(fd: Fd): Either<BadFileDescriptor, NioFileHandle> = lock.withLock {
+    fun remove(@Fd fd: Int): Either<BadFileDescriptor, NioFileHandle> = lock.withLock {
         return fds.release(fd)
     }
 
     fun get(
-        fd: Fd,
+        @Fd fd: Int,
     ): NioFileHandle? = lock.withLock {
         fds[fd]
     }

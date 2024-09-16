@@ -11,7 +11,9 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class SyncFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
+
     public val syncMetadata: Boolean = true,
 ) {
    public companion object : FileSystemOperation<SyncFd, SyncError, Unit> {

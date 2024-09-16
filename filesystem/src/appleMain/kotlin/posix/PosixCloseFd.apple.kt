@@ -10,6 +10,6 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.model.Fd
 
-internal actual fun Int.platformSpecificErrnoToCloseError(fd: Fd): CloseError {
+internal actual fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError {
     return IoError("Unknown error $this while closing $fd")
 }

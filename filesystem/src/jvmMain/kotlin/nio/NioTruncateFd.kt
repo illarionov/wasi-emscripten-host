@@ -35,7 +35,7 @@ internal class NioTruncateFd(
         }
     }
 
-    private fun Throwable.toTruncateError(fd: Fd): TruncateError = when (this) {
+    private fun Throwable.toTruncateError(@Fd fd: Int): TruncateError = when (this) {
         is NonReadableChannelException -> InvalidArgument("Read-only channel")
         is ClosedChannelException -> BadFileDescriptor(fileDescriptorNotOpenedMessage(fd))
         is IllegalArgumentException -> InvalidArgument("Negative length")

@@ -8,7 +8,6 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchmodFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -36,5 +35,5 @@ internal class SyscallFchmod(
     private fun syscallFchmod(
         fd: Int,
         mode: Int,
-    ): Int = handle.execute(Fd(fd), mode)
+    ): Int = handle.execute(fd, mode)
 }

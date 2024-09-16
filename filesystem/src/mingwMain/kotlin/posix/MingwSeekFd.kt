@@ -24,7 +24,7 @@ internal object MingwSeekFd : FileSystemOperationHandler<SeekFd, SeekError, Long
             return Overflow("input.fileDelta too big. Request: $input").left()
         }
 
-        val offset = lseek(input.fd.fd, input.fileDelta.toInt(), input.whence.toPosixWhence())
+        val offset = lseek(input.fd, input.fileDelta.toInt(), input.whence.toPosixWhence())
 
         return if (offset >= 0) {
             offset.toLong().right()

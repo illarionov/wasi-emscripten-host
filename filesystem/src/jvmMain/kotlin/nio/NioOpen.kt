@@ -35,8 +35,8 @@ import kotlin.concurrent.withLock
 
 internal class NioOpen(
     private val fsState: NioFileSystemState,
-) : FileSystemOperationHandler<Open, OpenError, Fd> {
-    override fun invoke(input: Open): Either<OpenError, Fd> = either {
+) : FileSystemOperationHandler<Open, OpenError, @Fd Int> {
+    override fun invoke(input: Open): Either<OpenError, @Fd Int> = either {
         val path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
             .mapLeft(ResolvePathError::toCommonError)
             .bind()

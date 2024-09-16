@@ -31,7 +31,7 @@ internal class GraalInputStreamWasiMemoryReader(
     private val defaultMemoryReader = DefaultWasiMemoryReader(memory, fileSystem)
 
     override fun read(
-        fd: Fd,
+        @Fd fd: Int,
         strategy: ReadWriteStrategy,
         iovecs: IovecArray,
     ): Either<ReadError, ULong> {

@@ -9,7 +9,6 @@ package at.released.weh.bindings.chicory.host.module.wasi.function
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
@@ -25,7 +24,7 @@ internal class FdReadFdPread private constructor(
     private val handle: FdReadFdPreadFunctionHandle,
 ) : WasiHostFunctionHandle {
     override fun apply(instance: Instance, vararg args: Value): Errno {
-        val fd = Fd(args[0].asInt())
+        val fd = args[0].asInt()
         val pIov: WasmPtr<Iovec> = args[1].asWasmAddr()
         val iovCnt = args[2].asInt()
         val pNum: WasmPtr<Int> = args[3].asWasmAddr()

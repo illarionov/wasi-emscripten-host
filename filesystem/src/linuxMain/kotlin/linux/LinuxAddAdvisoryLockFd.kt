@@ -44,7 +44,7 @@ internal object LinuxAddAdvisoryLockFd : FileSystemOperationHandler<AddAdvisoryL
             setFromAdvisoryLock(input.flock)
         }
         val exitCode = fcntl(
-            input.fd.fd,
+            input.fd,
             F_SETLK,
             structFlockInstance,
         )
@@ -68,7 +68,7 @@ internal object LinuxAddAdvisoryLockFd : FileSystemOperationHandler<AddAdvisoryL
         WRITE -> F_WRLCK
     }.toShort()
 
-    internal fun Int.errnoToAdvisoryLockError(fd: Fd, lock: Advisorylock): AdvisoryLockError = when (this) {
+    internal fun Int.errnoToAdvisoryLockError(@Fd fd: Int, lock: Advisorylock): AdvisoryLockError = when (this) {
         EACCES, EAGAIN -> Again("Can not lock `$fd - $lock`, operation prohibited`")
         EBADF -> BadFileDescriptor("Bad file descriptor $fd")
         EINTR -> Interrupted("Locking $fd interrupted by signal")

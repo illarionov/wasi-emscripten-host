@@ -6,16 +6,15 @@
 
 package at.released.weh.filesystem.model
 
-import kotlin.jvm.JvmInline
+import androidx.annotation.IntDef
 
 /**
  * A file descriptor handle.
  */
-@JvmInline
-public value class Fd(
-    public val fd: Int,
-) {
-    override fun toString(): String = "Fd($fd)"
-
-    public companion object
-}
+@Target(
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.TYPE,
+)
+@IntDef(open = true)
+public annotation class Fd

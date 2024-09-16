@@ -24,7 +24,7 @@ public sealed class BaseDirectory {
     /**
      * Relative paths are resolved relative to the directory associated with the file descriptor [fd]
      */
-    public data class DirectoryFd(val fd: Fd) : BaseDirectory()
+    public data class DirectoryFd(@Fd val fd: Int) : BaseDirectory()
 
     public companion object
 }

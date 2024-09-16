@@ -17,7 +17,7 @@ public class FdCloseFunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(WasiHostFunction.FD_CLOSE, host) {
     public fun execute(
-        fd: Fd,
+        @Fd fd: Int,
     ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd))
         .fold(
             ifLeft = { it.errno },

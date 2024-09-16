@@ -15,5 +15,5 @@ import at.released.weh.filesystem.platform.linux.AT_FDCWD
 internal fun BaseDirectory.toDirFd(): Int = when (this) {
     None -> AT_FDCWD
     CurrentWorkingDirectory -> AT_FDCWD
-    is DirectoryFd -> this.fd.fd
+    is DirectoryFd -> this.fd
 }

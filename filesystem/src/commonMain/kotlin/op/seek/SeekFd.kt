@@ -12,7 +12,8 @@ import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class SeekFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
     public val fileDelta: Long,
     public val whence: Whence,
 ) {

@@ -10,7 +10,6 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.memory.GraalOutputStreamWasiMemoryWriter
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.WasiMemoryWriter
@@ -67,6 +66,6 @@ private class FdWrite(
             handle.host.fileSystem,
             handle.host.rootLogger,
         )
-        return handle.execute(hostMemory, wasiMemoryWriter, Fd(fd), pCiov, cIovCnt, pNum).code
+        return handle.execute(hostMemory, wasiMemoryWriter, fd, pCiov, cIovCnt, pNum).code
     }
 }

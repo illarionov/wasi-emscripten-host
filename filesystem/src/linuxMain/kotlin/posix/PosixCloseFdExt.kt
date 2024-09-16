@@ -12,7 +12,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.model.Fd
 import platform.posix.EDQUOT
 
-internal actual fun Int.platformSpecificErrnoToCloseError(fd: Fd): CloseError {
+internal actual fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError {
     return when (this) {
         EDQUOT -> DiskQuota("Disk quota exceeded while closing $fd")
         else -> IoError("Unknown error $this while closing $fd")

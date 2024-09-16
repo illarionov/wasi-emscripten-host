@@ -11,7 +11,8 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class SetTimestampFd(
-    public val fd: Fd,
+    @Fd
+    public val fd: Int,
     public val atimeNanoseconds: Long?,
     public val mtimeNanoseconds: Long?,
     public val followSymlinks: Boolean,

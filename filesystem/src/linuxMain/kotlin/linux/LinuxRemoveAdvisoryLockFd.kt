@@ -29,7 +29,7 @@ internal object LinuxRemoveAdvisoryLockFd : FileSystemOperationHandler<RemoveAdv
             l_type = F_UNLCK.toShort()
         }
         val exitCode = fcntl(
-            input.fd.fd,
+            input.fd,
             F_SETLK,
             structFlockInstance,
         )

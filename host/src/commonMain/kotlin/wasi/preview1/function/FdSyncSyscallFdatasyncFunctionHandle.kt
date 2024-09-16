@@ -21,7 +21,7 @@ public class FdSyncSyscallFdatasyncFunctionHandle private constructor(
     private val syncMetadata: Boolean,
 ) : HostFunctionHandle(function, host) {
     public fun execute(
-        fd: Fd,
+        @Fd fd: Int,
     ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, syncMetadata))
         .fold(
             ifLeft = { it.errno },

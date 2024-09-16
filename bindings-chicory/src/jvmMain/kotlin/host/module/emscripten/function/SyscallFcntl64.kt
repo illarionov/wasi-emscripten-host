@@ -7,7 +7,6 @@
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.SyscallFcntl64FunctionHandle
@@ -23,7 +22,7 @@ internal class SyscallFcntl64(
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
             memory,
-            Fd(args[0].asInt()),
+            args[0].asInt(),
             args[1].asInt(),
             args[2].asInt(),
         )

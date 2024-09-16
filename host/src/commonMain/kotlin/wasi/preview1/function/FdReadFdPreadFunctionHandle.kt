@@ -32,7 +32,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
     public fun execute(
         memory: Memory,
         bulkReader: WasiMemoryReader,
-        fd: Fd,
+        @Fd fd: Int,
         pIov: WasmPtr<Iovec>,
         iovCnt: Int,
         pNum: WasmPtr<Int>,

@@ -32,7 +32,7 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
     public fun execute(
         memory: Memory,
         bulkWriter: WasiMemoryWriter,
-        fd: Fd,
+        @Fd fd: Int,
         pCiov: WasmPtr<CioVec>,
         cIovCnt: Int,
         pNum: WasmPtr<Int>,

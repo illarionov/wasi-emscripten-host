@@ -8,7 +8,6 @@
 
 package at.released.weh.host.emscripten
 
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.base.WasmValueTypes.F64
 import at.released.weh.host.base.WasmValueTypes.I32
@@ -16,8 +15,8 @@ import at.released.weh.host.base.WasmValueTypes.I64
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
 import at.released.weh.host.base.pointerToType
+import at.released.weh.host.wasi.preview1.type.FdWasmValueType
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
-import at.released.weh.host.wasi.preview1.type.wasmValueType
 
 public enum class EmscriptenHostFunction(
     public override val wasmName: String,
@@ -171,7 +170,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FCHOWN32(
         wasmName = "__syscall_fchown32",
         paramTypes = listOf(
-            Fd.wasmValueType, // fd
+            FdWasmValueType, // fd
             I32, // owner,
             I32, // group,
         ),
@@ -194,7 +193,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FSTAT64(
         wasmName = "__syscall_fstat64",
         paramTypes = listOf(
-            Fd.wasmValueType,
+            FdWasmValueType,
             pointerToType(U8), // statbuf
         ),
         retType = I32,
@@ -235,7 +234,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_OPENAT(
         wasmName = "__syscall_openat",
         paramTypes = listOf(
-            Fd.wasmValueType, // dirfd
+            FdWasmValueType, // dirfd
             pointerToType(U8), // pathname
             I32, // flags
             I32, // mode / varargs
@@ -245,7 +244,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_READLINKAT(
         wasmName = "__syscall_readlinkat",
         paramTypes = listOf(
-            Fd.wasmValueType, // dirfd
+            FdWasmValueType, // dirfd
             pointerToType(U8), // pathname
             pointerToType(U8), // buf
             I32, // bufsiz

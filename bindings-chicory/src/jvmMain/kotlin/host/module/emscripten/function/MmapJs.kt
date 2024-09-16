@@ -8,7 +8,6 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import com.dylibso.chicory.runtime.Instance
@@ -23,7 +22,7 @@ internal class MmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
             args[0].asInt(),
             args[1].asInt(),
             args[2].asInt(),
-            Fd(args[3].asInt()),
+            args[3].asInt(),
             args[4].asLong().toULong(),
             args[5].asWasmAddr(),
             args[6].asWasmAddr(),

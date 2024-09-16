@@ -23,7 +23,7 @@ public class MunapJsFunctionHandle(
         len: Int,
         @SysMmanProt prot: Int,
         @SysMmanMapFlags flags: Int,
-        fd: Fd,
+        @Fd fd: Int,
         offset: ULong,
     ): Int {
         logger.v {

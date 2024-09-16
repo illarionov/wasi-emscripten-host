@@ -19,7 +19,7 @@ import kotlinx.io.readByteArray
 
 public fun interface WasiMemoryWriter {
     public fun write(
-        fd: Fd,
+        @Fd fd: Int,
         strategy: ReadWriteStrategy,
         cioVecs: CiovecArray,
     ): Either<WriteError, ULong>
@@ -29,7 +29,7 @@ public class DefaultWasiMemoryWriter(
     private val memory: ReadOnlyMemory,
     private val fileSystem: FileSystem,
 ) : WasiMemoryWriter {
-    override fun write(fd: Fd, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
+    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
         val bufs = cioVecs.toByteBuffers(memory)
         return fileSystem.execute(WriteFd, WriteFd(fd, bufs, strategy))
     }

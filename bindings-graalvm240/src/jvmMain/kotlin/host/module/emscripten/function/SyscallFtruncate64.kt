@@ -9,7 +9,6 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsUlong
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFtruncate64FunctionHandle
 import com.oracle.truffle.api.CompilerDirectives
@@ -37,5 +36,5 @@ internal class SyscallFtruncate64(
     private fun syscallFtruncate64(
         fd: Int,
         length: ULong,
-    ): Int = handle.execute(Fd(fd), length)
+    ): Int = handle.execute(fd, length)
 }

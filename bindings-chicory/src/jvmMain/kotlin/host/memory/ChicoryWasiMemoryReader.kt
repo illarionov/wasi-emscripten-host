@@ -27,7 +27,7 @@ internal class ChicoryWasiMemoryReader(
     private val fileSystem: FileSystem,
     private val bufferField: Field,
 ) : WasiMemoryReader {
-    override fun read(fd: Fd, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
+    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: IovecArray): Either<ReadError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
         check(memoryByteBuffer.hasArray()) { "MemoryBuffer without array" }

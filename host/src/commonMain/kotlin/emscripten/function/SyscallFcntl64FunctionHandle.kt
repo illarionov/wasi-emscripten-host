@@ -20,7 +20,7 @@ public class SyscallFcntl64FunctionHandle(
 
     public fun execute(
         memory: ReadOnlyMemory,
-        fd: Fd,
+        @Fd fd: Int,
         cmd: Int,
         thirdArg: Int,
     ): Int {

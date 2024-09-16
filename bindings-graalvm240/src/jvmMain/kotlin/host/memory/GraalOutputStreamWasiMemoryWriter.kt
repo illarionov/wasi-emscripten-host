@@ -33,7 +33,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
     private val wasmMemory = memory.wasmMemory
     private val defaultMemoryWriter = DefaultWasiMemoryWriter(memory, fileSystem)
 
-    override fun write(fd: Fd, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
+    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
         return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
                 fd = fd,

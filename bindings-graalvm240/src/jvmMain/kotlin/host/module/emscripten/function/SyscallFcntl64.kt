@@ -8,7 +8,6 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFcntl64FunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -28,7 +27,7 @@ internal class SyscallFcntl64(
         val args = frame.arguments
         return syscallFcntl64(
             memory(frame),
-            Fd(args.getArgAsInt(0)),
+            args.getArgAsInt(0),
             args.getArgAsInt(1),
             args.getArgAsInt(2),
         )
@@ -38,7 +37,7 @@ internal class SyscallFcntl64(
     @TruffleBoundary
     private fun syscallFcntl64(
         memory: WasmMemory,
-        fd: Fd,
+        fd: Int,
         cmd: Int,
         thirdArg: Int,
     ): Int = handle.execute(memory.toHostMemory(), fd, cmd, thirdArg)

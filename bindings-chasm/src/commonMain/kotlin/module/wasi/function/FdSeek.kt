@@ -13,7 +13,6 @@ import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
 import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
@@ -27,7 +26,7 @@ internal class FdSeek(
     private val handle = FdSeekFunctionHandle(host)
 
     override operator fun invoke(args: List<Value>): Errno {
-        val fd = Fd(args[0].asInt())
+        val fd = args[0].asInt()
         val offset = args[1].asLong()
         val whenceInt = args[2].asInt()
         val pNewOffset: WasmPtr<Long> = args[3].asWasmAddr()

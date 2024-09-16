@@ -27,7 +27,7 @@ internal class ChicoryWasiMemoryWriter private constructor(
     private val fileSystem: FileSystem,
     private val bufferField: Field,
 ) : WasiMemoryWriter {
-    override fun write(fd: Fd, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
+    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: CiovecArray): Either<WriteError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
         val bbufs = cioVecs.toByteBuffers(memoryByteBuffer)

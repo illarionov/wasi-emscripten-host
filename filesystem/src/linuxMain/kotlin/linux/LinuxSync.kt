@@ -31,9 +31,9 @@ import platform.posix.fsync
 internal object LinuxSync : FileSystemOperationHandler<SyncFd, SyncError, Unit> {
     override fun invoke(input: SyncFd): Either<SyncError, Unit> {
         val resultCode = if (input.syncMetadata) {
-            fsync(input.fd.fd)
+            fsync(input.fd)
         } else {
-            fdatasync(input.fd.fd)
+            fdatasync(input.fd)
         }
 
         return if (resultCode == 0) {
