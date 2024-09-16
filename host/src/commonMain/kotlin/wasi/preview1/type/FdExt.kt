@@ -12,4 +12,5 @@ import at.released.weh.host.base.WasmValueType
 /**
  * A file descriptor handle.
  */
-public val Fd.Companion.wasmValueType: WasmValueType get() = WasiValueTypes.Handle
+@WasmValueType
+public val Fd.Companion.wasmValueType: Int get() = WasiValueTypes.HANDLE

@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * The contents of a `prestat` when type is `preopentype::dir`.
@@ -18,6 +19,7 @@ public data class PrestatDir(
     public val prNameLen: Size, // (field $pr_name_len $size)
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        public override val wasmValueType: Int = I32
     }
 }

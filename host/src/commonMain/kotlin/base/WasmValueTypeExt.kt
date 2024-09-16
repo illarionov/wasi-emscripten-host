@@ -6,13 +6,16 @@
 
 package at.released.weh.host.base
 
-import at.released.weh.host.base.WasmValueType.I32
+import at.released.weh.host.base.WasmValueTypes.I32
 import at.released.weh.host.wasi.preview1.type.WasiTypename
 
-public val POINTER: WasmValueType get() = I32
+@WasmValueType
+public val POINTER: Int get() = I32
 
-public val WasmValueType.pointer: WasmValueType
-    get() = POINTER
+public fun pointerToType(
+    @Suppress("UNUSED_PARAMETER") @WasmValueType type: Int,
+): @WasmValueType Int = POINTER
 
-public val WasiTypename.pointer: WasmValueType
-    get() = POINTER
+public fun pointerToType(
+    @Suppress("UNUSED_PARAMETER") type: WasiTypename,
+): @WasmValueType Int = POINTER

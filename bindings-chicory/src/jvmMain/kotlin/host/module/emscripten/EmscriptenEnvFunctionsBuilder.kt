@@ -8,7 +8,7 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten
 
-import at.released.weh.bindings.chicory.ext.chicory
+import at.released.weh.bindings.chicory.ext.wasmValueTypeToChicoryValueType
 import at.released.weh.bindings.chicory.host.module.emscripten.function.AbortJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.AssertFail
 import at.released.weh.bindings.chicory.host.module.emscripten.function.EmscriptenAsmConstAsyncOnMainThread
@@ -44,7 +44,6 @@ import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallL
 import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallStat64
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
-import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
@@ -66,8 +65,8 @@ internal class EmscriptenEnvFunctionsBuilder(
                 HostFunctionAdapter(emscriptenFunc.createChicoryEmscriptenFunction(host, memory, stackBindingsRef)),
                 moduleName,
                 emscriptenFunc.wasmName,
-                emscriptenFunc.type.paramTypes.map(WasmValueType::chicory),
-                emscriptenFunc.type.returnTypes.map(WasmValueType::chicory),
+                emscriptenFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
+                emscriptenFunc.type.returnTypes.map(::wasmValueTypeToChicoryValueType),
             )
         }
     }

@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * Subscription to an event.
@@ -21,6 +22,7 @@ public data class Subscription(
     val u: SubscriptionU, // (field $u $subscription_u)
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        public override val wasmValueType: Int = I32
     }
 }

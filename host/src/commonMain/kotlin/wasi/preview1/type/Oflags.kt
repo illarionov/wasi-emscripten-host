@@ -51,6 +51,7 @@ public value class Oflags(
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U16
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U16
     }
 }

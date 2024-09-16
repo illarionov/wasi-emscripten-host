@@ -17,6 +17,7 @@ public value class Dirnamlen(
     public val rawValue: UInt,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U32
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U32
     }
 }

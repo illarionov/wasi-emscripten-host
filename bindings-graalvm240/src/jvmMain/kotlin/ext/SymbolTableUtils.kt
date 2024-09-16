@@ -55,9 +55,7 @@ internal fun allocateFunctionTypes(
     return functionTypeMap
 }
 
-internal fun List<WasmValueType>.toTypesByteArray(): ByteArray = ByteArray(this.size) {
-    requireNotNull(this[it].opcode).toByte()
-}
+internal fun List<@WasmValueType Int>.toTypesByteArray(): ByteArray = ByteArray(this.size, Int::toByte)
 
 internal fun declareExportedFunctions(
     symbolTable: SymbolTable,

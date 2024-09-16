@@ -4,27 +4,58 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("VARIABLE_NAME_INCORRECT")
+
 package at.released.weh.host.base
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import androidx.annotation.IntDef
+import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
- * WebAssembly value types.
+ * Binary opcode of the WebAssembly value type.
  *
- * Number types, vector types, or reference types according to the [WebAssembly types](https://webassembly.github.io/spec/core/syntax/types.html#value-types).
+ * WebAssembly value types are number types, vector types, or reference types according to the [WebAssembly types](https://webassembly.github.io/spec/core/syntax/types.html#value-types)
  *
- * @property opcode Binary Opcode of the type (see [WebAssembly index of types](https://webassembly.github.io/spec/core/appendix/index-types.html))
+ * See also [WebAssembly index of types](https://webassembly.github.io/spec/core/appendix/index-types.html)
  */
-public enum class WasmValueType(
-    public val opcode: Byte,
-) {
-    I32(0x7f),
-    I64(0x7e),
-    F32(0x7d),
-    F64(0x7c),
-    V128(0x7b),
-    FuncRef(0x70),
-    ExternRef(0x6f),
+@IntDef(
+    value = [
+        WasmValueTypes.I32,
+        WasmValueTypes.I64,
+        WasmValueTypes.F32,
+        WasmValueTypes.F64,
+        WasmValueTypes.V128,
+        WasmValueTypes.FUNC_REF,
+        WasmValueTypes.EXTERN_REF,
+    ],
+)
+@Retention(SOURCE)
+@Target(
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
+)
+public annotation class WasmValueType
+
+public object WasmValueTypes {
+    @WasmValueType
+    public const val I32: Int = 0x7f
+
+    @WasmValueType
+    public const val I64: Int = 0x7e
+
+    @WasmValueType
+    public const val F32: Int = 0x7d
+
+    @WasmValueType
+    public const val F64: Int = 0x7c
+
+    @WasmValueType
+    public const val V128: Int = 0x7b
+
+    @WasmValueType
+    public const val FUNC_REF: Int = 0x70
+
+    @WasmValueType
+    public const val EXTERN_REF: Int = 0x6f
 }
-
-

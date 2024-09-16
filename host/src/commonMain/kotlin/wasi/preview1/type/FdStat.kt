@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * File descriptor attributes.
@@ -25,6 +26,7 @@ public data class FdStat(
     val fsRightsInheriting: Rights, // (field $fs_rights_inheriting $rights)
 ) {
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        override val wasmValueType: Int = I32
     }
 }

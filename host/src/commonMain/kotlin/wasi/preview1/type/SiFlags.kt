@@ -18,6 +18,7 @@ public value class SiFlags(
     public val rawValue: UInt,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U16
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U16
     }
 }

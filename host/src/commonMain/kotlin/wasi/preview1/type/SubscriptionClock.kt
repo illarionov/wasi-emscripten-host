@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * The contents of a `subscription` when type is `eventtype::clock`.
@@ -24,6 +25,7 @@ public data class SubscriptionClock(
     val flags: Subclockflags, // (field $flags $subclockflags)
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        public override val wasmValueType: Int = I32
     }
 }

@@ -17,6 +17,7 @@ public value class FileSize(
     public val value: ULong,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasiValueTypes.U64
+        @WasmValueType
+        public override val wasmValueType: Int = WasiValueTypes.U64
     }
 }

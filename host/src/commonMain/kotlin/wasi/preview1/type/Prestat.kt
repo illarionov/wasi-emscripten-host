@@ -7,6 +7,7 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
+import at.released.weh.host.base.WasmValueTypes.I32
 
 /**
  * Information about a pre-opened capability.
@@ -15,7 +16,8 @@ public sealed class Prestat(
     public open val tag: Preopentype,
 ) {
     public companion object : WasiTypename {
-        public override val wasmValueType: WasmValueType = WasmValueType.I32
+        @WasmValueType
+        public override val wasmValueType: Int = I32
     }
     public data class Dir(
         val prestatDir: PrestatDir,

@@ -41,6 +41,7 @@ public value class Riflags(
     }
 
     public companion object : WasiTypename {
-        override val wasmValueType: WasmValueType = WasiValueTypes.U16
+        @WasmValueType
+        override val wasmValueType: Int = WasiValueTypes.U16
     }
 }
