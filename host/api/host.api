@@ -564,18 +564,18 @@ public final class at/released/weh/host/include/FcntlExtKt {
 public final class at/released/weh/host/include/StructFlock {
 	public static final field Companion Lat/released/weh/host/include/StructFlock$Companion;
 	public static final field STRUCT_FLOCK_SIZE I
-	public synthetic fun <init> (SSJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (SSJJI)V
 	public final fun component1 ()S
 	public final fun component2 ()S
-	public final fun component3-s-VKNKU ()J
-	public final fun component4-s-VKNKU ()J
+	public final fun component3 ()J
+	public final fun component4 ()J
 	public final fun component5 ()I
-	public final fun copy-orKg6c4 (SSJJI)Lat/released/weh/host/include/StructFlock;
-	public static synthetic fun copy-orKg6c4$default (Lat/released/weh/host/include/StructFlock;SSJJIILjava/lang/Object;)Lat/released/weh/host/include/StructFlock;
+	public final fun copy (SSJJI)Lat/released/weh/host/include/StructFlock;
+	public static synthetic fun copy$default (Lat/released/weh/host/include/StructFlock;SSJJIILjava/lang/Object;)Lat/released/weh/host/include/StructFlock;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getL_len-s-VKNKU ()J
+	public final fun getL_len ()J
 	public final fun getL_pid ()I
-	public final fun getL_start-s-VKNKU ()J
+	public final fun getL_start ()J
 	public final fun getL_type ()S
 	public final fun getL_whence ()S
 	public fun hashCode ()I
