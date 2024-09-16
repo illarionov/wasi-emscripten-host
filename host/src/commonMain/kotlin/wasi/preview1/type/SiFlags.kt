@@ -7,15 +7,13 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * Flags provided to `sock_send`. As there are currently no flags
  * defined, it must be set to zero.
  */
-@JvmInline
-public value class SiFlags(
-    public val rawValue: UInt,
+public data class SiFlags(
+    public val rawValue: Int,
 ) {
     public companion object : WasiTypename {
         @WasmValueType

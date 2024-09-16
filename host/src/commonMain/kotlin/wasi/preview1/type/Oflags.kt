@@ -7,23 +7,22 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * Open flags used by `path_open`.
  */
-@JvmInline
-public value class Oflags(
-    public val rawMask: UShort,
+public data class Oflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: Oflags,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Oflags(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * Create file if it does not exist.
@@ -47,7 +46,7 @@ public value class Oflags(
 
         ;
 
-        constructor(bit: Int) : this(1.shl(bit).toUShort())
+        constructor(bit: Int) : this(1.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {

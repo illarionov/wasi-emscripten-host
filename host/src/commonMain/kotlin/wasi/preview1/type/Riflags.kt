@@ -7,23 +7,22 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * Flags provided to `sock_recv`.
  */
-@JvmInline
-public value class Riflags(
-    public val rawMask: UShort,
+public class Riflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: RiFlagsValue,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class RiFlagsValue(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * Returns the message without removing it from the socket's receive queue.
@@ -37,7 +36,7 @@ public value class Riflags(
 
         ;
 
-        constructor(bit: Int) : this(1.shl(bit).toUShort())
+        constructor(bit: Int) : this(1.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {

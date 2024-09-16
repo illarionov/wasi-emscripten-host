@@ -7,23 +7,22 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * Flags determining how to interpret the timestamp provided in `subscription_clock::timeout`.
  */
-@JvmInline
-public value class Subclockflags(
-    public val rawMask: UShort,
+public data class Subclockflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: Subclockflags,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Subclockflags(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * If set, treat the timestamp provided in
@@ -36,7 +35,7 @@ public value class Subclockflags(
 
         ;
 
-        constructor(bit: Int) : this(1.shl(bit).toUShort())
+        constructor(bit: Int) : this(1.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {
