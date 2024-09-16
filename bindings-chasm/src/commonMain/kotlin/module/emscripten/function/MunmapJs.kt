@@ -15,7 +15,6 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
 import at.released.weh.host.include.sys.SysMmanMapFlags
-import at.released.weh.host.include.sys.SysMmanProt
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 
@@ -29,7 +28,7 @@ internal class MunmapJs(
         val result: Int = handle.execute(
             args[0].asWasmAddr(),
             args[1].asInt(),
-            SysMmanProt(args[2].asUInt()),
+            args[2].asInt(),
             SysMmanMapFlags(args[3].asUInt()),
             Fd(args[4].asInt()),
             args[5].asULong(),

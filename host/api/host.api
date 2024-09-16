@@ -441,12 +441,12 @@ public final class at/released/weh/host/emscripten/function/LocaltimeJsFunctionH
 
 public final class at/released/weh/host/emscripten/function/MmapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-gtSjiHw (IIIIJII)I
+	public final fun execute-rwuSGAY (IIIIJII)I
 }
 
 public final class at/released/weh/host/emscripten/function/MunapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute-92Yz8zk (IIIIIJ)I
+	public final fun execute-yTCXtS0 (IIIIIJ)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallChmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -737,6 +737,16 @@ public final class at/released/weh/host/include/TimeZoneInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/host/include/sys/MemoryProtectionFlag {
+	public static final field INSTANCE Lat/released/weh/host/include/sys/MemoryProtectionFlag;
+	public static final field PROT_EXEC I
+	public static final field PROT_GROWSDOWN I
+	public static final field PROT_GROWSUP I
+	public static final field PROT_NONE I
+	public static final field PROT_READ I
+	public static final field PROT_WRITE I
+}
+
 public final class at/released/weh/host/include/sys/StructStatExtKt {
 	public static final field STRUCT_SIZE_PACKED_SIZE I
 	public static final fun pack (Lat/released/weh/filesystem/op/stat/StructStat;)Lkotlinx/io/Buffer;
@@ -797,30 +807,7 @@ public final class at/released/weh/host/include/sys/SysMmanMapFlags$Companion {
 	public final fun getMAP_TYPE-6HN-XAE ()I
 }
 
-public final class at/released/weh/host/include/sys/SysMmanProt : at/released/weh/common/api/UintBitMask {
-	public static final field Companion Lat/released/weh/host/include/sys/SysMmanProt$Companion;
-	public static final synthetic fun box-impl (I)Lat/released/weh/host/include/sys/SysMmanProt;
-	public static fun constructor-impl (I)I
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public fun getMask-pVg5ArA ()I
-	public fun getNewInstance ()Lkotlin/jvm/functions/Function1;
-	public static fun getNewInstance-impl (I)Lkotlin/jvm/functions/Function1;
-	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
-}
-
-public final class at/released/weh/host/include/sys/SysMmanProt$Companion {
-	public final fun getPROT_EXEC-E0MLoKs ()I
-	public final fun getPROT_GROWSDOWN-E0MLoKs ()I
-	public final fun getPROT_GROWSUP-E0MLoKs ()I
-	public final fun getPROT_NONE-E0MLoKs ()I
-	public final fun getPROT_READ-E0MLoKs ()I
-	public final fun getPROT_WRITE-E0MLoKs ()I
+public abstract interface annotation class at/released/weh/host/include/sys/SysMmanProt : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/host/include/sys/SysStat {

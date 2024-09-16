@@ -12,7 +12,6 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import at.released.weh.host.include.sys.SysMmanMapFlags
-import at.released.weh.host.include.sys.SysMmanProt
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
@@ -23,7 +22,7 @@ internal class MmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
             args[0].asInt(),
-            SysMmanProt(args[1].asUInt().toUInt()),
+            args[1].asInt(),
             SysMmanMapFlags(args[2].asUInt().toUInt()),
             Fd(args[3].asInt()),
             args[4].asLong().toULong(),

@@ -35,7 +35,7 @@ internal class MunapJs(
         return munmapJs(
             args.getArgAsWasmPtr(0),
             args.getArgAsInt(1),
-            args.getArgAsUint(2),
+            args.getArgAsInt(2),
             args.getArgAsUint(3),
             args.getArgAsInt(4),
             args.getArgAsLong(5).toULong(),
@@ -47,9 +47,9 @@ internal class MunapJs(
     private fun munmapJs(
         addr: WasmPtr<Byte>,
         len: Int,
-        prot: UInt,
+        prot: Int,
         flags: UInt,
         fd: Int,
         offset: ULong,
-    ): Int = handle.execute(addr, len, SysMmanProt(prot), SysMmanMapFlags(flags), Fd(fd), offset)
+    ): Int = handle.execute(addr, len, prot, SysMmanMapFlags(flags), Fd(fd), offset)
 }

@@ -15,7 +15,6 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import at.released.weh.host.include.sys.SysMmanMapFlags
-import at.released.weh.host.include.sys.SysMmanProt
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 
@@ -27,7 +26,7 @@ internal class MmapJs(
         @Suppress("MagicNumber")
         val result: Int = handle.execute(
             args[0].asInt(),
-            SysMmanProt(args[1].asUInt()),
+            args[1].asInt(),
             SysMmanMapFlags(args[2].asUInt()),
             Fd(args[3].asInt()),
             args[4].asULong(),

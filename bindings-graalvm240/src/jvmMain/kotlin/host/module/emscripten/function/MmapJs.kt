@@ -16,7 +16,6 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import at.released.weh.host.include.sys.SysMmanMapFlags
-import at.released.weh.host.include.sys.SysMmanProt
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -34,7 +33,7 @@ internal class MmapJs(
         val args = frame.arguments
         return mmapJs(
             args.getArgAsInt(0),
-            args.getArgAsUint(1),
+            args.getArgAsInt(1),
             args.getArgAsUint(2),
             args.getArgAsInt(3),
             args.getArgAsLong(4).toULong(),
@@ -47,11 +46,11 @@ internal class MmapJs(
     @Suppress("MemberNameEqualsClassName")
     private fun mmapJs(
         len: Int,
-        prot: UInt,
+        prot: Int,
         flags: UInt,
         fd: Int,
         offset: ULong,
         pAllocated: WasmPtr<Int>,
         pAddr: WasmPtr<WasmPtr<Byte>>,
-    ): Int = handle.execute(len, SysMmanProt(prot), SysMmanMapFlags(flags), Fd(fd), offset, pAllocated, pAddr)
+    ): Int = handle.execute(len, prot, SysMmanMapFlags(flags), Fd(fd), offset, pAllocated, pAddr)
 }

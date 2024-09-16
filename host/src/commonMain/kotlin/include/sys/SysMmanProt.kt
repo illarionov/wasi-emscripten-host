@@ -6,26 +6,31 @@
 
 package at.released.weh.host.include.sys
 
-import at.released.weh.common.api.UintBitMask
-import kotlin.jvm.JvmInline
+import androidx.annotation.IntDef
 
 /**
  * Memory protection bits for mmap
  *
  * <sys/mman.h>
  */
-@JvmInline
-public value class SysMmanProt(
-    public override val mask: UInt,
-) : UintBitMask<SysMmanProt> {
-    override val newInstance: (UInt) -> SysMmanProt get() = ::SysMmanProt
+@IntDef(
+    flag = true,
+    value = [
+        MemoryProtectionFlag.PROT_NONE,
+        MemoryProtectionFlag.PROT_READ,
+        MemoryProtectionFlag.PROT_WRITE,
+        MemoryProtectionFlag.PROT_EXEC,
+        MemoryProtectionFlag.PROT_GROWSDOWN,
+        MemoryProtectionFlag.PROT_GROWSUP,
+    ],
+)
+public annotation class SysMmanProt
 
-    public companion object {
-        public val PROT_NONE: SysMmanProt = SysMmanProt(0U)
-        public val PROT_READ: SysMmanProt = SysMmanProt(1U)
-        public val PROT_WRITE: SysMmanProt = SysMmanProt(2U)
-        public val PROT_EXEC: SysMmanProt = SysMmanProt(4U)
-        public val PROT_GROWSDOWN: SysMmanProt = SysMmanProt(0x0100_0000_U)
-        public val PROT_GROWSUP: SysMmanProt = SysMmanProt(0x0200_0000_U)
-    }
+public object MemoryProtectionFlag {
+    public const val PROT_NONE: Int = 0
+    public const val PROT_READ: Int = 1
+    public const val PROT_WRITE: Int = 2
+    public const val PROT_EXEC: Int = 4
+    public const val PROT_GROWSDOWN: Int = 0x0100_0000
+    public const val PROT_GROWSUP: Int = 0x0200_0000
 }

@@ -26,7 +26,6 @@ import kotlin.annotation.AnnotationRetention.SOURCE
 /**
  * File mode bits (mode_t)
  */
-@Retention(SOURCE)
 @IntDef(
     flag = true,
     value = [
@@ -46,6 +45,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
         S_IXOTH,
     ],
 )
+@Retention(SOURCE)
 public annotation class FileMode
 
 public object FileModeFlag {

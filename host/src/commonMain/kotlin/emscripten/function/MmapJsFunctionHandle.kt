@@ -20,7 +20,7 @@ public class MmapJsFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.MMAP_JS, host) {
     public fun execute(
         len: Int,
-        prot: SysMmanProt,
+        @SysMmanProt prot: Int,
         flags: SysMmanMapFlags,
         fd: Fd,
         offset: ULong,

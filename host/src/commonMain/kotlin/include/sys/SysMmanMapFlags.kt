@@ -17,8 +17,8 @@ import kotlin.jvm.JvmInline
 @JvmInline
 public value class SysMmanMapFlags(
     public override val mask: UInt,
-) : UintBitMask<SysMmanProt> {
-    override val newInstance: (UInt) -> SysMmanProt get() = ::SysMmanProt
+) : UintBitMask<SysMmanMapFlags> {
+    override val newInstance: (UInt) -> SysMmanMapFlags get() = ::SysMmanMapFlags
 
     @Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
     public companion object {
