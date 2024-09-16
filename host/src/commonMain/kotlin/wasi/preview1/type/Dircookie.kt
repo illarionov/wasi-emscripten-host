@@ -7,16 +7,14 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * A reference to the offset of a directory entry.
  *
  * The value 0 signifies the start of the directory.
  */
-@JvmInline
-public value class Dircookie(
-    public val rawValue: ULong,
+public data class Dircookie(
+    public val rawValue: Long,
 ) {
     public companion object : WasiTypename {
         @WasmValueType

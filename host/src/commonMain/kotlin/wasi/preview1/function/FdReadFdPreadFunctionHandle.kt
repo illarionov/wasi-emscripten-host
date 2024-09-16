@@ -73,7 +73,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
                 val pIovec: WasmPtr<*> = pIov + 8 * idx
                 Iovec(
                     buf = memory.readPtr(pIovec as WasmPtr<WasmPtr<Byte>>),
-                    bufLen = Size(memory.readI32(pIovec + 4).toUInt()),
+                    bufLen = Size(memory.readI32(pIovec + 4)),
                 )
             }
             return IovecArray(iovecs)

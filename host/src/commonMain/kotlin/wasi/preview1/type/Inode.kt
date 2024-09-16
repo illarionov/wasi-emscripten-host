@@ -7,14 +7,12 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
 
 /**
  * File serial number that is unique within its file system.
  */
-@JvmInline
-public value class Inode(
-    public val rawValue: ULong,
+public data class Inode(
+    public val rawValue: Long,
 ) {
     public companion object : WasiTypename {
         @WasmValueType

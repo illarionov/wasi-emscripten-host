@@ -74,7 +74,7 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
                 val pCiovec: WasmPtr<*> = pCiov + 8 * idx
                 CioVec(
                     buf = memory.readPtr(pCiovec as WasmPtr<WasmPtr<Byte>>),
-                    bufLen = Size(memory.readI32(pCiovec + 4).toUInt()),
+                    bufLen = Size(memory.readI32(pCiovec + 4)),
                 )
             }
             return CiovecArray(iovecs)

@@ -7,24 +7,23 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.host.base.WasmValueType
-import kotlin.jvm.JvmInline
+import kotlin.experimental.or
 
 /**
  * The state of the file descriptor subscribed to with
  * `eventtype::fd_read` or `eventtype::fd_write`.
  */
-@JvmInline
-public value class Eventrwflags(
-    public val rawMask: UShort,
+public class Eventrwflags(
+    public val rawMask: Short,
 ) {
     public constructor(
         vararg flags: Eventrwflags,
     ) : this(
-        flags.fold(0.toUShort()) { acc, flag -> acc.or(flag.mask) },
+        flags.fold(0.toShort()) { acc, flag -> acc.or(flag.mask) },
     )
 
     public enum class Eventrwflags(
-        public val mask: UShort,
+        public val mask: Short,
     ) {
         /**
          * The peer of this socket has closed or disconnected.
@@ -33,7 +32,7 @@ public value class Eventrwflags(
 
         ;
 
-        constructor(bit: Int) : this(1.shl(bit).toUShort())
+        constructor(bit: Int) : this(1.shl(bit).toShort())
     }
 
     public companion object : WasiTypename {
