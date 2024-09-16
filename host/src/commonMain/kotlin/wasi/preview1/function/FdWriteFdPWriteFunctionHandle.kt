@@ -38,7 +38,7 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
         pNum: WasmPtr<Int>,
     ): Errno {
         val cioVecs: CiovecArray = readCiovecs(memory, pCiov, cIovCnt)
-        return bulkWriter.write(fd, strategy, cioVecs)
+        return bulkWriter.write(fd, strategy, cioVecs.ciovecList)
             .onRight { writtenBytes ->
                 memory.writeI32(pNum, writtenBytes.toInt())
             }.fold(

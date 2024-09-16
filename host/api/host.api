@@ -133,7 +133,7 @@ public final class at/released/weh/host/base/memory/DefaultWasiMemoryReader : at
 
 public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at/released/weh/host/base/memory/WasiMemoryWriter {
 	public fun <init> (Lat/released/weh/host/base/memory/ReadOnlyMemory;Lat/released/weh/filesystem/FileSystem;)V
-	public fun write-2FxnJEQ (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+	public fun write (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
 public final class at/released/weh/host/base/memory/Pages {
@@ -163,7 +163,7 @@ public abstract interface class at/released/weh/host/base/memory/WasiMemoryReade
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryWriter {
-	public abstract fun write-2FxnJEQ (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
+	public abstract fun write (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
 public final class at/released/weh/host/emscripten/AssertionFailedException : java/lang/RuntimeException {
@@ -980,17 +980,14 @@ public final class at/released/weh/host/wasi/preview1/type/CioVec$Companion : at
 
 public final class at/released/weh/host/wasi/preview1/type/CiovecArray {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/CiovecArray$Companion;
-	public static final synthetic fun box-impl (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/CiovecArray;
-	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/CiovecArray;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/CiovecArray;Ljava/util/List;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/CiovecArray;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
 	public final fun getCiovecList ()Ljava/util/List;
 	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/util/List;)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/util/List;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/CiovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
@@ -1414,17 +1411,14 @@ public final class at/released/weh/host/wasi/preview1/type/Iovec$Companion : at/
 
 public final class at/released/weh/host/wasi/preview1/type/IovecArray {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/type/IovecArray$Companion;
-	public static final synthetic fun box-impl (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/IovecArray;
-	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lat/released/weh/host/wasi/preview1/type/IovecArray;
+	public static synthetic fun copy$default (Lat/released/weh/host/wasi/preview1/type/IovecArray;Ljava/util/List;ILjava/lang/Object;)Lat/released/weh/host/wasi/preview1/type/IovecArray;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
 	public final fun getIovecList ()Ljava/util/List;
 	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/util/List;)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/util/List;
 }
 
 public final class at/released/weh/host/wasi/preview1/type/IovecArray$Companion : at/released/weh/host/wasi/preview1/type/WasiTypename {
