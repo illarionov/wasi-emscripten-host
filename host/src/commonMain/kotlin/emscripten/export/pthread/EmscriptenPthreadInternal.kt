@@ -6,9 +6,11 @@
 
 package at.released.weh.host.emscripten.export.pthread
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.include.StructPthread
 
+@InternalWasiEmscriptenHostApi
 public class EmscriptenPthreadInternal(
     private val exports: EmscriptenPthreadExports,
 ) {

@@ -113,7 +113,7 @@ public final class at/released/weh/bindings/graalvm240/host/GraalvmEmscriptenRun
 	public static final field Companion Lat/released/weh/bindings/graalvm240/host/GraalvmEmscriptenRuntime$Companion;
 	public fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)V
 	public fun initMainThread ()V
-	public final fun initWorkerThread-e-C6Vng (I)V
+	public final fun initWorkerThread (Lat/released/weh/host/base/WasmPtr;)V
 	public fun isMultiThread ()Z
 }
 
@@ -127,14 +127,14 @@ public final class at/released/weh/bindings/graalvm240/host/pthread/GraalvmPthre
 	public final fun createWasmPthreadForThread-I7RO_PI (Ljava/lang/Thread;)J
 	public final fun joinThreads-LRDsOJo (J)V
 	public static synthetic fun joinThreads-LRDsOJo$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;JILjava/lang/Object;)V
-	public final fun spawnThread-mbdt81g (IIII)I
-	public final fun unregisterManagedThread-8A16jWI (ILjava/lang/Thread;Ljava/lang/Throwable;)V
-	public static synthetic fun unregisterManagedThread-8A16jWI$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;ILjava/lang/Thread;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun spawnThread (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;ILat/released/weh/host/base/WasmPtr;)I
+	public final fun unregisterManagedThread (Lat/released/weh/host/base/WasmPtr;Ljava/lang/Thread;Ljava/lang/Throwable;)V
+	public static synthetic fun unregisterManagedThread$default (Lat/released/weh/bindings/graalvm240/host/pthread/GraalvmPthreadManager;Lat/released/weh/host/base/WasmPtr;Ljava/lang/Thread;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
 public abstract interface class at/released/weh/bindings/graalvm240/host/pthread/ManagedThreadInitializer {
 	public abstract fun destroyThreadLocalGraalvmAgent ()V
 	public abstract fun initThreadLocalGraalvmAgent ()V
-	public abstract fun initWorkerThread-e-C6Vng (I)V
+	public abstract fun initWorkerThread (Lat/released/weh/host/base/WasmPtr;)V
 }
 

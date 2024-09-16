@@ -6,6 +6,7 @@
 
 package at.released.weh.host.emscripten.export.pthread
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -13,6 +14,7 @@ import at.released.weh.host.emscripten.export.memory.DynamicMemory
 import at.released.weh.host.emscripten.export.memory.freeSilent
 import at.released.weh.host.include.pthread_t
 
+@InternalWasiEmscriptenHostApi
 public class EmscriptenPthread(
     private val exports: EmscriptenPthreadExports,
     private val dynamicMemory: DynamicMemory,
