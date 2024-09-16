@@ -66,7 +66,7 @@ internal class NioStat(
         fun statCatching(
             path: Path,
             followSymlinks: Boolean,
-            blockSize: ULong = 512UL,
+            blockSize: Long = 512L,
         ): Either<StatError, StructStat> = either {
             val linkOptions = asLinkOptions(followSymlinks)
 
@@ -86,19 +86,19 @@ internal class NioStat(
                 .mapLeft { it.readAttributesToStatError() }
                 .bind()
 
-            val dev: ULong = (unixAttrs[ATTR_UNI_DEV] as? Long)?.toULong() ?: 1UL
-            val ino: ULong = (unixAttrs[ATTR_UNI_INO] as? Long)?.toULong()
-                ?: basicFileAttrs.fileKey().hashCode().toULong()
+            val dev: Long = (unixAttrs[ATTR_UNI_DEV] as? Long) ?: 1L
+            val ino: Long = (unixAttrs[ATTR_UNI_INO] as? Long)
+                ?: basicFileAttrs.fileKey().hashCode().toLong()
 
             @FileModeType
             val mode: Int = getModeType(basicFileAttrs, unixAttrs)
-            val nlink: ULong = (unixAttrs[ATTR_UNI_NLINK] as? Int)?.toULong() ?: 1UL
-            val uid: ULong = (unixAttrs[ATTR_UNI_UID] as? Int)?.toULong() ?: 0UL
-            val gid: ULong = (unixAttrs[ATTR_UNI_GID] as? Int)?.toULong() ?: 0UL
-            val rdev: ULong = (unixAttrs[ATTR_UNI_RDEV] as? Long)?.toULong() ?: 1UL
-            val size: ULong = basicFileAttrs.size().toULong()
-            val blksize: ULong = blockSize
-            val blocks: ULong = (size + blksize - 1UL) / blksize
+            val nlink: Long = (unixAttrs[ATTR_UNI_NLINK] as? Int)?.toLong() ?: 1L
+            val uid: Long = (unixAttrs[ATTR_UNI_UID] as? Int)?.toLong() ?: 0L
+            val gid: Long = (unixAttrs[ATTR_UNI_GID] as? Int)?.toLong() ?: 0L
+            val rdev: Long = (unixAttrs[ATTR_UNI_RDEV] as? Long)?.toLong() ?: 1L
+            val size: Long = basicFileAttrs.size()
+            val blksize: Long = blockSize
+            val blocks: Long = (size + blksize - 1L) / blksize
             val mtim: StructTimespec = basicFileAttrs.lastModifiedTime().toTimeSpec()
 
             val cTimeFileTime = unixAttrs[ATTR_UNI_CTIME] ?: basicFileAttrs.creationTime()
