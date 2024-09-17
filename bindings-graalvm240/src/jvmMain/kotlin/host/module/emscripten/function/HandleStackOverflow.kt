@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.host.emscripten.function.HandleStackOverflowFunctionHandle
@@ -32,6 +33,6 @@ internal class HandleStackOverflow(
     @TruffleBoundary
     @Suppress("MemberNameEqualsClassName")
     private fun handleStackOverflow(
-        requestedSp: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) requestedSp: WasmPtr,
     ): Nothing = handle.execute(stackBindingsRef(), requestedSp)
 }

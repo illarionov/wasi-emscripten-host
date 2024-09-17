@@ -6,6 +6,7 @@
 
 package at.released.weh.host.test.fixtures
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import kotlinx.io.Buffer
 import kotlinx.io.RawSink
@@ -13,10 +14,11 @@ import kotlinx.io.readTo
 
 internal class TestMemoryRawSink(
     private val memory: TestMemory,
-    baseAddr: WasmPtr<*>,
-    public val toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr val toAddrExclusive: WasmPtr,
 ) : RawSink {
-    public var baseAddr: WasmPtr<*> = baseAddr
+    @IntWasmPtr
+    public var baseAddr: WasmPtr = baseAddr
         private set
 
     public var isClosed: Boolean = false
@@ -26,17 +28,17 @@ internal class TestMemoryRawSink(
         require(byteCount >= 0) { "byteCount is negative" }
         check(!isClosed) { "Stream is closed" }
 
-        val endAddrExclusive = baseAddr.addr + byteCount
-        require(endAddrExclusive <= toAddrExclusive.addr) {
+        val endAddrExclusive = baseAddr + byteCount
+        require(endAddrExclusive <= toAddrExclusive) {
             "Cannot write `$byteCount` bytes to memory range $baseAddr ..<$toAddrExclusive: out of boundary access"
         }
 
         source.readTo(
             sink = memory.bytes,
-            startIndex = baseAddr.addr,
-            endIndex = baseAddr.addr + byteCount.toInt(),
+            startIndex = baseAddr,
+            endIndex = baseAddr + byteCount.toInt(),
         )
-        baseAddr = WasmPtr<Unit>(endAddrExclusive.toInt())
+        baseAddr = endAddrExclusive.toInt()
     }
 
     override fun flush() = Unit

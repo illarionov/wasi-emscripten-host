@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.memory.GraalInputStreamWasiMemoryReader
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.wasi.preview1.function.FdReadFdPreadFunctionHandle
@@ -64,9 +65,9 @@ private class FdRead(
     private fun fdRead(
         memory: WasmMemory,
         fd: Int,
-        pIov: WasmPtr<Iovec>,
+        @IntWasmPtr(Iovec::class) pIov: WasmPtr,
         iovCnt: Int,
-        pNum: WasmPtr<Int>,
+        @IntWasmPtr(Int::class) pNum: WasmPtr,
     ): Int {
         val hostMemory = memory.toHostMemory()
         val wasiMemoryReader: WasiMemoryReader = GraalInputStreamWasiMemoryReader(hostMemory, handle.host.fileSystem)

@@ -9,6 +9,7 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -19,7 +20,7 @@ public class MunapJsFunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(EmscriptenHostFunction.MUNMAP_JS, host) {
     public fun execute(
-        addr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) addr: WasmPtr,
         len: Int,
         @SysMmanProt prot: Int,
         @SysMmanMapFlags flags: Int,

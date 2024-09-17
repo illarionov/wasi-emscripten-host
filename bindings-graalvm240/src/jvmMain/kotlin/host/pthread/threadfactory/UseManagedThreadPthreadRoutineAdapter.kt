@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.bindings.graalvm240.host.pthread.threadfactory.UseManagedThreadPthreadRoutineAdapter.UseManagedThreadPthreadRoutineFunctionHandle
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives
@@ -37,7 +38,7 @@ internal class UseManagedThreadPthreadRoutineAdapter(
         host: EmbedderHost,
     ) : HostFunctionHandle(ExternalManagedThreadOrchestrator.USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION, host) {
         @CompilerDirectives.TruffleBoundary
-        fun execute(arg: WasmPtr<Unit>): Int {
+        fun execute(@IntWasmPtr arg: WasmPtr): Int {
             logger.v { "Managed thread start_routine called with arg $arg. Do nothing." }
             return 0
         }

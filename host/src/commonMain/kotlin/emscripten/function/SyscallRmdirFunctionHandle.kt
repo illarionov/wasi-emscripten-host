@@ -9,6 +9,7 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -21,7 +22,7 @@ public class SyscallRmdirFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_RMDIR, host) {
     public fun execute(
         memory: ReadOnlyMemory,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
         return host.fileSystem.execute(

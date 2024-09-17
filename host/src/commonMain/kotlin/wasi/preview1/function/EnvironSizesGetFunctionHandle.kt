@@ -8,6 +8,7 @@ package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -20,8 +21,8 @@ public class EnvironSizesGetFunctionHandle(
 ) : HostFunctionHandle(WasiHostFunction.ENVIRON_SIZES_GET, host) {
     public fun execute(
         memory: Memory,
-        environCountAddr: WasmPtr<Int>,
-        environSizeAddr: WasmPtr<Int>,
+        @IntWasmPtr(Int::class) environCountAddr: WasmPtr,
+        @IntWasmPtr(Int::class) environSizeAddr: WasmPtr,
     ): Errno {
         val env = host.systemEnvProvider.getSystemEnv()
         val count = env.size

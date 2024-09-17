@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -25,7 +26,7 @@ public class SyscallUnlinkatFunctionHandle(
     public fun execute(
         memory: ReadOnlyMemory,
         rawDirfd: Int,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         flags: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)

@@ -11,6 +11,7 @@ import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.ext.orThrow
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.WasmFunctionBinding
 import io.github.charlietap.chasm.embedding.error.ChasmError
@@ -59,7 +60,8 @@ internal class ChasmFunctionBinding(
             ::throwOnError,
         )
 
-    override fun <P> executeForPtr(vararg args: Any?): WasmPtr<P> = invoke(store, instance, name, args.argsToValues())
+    @IntWasmPtr
+    override fun executeForPtr(vararg args: Any?): WasmPtr = invoke(store, instance, name, args.argsToValues())
         .fold(
             { it[0].asWasmAddr() },
             ::throwOnError,

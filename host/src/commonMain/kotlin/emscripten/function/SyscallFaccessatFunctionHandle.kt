@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -27,7 +28,7 @@ public class SyscallFaccessatFunctionHandle(
     public fun execute(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         amode: Int,
         flags: Int,
     ): Int {

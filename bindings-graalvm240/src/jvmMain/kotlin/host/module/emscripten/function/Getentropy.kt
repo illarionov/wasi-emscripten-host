@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.GetentropyFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -37,7 +38,7 @@ internal class Getentropy(
     @Suppress("MemberNameEqualsClassName")
     private fun getentropy(
         memory: WasmMemory,
-        buffer: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) buffer: WasmPtr,
         size: Int,
     ): Int = handle.execute(memory.toHostMemory(), buffer, size)
 }

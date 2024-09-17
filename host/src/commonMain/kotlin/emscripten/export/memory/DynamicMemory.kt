@@ -7,27 +7,29 @@
 package at.released.weh.host.emscripten.export.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.isNull
+import at.released.weh.host.base.ptrIsNull
 
 @InternalWasiEmscriptenHostApi
 public class DynamicMemory(
     public val exports: DynamicMemoryExports,
 ) {
-    public fun <P : Any?> allocOrThrow(len: UInt): WasmPtr<P> {
+    @IntWasmPtr
+    public fun allocOrThrow(len: UInt): WasmPtr {
         check(len > 0U)
-        val mem: WasmPtr<P> = requireNotNull(exports.malloc) {
+        val mem: WasmPtr = requireNotNull(exports.malloc) {
             functionNotExported("malloc")
         }.executeForPtr(len.toInt())
 
-        if (mem.isNull()) {
+        if (ptrIsNull(mem)) {
             throw OutOfMemoryException()
         }
 
         return mem
     }
 
-    public fun free(ptr: WasmPtr<*>) {
+    public fun free(@IntWasmPtr ptr: WasmPtr) {
         requireNotNull(exports.free) {
             functionNotExported("free")
         }.executeVoid(ptr)
@@ -40,6 +42,6 @@ public class DynamicMemory(
 }
 
 @InternalWasiEmscriptenHostApi
-public fun DynamicMemory.freeSilent(value: WasmPtr<*>): Result<Unit> = kotlin.runCatching {
+public fun DynamicMemory.freeSilent(@IntWasmPtr value: WasmPtr): Result<Unit> = kotlin.runCatching {
     free(value)
 }

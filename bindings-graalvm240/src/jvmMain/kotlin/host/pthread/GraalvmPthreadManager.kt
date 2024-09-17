@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.pthread
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.DESTROYING
 import at.released.weh.bindings.graalvm240.host.pthread.threadfactory.ExternalManagedThreadOrchestrator
 import at.released.weh.common.api.Logger
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.IndirectFunctionBindingProvider
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
@@ -58,10 +59,10 @@ public class GraalvmPthreadManager(
      * Called from `__pthread_create_js` to reuse an existing Web Worker or spawn a new one
      */
     public fun spawnThread(
-        pthreadPtr: WasmPtr<StructPthread>,
-        attr: WasmPtr<UInt>,
+        @IntWasmPtr(StructPthread::class) pthreadPtr: WasmPtr,
+        @IntWasmPtr(Int::class) attr: WasmPtr,
         startRoutine: Int,
-        arg: WasmPtr<Unit>,
+        @IntWasmPtr() arg: WasmPtr,
     ): Int {
         logger.v { "spawnThread($pthreadPtr, $attr, $startRoutine, $arg)" }
         return if (startRoutine != externalManagedThreadStartRoutine().funcId) {
@@ -76,9 +77,9 @@ public class GraalvmPthreadManager(
     }
 
     private fun spawnManagedThread(
-        pthreadPtr: WasmPtr<StructPthread>,
+        @IntWasmPtr(StructPthread::class) pthreadPtr: WasmPtr,
         startRoutine: Int,
-        arg: WasmPtr<Unit>,
+        @IntWasmPtr arg: WasmPtr,
     ): Int {
         val name = "graalvm-pthread-${threadNumber.getAndDecrement()}"
         val thread = ManagedPthread(
@@ -117,7 +118,7 @@ public class GraalvmPthreadManager(
     }
 
     public fun unregisterManagedThread(
-        pthreadPtr: WasmPtr<StructPthread>,
+        @IntWasmPtr(StructPthread::class) pthreadPtr: WasmPtr,
         thread: Thread,
         throwable: Throwable? = null,
     ): Unit = lock.withLock {
@@ -148,10 +149,10 @@ public class GraalvmPthreadManager(
     }
 
     private class NativeThreadRegistry {
-        private val threads: MutableMap<WasmPtr<StructPthread>, Thread> = mutableMapOf()
+        private val threads: MutableMap<WasmPtr, Thread> = mutableMapOf()
 
         fun register(
-            ptr: WasmPtr<StructPthread>,
+            @IntWasmPtr(StructPthread::class) ptr: WasmPtr,
             thread: Thread,
         ) {
             val old = threads.getOrPut(ptr) { thread }
@@ -161,7 +162,7 @@ public class GraalvmPthreadManager(
         }
 
         fun unregister(
-            ptr: WasmPtr<StructPthread>,
+            @IntWasmPtr(StructPthread::class) ptr: WasmPtr,
             terminatedThread: Thread,
             error: Throwable? = null,
         ) {

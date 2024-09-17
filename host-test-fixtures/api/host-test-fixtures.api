@@ -1,7 +1,7 @@
 public final class at/released/weh/host/test/assertions/MemoryAssertionsKt {
-	public static final fun byteAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;)Lassertk/Assert;
-	public static final fun bytesAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;I)Lassertk/Assert;
-	public static final fun hasBytesAt (Lassertk/Assert;Lat/released/weh/host/base/WasmPtr;[B)V
+	public static final fun byteAt (Lassertk/Assert;I)Lassertk/Assert;
+	public static final fun bytesAt (Lassertk/Assert;II)Lassertk/Assert;
+	public static final fun hasBytesAt (Lassertk/Assert;I[B)V
 }
 
 public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/weh/host/EmbedderHost {
@@ -39,18 +39,18 @@ public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/hos
 	public final fun getMemoryReader ()Lat/released/weh/host/base/memory/DefaultWasiMemoryReader;
 	public final fun getMemoryWriter ()Lat/released/weh/host/base/memory/DefaultWasiMemoryWriter;
 	public final fun getSize ()I
-	public fun readI32 (Lat/released/weh/host/base/WasmPtr;)I
-	public fun readI64 (Lat/released/weh/host/base/WasmPtr;)J
-	public fun readI8 (Lat/released/weh/host/base/WasmPtr;)B
-	public fun sink (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)Lkotlinx/io/RawSink;
-	public fun source (Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)Lkotlinx/io/RawSource;
+	public fun readI32 (I)I
+	public fun readI64 (I)J
+	public fun readI8 (I)B
+	public fun sink (II)Lkotlinx/io/RawSink;
+	public fun source (II)Lkotlinx/io/RawSource;
 	public fun toString ()Ljava/lang/String;
-	public fun writeI32 (Lat/released/weh/host/base/WasmPtr;I)V
-	public fun writeI64 (Lat/released/weh/host/base/WasmPtr;J)V
-	public fun writeI8 (Lat/released/weh/host/base/WasmPtr;B)V
+	public fun writeI32 (II)V
+	public fun writeI64 (IJ)V
+	public fun writeI8 (IB)V
 }
 
 public final class at/released/weh/host/test/fixtures/TestMemoryRawSource : at/released/weh/host/base/memory/MemoryRawSource {
-	public fun <init> (Lat/released/weh/host/test/fixtures/TestMemory;Lat/released/weh/host/base/WasmPtr;Lat/released/weh/host/base/WasmPtr;)V
+	public fun <init> (Lat/released/weh/host/test/fixtures/TestMemory;II)V
 }
 

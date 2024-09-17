@@ -10,6 +10,7 @@ import assertk.assertThat
 import assertk.assertions.isNotZero
 import assertk.assertions.isZero
 import at.released.weh.host.EmbedderHost.EntropySource
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.test.assertions.hasBytesAt
 import at.released.weh.host.test.fixtures.TestEmbedderHost
@@ -42,7 +43,9 @@ class GetentropyFunctionHandleTest {
             check(size == testEntropySize)
             testEntropy
         }
-        val bufPtr: WasmPtr<Byte> = WasmPtr(128)
+
+        @IntWasmPtr(Byte::class)
+        val bufPtr: WasmPtr = 128
 
         val code = getentropyHandle.execute(memory, bufPtr, testEntropySize)
 
@@ -53,7 +56,10 @@ class GetentropyFunctionHandleTest {
     @Test
     fun getEntropy_should_return_correct_code_on_fail() {
         host.entropySource = EntropySource { error("No entropy source") }
-        val bufPtr: WasmPtr<Byte> = WasmPtr(128)
+
+        @IntWasmPtr(Byte::class)
+        val bufPtr: WasmPtr = 128
+
         val code = getentropyHandle.execute(memory, bufPtr, -32)
         assertThat(code).isNotZero()
     }

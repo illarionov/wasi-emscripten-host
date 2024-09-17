@@ -11,6 +11,7 @@ import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryReader
@@ -25,9 +26,15 @@ internal class FdReadFdPread private constructor(
 ) : WasiHostFunctionHandle {
     override operator fun invoke(args: List<Value>): Errno {
         val fd = args[0].asInt()
-        val pIov: WasmPtr<Iovec> = args[1].asWasmAddr()
+
+        @IntWasmPtr(Iovec::class)
+        val pIov: WasmPtr = args[1].asWasmAddr()
+
         val iovCnt = args[2].asInt()
-        val pNum: WasmPtr<Int> = args[3].asWasmAddr()
+
+        @IntWasmPtr(Int::class)
+        val pNum: WasmPtr = args[3].asWasmAddr()
+
         return handle.execute(memory, memoryReader, fd, pIov, iovCnt, pNum)
     }
 

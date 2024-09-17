@@ -12,6 +12,7 @@ import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -51,7 +52,7 @@ internal class SyscallOpenat(
     private fun openAt(
         memory: WasmMemory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         @OpenFileFlags flags: Int,
         @FileMode rawMode: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, flags, rawMode)

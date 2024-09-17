@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.bindings.graalvm240.host.pthread.PthreadCreateJsWasmNode.PthreadCreateJsFunctionHandle
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -49,10 +50,10 @@ internal class PthreadCreateJsWasmNode(
     ) : HostFunctionHandle(EmscriptenHostFunction.PTHREAD_CREATE_JS, host) {
         @TruffleBoundary
         fun execute(
-            pthreadPtr: WasmPtr<StructPthread>,
-            attr: WasmPtr<UInt>,
+            @IntWasmPtr(StructPthread::class) pthreadPtr: WasmPtr,
+            @IntWasmPtr(Int::class) attr: WasmPtr,
             startRoutine: Int,
-            arg: WasmPtr<Unit>,
+            @IntWasmPtr arg: WasmPtr,
         ): Int {
             logger.v { "pthread_create_js(pthreadPtr=$pthreadPtr, attr=$attr, startRoutine=$startRoutine, arg=$arg)" }
             return pThreadManagerRef().spawnThread(pthreadPtr, attr, startRoutine, arg)

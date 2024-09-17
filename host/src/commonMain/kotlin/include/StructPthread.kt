@@ -8,6 +8,7 @@
 
 package at.released.weh.host.include
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 
 /**
@@ -16,10 +17,17 @@ import at.released.weh.host.base.WasmPtr
  * [pthread_impl.h](https://github.com/emscripten-core/emscripten/blob/3.1.61/system/lib/libc/musl/src/internal/pthread_impl.h)
  */
 public data class StructPthread(
-    val self: WasmPtr<StructPthread>,
+    @IntWasmPtr(StructPthread::class)
+    val self: WasmPtr,
+
     // uintptr_t *dtv;
-    val prev: WasmPtr<StructPthread>,
-    val next: WasmPtr<StructPthread>,
+
+    @IntWasmPtr(StructPthread::class)
+    val prev: WasmPtr,
+
+    @IntWasmPtr(StructPthread::class)
+    val next: WasmPtr,
+
     val sysinfo: uintptr_t,
     // canary_pad
     val canary: uintptr_t,
@@ -36,7 +44,8 @@ public data class StructPthread(
      * The TLS base to use the main module TLS data. Secondary modules
      * still require dynamic allocation.
      */
-    val tlsBase: WasmPtr<Unit>,
+    @IntWasmPtr
+    val tlsBase: WasmPtr,
 
     /**
      * The lowest level of the proxying system. Other threads can enqueue
@@ -48,7 +57,8 @@ public data class StructPthread(
      * other threads waiting for their messages to be processed to be
      * notified that their messages will not be processed after all.
      */
-    val mailbox: WasmPtr<Unit>,
+    @IntWasmPtr
+    val mailbox: WasmPtr,
 
     /**
      * To ensure that no other thread is concurrently enqueueing a message

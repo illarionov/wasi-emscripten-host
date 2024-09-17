@@ -7,6 +7,7 @@
 package at.released.weh.host.include.sys
 
 import androidx.annotation.IntDef
+import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
  * Mmap flags
@@ -50,6 +51,17 @@ import androidx.annotation.IntDef
         MmapFlag.MAP_HUGE_2GB,
         MmapFlag.MAP_HUGE_16GB,
     ],
+)
+@Retention(SOURCE)
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
 )
 public annotation class SysMmanMapFlags
 

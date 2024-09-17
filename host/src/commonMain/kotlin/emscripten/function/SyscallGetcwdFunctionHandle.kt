@@ -9,6 +9,7 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -21,7 +22,7 @@ public class SyscallGetcwdFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_GETCWD, host) {
     public fun execute(
         memory: Memory,
-        dst: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) dst: WasmPtr,
         size: Int,
     ): Int {
         if (size == 0) {

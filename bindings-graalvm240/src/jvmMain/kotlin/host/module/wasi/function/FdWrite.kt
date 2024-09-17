@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.memory.GraalOutputStreamWasiMemoryWriter
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
@@ -56,9 +57,9 @@ private class FdWrite(
     private fun fdWrite(
         memory: WasmMemory,
         fd: Int,
-        pCiov: WasmPtr<CioVec>,
+        @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
         cIovCnt: Int,
-        pNum: WasmPtr<Int>,
+        @IntWasmPtr(Int::class) pNum: WasmPtr,
     ): Int {
         val hostMemory = memory.toHostMemory()
         val wasiMemoryWriter: WasiMemoryWriter = GraalOutputStreamWasiMemoryWriter(

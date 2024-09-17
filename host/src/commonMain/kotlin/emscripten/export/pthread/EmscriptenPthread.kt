@@ -7,6 +7,8 @@
 package at.released.weh.host.emscripten.export.pthread
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.C_NULL
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -25,18 +27,19 @@ public class EmscriptenPthread(
     }
 
     public fun pthreadCreate(
-        attr: WasmPtr<*>,
+        @IntWasmPtr attr: WasmPtr,
         startRoutine: IndirectFunctionTableIndex,
-        arg: WasmPtr<*>,
+        @IntWasmPtr arg: WasmPtr,
     ): pthread_t {
-        var threadIdRef: WasmPtr<pthread_t> = WasmPtr.cNull()
+        @IntWasmPtr(pthread_t::class)
+        var threadIdRef: WasmPtr = C_NULL
         try {
             threadIdRef = dynamicMemory.allocOrThrow(8U)
 
             val errNo = requireNotNull(exports.pthread_create) {
                 "pthread_create not exported." +
                         " Recompile application with _pthread_create and _pthread_exit in EXPORTED_FUNCTIONS"
-            }.executeForInt(threadIdRef.addr, attr.addr, startRoutine.funcId, arg.addr)
+            }.executeForInt(threadIdRef, attr, startRoutine.funcId, arg)
 
             if (errNo != 0) {
                 throw PthreadException("pthread_create() failed with error $errNo", errNo)
@@ -49,11 +52,11 @@ public class EmscriptenPthread(
     }
 
     public fun pthreadExit(
-        retval: WasmPtr<*>,
+        @IntWasmPtr retval: WasmPtr,
     ) {
         requireNotNull(exports.pthread_exit) {
             "pthread_exit not exported." +
                     " Recompile application with _pthread_create and _pthread_exit in EXPORTED_FUNCTIONS"
-        }.executeVoid(retval.addr)
+        }.executeVoid(retval)
     }
 }

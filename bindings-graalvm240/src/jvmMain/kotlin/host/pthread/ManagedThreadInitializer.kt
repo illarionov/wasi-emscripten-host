@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.graalvm240.host.pthread
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.include.StructPthread
 
@@ -13,5 +14,5 @@ import at.released.weh.host.include.StructPthread
 public interface ManagedThreadInitializer {
     public fun initThreadLocalGraalvmAgent()
     public fun destroyThreadLocalGraalvmAgent()
-    public fun initWorkerThread(threadPtr: WasmPtr<StructPthread>)
+    public fun initWorkerThread(@IntWasmPtr(StructPthread::class) threadPtr: WasmPtr)
 }

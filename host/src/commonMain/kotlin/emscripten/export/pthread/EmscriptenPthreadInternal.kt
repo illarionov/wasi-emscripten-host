@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.export.pthread
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.include.StructPthread
 
@@ -27,7 +28,7 @@ public class EmscriptenPthreadInternal(
      * @see EmscriptenPthreadExports._emscripten_thread_init
      */
     public fun emscriptenThreadInit(
-        threadPtr: WasmPtr<StructPthread>,
+        @IntWasmPtr(StructPthread::class) threadPtr: WasmPtr,
         isMain: Boolean,
         isRuntime: Boolean = true, //
         canBlock: Boolean = true, // !ENVIRONMENT_IS_WEB
@@ -35,7 +36,7 @@ public class EmscriptenPthreadInternal(
         startProfiling: Boolean = false,
     ) {
         exports._emscripten_thread_init.executeVoid(
-            threadPtr.addr,
+            threadPtr,
             isMain.toInt(),
             isRuntime.toInt(),
             canBlock.toInt(),
@@ -49,8 +50,8 @@ public class EmscriptenPthreadInternal(
      *
      * @see EmscriptenPthreadExports._emscripten_thread_exit
      */
-    public fun emscriptenThreadExit(result: WasmPtr<*>) {
-        exports._emscripten_thread_exit.executeVoid(result.addr)
+    public fun emscriptenThreadExit(@IntWasmPtr result: WasmPtr) {
+        exports._emscripten_thread_exit.executeVoid(result)
     }
 
     /**
@@ -58,8 +59,8 @@ public class EmscriptenPthreadInternal(
      *
      * @see EmscriptenPthreadExports._emscripten_thread_free_data
      */
-    public fun emscriptenThreadFreeData(thread: WasmPtr<StructPthread>) {
-        exports._emscripten_thread_free_data.executeVoid(thread.addr)
+    public fun emscriptenThreadFreeData(@IntWasmPtr(StructPthread::class) thread: WasmPtr) {
+        exports._emscripten_thread_free_data.executeVoid(thread)
     }
 
     /**

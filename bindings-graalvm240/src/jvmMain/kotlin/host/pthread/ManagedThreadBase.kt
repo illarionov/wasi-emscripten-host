@@ -14,6 +14,7 @@ import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.NOT_STARTED
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.RUNNING
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.StateListener
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
@@ -26,7 +27,8 @@ internal abstract class ManagedThreadBase(
     private val threadInitializer: ManagedThreadInitializer,
     private val stateListener: StateListener = StateListener { _, _, _ -> },
 ) : Thread(name) {
-    abstract var pthreadPtr: WasmPtr<StructPthread>?
+    @IntWasmPtr(StructPthread::class)
+    abstract var pthreadPtr: WasmPtr?
     private val stateLock = Any()
     private var wasmAgentLoaded: Boolean = false
     private var pthreadAttached: Boolean = false
@@ -84,7 +86,7 @@ internal abstract class ManagedThreadBase(
         val ptr = requireNotNull(pthreadPtr)
         threadInitializer.initWorkerThread(ptr)
 
-        check(emscriptenPthread.pthreadSelf() == ptr.addr.toULong()) {
+        check(emscriptenPthread.pthreadSelf() == ptr.toULong()) {
             "pthreadSelf is not $ptr"
         }
 
@@ -96,7 +98,7 @@ internal abstract class ManagedThreadBase(
             return
         }
         pthreadAttached = false
-        pthreadInternal.emscriptenThreadExit(WasmPtr<Unit>(-1))
+        pthreadInternal.emscriptenThreadExit(-1)
     }
 
     private fun destroyThreadPtr() {
@@ -118,7 +120,7 @@ internal abstract class ManagedThreadBase(
     internal fun interface StateListener {
         fun onNewState(
             thread: ManagedThreadBase,
-            pthreadPtr: WasmPtr<StructPthread>?,
+            @IntWasmPtr(StructPthread::class) pthreadPtr: WasmPtr?,
             newState: State,
         )
     }

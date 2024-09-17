@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -23,7 +24,7 @@ public class LocaltimeJsFunctionHandle(
     public fun execute(
         memory: Memory,
         timeSeconds: Long,
-        timePtr: WasmPtr<StructTm>,
+        @IntWasmPtr(StructTm::class) timePtr: WasmPtr,
     ) {
         val localTime = host.localTimeFormatter.format(timeSeconds)
         memory.sinkWithMaxSize(timePtr, STRUCT_TM_PACKED_SIZE).buffered().use {

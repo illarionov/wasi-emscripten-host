@@ -9,6 +9,7 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -24,8 +25,8 @@ public class MmapJsFunctionHandle(
         @SysMmanMapFlags flags: Int,
         @Fd fd: Int,
         offset: Long,
-        pAllocated: WasmPtr<Int>,
-        pAddr: WasmPtr<WasmPtr<Byte>>,
+        @IntWasmPtr(Int::class) pAllocated: WasmPtr,
+        @IntWasmPtr(WasmPtr::class) pAddr: WasmPtr, // **byte
     ): Int {
         logger.v {
             "mmapJs($fd, $len, 0x${prot.toString(16)}, 0x${flags.toString(16)}, $fd, " +

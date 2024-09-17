@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -26,8 +27,8 @@ public class SyscallReadlinkatFunctionHandle(
     public fun execute(
         memory: Memory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
-        buf: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
+        @IntWasmPtr(Byte::class) buf: WasmPtr,
         bufSize: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)

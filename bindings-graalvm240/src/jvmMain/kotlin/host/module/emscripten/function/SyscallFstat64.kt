@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallFstat64FunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -40,6 +41,6 @@ internal class SyscallFstat64(
     private fun syscallFstat64(
         memory: WasmMemory,
         fd: Int,
-        dst: WasmPtr<StructStat>,
+        @IntWasmPtr(StructStat::class) dst: WasmPtr,
     ): Int = handle.execute(memory.toHostMemory(), fd, dst)
 }

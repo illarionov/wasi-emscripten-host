@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.chmod.Chmod
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -22,7 +23,7 @@ public class SyscallChmodFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.SYSCALL_CHMOD, host) {
     public fun execute(
         memory: ReadOnlyMemory,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         @FileMode mode: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)

@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -47,7 +48,7 @@ internal class MmapJs(
         flags: Int,
         fd: Int,
         offset: Long,
-        pAllocated: WasmPtr<Int>,
-        pAddr: WasmPtr<WasmPtr<Byte>>,
+        @IntWasmPtr(Int::class) pAllocated: WasmPtr,
+        @IntWasmPtr(WasmPtr::class) pAddr: WasmPtr,
     ): Int = handle.execute(len, prot, flags, fd, offset, pAllocated, pAddr)
 }

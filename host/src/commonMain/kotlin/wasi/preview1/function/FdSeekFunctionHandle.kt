@@ -12,6 +12,7 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -25,7 +26,7 @@ public class FdSeekFunctionHandle(
         @Fd fd: Int,
         offset: Long,
         whenceInt: Int,
-        pNewOffset: WasmPtr<Long>,
+        @IntWasmPtr(Long::class) pNewOffset: WasmPtr,
     ): Errno {
         val whence = Whence.fromIdOrNull(whenceInt) ?: return Errno.INVAL
         return host.fileSystem.execute(

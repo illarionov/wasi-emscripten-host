@@ -21,6 +21,7 @@ import at.released.weh.bindings.graalvm240.host.pthread.threadfactory.GraalvmMan
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.common.api.Logger
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.Memory
@@ -60,7 +61,7 @@ public class GraalvmEmscriptenEnvironment internal constructor(
             error("Not implemented")
         }
 
-        override fun initWorkerThread(threadPtr: WasmPtr<StructPthread>) {
+        override fun initWorkerThread(@IntWasmPtr(StructPthread::class) threadPtr: WasmPtr) {
             error("Not implemented")
         }
     }
@@ -73,7 +74,7 @@ public class GraalvmEmscriptenEnvironment internal constructor(
             managedThreadInitializer.destroyThreadLocalGraalvmAgent()
         }
 
-        override fun initWorkerThread(threadPtr: WasmPtr<StructPthread>) {
+        override fun initWorkerThread(@IntWasmPtr(StructPthread::class) threadPtr: WasmPtr) {
             managedThreadInitializer.initWorkerThread(threadPtr)
         }
     }

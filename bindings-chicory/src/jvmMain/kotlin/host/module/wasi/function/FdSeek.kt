@@ -12,6 +12,7 @@ import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.wasi.preview1.function.FdSeekFunctionHandle
@@ -28,7 +29,10 @@ internal class FdSeek(
         val fd = args[0].asInt()
         val offset = args[1].asLong()
         val whenceInt = args[2].asInt()
-        val pNewOffset: WasmPtr<Long> = args[3].asWasmAddr()
+
+        @IntWasmPtr(Long::class)
+        val pNewOffset: WasmPtr = args[3].asWasmAddr()
+
         return handle.execute(memory, fd, offset, whenceInt, pNewOffset)
     }
 }

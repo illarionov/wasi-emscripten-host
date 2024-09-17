@@ -7,6 +7,7 @@
 package at.released.weh.host.base.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import kotlinx.io.Buffer
 import kotlinx.io.RawSink
@@ -14,28 +15,28 @@ import kotlinx.io.writeString
 
 @InternalWasiEmscriptenHostApi
 public interface Memory : ReadOnlyMemory {
-    public fun writeI8(addr: WasmPtr<*>, data: Byte)
-    public fun writeI32(addr: WasmPtr<*>, data: Int)
-    public fun writeI64(addr: WasmPtr<*>, data: Long)
+    public fun writeI8(@IntWasmPtr addr: WasmPtr, data: Byte)
+    public fun writeI32(@IntWasmPtr addr: WasmPtr, data: Int)
+    public fun writeI64(@IntWasmPtr addr: WasmPtr, data: Long)
 
-    public fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink
+    public fun sink(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSink
 }
 
 @InternalWasiEmscriptenHostApi
-public fun Memory.writeU8(addr: WasmPtr<*>, data: UByte): Unit = writeI8(addr, data.toByte())
+public fun Memory.writeU8(@IntWasmPtr addr: WasmPtr, data: UByte): Unit = writeI8(addr, data.toByte())
 
 @InternalWasiEmscriptenHostApi
-public fun Memory.writeU32(addr: WasmPtr<*>, data: UInt): Unit = writeI32(addr, data.toInt())
+public fun Memory.writeU32(@IntWasmPtr addr: WasmPtr, data: UInt): Unit = writeI32(addr, data.toInt())
 
 @InternalWasiEmscriptenHostApi
-public fun Memory.writeU64(addr: WasmPtr<*>, data: ULong): Unit = writeI64(addr, data.toLong())
+public fun Memory.writeU64(@IntWasmPtr addr: WasmPtr, data: ULong): Unit = writeI64(addr, data.toLong())
 
 @InternalWasiEmscriptenHostApi
-public fun Memory.writePtr(addr: WasmPtr<*>, data: WasmPtr<*>): Unit = writeI32(addr, data.addr)
+public fun Memory.writePtr(@IntWasmPtr addr: WasmPtr, @IntWasmPtr data: WasmPtr): Unit = writeI32(addr, data)
 
 @InternalWasiEmscriptenHostApi
 public fun Memory.writeNullTerminatedString(
-    offset: WasmPtr<*>,
+    @IntWasmPtr offset: WasmPtr,
     value: String,
 ): Int {
     val buffer = Buffer().apply {
@@ -50,7 +51,8 @@ public fun Memory.writeNullTerminatedString(
 }
 
 @InternalWasiEmscriptenHostApi
-public fun <P : Any?> Memory.sinkWithMaxSize(
-    fromAddr: WasmPtr<P>,
+@IntWasmPtr
+public fun Memory.sinkWithMaxSize(
+    @IntWasmPtr fromAddr: WasmPtr,
     maxSize: Int,
-): RawSink = sink(fromAddr, WasmPtr<P>(fromAddr.addr + maxSize))
+): RawSink = sink(fromAddr, fromAddr + maxSize)

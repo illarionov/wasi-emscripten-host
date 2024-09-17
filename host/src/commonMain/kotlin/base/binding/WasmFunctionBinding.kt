@@ -7,6 +7,7 @@
 package at.released.weh.host.base.binding
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 
 @InternalWasiEmscriptenHostApi
@@ -16,7 +17,9 @@ public interface WasmFunctionBinding {
     public fun executeForLong(vararg args: Any?): Long
     public fun executeForFloat(vararg args: Any?): Float
     public fun executeForDouble(vararg args: Any?): Double
-    public fun <P : Any?> executeForPtr(vararg args: Any?): WasmPtr<P>
+
+    @IntWasmPtr
+    public fun executeForPtr(vararg args: Any?): WasmPtr
 }
 
 @InternalWasiEmscriptenHostApi
@@ -32,5 +35,7 @@ public val BINDING_NOT_INITIALIZED: WasmFunctionBinding = object : WasmFunctionB
     override fun executeForLong(vararg args: Any?): Long = error("Not initialized")
     override fun executeForFloat(vararg args: Any?): Float = error("Not initialized")
     override fun executeForDouble(vararg args: Any?): Double = error("Not initialized")
-    override fun <P> executeForPtr(vararg args: Any?): WasmPtr<P> = error("Not initialized")
+
+    @IntWasmPtr
+    override fun executeForPtr(vararg args: Any?): Int = error("Not initialized")
 }

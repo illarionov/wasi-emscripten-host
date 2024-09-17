@@ -13,6 +13,7 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.type.Iovec
 import kotlinx.io.buffered
@@ -46,7 +47,8 @@ public class DefaultWasiMemoryReader(
             if (bytesLeft == 0L) {
                 break
             }
-            val dstAddress: WasmPtr<Byte> = dstAddresses[vecNo].buf
+            @IntWasmPtr(Byte::class)
+            val dstAddress: WasmPtr = dstAddresses[vecNo].buf
             val bbuf = buffers[vecNo]
             val size = minOf(bbuf.length, bytesLeft.toInt())
 

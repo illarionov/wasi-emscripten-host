@@ -6,7 +6,9 @@
 
 package at.released.weh.bindings.chicory.ext
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import com.dylibso.chicory.wasm.types.Value
 
-internal fun <P : Any?> Value.asWasmAddr(): WasmPtr<P> = WasmPtr(asInt())
+@IntWasmPtr
+internal fun Value.asWasmAddr(): WasmPtr = asInt()

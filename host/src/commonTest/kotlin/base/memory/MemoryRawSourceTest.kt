@@ -10,6 +10,7 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.tableOf
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import kotlinx.io.Buffer
 import kotlin.test.Test
@@ -20,8 +21,8 @@ class MemoryRawSourceTest {
     fun readAtMostTo_should_copy_bytes() {
         val readBytesTracker = ReadBytesToMemoryTracker()
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
             readBytesHandler = readBytesTracker,
         )
         val buffer = Buffer()
@@ -44,8 +45,8 @@ class MemoryRawSourceTest {
     @Test
     fun readAtMostTo_should_throw_iae_on_negative_byte_count() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -56,8 +57,8 @@ class MemoryRawSourceTest {
     @Test
     fun readAtMostTo_should_throw_ise_when_sink_is_closed() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         sink.close()
 
@@ -70,8 +71,8 @@ class MemoryRawSourceTest {
     @Suppress("TooGenericExceptionThrown")
     fun readAtMostTo_should_throw_ise_on_unknown_exception() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
             readBytesHandler = { _, _, _ -> throw RuntimeException("Test exception") },
         )
         assertFailsWith<IllegalStateException> {
@@ -87,8 +88,8 @@ class MemoryRawSourceTest {
             .row(100, 200, 102, 100L)
             .forAll { baseAddr, toAddrExclusive, readBytes, expectedResult ->
                 val sink = TestMemoryRawSource(
-                    baseAddr = WasmPtr<Unit>(baseAddr),
-                    toAddrExclusive = WasmPtr<Unit>(toAddrExclusive),
+                    baseAddr = baseAddr,
+                    toAddrExclusive = toAddrExclusive,
                 )
                 val result: Long = sink.readAtMostTo(Buffer(), readBytes.toLong())
                 assertThat(result).isEqualTo(expectedResult)
@@ -98,8 +99,8 @@ class MemoryRawSourceTest {
     @Test
     fun readAtMostTo_should_return_correct_code_on_partial_exhausted() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         val read1 = sink.readAtMostTo(Buffer(), 10)
         assertThat(read1).isEqualTo(10)
@@ -114,8 +115,8 @@ class MemoryRawSourceTest {
     @Test
     fun readAtMostTo_should_return_correct_code_on_zero_bytes_read() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         val read = sink.readAtMostTo(Buffer(), 0)
         assertThat(read).isEqualTo(-1)
@@ -124,28 +125,28 @@ class MemoryRawSourceTest {
     @Test
     fun close_is_safe_to_call_more_than_once() {
         val sink = TestMemoryRawSource(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         sink.close()
         sink.close()
     }
 
     private class TestMemoryRawSource(
-        baseAddr: WasmPtr<*>,
-        toAddrExclusive: WasmPtr<*>,
-        val readBytesHandler: (srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) -> Unit = { _, _, _ -> },
+        @IntWasmPtr baseAddr: Int,
+        @IntWasmPtr toAddrExclusive: Int,
+        val readBytesHandler: (srcAddr: WasmPtr, sink: Buffer, readBytes: Int) -> Unit = { _, _, _ -> },
     ) : MemoryRawSource(baseAddr, toAddrExclusive) {
-        override fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
+        override fun readBytesFromMemory(srcAddr: WasmPtr, sink: Buffer, readBytes: Int) {
             readBytesHandler(srcAddr, sink, readBytes)
         }
     }
 
     class ReadBytesToMemoryTracker(
         val invocations: MutableList<ReadBytesInvocation> = mutableListOf(),
-    ) : (WasmPtr<*>, Buffer, Int) -> Unit {
-        override fun invoke(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
-            invocations.add(ReadBytesInvocation(srcAddr.addr, readBytes))
+    ) : (WasmPtr, Buffer, Int) -> Unit {
+        override fun invoke(srcAddr: WasmPtr, sink: Buffer, readBytes: Int) {
+            invocations.add(ReadBytesInvocation(srcAddr, readBytes))
         }
     }
 

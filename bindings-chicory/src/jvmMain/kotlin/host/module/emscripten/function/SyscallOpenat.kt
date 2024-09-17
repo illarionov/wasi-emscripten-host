@@ -24,7 +24,7 @@ internal class SyscallOpenat(
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val mode = if (args.lastIndex == 3) {
-            memory.readI32(args[3].asWasmAddr<Unit>())
+            memory.readI32(args[3].asWasmAddr())
         } else {
             0
         }
