@@ -9,6 +9,7 @@
 package at.released.weh.bindings.chasm.memory
 
 import at.released.weh.bindings.chasm.ext.orThrow
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import com.github.michaelbull.result.fold
@@ -47,22 +48,22 @@ public class ChasmMemoryAdapter(
             )
         }
 
-    override fun readI8(addr: WasmPtr<*>): Byte {
-        return readByte(store, memoryInstance, addr.addr).orThrow()
+    override fun readI8(@IntWasmPtr addr: WasmPtr): Byte {
+        return readByte(store, memoryInstance, addr).orThrow()
     }
 
-    override fun readI32(addr: WasmPtr<*>): Int {
+    override fun readI32(@IntWasmPtr addr: WasmPtr): Int {
         val buffer = ByteArray(4)
-        val bytes = readBytes(store, memoryInstance, buffer, addr.addr, 4).orThrow()
+        val bytes = readBytes(store, memoryInstance, buffer, addr, 4).orThrow()
         return (bytes[0].toInt() and 0xff) or
                 ((bytes[1].toInt() and 0xff) shl 8) or
                 ((bytes[2].toInt() and 0xff) shl 16) or
                 ((bytes[3].toInt() and 0xff) shl 24)
     }
 
-    override fun readI64(addr: WasmPtr<*>): Long {
+    override fun readI64(@IntWasmPtr addr: WasmPtr): Long {
         val buffer = ByteArray(8)
-        val bytes = readBytes(store, memoryInstance, buffer, addr.addr, 8).orThrow()
+        val bytes = readBytes(store, memoryInstance, buffer, addr, 8).orThrow()
         return (bytes[0].toLong() and 0xffL) or
                 (bytes[1].toLong() and 0xffL shl 8) or
                 (bytes[2].toLong() and 0xffL shl 16) or
@@ -73,29 +74,29 @@ public class ChasmMemoryAdapter(
                 (bytes[7].toLong() and 0xffL shl 56)
     }
 
-    override fun source(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSource {
+    override fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource {
         return ChasmMemoryRawSource(store, memoryInstance, fromAddr, toAddrExclusive)
     }
 
-    override fun writeI8(addr: WasmPtr<*>, data: Byte) {
-        writeByte(store, memoryInstance, addr.addr, data).orThrow()
+    override fun writeI8(@IntWasmPtr addr: WasmPtr, data: Byte) {
+        writeByte(store, memoryInstance, addr, data).orThrow()
     }
 
-    override fun writeI32(addr: WasmPtr<*>, data: Int) {
+    override fun writeI32(@IntWasmPtr addr: WasmPtr, data: Int) {
         val bytes = ByteArray(4) {
             (data ushr 8 * it and 0xff).toByte()
         }
-        writeBytes(store, memoryInstance, addr.addr, bytes).orThrow()
+        writeBytes(store, memoryInstance, addr, bytes).orThrow()
     }
 
-    override fun writeI64(addr: WasmPtr<*>, data: Long) {
+    override fun writeI64(addr: WasmPtr, data: Long) {
         val bytes = ByteArray(8) {
             (data ushr 8 * it and 0xff).toByte()
         }
-        writeBytes(store, memoryInstance, addr.addr, bytes).orThrow()
+        writeBytes(store, memoryInstance, addr, bytes).orThrow()
     }
 
-    override fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink {
+    override fun sink(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSink {
         return ChasmMemoryRawSink(store, memoryInstance, fromAddr, toAddrExclusive)
     }
 

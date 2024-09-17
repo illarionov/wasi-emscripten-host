@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -24,7 +25,7 @@ public class SyscallMkdiratFunctionHandle(
     public fun execute(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         @FileMode rawMode: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)

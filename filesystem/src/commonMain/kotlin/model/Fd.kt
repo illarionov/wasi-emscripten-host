@@ -7,14 +7,21 @@
 package at.released.weh.filesystem.model
 
 import androidx.annotation.IntDef
+import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
  * A file descriptor handle.
  */
+@Retention(SOURCE)
 @Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.LOCAL_VARIABLE,
     AnnotationTarget.PROPERTY,
-    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
     AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
 )
 @IntDef(open = true)
 public annotation class Fd

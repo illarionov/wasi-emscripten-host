@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.function.FdSeekFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -44,6 +45,6 @@ internal class FdSeek(
         fd: Int,
         offset: Long,
         whenceInt: Int,
-        pNewOffset: WasmPtr<Long>,
+        @IntWasmPtr(Long::class) pNewOffset: WasmPtr,
     ): Int = handle.execute(memory.toHostMemory(), fd, offset, whenceInt, pNewOffset).code
 }

@@ -8,11 +8,11 @@ package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.writeNullTerminatedString
-import at.released.weh.host.base.plus
 import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.host.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi
 
@@ -21,8 +21,8 @@ public class EnvironGetFunctionHandle(
 ) : HostFunctionHandle(WasiHostFunction.ENVIRON_GET, host) {
     public fun execute(
         memory: Memory,
-        environPAddr: WasmPtr<Int>,
-        environBufAddr: WasmPtr<Int>,
+        @IntWasmPtr(Int::class) environPAddr: WasmPtr,
+        @IntWasmPtr(Int::class) environBufAddr: WasmPtr,
     ): Errno {
         var pp = environPAddr
         var bufP = environBufAddr
@@ -30,7 +30,7 @@ public class EnvironGetFunctionHandle(
             .entries
             .map { it.encodeEnvToWasi() }
             .forEach { envString ->
-                memory.writeI32(pp, bufP.addr)
+                memory.writeI32(pp, bufP)
                 pp += 4
                 bufP += memory.writeNullTerminatedString(bufP, envString)
             }

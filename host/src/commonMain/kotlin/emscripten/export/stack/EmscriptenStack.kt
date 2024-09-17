@@ -7,6 +7,8 @@
 package at.released.weh.host.emscripten.export.stack
 
 import at.released.weh.common.api.Logger
+import at.released.weh.host.base.C_NULL
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -28,8 +30,9 @@ public class EmscriptenStack(
      *
      * Binding for `uintptr_t emscripten_stack_get_base(void)`
      */
-    public val emscriptenStackBase: WasmPtr<UInt>
-        get() = exports.emscripten_stack_get_base?.executeForPtr() ?: WasmPtr(0)
+    @IntWasmPtr
+    public val emscriptenStackBase: WasmPtr
+        get() = exports.emscripten_stack_get_base?.executeForPtr() ?: C_NULL
 
     /**
      * Returns the end address of the stack.
@@ -40,15 +43,17 @@ public class EmscriptenStack(
      *
      * Binding for `uintptr_t emscripten_stack_get_end(void)`
      */
-    public val emscriptenStackEnd: WasmPtr<UInt>
-        get() = exports.emscripten_stack_get_end?.executeForPtr() ?: WasmPtr(0)
+    @IntWasmPtr(Int::class)
+    public val emscriptenStackEnd: WasmPtr
+        get() = exports.emscripten_stack_get_end?.executeForPtr() ?: 0
 
     /**
      * Returns the current stack pointer.
      *
      * Binding for `uintptr_t emscripten_stack_get_current(void)`
      */
-    public val emscriptenStackCurrent: WasmPtr<UInt>
+    @IntWasmPtr(Int::class)
+    public val emscriptenStackCurrent: WasmPtr
         get() = exports.emscripten_stack_get_current.executeForPtr()
 
     /**
@@ -66,10 +71,13 @@ public class EmscriptenStack(
      *
      * Binding for `void emscripten_stack_set_limits(void* base, void* end)`
      */
-    public fun emscriptenStackSetLimits(base: WasmPtr<Unit>, end: WasmPtr<Unit>) {
+    public fun emscriptenStackSetLimits(
+        @IntWasmPtr(Int::class) base: WasmPtr,
+        @IntWasmPtr(Int::class) end: WasmPtr,
+    ) {
         requireNotNull(exports.emscripten_stack_set_limits) {
             "emscripten_stack_set_limits not exported"
-        }.executeVoid(base.addr, end.addr)
+        }.executeVoid(base, end)
     }
 
     /**
@@ -79,8 +87,10 @@ public class EmscriptenStack(
      *
      * @see emscriptenStackCurrent
      */
-    public fun emscriptenStackRestore(addr: WasmPtr<Unit>) {
-        exports._emscripten_stack_restore.executeVoid(addr.addr)
+    public fun emscriptenStackRestore(
+        @IntWasmPtr addr: WasmPtr,
+    ) {
+        exports._emscripten_stack_restore.executeVoid(addr)
     }
 
     /**
@@ -102,7 +112,7 @@ public class EmscriptenStack(
         }
         val stackLow = emscriptenStackBase
         val stackHigh = emscriptenStackEnd
-        exports.__set_stack_limits?.executeVoid(stackLow.addr, stackHigh.addr)
+        exports.__set_stack_limits?.executeVoid(stackLow, stackHigh)
             ?: logger.v { "No __set_stack_limits export" }
     }
 
@@ -112,16 +122,16 @@ public class EmscriptenStack(
             return
         }
 
-        var max = emscriptenStackEnd.addr
+        var max = emscriptenStackEnd
         check(max.and(0x03) == 0)
 
         if (max == 0) {
             max = 4
         }
 
-        memory.writeI32(WasmPtr<Unit>(max), 0x0213_5467)
-        memory.writeI32(WasmPtr<Unit>(max + 4), 0x89BA_CDFE_U.toInt())
-        memory.writeI32(WasmPtr<Unit>(0), 1_668_509_029)
+        memory.writeI32(max, 0x0213_5467)
+        memory.writeI32(max + 4, 0x89BA_CDFE_U.toInt())
+        memory.writeI32(0, 1_668_509_029)
     }
 
     @Suppress("MagicNumber")
@@ -130,15 +140,15 @@ public class EmscriptenStack(
             return
         }
 
-        var max = emscriptenStackEnd.addr
+        var max = emscriptenStackEnd
         check(max.and(0x03) == 0)
 
         if (max == 0) {
             max = 4
         }
 
-        val cookie1 = memory.readI32(WasmPtr<Unit>(max))
-        val cookie2 = memory.readI32(WasmPtr<Unit>(max + 4))
+        val cookie1 = memory.readI32(max)
+        val cookie2 = memory.readI32(max + 4)
 
         check(cookie1 == 0x0213_5467 && cookie2 == 0x89BA_CDFE_U.toInt()) {
             "Stack overflow! Stack cookie has been overwritten at ${max.toString(16)}, expected hex dwords " +

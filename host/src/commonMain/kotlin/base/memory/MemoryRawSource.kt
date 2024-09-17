@@ -7,25 +7,25 @@
 package at.released.weh.host.base.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.plus
 import kotlinx.io.Buffer
 import kotlinx.io.RawSource
 
 @InternalWasiEmscriptenHostApi
 public abstract class MemoryRawSource(
-    protected var baseAddr: WasmPtr<*>,
-    protected val toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr protected var baseAddr: WasmPtr,
+    @IntWasmPtr protected val toAddrExclusive: WasmPtr,
 ) : RawSource {
     private var isClosed: Boolean = false
     protected val bytesLeft: Long
-        get() = (toAddrExclusive.addr - baseAddr.addr).toLong()
+        get() = (toAddrExclusive - baseAddr).toLong()
 
     override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
         require(byteCount >= 0) { "byteCount is negative" }
         check(!isClosed) { "Stream is closed" }
 
-        val bytesLeft: Long = (toAddrExclusive.addr - baseAddr.addr).toLong()
+        val bytesLeft: Long = (toAddrExclusive - baseAddr).toLong()
         val readBytes = byteCount.coerceAtMost(bytesLeft).toInt()
         if (readBytes <= 0) {
             return -1
@@ -45,7 +45,11 @@ public abstract class MemoryRawSource(
         return readBytes.toLong()
     }
 
-    protected abstract fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int)
+    protected abstract fun readBytesFromMemory(
+        @IntWasmPtr srcAddr: WasmPtr,
+        sink: Buffer,
+        readBytes: Int,
+    )
 
     override fun close() {
         isClosed = true

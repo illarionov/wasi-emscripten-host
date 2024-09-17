@@ -39,8 +39,8 @@ internal class ChicoryWasiMemoryWriter private constructor(
     ): List<FileSystemByteBuffer> = map { cioVec ->
         FileSystemByteBuffer(
             memoryBuffer.array(),
-            memoryBuffer.arrayOffset() + cioVec.buf.addr,
-            cioVec.bufLen.value.toInt(),
+            memoryBuffer.arrayOffset() + cioVec.buf,
+            cioVec.bufLen.value,
         )
     }
 

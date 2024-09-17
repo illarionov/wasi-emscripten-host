@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.graalvm240.host.memory
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSource
 import com.oracle.truffle.api.nodes.Node
@@ -16,14 +17,14 @@ import java.io.IOException
 
 internal class GraalvmMemoryRawSource(
     private val memoryProvider: () -> WasmMemory,
-    baseAddr: WasmPtr<*>,
-    toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr toAddrExclusive: WasmPtr,
     private val node: Node?,
 ) : MemoryRawSource(baseAddr, toAddrExclusive) {
-    override fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
+    override fun readBytesFromMemory(@IntWasmPtr srcAddr: WasmPtr, sink: Buffer, readBytes: Int) {
         val outputStream = sink.asOutputStream()
         try {
-            memoryProvider().copyToStream(node, outputStream, srcAddr.addr, readBytes)
+            memoryProvider().copyToStream(node, outputStream, srcAddr, readBytes)
         } catch (ioe: IOException) {
             throw IllegalStateException("Can not read from memory", ioe)
         } finally {

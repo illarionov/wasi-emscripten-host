@@ -40,8 +40,8 @@ internal class ChicoryWasiMemoryReader(
     ): List<FileSystemByteBuffer> = map { iovec ->
         FileSystemByteBuffer(
             memoryBuffer.array(),
-            memoryBuffer.arrayOffset() + iovec.buf.addr,
-            iovec.bufLen.value.toInt(),
+            memoryBuffer.arrayOffset() + iovec.buf,
+            iovec.bufLen.value,
         )
     }
 

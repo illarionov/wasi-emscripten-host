@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.chicory.host.memory
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import kotlinx.io.RawSink
@@ -16,35 +17,35 @@ import com.dylibso.chicory.runtime.Memory as ChicoryMemory
 public class ChicoryMemoryAdapter(
     internal val wasmMemory: ChicoryMemory,
 ) : Memory {
-    override fun readI8(addr: WasmPtr<*>): Byte {
-        return wasmMemory.read(addr.addr)
+    override fun readI8(@IntWasmPtr addr: WasmPtr): Byte {
+        return wasmMemory.read(addr)
     }
 
-    override fun readI32(addr: WasmPtr<*>): Int {
-        return wasmMemory.readI32(addr.addr).asInt()
+    override fun readI32(@IntWasmPtr addr: WasmPtr): Int {
+        return wasmMemory.readI32(addr).asInt()
     }
 
-    override fun readI64(addr: WasmPtr<*>): Long {
-        return wasmMemory.readI64(addr.addr).asLong()
+    override fun readI64(@IntWasmPtr addr: WasmPtr): Long {
+        return wasmMemory.readI64(addr).asLong()
     }
 
-    override fun source(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSource {
+    override fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource {
         return ChicoryMemoryRawSource(wasmMemory, fromAddr, toAddrExclusive)
     }
 
-    override fun writeI8(addr: WasmPtr<*>, data: Byte) {
-        wasmMemory.writeByte(addr.addr, data)
+    override fun writeI8(@IntWasmPtr addr: WasmPtr, data: Byte) {
+        wasmMemory.writeByte(addr, data)
     }
 
-    override fun writeI32(addr: WasmPtr<*>, data: Int) {
-        wasmMemory.writeI32(addr.addr, data)
+    override fun writeI32(@IntWasmPtr addr: WasmPtr, data: Int) {
+        wasmMemory.writeI32(addr, data)
     }
 
-    override fun writeI64(addr: WasmPtr<*>, data: Long) {
-        wasmMemory.writeLong(addr.addr, data)
+    override fun writeI64(@IntWasmPtr addr: WasmPtr, data: Long) {
+        wasmMemory.writeLong(addr, data)
     }
 
-    override fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink {
+    override fun sink(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSink {
         return ChicoryMemoryRawSink(wasmMemory, fromAddr, toAddrExclusive)
     }
 }

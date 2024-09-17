@@ -22,5 +22,5 @@ internal class GraalWasmFunctionBinding(
     override fun executeForLong(vararg args: Any?): Long = member.execute(*args).asLong()
     override fun executeForFloat(vararg args: Any?): Float = member.execute(*args).asFloat()
     override fun executeForDouble(vararg args: Any?): Double = member.execute(*args).asDouble()
-    override fun <P> executeForPtr(vararg args: Any?): WasmPtr<P> = member.execute(*args).asWasmAddr()
+    override fun executeForPtr(vararg args: Any?): WasmPtr = member.execute(*args).asWasmAddr()
 }

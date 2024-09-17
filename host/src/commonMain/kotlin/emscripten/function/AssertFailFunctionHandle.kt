@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -19,10 +20,10 @@ public class AssertFailFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.ASSERT_FAIL, host) {
     public fun execute(
         memory: ReadOnlyMemory,
-        condition: WasmPtr<Byte>,
-        filename: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) condition: WasmPtr,
+        @IntWasmPtr(Byte::class) filename: WasmPtr,
         line: Int,
-        func: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) func: WasmPtr,
     ): Nothing {
         throw AssertionFailedException(
             condition = memory.readNullTerminatedString(condition),

@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.LocaltimeJsFunctionHandle
 import at.released.weh.host.include.StructTm
@@ -40,6 +41,6 @@ internal class LocaltimeJs(
     private fun localtimeJs(
         memory: WasmMemory,
         time: Long,
-        timePtr: WasmPtr<StructTm>,
+        @IntWasmPtr(StructTm::class) timePtr: WasmPtr,
     ) = handle.execute(memory.toHostMemory(), time, timePtr)
 }

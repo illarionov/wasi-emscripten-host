@@ -4,12 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LOCAL_VARIABLE_EARLY_DECLARATION")
+
 package at.released.weh.host.emscripten.function
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.writeNullTerminatedString
 import at.released.weh.host.test.fixtures.TestEmbedderHost
@@ -49,7 +52,10 @@ class EmscriptenConsoleErrorFunctionHandleTest {
         val handle = EmscriptenConsoleErrorFunctionHandle(host)
 
         val testMessage = "Test message"
-        val messagePtr: WasmPtr<Byte> = WasmPtr(128)
+
+        @IntWasmPtr
+        val messagePtr: WasmPtr = 128
+
         memory.writeNullTerminatedString(messagePtr, testMessage)
 
         handle.execute(memory, messagePtr)

@@ -7,6 +7,7 @@
 package at.released.weh.bindings.graalvm240.host.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import com.oracle.truffle.api.nodes.Node
@@ -24,35 +25,35 @@ public class GraalvmWasmHostMemoryAdapter(
 ) : Memory {
     internal val wasmMemory: WasmMemory get() = memoryProvider.invoke()
 
-    override fun readI8(addr: WasmPtr<*>): Byte {
-        return wasmMemory.load_i32_8u(node, addr.addr.toLong()).toByte()
+    override fun readI8(@IntWasmPtr addr: WasmPtr): Byte {
+        return wasmMemory.load_i32_8u(node, addr.toLong()).toByte()
     }
 
-    override fun readI32(addr: WasmPtr<*>): Int {
-        return wasmMemory.load_i32(node, addr.addr.toLong())
+    override fun readI32(@IntWasmPtr addr: WasmPtr): Int {
+        return wasmMemory.load_i32(node, addr.toLong())
     }
 
-    override fun readI64(addr: WasmPtr<*>): Long {
-        return wasmMemory.load_i64(node, addr.addr.toLong())
+    override fun readI64(@IntWasmPtr addr: WasmPtr): Long {
+        return wasmMemory.load_i64(node, addr.toLong())
     }
 
-    override fun source(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSource {
+    override fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource {
         return GraalvmMemoryRawSource(memoryProvider, fromAddr, toAddrExclusive, node)
     }
 
-    override fun writeI8(addr: WasmPtr<*>, data: Byte) {
-        wasmMemory.store_i32_8(node, addr.addr.toLong(), data)
+    override fun writeI8(@IntWasmPtr addr: WasmPtr, data: Byte) {
+        wasmMemory.store_i32_8(node, addr.toLong(), data)
     }
 
-    override fun writeI32(addr: WasmPtr<*>, data: Int) {
-        wasmMemory.store_i32(node, addr.addr.toLong(), data)
+    override fun writeI32(@IntWasmPtr addr: WasmPtr, data: Int) {
+        wasmMemory.store_i32(node, addr.toLong(), data)
     }
 
-    override fun writeI64(addr: WasmPtr<*>, data: Long) {
-        wasmMemory.store_i64(node, addr.addr.toLong(), data)
+    override fun writeI64(@IntWasmPtr addr: WasmPtr, data: Long) {
+        wasmMemory.store_i64(node, addr.toLong(), data)
     }
 
-    override fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink {
+    override fun sink(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSink {
         return GraalvmMemoryRawSink(memoryProvider, fromAddr, toAddrExclusive)
     }
 }

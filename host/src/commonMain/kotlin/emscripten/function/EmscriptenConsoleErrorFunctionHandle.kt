@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.ReadOnlyMemory
@@ -18,7 +19,7 @@ public class EmscriptenConsoleErrorFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_CONSOLE_ERROR, host) {
     public fun execute(
         memory: ReadOnlyMemory,
-        messagePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) messagePtr: WasmPtr,
     ) {
         val message = memory.readNullTerminatedString(messagePtr)
         logger.e { message }

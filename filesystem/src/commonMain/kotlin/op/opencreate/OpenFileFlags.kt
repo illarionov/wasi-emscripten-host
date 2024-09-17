@@ -33,7 +33,6 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TRUNC
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_WRONLY
 import kotlin.annotation.AnnotationRetention.SOURCE
 
-@Retention(SOURCE)
 @IntDef(
     flag = true,
     value = [
@@ -61,6 +60,17 @@ import kotlin.annotation.AnnotationRetention.SOURCE
         O_TMPFILE,
         O_SEARCH,
     ],
+)
+@Retention(SOURCE)
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
 )
 public annotation class OpenFileFlags
 

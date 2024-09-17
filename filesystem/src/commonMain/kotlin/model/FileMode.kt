@@ -46,6 +46,16 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     ],
 )
 @Retention(SOURCE)
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
+)
 public annotation class FileMode
 
 public object FileModeFlag {

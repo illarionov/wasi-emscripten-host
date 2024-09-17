@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.AssertFailFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -40,10 +41,10 @@ internal class AssertFail(
     @Suppress("MemberNameEqualsClassName")
     private fun assertFail(
         memory: WasmMemory,
-        condition: WasmPtr<Byte>,
-        filename: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) condition: WasmPtr,
+        @IntWasmPtr(Byte::class) filename: WasmPtr,
         line: Int,
-        func: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) func: WasmPtr,
     ): Nothing {
         handle.execute(memory.toHostMemory(), condition, filename, line, func)
     }

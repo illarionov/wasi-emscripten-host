@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.wasi.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.function.EnvironSizesGetFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -37,7 +38,7 @@ internal class EnvironSizesGet(
     @Suppress("MemberNameEqualsClassName")
     private fun environSizesGet(
         memory: WasmMemory,
-        environCountAddr: WasmPtr<Int>,
-        environSizeAddr: WasmPtr<Int>,
+        @IntWasmPtr(Int::class) environCountAddr: WasmPtr,
+        @IntWasmPtr(Int::class) environSizeAddr: WasmPtr,
     ): Int = handle.execute(memory.toHostMemory(), environCountAddr, environSizeAddr).code
 }

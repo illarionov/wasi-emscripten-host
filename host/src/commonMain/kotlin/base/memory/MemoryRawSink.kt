@@ -7,14 +7,18 @@
 package at.released.weh.host.base.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import kotlinx.io.Buffer
 import kotlinx.io.RawSink
 
 @InternalWasiEmscriptenHostApi
 public abstract class MemoryRawSink(
-    protected var baseAddr: WasmPtr<*>,
-    protected val toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr
+    protected var baseAddr: WasmPtr,
+
+    @IntWasmPtr
+    protected val toAddrExclusive: WasmPtr,
 ) : RawSink {
     private var isClosed: Boolean = false
 
@@ -33,12 +37,12 @@ public abstract class MemoryRawSink(
         } catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
             throw IllegalStateException(ex.message, ex)
         }
-        baseAddr = WasmPtr<Unit>(endAddrExclusive.toInt())
+        baseAddr = endAddrExclusive.toInt()
     }
 
     protected abstract fun writeBytesToMemory(
         source: Buffer,
-        toAddr: WasmPtr<*>,
+        @IntWasmPtr toAddr: WasmPtr,
         byteCount: Long,
     )
 
@@ -56,8 +60,8 @@ public abstract class MemoryRawSink(
     protected fun getEndAddressOrThrow(
         byteCount: Long,
     ): Long {
-        val endAddrExclusive = baseAddr.addr + byteCount
-        require(endAddrExclusive <= toAddrExclusive.addr) {
+        val endAddrExclusive = baseAddr + byteCount
+        require(endAddrExclusive <= toAddrExclusive) {
             "Cannot write `$byteCount` bytes to memory range [$baseAddr .. $toAddrExclusive): out of boundary access"
         }
         return endAddrExclusive

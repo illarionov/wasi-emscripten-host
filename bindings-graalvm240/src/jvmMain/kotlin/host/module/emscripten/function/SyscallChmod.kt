@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallChmodFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -38,7 +39,7 @@ internal class SyscallChmod(
     @Suppress("MemberNameEqualsClassName")
     private fun syscallChmod(
         memory: WasmMemory,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         mode: Int,
     ): Int = handle.execute(memory.toHostMemory(), pathnamePtr, mode)
 }

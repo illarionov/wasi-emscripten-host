@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.TzsetJsFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives
@@ -39,9 +40,9 @@ internal class TzsetJs(
     @Suppress("MemberNameEqualsClassName", "MagicNumber")
     private fun tzsetJs(
         memory: WasmMemory,
-        timezone: WasmPtr<Int>,
-        daylight: WasmPtr<Int>,
-        stdName: WasmPtr<Byte>,
-        dstName: WasmPtr<Byte>,
+        @IntWasmPtr(Int::class) timezone: WasmPtr,
+        @IntWasmPtr(Int::class) daylight: WasmPtr,
+        @IntWasmPtr(Byte::class) stdName: WasmPtr,
+        @IntWasmPtr(Byte::class) dstName: WasmPtr,
     ) = handle.execute(memory.toHostMemory(), timezone, daylight, stdName, dstName)
 }

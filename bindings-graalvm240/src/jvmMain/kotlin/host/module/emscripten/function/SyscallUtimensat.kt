@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallUtimensatFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -41,8 +42,8 @@ internal class SyscallUtimensat(
     private fun syscallUtimensat(
         memory: WasmMemory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
-        times: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
+        @IntWasmPtr(Byte::class) times: WasmPtr,
         flags: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, times, flags)
 }

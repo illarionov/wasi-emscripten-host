@@ -10,6 +10,7 @@ import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -29,8 +30,8 @@ public class SyscallStatLstat64FunctionHandle private constructor(
 ) : HostFunctionHandle(function, host) {
     public fun execute(
         memory: Memory,
-        pathnamePtr: WasmPtr<Byte>,
-        dstAddr: WasmPtr<StructStat>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
+        @IntWasmPtr(StructStat::class) dstAddr: WasmPtr,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
         return host.fileSystem.execute(

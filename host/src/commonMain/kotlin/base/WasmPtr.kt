@@ -6,41 +6,33 @@
 
 package at.released.weh.host.base
 
+import androidx.annotation.IntDef
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.WasmPtr.Companion.C_NULL
+import kotlin.annotation.AnnotationRetention.SOURCE
+import kotlin.reflect.KClass
 
-public class WasmPtr<out P : Any?>(
-    public val addr: Int,
-) {
-    override fun toString(): String = "0x${addr.toString(16)}"
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || this::class != other::class) {
-            return false
-        }
+@IntDef(flag = false)
+@Retention(SOURCE)
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.VALUE_PARAMETER,
+)
+public annotation class IntWasmPtr(
+    public val ref: KClass<*> = Unit::class,
+)
 
-        other as WasmPtr<*>
+public typealias WasmPtr = @IntWasmPtr Int
 
-        return addr == other.addr
-    }
+public const val WASM_SIZEOF_PTR: UInt = 4U
 
-    override fun hashCode(): Int {
-        return addr
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    @InternalWasiEmscriptenHostApi
-    public companion object {
-        public const val WASM_SIZEOF_PTR: UInt = 4U
-        public val C_NULL: WasmPtr<*> = WasmPtr<Unit>(0)
-        public fun <P> cNull(): WasmPtr<P> = C_NULL as WasmPtr<P>
-    }
-}
+@IntWasmPtr
+public const val C_NULL: WasmPtr = 0
 
 @InternalWasiEmscriptenHostApi
-public fun WasmPtr<*>.isNull(): Boolean = this == C_NULL
-
-@InternalWasiEmscriptenHostApi
-public operator fun <P> WasmPtr<P>.plus(bytes: Int): WasmPtr<P> = WasmPtr(addr + bytes)
+public fun ptrIsNull(@IntWasmPtr ptr: WasmPtr): Boolean = ptr == C_NULL

@@ -9,12 +9,12 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.isNull
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.readNullTerminatedString
-import at.released.weh.host.base.plus
+import at.released.weh.host.base.ptrIsNull
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.fromRawDirFd
 import at.released.weh.host.ext.negativeErrnoCode
@@ -31,8 +31,8 @@ public class SyscallUtimensatFunctionHandle(
     public fun execute(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
-        pathnamePtr: WasmPtr<Byte>,
-        times: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
+        @IntWasmPtr(Byte::class) times: WasmPtr,
         flags: Int,
     ): Int {
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
@@ -41,7 +41,7 @@ public class SyscallUtimensatFunctionHandle(
         var atimeNs: Long?
         val mtimeNs: Long?
         @Suppress("MagicNumber")
-        if (times.isNull()) {
+        if (ptrIsNull(times)) {
             atimeNs = host.clock.getCurrentTimeEpochMilliseconds()
             mtimeNs = atimeNs
         } else {

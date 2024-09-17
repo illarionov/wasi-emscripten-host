@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.chicory.host.memory
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSink
 import com.dylibso.chicory.runtime.Memory
@@ -14,11 +15,11 @@ import kotlinx.io.readByteArray
 
 internal class ChicoryMemoryRawSink(
     private val wasmMemory: Memory,
-    baseAddr: WasmPtr<*>,
-    toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr toAddrExclusive: WasmPtr,
 ) : MemoryRawSink(baseAddr, toAddrExclusive) {
-    override fun writeBytesToMemory(source: Buffer, toAddr: WasmPtr<*>, byteCount: Long) {
+    override fun writeBytesToMemory(source: Buffer, @IntWasmPtr toAddr: WasmPtr, byteCount: Long) {
         val data = source.readByteArray(byteCount.toInt())
-        wasmMemory.write(toAddr.addr, data)
+        wasmMemory.write(toAddr, data)
     }
 }

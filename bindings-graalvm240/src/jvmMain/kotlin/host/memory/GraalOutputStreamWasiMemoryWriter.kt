@@ -62,7 +62,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
             val outputStream = Channels.newOutputStream(channel).buffered()
             for (vec in cioVecs) {
                 val limit = vec.bufLen.value.toInt()
-                wasmMemory.copyToStream(memory.node, outputStream, vec.buf.addr, limit)
+                wasmMemory.copyToStream(memory.node, outputStream, vec.buf, limit)
                 totalBytesWritten += limit.toUInt()
             }
             outputStream.flush()

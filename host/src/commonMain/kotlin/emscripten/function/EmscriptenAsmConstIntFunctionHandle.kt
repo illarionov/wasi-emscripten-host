@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -15,9 +16,9 @@ public class EmscriptenAsmConstIntFunctionHandle(
     host: EmbedderHost,
 ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_ASM_CONST_INT, host) {
     public fun execute(
-        emAsmAddr: WasmPtr<Byte>,
-        sigPtr: WasmPtr<Byte>,
-        argbuf: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) emAsmAddr: WasmPtr,
+        @IntWasmPtr(Byte::class) sigPtr: WasmPtr,
+        @IntWasmPtr(Byte::class) argbuf: WasmPtr,
     ): Int {
         logger.i { "emscripten_asm_const_int($emAsmAddr, $sigPtr, $argbuf): Not implemented" }
         return 0

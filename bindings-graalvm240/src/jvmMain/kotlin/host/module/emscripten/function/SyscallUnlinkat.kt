@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallUnlinkatFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -40,7 +41,7 @@ internal class SyscallUnlinkat(
     private fun syscallUnlinkat(
         memory: WasmMemory,
         rawDirfd: Int,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         flags: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirfd, pathnamePtr, flags)
 }

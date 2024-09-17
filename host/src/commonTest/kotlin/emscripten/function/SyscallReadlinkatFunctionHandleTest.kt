@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LOCAL_VARIABLE_EARLY_DECLARATION")
+
 package at.released.weh.host.emscripten.function
 
 import arrow.core.left
@@ -14,9 +16,9 @@ import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.writeNullTerminatedString
-import at.released.weh.host.base.plus
 import at.released.weh.host.include.Fcntl
 import at.released.weh.host.test.assertions.byteAt
 import at.released.weh.host.test.assertions.hasBytesAt
@@ -52,8 +54,11 @@ class SyscallReadlinkatFunctionHandleTest {
             assertThat(operation.path).isEqualTo("/sbin")
             expectedLinkTarget.right()
         }
-        val pathnamePtr: WasmPtr<Byte> = WasmPtr(64)
-        val bufPtr: WasmPtr<Byte> = WasmPtr(128)
+        @IntWasmPtr(Byte::class)
+        val pathnamePtr: WasmPtr = 64
+
+        @IntWasmPtr(Byte::class)
+        val bufPtr: WasmPtr = 128
 
         memory.fill(0xff.toByte())
         memory.writeNullTerminatedString(pathnamePtr, "/sbin")
@@ -75,7 +80,7 @@ class SyscallReadlinkatFunctionHandleTest {
 
     @Test
     fun readlinkAt_should_return_einval_on_incorrect_bufsize() {
-        val pathnamePtr = WasmPtr<Byte>(64).also {
+        val pathnamePtr = 64.also {
             memory.writeNullTerminatedString(it, "")
         }
 
@@ -83,7 +88,7 @@ class SyscallReadlinkatFunctionHandleTest {
             memory = memory,
             rawDirFd = Fcntl.AT_FDCWD,
             pathnamePtr = pathnamePtr,
-            buf = WasmPtr(128),
+            buf = 128,
             bufSize = -1,
         )
 
@@ -92,18 +97,18 @@ class SyscallReadlinkatFunctionHandleTest {
 
     @Test
     fun readlinkAt_should_return_negative_error_code_on_filesystem_error() {
-        val pathnamePtr = WasmPtr<Byte>(64).also {
+        val pathnamePtr = 64.also {
             memory.writeNullTerminatedString(it, "/")
         }
         fileSystem.onOperation(ReadLink) { _ ->
-            AccessDenied("Test access denied").left()
+            AccessDenied("Testing access denied").left()
         }
 
         val sizeOrErrno = readlinkatFunctionHandle.execute(
             memory = memory,
             rawDirFd = Fcntl.AT_FDCWD,
             pathnamePtr = pathnamePtr,
-            buf = WasmPtr(128),
+            buf = 128,
             bufSize = 100,
         )
 
@@ -116,8 +121,11 @@ class SyscallReadlinkatFunctionHandleTest {
             "usr/sbin".right()
         }
 
-        val pathnamePtr: WasmPtr<Byte> = WasmPtr(64)
-        val bufPtr: WasmPtr<Byte> = WasmPtr(128)
+        @IntWasmPtr(Byte::class)
+        val pathnamePtr: WasmPtr = 6
+
+        @IntWasmPtr(Byte::class)
+        val bufPtr: WasmPtr = 128
 
         memory.fill(0xff.toByte())
         memory.writeNullTerminatedString(pathnamePtr, "sbin")

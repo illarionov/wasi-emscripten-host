@@ -7,9 +7,9 @@
 package at.released.weh.bindings.graalvm240.host
 
 import at.released.weh.common.api.Logger
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
-import at.released.weh.host.base.plus
 import at.released.weh.host.emscripten.export.EmscriptenMainExports
 import at.released.weh.host.emscripten.export.EmscriptenRuntime
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
@@ -43,7 +43,7 @@ public class GraalvmEmscriptenRuntime(
     }
 
     public fun initWorkerThread(
-        threadPtr: WasmPtr<StructPthread>,
+        @IntWasmPtr(StructPthread::class) threadPtr: WasmPtr,
     ) {
         val pthreadInternal = checkNotNullInMultithreaded(emscriptenPthreadInternal)
 
@@ -62,7 +62,8 @@ public class GraalvmEmscriptenRuntime(
     private fun establishStackSpace() {
         val pthread = checkNotNullInMultithreaded(emscriptenPthread)
 
-        val pthreadPtr: WasmPtr<StructPthread> = WasmPtr(pthread.pthreadSelf().toInt())
+        @IntWasmPtr(StructPthread::class)
+        val pthreadPtr: WasmPtr = pthread.pthreadSelf().toInt()
         val stackHigh: Int = memory.readI32(pthreadPtr + STRUCT_PTHREAD_STACK_HIGH_OFFSET)
         val stackSize: Int = memory.readI32(pthreadPtr + STRUCT_PTHREAD_STACK_SZIE_OFFSET)
 
@@ -71,9 +72,9 @@ public class GraalvmEmscriptenRuntime(
         check(stackHigh > stackLow) { "stackHigh must be higher then stackLow" }
         check(stackLow != 0)
 
-        stack.emscriptenStackSetLimits(WasmPtr(stackHigh), WasmPtr(stackLow))
+        stack.emscriptenStackSetLimits(stackHigh, stackLow)
         stack.setStackLimits()
-        stack.emscriptenStackRestore(WasmPtr(stackHigh))
+        stack.emscriptenStackRestore(stackHigh)
         stack.writeStackCookie(memory)
     }
 

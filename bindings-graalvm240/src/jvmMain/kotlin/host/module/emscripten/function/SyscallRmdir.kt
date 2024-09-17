@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.SyscallRmdirFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -31,6 +32,6 @@ internal class SyscallRmdir(
     @TruffleBoundary
     private fun syscallRmdirat(
         memory: WasmMemory,
-        pathnamePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
     ): Int = handle.execute(memory.toHostMemory(), pathnamePtr)
 }

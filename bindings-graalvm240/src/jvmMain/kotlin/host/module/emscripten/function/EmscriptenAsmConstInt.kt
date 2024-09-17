@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.EmscriptenAsmConstIntFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -35,9 +36,9 @@ internal class EmscriptenAsmConstInt(
     @TruffleBoundary
     @Suppress("MemberNameEqualsClassName")
     private fun asmConstAsyncOnMainThread(
-        emAsmAddr: WasmPtr<Byte>,
-        sigPtr: WasmPtr<Byte>,
-        argbuf: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) emAsmAddr: WasmPtr,
+        @IntWasmPtr(Byte::class) sigPtr: WasmPtr,
+        @IntWasmPtr(Byte::class) argbuf: WasmPtr,
     ) {
         handle.execute(emAsmAddr, sigPtr, argbuf)
     }

@@ -19,6 +19,7 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.readPtr
@@ -61,7 +62,8 @@ internal class FcntlHandler(
             @Fd fd: Int,
             varArgs: Int?,
         ): Int {
-            val structStatPtr: WasmPtr<StructFlock> = memory.readPtr(WasmPtr(checkNotNull(varArgs)))
+            @IntWasmPtr(StructFlock::class)
+            val structStatPtr: WasmPtr = memory.readPtr(checkNotNull(varArgs))
             val flock = memory.sourceWithMaxSize(structStatPtr, STRUCT_FLOCK_SIZE).buffered().use {
                 StructFlock.unpack(it)
             }

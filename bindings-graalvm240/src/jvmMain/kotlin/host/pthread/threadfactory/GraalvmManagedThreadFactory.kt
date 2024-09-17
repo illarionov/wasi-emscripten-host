@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.DESTROYING
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadInitializer
 import at.released.weh.common.api.Logger
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
@@ -47,7 +48,8 @@ internal class GraalvmManagedThreadFactory(
             threadInitializer = managedThreadInitializer,
             stateListener = threadStateListener,
         ) {
-            override var pthreadPtr: WasmPtr<StructPthread>? = null
+            @IntWasmPtr(StructPthread::class)
+            override var pthreadPtr: WasmPtr? = null
 
             override fun managedRun() = runnable.run()
         }
@@ -66,7 +68,7 @@ internal class GraalvmManagedThreadFactory(
 
         // XXX: Wasm pthread leaks if thread not started
         val ptr = pthreadManager.createWasmPthreadForThread(thread)
-        thread.pthreadPtr = WasmPtr(ptr.toInt())
+        thread.pthreadPtr = ptr.toInt()
 
         return thread
     }

@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.graalvm240.host.pthread
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.IndirectFunctionBindingProvider
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
@@ -15,9 +16,13 @@ import at.released.weh.host.include.StructPthread
 
 internal class ManagedPthread(
     name: String,
-    override var pthreadPtr: WasmPtr<StructPthread>?,
+    @IntWasmPtr(StructPthread::class)
+    override var pthreadPtr: WasmPtr?,
     private val startRoutine: Int,
-    private val arg: WasmPtr<Unit>,
+
+    @IntWasmPtr
+    private val arg: WasmPtr,
+
     stateListener: StateListener,
     emscriptenPthread: EmscriptenPthread,
     emscriptenPthreadInternal: EmscriptenPthreadInternal,
@@ -37,6 +42,6 @@ internal class ManagedPthread(
     private fun invokeStartRoutine() {
         indirectBindingProvider.getFunctionBinding(
             IndirectFunctionTableIndex(startRoutine),
-        )?.executeForInt(arg.addr) ?: error("Indirect function `$startRoutine` not registered")
+        )?.executeForInt(arg) ?: error("Indirect function `$startRoutine` not registered")
     }
 }

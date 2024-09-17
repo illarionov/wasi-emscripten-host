@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -17,7 +18,7 @@ public class HandleStackOverflowFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.HANDLE_STACK_OVERFLOW, host) {
     public fun execute(
         stackBindings: EmscriptenStack,
-        requestedSp: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) requestedSp: WasmPtr,
     ): Nothing {
         val base = stackBindings.emscriptenStackBase
         val end = stackBindings.emscriptenStackEnd

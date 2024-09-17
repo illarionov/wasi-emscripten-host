@@ -9,6 +9,7 @@ package at.released.weh.host.test.assertions
 import assertk.Assert
 import assertk.assertions.isEqualTo
 import assertk.assertions.support.appendName
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.sourceWithMaxSize
 import at.released.weh.host.test.fixtures.TestMemory
@@ -16,7 +17,7 @@ import kotlinx.io.buffered
 import kotlinx.io.readByteArray
 
 public fun Assert<TestMemory>.bytesAt(
-    address: WasmPtr<Byte>,
+    @IntWasmPtr(Byte::class) address: WasmPtr,
     size: Int,
 ): Assert<ByteArray> = transform(appendName("TestMemory{$address}", separator = ".")) { testMemory ->
     testMemory.sourceWithMaxSize(address, size).buffered().use {
@@ -25,12 +26,12 @@ public fun Assert<TestMemory>.bytesAt(
 }
 
 public fun Assert<TestMemory>.hasBytesAt(
-    address: WasmPtr<Byte>,
+    @IntWasmPtr(Byte::class) address: WasmPtr,
     expectedBytes: ByteArray,
 ): Unit = bytesAt(address, expectedBytes.size).isEqualTo(expectedBytes)
 
 public fun Assert<TestMemory>.byteAt(
-    address: WasmPtr<Byte>,
+    @IntWasmPtr(Byte::class) address: WasmPtr,
 ): Assert<Byte> = transform(appendName("TestMemory{$address}", separator = ".")) {
     it.readI8(address)
 }

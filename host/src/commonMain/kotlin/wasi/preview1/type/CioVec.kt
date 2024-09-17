@@ -6,6 +6,7 @@
 
 package at.released.weh.host.wasi.preview1.type
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.WasmValueType
 
@@ -17,7 +18,9 @@ import at.released.weh.host.base.WasmValueType
  */
 @Suppress("KDOC_NO_CONSTRUCTOR_PROPERTY_WITH_COMMENT")
 public data class CioVec(
-    val buf: WasmPtr<Byte>, // (@witx const_pointer u8))
+    @IntWasmPtr(Byte::class)
+    val buf: WasmPtr, // (@witx const_pointer u8))
+
     val bufLen: Size, // (field $buf_len $size)
 ) {
     public companion object : WasiTypename {

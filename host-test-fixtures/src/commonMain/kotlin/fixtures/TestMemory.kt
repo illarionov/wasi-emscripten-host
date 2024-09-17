@@ -11,6 +11,7 @@ package at.released.weh.host.test.fixtures
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
@@ -32,51 +33,51 @@ public open class TestMemory(
         bytes.fill(value)
     }
 
-    override fun readI8(addr: WasmPtr<*>): Byte {
-        return bytes[addr.addr]
+    override fun readI8(@IntWasmPtr addr: WasmPtr): Byte {
+        return bytes[addr]
     }
 
-    override fun readI32(addr: WasmPtr<*>): Int = (bytes[addr.addr].toInt() and 0xff) or
-            (bytes[addr.addr + 1].toInt() and 0xff shl 8) or
-            (bytes[addr.addr + 2].toInt() and 0xff shl 16) or
-            (bytes[addr.addr + 3].toInt() and 0xff shl 24)
+    override fun readI32(@IntWasmPtr addr: WasmPtr): Int = (bytes[addr].toInt() and 0xff) or
+            (bytes[addr + 1].toInt() and 0xff shl 8) or
+            (bytes[addr + 2].toInt() and 0xff shl 16) or
+            (bytes[addr + 3].toInt() and 0xff shl 24)
 
-    override fun readI64(addr: WasmPtr<*>): Long = (bytes[addr.addr].toLong() and 0xffL) or
-            (bytes[addr.addr + 1].toLong() and 0xffL shl 8) or
-            (bytes[addr.addr + 2].toLong() and 0xffL shl 16) or
-            (bytes[addr.addr + 3].toLong() and 0xffL shl 24) or
-            (bytes[addr.addr + 4].toLong() and 0xffL shl 32) or
-            (bytes[addr.addr + 5].toLong() and 0xffL shl 40) or
-            (bytes[addr.addr + 6].toLong() and 0xffL shl 48) or
-            (bytes[addr.addr + 7].toLong() and 0xffL shl 56)
+    override fun readI64(@IntWasmPtr addr: WasmPtr): Long = (bytes[addr].toLong() and 0xffL) or
+            (bytes[addr + 1].toLong() and 0xffL shl 8) or
+            (bytes[addr + 2].toLong() and 0xffL shl 16) or
+            (bytes[addr + 3].toLong() and 0xffL shl 24) or
+            (bytes[addr + 4].toLong() and 0xffL shl 32) or
+            (bytes[addr + 5].toLong() and 0xffL shl 40) or
+            (bytes[addr + 6].toLong() and 0xffL shl 48) or
+            (bytes[addr + 7].toLong() and 0xffL shl 56)
 
-    override fun source(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSource {
+    override fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource {
         return TestMemoryRawSource(this, fromAddr, toAddrExclusive)
     }
 
-    override fun writeI8(addr: WasmPtr<*>, data: Byte) {
-        bytes[addr.addr] = data
+    override fun writeI8(@IntWasmPtr addr: WasmPtr, data: Byte) {
+        bytes[addr] = data
     }
 
-    override fun writeI32(addr: WasmPtr<*>, data: Int) {
-        bytes[addr.addr] = (data and 0xff).toByte()
-        bytes[addr.addr + 1] = (data ushr 8 and 0xff).toByte()
-        bytes[addr.addr + 2] = (data ushr 16 and 0xff).toByte()
-        bytes[addr.addr + 3] = (data ushr 24 and 0xff).toByte()
+    override fun writeI32(@IntWasmPtr addr: WasmPtr, data: Int) {
+        bytes[addr] = (data and 0xff).toByte()
+        bytes[addr + 1] = (data ushr 8 and 0xff).toByte()
+        bytes[addr + 2] = (data ushr 16 and 0xff).toByte()
+        bytes[addr + 3] = (data ushr 24 and 0xff).toByte()
     }
 
-    override fun writeI64(addr: WasmPtr<*>, data: Long) {
-        bytes[addr.addr] = (data and 0xffL).toByte()
-        bytes[addr.addr + 1] = (data ushr 8 and 0xff).toByte()
-        bytes[addr.addr + 2] = (data ushr 16 and 0xff).toByte()
-        bytes[addr.addr + 3] = (data ushr 24 and 0xff).toByte()
-        bytes[addr.addr + 4] = (data ushr 32 and 0xff).toByte()
-        bytes[addr.addr + 5] = (data ushr 40 and 0xff).toByte()
-        bytes[addr.addr + 6] = (data ushr 48 and 0xff).toByte()
-        bytes[addr.addr + 7] = (data ushr 56 and 0xff).toByte()
+    override fun writeI64(@IntWasmPtr addr: WasmPtr, data: Long) {
+        bytes[addr] = (data and 0xffL).toByte()
+        bytes[addr + 1] = (data ushr 8 and 0xff).toByte()
+        bytes[addr + 2] = (data ushr 16 and 0xff).toByte()
+        bytes[addr + 3] = (data ushr 24 and 0xff).toByte()
+        bytes[addr + 4] = (data ushr 32 and 0xff).toByte()
+        bytes[addr + 5] = (data ushr 40 and 0xff).toByte()
+        bytes[addr + 6] = (data ushr 48 and 0xff).toByte()
+        bytes[addr + 7] = (data ushr 56 and 0xff).toByte()
     }
 
-    override fun sink(fromAddr: WasmPtr<*>, toAddrExclusive: WasmPtr<*>): RawSink {
+    override fun sink(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSink {
         return TestMemoryRawSink(this, fromAddr, toAddrExclusive)
     }
 

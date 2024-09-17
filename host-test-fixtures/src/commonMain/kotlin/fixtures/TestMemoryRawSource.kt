@@ -6,20 +6,21 @@
 
 package at.released.weh.host.test.fixtures
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSource
 import kotlinx.io.Buffer
 
 public class TestMemoryRawSource(
     private val memory: TestMemory,
-    baseAddr: WasmPtr<*>,
-    toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr toAddrExclusive: WasmPtr,
 ) : MemoryRawSource(baseAddr, toAddrExclusive) {
-    override fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
+    override fun readBytesFromMemory(@IntWasmPtr srcAddr: WasmPtr, sink: Buffer, readBytes: Int) {
         sink.write(
             source = memory.bytes,
-            startIndex = srcAddr.addr,
-            endIndex = srcAddr.addr + readBytes,
+            startIndex = srcAddr,
+            endIndex = srcAddr + readBytes,
         )
         sink.emit()
     }

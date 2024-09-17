@@ -7,6 +7,7 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -20,10 +21,10 @@ public class TzsetJsFunctionHandle(
 ) : HostFunctionHandle(EmscriptenHostFunction.TZSET_JS, host) {
     public fun execute(
         memory: Memory,
-        timezone: WasmPtr<Int>,
-        daylight: WasmPtr<Int>,
-        stdName: WasmPtr<Byte>,
-        dstName: WasmPtr<Byte>,
+        @IntWasmPtr(Int::class) timezone: WasmPtr,
+        @IntWasmPtr(Int::class) daylight: WasmPtr,
+        @IntWasmPtr(Byte::class) stdName: WasmPtr,
+        @IntWasmPtr(Byte::class) dstName: WasmPtr,
     ) {
         val tzInfo = host.timeZoneInfo.getTimeZoneInfo()
         memory.writeI32(timezone, tzInfo.timeZone.toInt())

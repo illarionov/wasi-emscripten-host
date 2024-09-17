@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.graalvm240.host.memory
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSink
 import kotlinx.io.Buffer
@@ -14,12 +15,12 @@ import org.graalvm.wasm.memory.WasmMemory
 
 internal class GraalvmMemoryRawSink(
     private val memoryProvider: () -> WasmMemory,
-    baseAddr: WasmPtr<*>,
-    toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr toAddrExclusive: WasmPtr,
 ) : MemoryRawSink(baseAddr, toAddrExclusive) {
-    override fun writeBytesToMemory(source: Buffer, toAddr: WasmPtr<*>, byteCount: Long) {
+    override fun writeBytesToMemory(source: Buffer, @IntWasmPtr toAddr: WasmPtr, byteCount: Long) {
         val inputStream = source.asInputStream()
-        val bytesWritten = memoryProvider().copyFromStream(null, inputStream, toAddr.addr, byteCount.toInt())
+        val bytesWritten = memoryProvider().copyFromStream(null, inputStream, toAddr, byteCount.toInt())
         check(bytesWritten >= 0) {
             "End of the stream has been reached"
         }

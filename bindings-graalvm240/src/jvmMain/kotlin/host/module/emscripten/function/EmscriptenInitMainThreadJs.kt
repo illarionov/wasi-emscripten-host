@@ -10,6 +10,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.bindings.graalvm240.host.module.emscripten.function.EmscriptenInitMainThreadJs.InitMainThreadJsHandle
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
@@ -38,7 +39,7 @@ internal class EmscriptenInitMainThreadJs(
         private val posixThreadRef: () -> PthreadManager,
     ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS, host) {
         @TruffleBoundary
-        fun execute(ptr: WasmPtr<StructPthread>) {
+        fun execute(@IntWasmPtr(StructPthread::class) ptr: WasmPtr) {
             posixThreadRef().initMainThreadJs(ptr)
         }
     }

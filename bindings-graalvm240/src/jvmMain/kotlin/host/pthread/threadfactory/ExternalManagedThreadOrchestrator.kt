@@ -7,6 +7,8 @@
 package at.released.weh.bindings.graalvm240.host.pthread.threadfactory
 
 import at.released.weh.common.api.Logger
+import at.released.weh.host.base.C_NULL
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.POINTER
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunction
@@ -52,12 +54,13 @@ internal class ExternalManagedThreadOrchestrator(
     private fun pthreadCreate(
         token: ManagedThreadToken,
     ): pthread_t {
-        var tokenRef: WasmPtr<Long> = WasmPtr.cNull()
+        @IntWasmPtr(Long::class)
+        var tokenRef: WasmPtr = C_NULL
         try {
             tokenRef = dynamicMemory.allocOrThrow(8U)
             memory.writeI64(tokenRef, token.id.toLong())
             return pthread.pthreadCreate(
-                attr = WasmPtr.C_NULL,
+                attr = C_NULL,
                 startRoutine = externalManagedThreadStartRoutine(),
                 arg = tokenRef,
             )
@@ -67,7 +70,7 @@ internal class ExternalManagedThreadOrchestrator(
     }
 
     fun joinExternalThread(
-        startRoutineArg: WasmPtr<Unit>,
+        @IntWasmPtr startRoutineArg: WasmPtr,
     ): Thread {
         val threadToken = ManagedThreadToken(memory.readU64(startRoutineArg))
         lock.withLock {

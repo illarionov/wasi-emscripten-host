@@ -9,6 +9,7 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.EmscriptenConsoleErrorFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -35,6 +36,6 @@ internal class EmscriptenConsoleError(
     @Suppress("MemberNameEqualsClassName")
     private fun consoleError(
         memory: WasmMemory,
-        messagePtr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) messagePtr: WasmPtr,
     ): Unit = handle.execute(memory.toHostMemory(), messagePtr)
 }

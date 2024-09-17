@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.chicory.host.memory
 
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSource
 import com.dylibso.chicory.runtime.Memory
@@ -14,12 +15,12 @@ import kotlinx.io.Buffer
 
 internal class ChicoryMemoryRawSource(
     private val wasmMemory: Memory,
-    baseAddr: WasmPtr<*>,
-    toAddrExclusive: WasmPtr<*>,
+    @IntWasmPtr baseAddr: WasmPtr,
+    @IntWasmPtr toAddrExclusive: WasmPtr,
 ) : MemoryRawSource(baseAddr, toAddrExclusive) {
-    override fun readBytesFromMemory(srcAddr: WasmPtr<*>, sink: Buffer, readBytes: Int) {
+    override fun readBytesFromMemory(@IntWasmPtr srcAddr: WasmPtr, sink: Buffer, readBytes: Int) {
         try {
-            val bytes = wasmMemory.readBytes(srcAddr.addr, readBytes)
+            val bytes = wasmMemory.readBytes(srcAddr, readBytes)
             sink.write(bytes)
         } catch (oob: WASMRuntimeException) {
             throw IllegalStateException("Out of bounds memory access", oob)

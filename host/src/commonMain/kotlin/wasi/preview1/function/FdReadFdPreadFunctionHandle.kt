@@ -11,6 +11,7 @@ import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -18,7 +19,6 @@ import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.base.memory.readPtr
-import at.released.weh.host.base.plus
 import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.host.wasi.preview1.type.Iovec
 import at.released.weh.host.wasi.preview1.type.IovecArray
@@ -33,9 +33,9 @@ public class FdReadFdPreadFunctionHandle private constructor(
         memory: Memory,
         bulkReader: WasiMemoryReader,
         @Fd fd: Int,
-        pIov: WasmPtr<Iovec>,
+        @IntWasmPtr(Iovec::class) pIov: WasmPtr,
         iovCnt: Int,
-        pNum: WasmPtr<Int>,
+        @IntWasmPtr(Iovec::class) pNum: WasmPtr,
     ): Errno {
         val ioVecs: IovecArray = readIovecs(memory, pIov, iovCnt)
         return bulkReader.read(fd, strategy, ioVecs.iovecList)
@@ -65,14 +65,13 @@ public class FdReadFdPreadFunctionHandle private constructor(
 
         private fun readIovecs(
             memory: ReadOnlyMemory,
-            pIov: WasmPtr<Iovec>,
+            @IntWasmPtr(Iovec::class) pIov: WasmPtr,
             iovCnt: Int,
         ): IovecArray {
-            @Suppress("UNCHECKED_CAST")
             val iovecs = MutableList(iovCnt) { idx ->
-                val pIovec: WasmPtr<*> = pIov + 8 * idx
+                val pIovec: WasmPtr = pIov + 8 * idx
                 Iovec(
-                    buf = memory.readPtr(pIovec as WasmPtr<WasmPtr<Byte>>),
+                    buf = memory.readPtr(pIovec),
                     bufLen = Size(memory.readI32(pIovec + 4)),
                 )
             }

@@ -11,6 +11,7 @@ import at.released.weh.bindings.graalvm240.ext.getArgAsLong
 import at.released.weh.bindings.graalvm240.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -41,7 +42,7 @@ internal class MunapJs(
     @TruffleBoundary
     @Suppress("MemberNameEqualsClassName")
     private fun munmapJs(
-        addr: WasmPtr<Byte>,
+        @IntWasmPtr(Byte::class) addr: WasmPtr,
         len: Int,
         prot: Int,
         flags: Int,

@@ -9,6 +9,7 @@ package at.released.weh.host.base.memory
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.tableOf
+import at.released.weh.host.base.IntWasmPtr
 import at.released.weh.host.base.WasmPtr
 import kotlinx.io.Buffer
 import kotlin.test.Test
@@ -19,8 +20,8 @@ class MemoryRawSinkTest {
     fun write_should_copy_bytes() {
         val writeByteTracker = WriteBytesToMemoryTracker()
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
             writeBytesToMemoryHandler = writeByteTracker,
         )
         val buffer = Buffer()
@@ -39,8 +40,8 @@ class MemoryRawSinkTest {
     @Test
     fun write_should_throw_iae_on_negative_byte_count() {
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -51,8 +52,8 @@ class MemoryRawSinkTest {
     @Test
     fun write_should_throw_ise_on_sink_is_closed() {
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         sink.close()
 
@@ -65,8 +66,8 @@ class MemoryRawSinkTest {
     @Suppress("TooGenericExceptionThrown")
     fun write_should_throw_ise_on_unknown_exception() {
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
             writeBytesToMemoryHandler = { _, _, _ -> throw RuntimeException("Test exception") },
         )
         assertFailsWith<IllegalStateException> {
@@ -82,8 +83,8 @@ class MemoryRawSinkTest {
             .row(100, 200, 102)
             .forAll { baseAddr, toAddrExclusive, writeBytes ->
                 val sink = TestMemoryRawSink(
-                    baseAddr = WasmPtr<Unit>(baseAddr),
-                    toAddrExclusive = WasmPtr<Unit>(toAddrExclusive),
+                    baseAddr = baseAddr,
+                    toAddrExclusive = toAddrExclusive,
                 )
                 assertFailsWith<IllegalArgumentException> {
                     sink.write(Buffer(), writeBytes.toLong())
@@ -95,8 +96,8 @@ class MemoryRawSinkTest {
     fun write_should_not_throw_on_zero_bytes_write() {
         val writeByteTracker = WriteBytesToMemoryTracker()
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(104),
+            baseAddr = 100,
+            toAddrExclusive = 104,
             writeBytesToMemoryHandler = writeByteTracker,
         )
         val buffer = Buffer()
@@ -113,8 +114,8 @@ class MemoryRawSinkTest {
     @Test
     fun flush_should_throw_ise_on_closed_sink() {
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         sink.close()
 
@@ -126,28 +127,32 @@ class MemoryRawSinkTest {
     @Test
     fun close_is_safe_to_call_more_than_once() {
         val sink = TestMemoryRawSink(
-            baseAddr = WasmPtr<Unit>(100),
-            toAddrExclusive = WasmPtr<Unit>(116),
+            baseAddr = 100,
+            toAddrExclusive = 116,
         )
         sink.close()
         sink.close()
     }
 
     private class TestMemoryRawSink(
-        baseAddr: WasmPtr<*>,
-        toAddrExclusive: WasmPtr<*>,
-        val writeBytesToMemoryHandler: (buffer: Buffer, fromAddr: WasmPtr<*>, byteCount: Long) -> Unit = { _, _, _ -> },
+        @IntWasmPtr baseAddr: WasmPtr,
+        @IntWasmPtr toAddrExclusive: WasmPtr,
+        val writeBytesToMemoryHandler: (buffer: Buffer, fromAddr: WasmPtr, byteCount: Long) -> Unit = { _, _, _ -> },
     ) : MemoryRawSink(baseAddr, toAddrExclusive) {
-        override fun writeBytesToMemory(source: Buffer, toAddr: WasmPtr<*>, byteCount: Long) {
+        override fun writeBytesToMemory(
+            source: Buffer,
+            @IntWasmPtr toAddr: WasmPtr,
+            byteCount: Long,
+        ) {
             writeBytesToMemoryHandler(source, toAddr, byteCount)
         }
     }
 
     class WriteBytesToMemoryTracker(
         val invocations: MutableList<WriteBytesInvocation> = mutableListOf(),
-    ) : (Buffer, WasmPtr<*>, Long) -> Unit {
-        override fun invoke(buffer: Buffer, fromAddr: WasmPtr<*>, toAddr: Long) {
-            invocations.add(WriteBytesInvocation(fromAddr.addr, toAddr))
+    ) : (Buffer, WasmPtr, Long) -> Unit {
+        override fun invoke(buffer: Buffer, fromAddr: WasmPtr, toAddr: Long) {
+            invocations.add(WriteBytesInvocation(fromAddr, toAddr))
         }
     }
 
