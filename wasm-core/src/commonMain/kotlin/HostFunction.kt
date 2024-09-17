@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.function
+package at.released.weh.wasm.core
 
-import at.released.weh.wasm.core.WasmValueType
-
+/**
+ * Interface defining a WebAssembly function implemented on the host
+ */
 public interface HostFunction {
     public val wasmName: String
     public val type: HostFunctionType

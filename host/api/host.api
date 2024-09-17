@@ -77,25 +77,9 @@ public abstract interface class at/released/weh/host/base/binding/IndirectFuncti
 	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/host/base/binding/WasmFunctionBinding;
 }
 
-public abstract interface class at/released/weh/host/base/function/HostFunction {
-	public abstract fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
-	public abstract fun getWasmName ()Ljava/lang/String;
-}
-
-public abstract interface class at/released/weh/host/base/function/HostFunction$HostFunctionType {
-	public static final field Companion Lat/released/weh/host/base/function/HostFunction$HostFunctionType$Companion;
-	public abstract fun getParamTypes ()Ljava/util/List;
-	public abstract fun getReturnTypes ()Ljava/util/List;
-}
-
-public final class at/released/weh/host/base/function/HostFunction$HostFunctionType$Companion {
-	public final fun invoke (Ljava/util/List;Ljava/util/List;)Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
-	public static synthetic fun invoke$default (Lat/released/weh/host/base/function/HostFunction$HostFunctionType$Companion;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
-}
-
 public class at/released/weh/host/base/function/HostFunctionHandle {
-	public fun <init> (Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/host/EmbedderHost;)V
-	public final fun getFunction ()Lat/released/weh/host/base/function/HostFunction;
+	public fun <init> (Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/host/EmbedderHost;)V
+	public final fun getFunction ()Lat/released/weh/wasm/core/HostFunction;
 	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
 	protected final fun getLogger ()Lat/released/weh/common/api/Logger;
 }
@@ -146,7 +130,7 @@ public final class at/released/weh/host/emscripten/AssertionFailedException : ja
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
 }
 
-public final class at/released/weh/host/emscripten/EmscriptenHostFunction : java/lang/Enum, at/released/weh/host/base/function/HostFunction {
+public final class at/released/weh/host/emscripten/EmscriptenHostFunction : java/lang/Enum, at/released/weh/wasm/core/HostFunction {
 	public static final field ABORT_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
 	public static final field ASSERT_FAIL Lat/released/weh/host/emscripten/EmscriptenHostFunction;
 	public static final field Companion Lat/released/weh/host/emscripten/EmscriptenHostFunction$Companion;
@@ -194,7 +178,7 @@ public final class at/released/weh/host/emscripten/EmscriptenHostFunction : java
 	public static final field SYSCALL_UTIMENSAT Lat/released/weh/host/emscripten/EmscriptenHostFunction;
 	public static final field TZSET_JS Lat/released/weh/host/emscripten/EmscriptenHostFunction;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public fun getType ()Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
 	public fun getWasmName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/emscripten/EmscriptenHostFunction;
 	public static fun values ()[Lat/released/weh/host/emscripten/EmscriptenHostFunction;
@@ -451,7 +435,7 @@ public final class at/released/weh/host/emscripten/function/SyscallRmdirFunction
 
 public final class at/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;ZLat/released/weh/host/base/function/HostFunction;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;ZLat/released/weh/wasm/core/HostFunction;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)I
 }
 
@@ -763,7 +747,7 @@ public final class at/released/weh/host/jvm/JvmTimeZoneInfoProvider : at/release
 	public fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
 }
 
-public final class at/released/weh/host/wasi/preview1/WasiHostFunction : java/lang/Enum, at/released/weh/host/base/function/HostFunction {
+public final class at/released/weh/host/wasi/preview1/WasiHostFunction : java/lang/Enum, at/released/weh/wasm/core/HostFunction {
 	public static final field ARGS_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
 	public static final field ARGS_SIZES_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
 	public static final field CLOCK_RES_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
@@ -812,7 +796,7 @@ public final class at/released/weh/host/wasi/preview1/WasiHostFunction : java/la
 	public static final field SOCK_SEND Lat/released/weh/host/wasi/preview1/WasiHostFunction;
 	public static final field SOCK_SHUTDOWN Lat/released/weh/host/wasi/preview1/WasiHostFunction;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public fun getType ()Lat/released/weh/host/base/function/HostFunction$HostFunctionType;
+	public fun getType ()Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
 	public fun getWasmName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/WasiHostFunction;
 	public static fun values ()[Lat/released/weh/host/wasi/preview1/WasiHostFunction;
@@ -843,7 +827,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdCloseFunctionHa
 
 public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun execute (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryReader;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
@@ -859,7 +843,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdSeekFunctionHan
 
 public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun execute (I)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
@@ -870,7 +854,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdat
 
 public final class at/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion;
-	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/host/base/function/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun execute (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryWriter;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 

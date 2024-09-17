@@ -8,12 +8,12 @@ package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasm.core.HostFunction
 
 public class FdSyncSyscallFdatasyncFunctionHandle private constructor(
     host: EmbedderHost,

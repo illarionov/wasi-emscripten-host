@@ -7,8 +7,8 @@
 package at.released.weh.bindings.chasm.module.wasi.function
 
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
-import at.released.weh.host.base.function.HostFunction
 import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasm.core.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class NotImplementedWasiFunction(

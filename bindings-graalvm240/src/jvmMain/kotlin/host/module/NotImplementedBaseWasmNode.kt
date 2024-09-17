@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm240.host.module
 
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
+import at.released.weh.wasm.core.HostFunction
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
 import org.graalvm.wasm.WasmInstance
