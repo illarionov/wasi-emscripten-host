@@ -8,6 +8,7 @@ package at.released.weh.host.base.function
 
 import at.released.weh.common.api.Logger
 import at.released.weh.host.EmbedderHost
+import at.released.weh.wasm.core.HostFunction
 
 public open class HostFunctionHandle(
     public val function: HostFunction,

@@ -7,7 +7,7 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
-import at.released.weh.host.base.function.HostFunction
+import at.released.weh.wasm.core.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.HostFunction as ChasmHostFunction
 
 internal class NotImplementedEmscriptenFunction(

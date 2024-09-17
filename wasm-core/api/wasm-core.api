@@ -1,3 +1,19 @@
+public abstract interface class at/released/weh/wasm/core/HostFunction {
+	public abstract fun getType ()Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
+	public abstract fun getWasmName ()Ljava/lang/String;
+}
+
+public abstract interface class at/released/weh/wasm/core/HostFunction$HostFunctionType {
+	public static final field Companion Lat/released/weh/wasm/core/HostFunction$HostFunctionType$Companion;
+	public abstract fun getParamTypes ()Ljava/util/List;
+	public abstract fun getReturnTypes ()Ljava/util/List;
+}
+
+public final class at/released/weh/wasm/core/HostFunction$HostFunctionType$Companion {
+	public final fun invoke (Ljava/util/List;Ljava/util/List;)Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
+	public static synthetic fun invoke$default (Lat/released/weh/wasm/core/HostFunction$HostFunctionType$Companion;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
+}
+
 public abstract interface annotation class at/released/weh/wasm/core/IntWasmPtr : java/lang/annotation/Annotation {
 	public abstract fun ref ()Ljava/lang/Class;
 }

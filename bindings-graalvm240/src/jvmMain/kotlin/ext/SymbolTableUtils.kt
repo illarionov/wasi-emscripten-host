@@ -8,8 +8,8 @@ package at.released.weh.bindings.graalvm240.ext
 
 import at.released.weh.bindings.graalvm240.host.module.NodeFactory
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunction
-import at.released.weh.host.base.function.HostFunction.HostFunctionType
+import at.released.weh.wasm.core.HostFunction
+import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
 import org.graalvm.wasm.SymbolTable
 import org.graalvm.wasm.WasmContext
