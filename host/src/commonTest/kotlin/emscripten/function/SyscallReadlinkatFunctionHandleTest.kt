@@ -16,8 +16,6 @@ import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.writeNullTerminatedString
 import at.released.weh.host.include.Fcntl
 import at.released.weh.host.test.assertions.byteAt
@@ -25,6 +23,8 @@ import at.released.weh.host.test.assertions.hasBytesAt
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.host.test.fixtures.TestMemory
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

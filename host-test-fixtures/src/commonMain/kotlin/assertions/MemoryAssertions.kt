@@ -9,10 +9,10 @@ package at.released.weh.host.test.assertions
 import assertk.Assert
 import assertk.assertions.isEqualTo
 import assertk.assertions.support.appendName
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.sourceWithMaxSize
 import at.released.weh.host.test.fixtures.TestMemory
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered
 import kotlinx.io.readByteArray
 

@@ -8,8 +8,8 @@
 
 package at.released.weh.bindings.chasm.ext
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.Value.Number
 

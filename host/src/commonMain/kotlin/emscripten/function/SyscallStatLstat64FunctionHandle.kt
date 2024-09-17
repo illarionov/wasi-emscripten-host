@@ -10,8 +10,6 @@ import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -21,6 +19,8 @@ import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.negativeErrnoCode
 import at.released.weh.host.include.sys.STRUCT_SIZE_PACKED_SIZE
 import at.released.weh.host.include.sys.packTo
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered
 
 public class SyscallStatLstat64FunctionHandle private constructor(

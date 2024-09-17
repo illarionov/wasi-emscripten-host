@@ -7,9 +7,9 @@
 package at.released.weh.bindings.graalvm240.host.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.nodes.Node
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource

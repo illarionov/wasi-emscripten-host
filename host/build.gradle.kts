@@ -32,6 +32,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.commonApi)
             api(projects.filesystem)
+            api(projects.wasmCore)
             implementation(libs.arrow.core)
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)

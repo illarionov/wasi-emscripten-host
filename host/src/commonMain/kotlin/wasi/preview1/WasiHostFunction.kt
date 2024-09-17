@@ -8,8 +8,6 @@ package at.released.weh.host.wasi.preview1
 
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Whence
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes.I32
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.pointerToType
 import at.released.weh.host.wasi.preview1.type.Advice
@@ -41,6 +39,8 @@ import at.released.weh.host.wasi.preview1.type.Timestamp
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.host.wasi.preview1.type.wasmValueType
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes.I32
 
 /**
  * WASI Preview1 function descriptors

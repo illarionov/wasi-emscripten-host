@@ -7,8 +7,8 @@
 package at.released.weh.host.base.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.Buffer
 import kotlinx.io.RawSink
 import kotlinx.io.writeString

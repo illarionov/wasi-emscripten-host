@@ -7,8 +7,8 @@
 package at.released.weh.host.wasi.preview1.type
 
 import at.released.weh.filesystem.model.Fd
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes.I32
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes.I32
 
 /**
  * The contents of a `subscription` when type is type is `eventtype::fd_read` or `eventtype::fd_write`.

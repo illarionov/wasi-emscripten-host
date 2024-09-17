@@ -6,8 +6,8 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes.I32
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes.I32
 
 /**
  * The contents of a `prestat` when type is `preopentype::dir`.

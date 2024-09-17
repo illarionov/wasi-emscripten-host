@@ -7,9 +7,9 @@
 package at.released.weh.host.emscripten.export.memory
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.ptrIsNull
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.WasmPtrUtil.ptrIsNull
 
 @InternalWasiEmscriptenHostApi
 public class DynamicMemory(

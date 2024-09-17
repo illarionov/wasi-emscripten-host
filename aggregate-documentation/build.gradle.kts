@@ -37,4 +37,5 @@ dependencies {
     dokkatoo(projects.hostTestFixtures)
     dokkatoo(projects.testIoBootstrap)
     dokkatoo(projects.testLogger)
+    dokkatoo(projects.wasmCore)
 }

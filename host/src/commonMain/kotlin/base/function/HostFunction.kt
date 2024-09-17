@@ -6,7 +6,7 @@
 
 package at.released.weh.host.base.function
 
-import at.released.weh.host.base.WasmValueType
+import at.released.weh.wasm.core.WasmValueType
 
 public interface HostFunction {
     public val wasmName: String

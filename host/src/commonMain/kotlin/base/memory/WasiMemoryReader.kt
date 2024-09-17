@@ -13,9 +13,9 @@ import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.wasi.preview1.type.Iovec
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered
 
 public fun interface WasiMemoryReader {

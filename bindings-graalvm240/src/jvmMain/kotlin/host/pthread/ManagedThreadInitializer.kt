@@ -6,9 +6,9 @@
 
 package at.released.weh.bindings.graalvm240.host.pthread
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.include.StructPthread
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 // TODO: hide
 public interface ManagedThreadInitializer {

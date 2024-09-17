@@ -6,7 +6,7 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.host.base.WasmValueType
+import at.released.weh.wasm.core.WasmValueType
 
 /**
  * Non-negative file size or length of a region within a file.

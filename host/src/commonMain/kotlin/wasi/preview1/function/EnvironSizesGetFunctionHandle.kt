@@ -8,13 +8,13 @@ package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.ext.encodedNullTerminatedStringLength
 import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.host.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 public class EnvironSizesGetFunctionHandle(
     host: EmbedderHost,

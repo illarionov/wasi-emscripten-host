@@ -6,10 +6,10 @@
 
 package at.released.weh.host.emscripten.export.pthread
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal.Companion.DEFAULT_THREAD_STACK_SIZE
 import at.released.weh.host.include.StructPthread
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 public open class PthreadManager(
     private val pthreadInternal: EmscriptenPthreadInternal,

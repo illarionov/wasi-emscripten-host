@@ -7,9 +7,9 @@
 package at.released.weh.host.emscripten.export.pthread
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.include.StructPthread
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 @InternalWasiEmscriptenHostApi
 public class EmscriptenPthreadInternal(

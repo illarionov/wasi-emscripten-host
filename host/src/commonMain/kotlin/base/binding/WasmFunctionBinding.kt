@@ -7,8 +7,8 @@
 package at.released.weh.host.base.binding
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 @InternalWasiEmscriptenHostApi
 public interface WasmFunctionBinding {

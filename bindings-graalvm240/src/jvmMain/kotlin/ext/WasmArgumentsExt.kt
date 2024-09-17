@@ -8,8 +8,8 @@
 
 package at.released.weh.bindings.graalvm240.ext
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import org.graalvm.polyglot.Value
 import org.graalvm.wasm.WasmArguments
 

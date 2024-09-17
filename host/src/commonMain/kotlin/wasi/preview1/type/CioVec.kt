@@ -6,9 +6,9 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
-import at.released.weh.host.base.WasmValueType
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.WasmValueType
 
 /**
  * A region of memory for scatter/gather writes.
