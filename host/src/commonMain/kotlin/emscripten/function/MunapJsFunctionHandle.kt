@@ -9,12 +9,12 @@ package at.released.weh.host.emscripten.function
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.include.sys.SysMmanMapFlags
 import at.released.weh.host.include.sys.SysMmanProt
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 public class MunapJsFunctionHandle(
     host: EmbedderHost,

@@ -8,8 +8,8 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.host.base.WasmValueType
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
+import at.released.weh.wasm.core.WasmValueType
 
 /**
  * File or memory access pattern advisory information.

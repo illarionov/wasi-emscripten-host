@@ -14,11 +14,11 @@ import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.NOT_STARTED
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.RUNNING
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.StateListener
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.host.include.StructPthread
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 internal abstract class ManagedThreadBase(
     name: String,

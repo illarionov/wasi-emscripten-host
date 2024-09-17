@@ -9,8 +9,6 @@ package at.released.weh.bindings.graalvm240.host.pthread
 import at.released.weh.bindings.graalvm240.host.pthread.ManagedThreadBase.State.DESTROYING
 import at.released.weh.bindings.graalvm240.host.pthread.threadfactory.ExternalManagedThreadOrchestrator
 import at.released.weh.common.api.Logger
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.IndirectFunctionBindingProvider
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.Memory
@@ -20,6 +18,8 @@ import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.host.emscripten.export.pthread.PthreadManager
 import at.released.weh.host.include.StructPthread
 import at.released.weh.host.include.pthread_t
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock

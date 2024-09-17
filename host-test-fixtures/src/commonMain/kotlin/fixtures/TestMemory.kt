@@ -11,12 +11,12 @@ package at.released.weh.host.test.fixtures
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.DefaultWasiMemoryReader
 import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.test.logger.TestLogger
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 

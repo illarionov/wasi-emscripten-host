@@ -6,9 +6,9 @@
 
 package at.released.weh.bindings.chicory.host.memory
 
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.MemoryRawSink
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import com.dylibso.chicory.runtime.Memory
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray

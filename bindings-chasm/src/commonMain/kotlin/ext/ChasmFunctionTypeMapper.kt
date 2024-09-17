@@ -6,9 +6,9 @@
 
 package at.released.weh.bindings.chasm.ext
 
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes
 import io.github.charlietap.chasm.embedding.shapes.ValueType
 import io.github.charlietap.chasm.embedding.shapes.FunctionType as ChasmFunctionType
 

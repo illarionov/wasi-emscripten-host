@@ -11,12 +11,12 @@ import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
 import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.host.wasi.preview1.type.Iovec
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class FdReadFdPread private constructor(

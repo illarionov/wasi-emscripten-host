@@ -21,14 +21,14 @@ import at.released.weh.bindings.graalvm240.host.pthread.threadfactory.GraalvmMan
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.common.api.Logger
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.export.memory.DynamicMemory
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.host.include.StructPthread
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import java.util.concurrent.ThreadFactory

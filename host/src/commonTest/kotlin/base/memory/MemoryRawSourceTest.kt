@@ -10,8 +10,8 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.Buffer
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

@@ -4,15 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base
+package at.released.weh.wasm.core
 
 import androidx.annotation.IntDef
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import kotlin.annotation.AnnotationRetention.SOURCE
 import kotlin.reflect.KClass
 
 @IntDef(flag = false)
-@Retention(SOURCE)
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.FIELD,
     AnnotationTarget.FUNCTION,
@@ -26,13 +24,3 @@ import kotlin.reflect.KClass
 public annotation class IntWasmPtr(
     public val ref: KClass<*> = Unit::class,
 )
-
-public typealias WasmPtr = @IntWasmPtr Int
-
-public const val WASM_SIZEOF_PTR: UInt = 4U
-
-@IntWasmPtr
-public const val C_NULL: WasmPtr = 0
-
-@InternalWasiEmscriptenHostApi
-public fun ptrIsNull(@IntWasmPtr ptr: WasmPtr): Boolean = ptr == C_NULL

@@ -7,14 +7,14 @@
 package at.released.weh.host.emscripten.export.pthread
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.C_NULL
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.export.memory.DynamicMemory
 import at.released.weh.host.emscripten.export.memory.freeSilent
 import at.released.weh.host.include.pthread_t
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.WasmPtrUtil.C_NULL
 
 @InternalWasiEmscriptenHostApi
 public class EmscriptenPthread(

@@ -11,8 +11,6 @@ import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
@@ -23,6 +21,8 @@ import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.host.wasi.preview1.type.Iovec
 import at.released.weh.host.wasi.preview1.type.IovecArray
 import at.released.weh.host.wasi.preview1.type.Size
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 
 public class FdReadFdPreadFunctionHandle private constructor(
     host: EmbedderHost,

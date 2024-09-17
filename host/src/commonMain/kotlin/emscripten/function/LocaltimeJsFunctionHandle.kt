@@ -7,8 +7,6 @@
 package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.sinkWithMaxSize
@@ -16,6 +14,8 @@ import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.include.STRUCT_TM_PACKED_SIZE
 import at.released.weh.host.include.StructTm
 import at.released.weh.host.include.packTo
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered
 
 public class LocaltimeJsFunctionHandle(

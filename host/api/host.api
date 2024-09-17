@@ -61,39 +61,16 @@ public abstract interface class at/released/weh/host/EmbedderHost$TimeZoneInfoPr
 	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
 }
 
-public abstract interface annotation class at/released/weh/host/base/IntWasmPtr : java/lang/annotation/Annotation {
-	public abstract fun ref ()Ljava/lang/Class;
-}
-
 public final class at/released/weh/host/base/WasmModules {
 	public static final field ENV_MODULE_NAME Ljava/lang/String;
 	public static final field INSTANCE Lat/released/weh/host/base/WasmModules;
 	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
 }
 
-public final class at/released/weh/host/base/WasmPtrKt {
-	public static final field C_NULL I
-	public static final field WASM_SIZEOF_PTR I
-}
-
-public abstract interface annotation class at/released/weh/host/base/WasmValueType : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/host/base/WasmValueTypeExtKt {
 	public static final fun getPOINTER ()I
 	public static final fun pointerToType (I)I
 	public static final fun pointerToType (Lat/released/weh/host/wasi/preview1/type/WasiTypename;)I
-}
-
-public final class at/released/weh/host/base/WasmValueTypes {
-	public static final field EXTERN_REF I
-	public static final field F32 I
-	public static final field F64 I
-	public static final field FUNC_REF I
-	public static final field I32 I
-	public static final field I64 I
-	public static final field INSTANCE Lat/released/weh/host/base/WasmValueTypes;
-	public static final field V128 I
 }
 
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {

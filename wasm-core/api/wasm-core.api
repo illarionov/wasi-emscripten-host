@@ -1,0 +1,24 @@
+public abstract interface annotation class at/released/weh/wasm/core/IntWasmPtr : java/lang/annotation/Annotation {
+	public abstract fun ref ()Ljava/lang/Class;
+}
+
+public final class at/released/weh/wasm/core/WasmPtrUtil {
+	public static final field C_NULL I
+	public static final field INSTANCE Lat/released/weh/wasm/core/WasmPtrUtil;
+	public static final field WASM_SIZEOF_PTR I
+}
+
+public abstract interface annotation class at/released/weh/wasm/core/WasmValueType : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasm/core/WasmValueTypes {
+	public static final field EXTERN_REF I
+	public static final field F32 I
+	public static final field F64 I
+	public static final field FUNC_REF I
+	public static final field I32 I
+	public static final field I64 I
+	public static final field INSTANCE Lat/released/weh/wasm/core/WasmValueTypes;
+	public static final field V128 I
+}
+

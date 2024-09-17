@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm240.exports
 
 import at.released.weh.bindings.graalvm240.ext.asWasmAddr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmPtr
 import org.graalvm.polyglot.Value
 
 internal class GraalWasmFunctionBinding(

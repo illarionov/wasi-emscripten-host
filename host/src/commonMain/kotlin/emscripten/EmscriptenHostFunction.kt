@@ -8,15 +8,15 @@
 
 package at.released.weh.host.emscripten
 
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes.F64
-import at.released.weh.host.base.WasmValueTypes.I32
-import at.released.weh.host.base.WasmValueTypes.I64
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
 import at.released.weh.host.base.pointerToType
 import at.released.weh.host.wasi.preview1.type.FdWasmValueType
 import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes.F64
+import at.released.weh.wasm.core.WasmValueTypes.I32
+import at.released.weh.wasm.core.WasmValueTypes.I64
 
 public enum class EmscriptenHostFunction(
     public override val wasmName: String,

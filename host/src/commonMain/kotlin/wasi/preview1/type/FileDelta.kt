@@ -6,8 +6,8 @@
 
 package at.released.weh.host.wasi.preview1.type
 
-import at.released.weh.host.base.WasmValueType
-import at.released.weh.host.base.WasmValueTypes.I64
+import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.wasm.core.WasmValueTypes.I64
 
 /**
  * Relative offset within a file.

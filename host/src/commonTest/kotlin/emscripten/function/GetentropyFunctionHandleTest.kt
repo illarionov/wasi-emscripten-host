@@ -10,12 +10,12 @@ import assertk.assertThat
 import assertk.assertions.isNotZero
 import assertk.assertions.isZero
 import at.released.weh.host.EmbedderHost.EntropySource
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.test.assertions.hasBytesAt
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.host.test.fixtures.TestMemory
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

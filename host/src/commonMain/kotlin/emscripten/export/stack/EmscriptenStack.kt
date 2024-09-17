@@ -7,11 +7,11 @@
 package at.released.weh.host.emscripten.export.stack
 
 import at.released.weh.common.api.Logger
-import at.released.weh.host.base.C_NULL
-import at.released.weh.host.base.IntWasmPtr
-import at.released.weh.host.base.WasmPtr
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.WasmPtrUtil.C_NULL
 
 /**
  * Emscripten Stack bindings.
