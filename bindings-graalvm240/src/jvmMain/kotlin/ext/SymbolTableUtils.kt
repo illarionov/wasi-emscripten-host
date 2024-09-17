@@ -10,7 +10,6 @@ import at.released.weh.bindings.graalvm240.host.module.NodeFactory
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
-import at.released.weh.host.base.function.functionTypes
 import at.released.weh.wasm.core.WasmValueType
 import org.graalvm.wasm.SymbolTable
 import org.graalvm.wasm.WasmContext
@@ -68,3 +67,5 @@ internal fun declareExportedFunctions(
         fn.wasmName to functionIdx
     }
 }
+
+private fun Collection<HostFunction>.functionTypes(): Set<HostFunctionType> = mapTo(mutableSetOf(), HostFunction::type)

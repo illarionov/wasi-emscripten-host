@@ -8,10 +8,10 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.common.api.Logger
-import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Pages
 import at.released.weh.host.emscripten.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
+import at.released.weh.wasi.filesystem.common.Errno
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

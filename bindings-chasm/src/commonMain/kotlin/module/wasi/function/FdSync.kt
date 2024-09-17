@@ -10,9 +10,9 @@ package at.released.weh.bindings.chasm.module.wasi.function
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
-import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
+import at.released.weh.wasi.filesystem.common.Errno
 import io.github.charlietap.chasm.embedding.shapes.Value
 
 internal class FdSync(

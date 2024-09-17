@@ -6,7 +6,6 @@
 
 package at.released.weh.host.emscripten.function
 
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.stat.StatFd
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
@@ -17,6 +16,7 @@ import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.negativeErrnoCode
 import at.released.weh.host.include.sys.STRUCT_SIZE_PACKED_SIZE
 import at.released.weh.host.include.sys.packTo
+import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered

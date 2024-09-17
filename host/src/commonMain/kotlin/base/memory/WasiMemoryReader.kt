@@ -9,11 +9,11 @@ package at.released.weh.host.base.memory
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.ReadError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.host.wasi.preview1.type.Iovec
+import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered

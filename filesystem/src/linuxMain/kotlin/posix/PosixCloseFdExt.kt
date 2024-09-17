@@ -9,7 +9,7 @@ package at.released.weh.filesystem.posix
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.DiskQuota
 import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.model.Fd
+import at.released.weh.wasi.filesystem.common.Fd
 import platform.posix.EDQUOT
 
 internal actual fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError {

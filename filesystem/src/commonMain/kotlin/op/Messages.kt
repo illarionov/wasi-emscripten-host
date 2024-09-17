@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.op
 
-import at.released.weh.filesystem.model.Fd
+import at.released.weh.wasi.filesystem.common.Fd
 
 internal object Messages {
     internal fun fileDescriptorNotOpenedMessage(@Fd fd: Int) = "File descriptor `$fd` is not opened"

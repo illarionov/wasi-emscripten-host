@@ -6,8 +6,8 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Errno.NOTSUP
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.filesystem.common.Errno.NOTSUP
 
 public data object NotImplemented : FileSystemOperationError {
     override val message: String = "Operation not implemented"

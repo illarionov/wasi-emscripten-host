@@ -8,7 +8,7 @@ package at.released.weh.filesystem.posix
 
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.model.Fd
+import at.released.weh.wasi.filesystem.common.Fd
 
 internal actual fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError {
     return IoError("Unknown error $this while closing $fd")

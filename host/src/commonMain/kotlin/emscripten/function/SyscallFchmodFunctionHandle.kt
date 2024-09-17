@@ -6,13 +6,13 @@
 
 package at.released.weh.host.emscripten.function
 
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.chmod.ChmodFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.negativeErrnoCode
+import at.released.weh.wasi.filesystem.common.Fd
 
 public class SyscallFchmodFunctionHandle(
     host: EmbedderHost,

@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.op.sync
 
 import at.released.weh.filesystem.error.SyncError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 
 public data class SyncFd(
     @Fd

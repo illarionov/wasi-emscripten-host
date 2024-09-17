@@ -7,9 +7,9 @@
 package at.released.weh.filesystem.op.seek
 
 import at.released.weh.filesystem.error.SeekError
-import at.released.weh.filesystem.model.Fd
-import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.filesystem.common.Whence
 
 public data class SeekFd(
     @Fd

@@ -7,7 +7,7 @@
 package at.released.weh.filesystem.internal
 
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.model.Errno
+import at.released.weh.wasi.filesystem.common.Errno
 
 internal sealed class ChannelPositionError(
     override val errno: Errno,

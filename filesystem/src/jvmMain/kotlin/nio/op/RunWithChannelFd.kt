@@ -9,8 +9,8 @@ package at.released.weh.filesystem.nio.op
 import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 import java.nio.channels.FileChannel
 
 public class RunWithChannelFd<R>(

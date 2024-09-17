@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.Errno
+import at.released.weh.wasi.filesystem.common.Errno
 
 public data class Again(
     override val message: String,

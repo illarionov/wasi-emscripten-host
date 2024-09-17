@@ -7,14 +7,14 @@
 package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.error.SeekError
-import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Fd
-import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 

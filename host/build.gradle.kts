@@ -33,6 +33,7 @@ kotlin {
             api(projects.commonApi)
             api(projects.filesystem)
             api(projects.wasmCore)
+            api(projects.wasmWasiPreview1Core)
             implementation(libs.arrow.core)
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)

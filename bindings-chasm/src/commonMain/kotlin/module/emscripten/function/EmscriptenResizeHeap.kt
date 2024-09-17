@@ -12,11 +12,11 @@ import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.common.api.Logger
-import at.released.weh.filesystem.model.Errno.NOMEM
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Pages
 import at.released.weh.host.base.memory.WASM_MEMORY_32_MAX_PAGES
 import at.released.weh.host.emscripten.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
+import at.released.weh.wasi.filesystem.common.Errno.NOMEM
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32

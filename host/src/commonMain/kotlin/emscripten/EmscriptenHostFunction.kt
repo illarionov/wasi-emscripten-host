@@ -11,8 +11,8 @@ package at.released.weh.host.emscripten
 import at.released.weh.host.base.function.HostFunction
 import at.released.weh.host.base.function.HostFunction.HostFunctionType
 import at.released.weh.host.base.pointerToType
-import at.released.weh.host.wasi.preview1.type.FdWasmValueType
-import at.released.weh.host.wasi.preview1.type.WasiValueTypes.U8
+import at.released.weh.wasi.preview1.type.FdWasmValueType
+import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes.F64
 import at.released.weh.wasm.core.WasmValueTypes.I32

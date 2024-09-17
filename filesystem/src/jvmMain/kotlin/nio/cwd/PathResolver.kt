@@ -9,11 +9,11 @@ package at.released.weh.filesystem.nio.cwd
 import arrow.core.Either
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Errno.BADF
-import at.released.weh.filesystem.model.Errno.INVAL
-import at.released.weh.filesystem.model.Errno.NOENT
-import at.released.weh.filesystem.model.Errno.NOTDIR
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.filesystem.common.Errno.BADF
+import at.released.weh.wasi.filesystem.common.Errno.INVAL
+import at.released.weh.wasi.filesystem.common.Errno.NOENT
+import at.released.weh.wasi.filesystem.common.Errno.NOTDIR
 import java.nio.file.Path
 
 internal interface PathResolver {

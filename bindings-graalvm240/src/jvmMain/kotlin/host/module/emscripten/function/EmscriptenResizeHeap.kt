@@ -9,12 +9,12 @@ package at.released.weh.bindings.graalvm240.host.module.emscripten.function
 import at.released.weh.bindings.graalvm240.ext.getArgAsInt
 import at.released.weh.bindings.graalvm240.host.module.BaseWasmNode
 import at.released.weh.bindings.graalvm240.host.module.emscripten.function.EmscriptenResizeHeap.ResizeHeapHandle
-import at.released.weh.filesystem.model.Errno.NOMEM
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.base.memory.Pages
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.emscripten.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
+import at.released.weh.wasi.filesystem.common.Errno.NOMEM
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext

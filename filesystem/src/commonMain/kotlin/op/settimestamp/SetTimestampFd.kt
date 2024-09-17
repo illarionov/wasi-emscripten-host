@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.op.settimestamp
 
 import at.released.weh.filesystem.error.SetTimestampError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 
 public data class SetTimestampFd(
     @Fd

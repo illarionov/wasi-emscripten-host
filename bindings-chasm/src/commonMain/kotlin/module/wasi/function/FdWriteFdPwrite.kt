@@ -9,12 +9,12 @@ package at.released.weh.bindings.chasm.module.wasi.function
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
-import at.released.weh.filesystem.model.Errno
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
-import at.released.weh.host.wasi.preview1.type.CioVec
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.CioVec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import io.github.charlietap.chasm.embedding.shapes.Value

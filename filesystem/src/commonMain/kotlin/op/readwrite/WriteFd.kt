@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.op.readwrite
 
 import at.released.weh.filesystem.error.WriteError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 
 public data class WriteFd(
     @Fd

@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.model
 
+import at.released.weh.wasi.filesystem.common.Fd
+
 /**
  * Base path used to resolve relative paths
  */

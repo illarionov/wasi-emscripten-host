@@ -6,7 +6,7 @@
 
 package at.released.weh.host.emscripten.export.pthread
 
-import at.released.weh.filesystem.model.Errno
+import at.released.weh.wasi.filesystem.common.Errno
 
 public class PthreadException : RuntimeException {
     public val errCode: Errno?

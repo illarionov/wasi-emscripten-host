@@ -11,7 +11,7 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Nfile
-import at.released.weh.filesystem.model.Fd
+import at.released.weh.wasi.filesystem.common.Fd
 
 internal class FileDescriptorTable<V : Any> {
     private val fds: MutableMap<@Fd Int, V> = mutableMapOf()

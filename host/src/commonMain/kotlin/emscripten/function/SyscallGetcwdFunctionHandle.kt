@@ -6,7 +6,6 @@
 
 package at.released.weh.host.emscripten.function
 
-import at.released.weh.filesystem.model.Errno
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -14,6 +13,7 @@ import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.sinkWithMaxSize
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.encodeToNullTerminatedBuffer
+import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 
