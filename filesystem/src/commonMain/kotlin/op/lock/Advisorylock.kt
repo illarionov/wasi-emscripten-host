@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.op.lock
 
-import at.released.weh.filesystem.model.Whence
+import at.released.weh.wasi.filesystem.common.Whence
 
 public data class Advisorylock(
     val type: AdvisorylockLockType,

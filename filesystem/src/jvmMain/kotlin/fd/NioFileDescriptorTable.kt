@@ -10,8 +10,8 @@ import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.nio.NioFileSystemState
+import at.released.weh.wasi.filesystem.common.Fd
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.util.concurrent.locks.Lock

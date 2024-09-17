@@ -7,8 +7,6 @@
 package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunction
@@ -18,9 +16,11 @@ import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.base.memory.readPtr
 import at.released.weh.host.wasi.preview1.WasiHostFunction
-import at.released.weh.host.wasi.preview1.type.CioVec
-import at.released.weh.host.wasi.preview1.type.CiovecArray
-import at.released.weh.host.wasi.preview1.type.Size
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.CiovecArray
+import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 

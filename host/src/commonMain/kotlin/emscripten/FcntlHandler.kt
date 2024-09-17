@@ -12,9 +12,6 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.model.Errno.INVAL
-import at.released.weh.filesystem.model.Fd
-import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
@@ -26,6 +23,9 @@ import at.released.weh.host.ext.negativeErrnoCode
 import at.released.weh.host.include.Fcntl
 import at.released.weh.host.include.StructFlock
 import at.released.weh.host.include.StructFlock.Companion.STRUCT_FLOCK_SIZE
+import at.released.weh.wasi.filesystem.common.Errno.INVAL
+import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.buffered

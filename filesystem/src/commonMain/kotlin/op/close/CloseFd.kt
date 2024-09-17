@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.op.close
 
 import at.released.weh.filesystem.error.CloseError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 
 public data class CloseFd(
     @Fd

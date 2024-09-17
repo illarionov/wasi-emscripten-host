@@ -6,8 +6,8 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.Errno
-import at.released.weh.filesystem.model.Errno.INVAL
+import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.filesystem.common.Errno.INVAL
 
 public data class InvalidArgument(
     override val message: String,

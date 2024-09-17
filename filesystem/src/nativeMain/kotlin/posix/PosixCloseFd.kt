@@ -15,9 +15,9 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.posix.base.PosixFileSystemState
+import at.released.weh.wasi.filesystem.common.Fd
 import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.EIO

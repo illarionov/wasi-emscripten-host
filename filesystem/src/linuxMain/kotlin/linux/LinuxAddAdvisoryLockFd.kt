@@ -16,13 +16,13 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoLock
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.READ
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.WRITE
 import at.released.weh.filesystem.posix.ext.toPosixWhence
+import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import platform.posix.EACCES

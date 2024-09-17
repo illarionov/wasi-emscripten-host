@@ -6,10 +6,10 @@
 
 package at.released.weh.filesystem.posix.ext
 
-import at.released.weh.filesystem.model.Whence
-import at.released.weh.filesystem.model.Whence.CUR
-import at.released.weh.filesystem.model.Whence.END
-import at.released.weh.filesystem.model.Whence.SET
+import at.released.weh.wasi.filesystem.common.Whence
+import at.released.weh.wasi.filesystem.common.Whence.CUR
+import at.released.weh.wasi.filesystem.common.Whence.END
+import at.released.weh.wasi.filesystem.common.Whence.SET
 import platform.posix.SEEK_CUR
 import platform.posix.SEEK_END
 import platform.posix.SEEK_SET

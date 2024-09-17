@@ -6,7 +6,7 @@
 
 package at.released.weh.host.base
 
-import at.released.weh.host.wasi.preview1.type.WasiTypename
+import at.released.weh.wasi.preview1.type.WasiTypename
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes.I32
 

@@ -22,11 +22,11 @@ import at.released.weh.filesystem.error.Pipe
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.LinuxReadFd.callReadWrite
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.WriteFd
+import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.CPointer
 import platform.posix.EAGAIN
 import platform.posix.EBADF

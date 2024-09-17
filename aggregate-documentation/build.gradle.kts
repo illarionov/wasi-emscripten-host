@@ -38,4 +38,6 @@ dependencies {
     dokkatoo(projects.testIoBootstrap)
     dokkatoo(projects.testLogger)
     dokkatoo(projects.wasmCore)
+    dokkatoo(projects.wasmWasiPreview1Core)
+    dokkatoo(projects.wasmWasiCommonPreview1Filesystem)
 }

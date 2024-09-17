@@ -8,7 +8,7 @@ package at.released.weh.host.ext
 
 import arrow.core.Either
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.model.Errno
+import at.released.weh.wasi.filesystem.common.Errno
 
 internal fun Either<FileSystemOperationError, Unit>.negativeErrnoCode(): Int = this.fold(
     ifLeft = { -it.errno.code },

@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.posix.base
 
-import at.released.weh.filesystem.model.Fd
+import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock

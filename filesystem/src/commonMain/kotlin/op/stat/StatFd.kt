@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.op.stat
 
 import at.released.weh.filesystem.error.StatError
-import at.released.weh.filesystem.model.Fd
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.wasi.filesystem.common.Fd
 
 /**
  * Retrieves information about the currently opened file [fd].
