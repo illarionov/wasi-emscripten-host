@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.preview1.type
+package at.released.weh.wasi.preview1
 
 import at.released.weh.wasm.core.WasmValueType
 

@@ -14,9 +14,9 @@ import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.base.memory.readPtr
-import at.released.weh.host.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasi.preview1.type.IovecArray
 import at.released.weh.wasi.preview1.type.Size

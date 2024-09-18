@@ -67,12 +67,6 @@ public final class at/released/weh/host/base/WasmModules {
 	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
 }
 
-public final class at/released/weh/host/base/WasmValueTypeExtKt {
-	public static final fun getPOINTER ()I
-	public static final fun pointerToType (I)I
-	public static final fun pointerToType (Lat/released/weh/wasi/preview1/type/WasiTypename;)I
-}
-
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
 	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/host/base/binding/WasmFunctionBinding;
 }
@@ -745,65 +739,6 @@ public final class at/released/weh/host/jvm/JvmTimeZoneInfoProvider : at/release
 	public fun <init> (Ljava/time/Clock;)V
 	public synthetic fun <init> (Ljava/time/Clock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
-}
-
-public final class at/released/weh/host/wasi/preview1/WasiHostFunction : java/lang/Enum, at/released/weh/wasm/core/HostFunction {
-	public static final field ARGS_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field ARGS_SIZES_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field CLOCK_RES_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field CLOCK_TIME_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field Companion Lat/released/weh/host/wasi/preview1/WasiHostFunction$Companion;
-	public static final field ENVIRON_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field ENVIRON_SIZES_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_ADVISE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_ALLOCATE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_CLOSE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_DATASYNC Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FDSTAT_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FDSTAT_SET_FLAGS Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FDSTAT_SET_RIGHTS Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FILESTAT_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FILESTAT_SET_SIZE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_PREAD Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_PRESTAT_DIR_NAME Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_PRESTAT_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_PWRITE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_READ Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_READDIR Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_RENUMBER Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_SEEK Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_SYNC Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_TELL Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field FD_WRITE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_CREATE_DIRECTORY Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_FILESTAT_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_FILESTAT_SET_TIMES Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_LINK Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_OPEN Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_READLINK Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_REMOVE_DIRECTORY Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_RENAME Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_SYMLINK Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PATH_UNLINK_FILE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field POLL_ONEOFF Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PROC_EXIT Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field PROC_RAISE Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field RANDOM_GET Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field SCHED_YIELD Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field SOCK_ACCEPT Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field SOCK_RECV Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field SOCK_SEND Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static final field SOCK_SHUTDOWN Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public fun getType ()Lat/released/weh/wasm/core/HostFunction$HostFunctionType;
-	public fun getWasmName ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-	public static fun values ()[Lat/released/weh/host/wasi/preview1/WasiHostFunction;
-}
-
-public final class at/released/weh/host/wasi/preview1/WasiHostFunction$Companion {
-	public final fun getByWasmName ()Ljava/util/Map;
 }
 
 public final class at/released/weh/host/wasi/preview1/ext/WasiEnvironmentFunc {

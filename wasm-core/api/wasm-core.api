@@ -27,6 +27,10 @@ public final class at/released/weh/wasm/core/WasmPtrUtil {
 public abstract interface annotation class at/released/weh/wasm/core/WasmValueType : java/lang/annotation/Annotation {
 }
 
+public final class at/released/weh/wasm/core/WasmValueTypeExtKt {
+	public static final fun getPOINTER ()I
+}
+
 public final class at/released/weh/wasm/core/WasmValueTypes {
 	public static final field EXTERN_REF I
 	public static final field F32 I

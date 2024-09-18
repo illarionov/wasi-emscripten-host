@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1
+package at.released.weh.wasi.preview1
 
-import at.released.weh.host.base.pointerToType
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasi.preview1.type.Advice
@@ -41,6 +40,7 @@ import at.released.weh.wasi.preview1.type.wasmValueType
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes.I32
+import at.released.weh.wasm.core.witxPointer
 
 /**
  * WASI Preview1 function descriptors
@@ -65,8 +65,8 @@ public enum class WasiHostFunction(
     ARGS_GET(
         wasmName = "args_get",
         paramTypes = listOf(
-            pointerToType(pointerToType(U8)), // argv
-            pointerToType(U8), // argv_buf
+            witxPointer(witxPointer(U8)), // argv
+            witxPointer(U8), // argv_buf
         ),
         retType = Errno.wasmValueType,
     ),
@@ -107,8 +107,8 @@ public enum class WasiHostFunction(
     ENVIRON_GET(
         wasmName = "environ_get",
         paramTypes = listOf(
-            pointerToType(pointerToType(U8)),
-            pointerToType(U8),
+            witxPointer(witxPointer(U8)),
+            witxPointer(U8),
         ),
         retType = Errno.wasmValueType,
     ),
@@ -467,7 +467,7 @@ public enum class WasiHostFunction(
         wasmName = "fd_prestat_dir_name",
         paramTypes = listOf(
             FdWasmValueType, // fd,
-            pointerToType(U8), // path
+            witxPointer(U8), // path
             Size.wasmValueType, // path_len
         ),
         retType = Errno.wasmValueType,
@@ -524,7 +524,7 @@ public enum class WasiHostFunction(
             FdWasmValueType, // Fd
             pointerToType(IovecArray), // iov
             I32, // iov_cnt
-            pointerToType(I32), // pNum
+            witxPointer(I32), // pNum
         ),
         retType = Errno.wasmValueType,
     ),
@@ -562,7 +562,7 @@ public enum class WasiHostFunction(
         wasmName = "fd_readdir",
         paramTypes = listOf(
             FdWasmValueType, // Fd
-            pointerToType(U8), // buf
+            witxPointer(U8), // buf
             Size.wasmValueType, // $buf_len
             Dircookie.wasmValueType, // cookie
             pointerToType(Size), // expected $size
@@ -712,7 +712,7 @@ public enum class WasiHostFunction(
         wasmName = "path_create_directory",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // path
+            witxPointer(U8), // path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -737,7 +737,7 @@ public enum class WasiHostFunction(
         wasmName = "path_filestat_get",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // path
+            witxPointer(U8), // path
             pointerToType(Filestat), // expected $filestat
         ),
         retType = Errno.wasmValueType,
@@ -769,7 +769,7 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             FdWasmValueType, // fd
             LookupFlags.wasmValueType, // $flags
-            pointerToType(U8), // $path
+            witxPointer(U8), // $path
             Timestamp.wasmValueType, // atim
             Timestamp.wasmValueType, // mtim
             Fstflags.wasmValueType, // fst_flags
@@ -801,9 +801,9 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             FdWasmValueType, // old_fd
             LookupFlags.wasmValueType, // old_flags
-            pointerToType(U8), // old_path
+            witxPointer(U8), // old_path
             FdWasmValueType, // new_fd
-            pointerToType(U8), // new_path
+            witxPointer(U8), // new_path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -845,12 +845,12 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             FdWasmValueType, // fd
             LookupFlags.wasmValueType, // dirflags
-            pointerToType(U8), // path
+            witxPointer(U8), // path
             Oflags.wasmValueType, // oflags
             Rights.wasmValueType, // fs_rights_base
             Rights.wasmValueType, // fs_rights_inheriting
             FdFlags.wasmValueType, // fdflags
-            pointerToType(FdWasmValueType), // expected $fd
+            witxPointer(FdWasmValueType), // expected $fd
         ),
         retType = Errno.wasmValueType,
     ),
@@ -879,8 +879,8 @@ public enum class WasiHostFunction(
         wasmName = "path_readlink",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // path
-            pointerToType(U8), // buf
+            witxPointer(U8), // path
+            witxPointer(U8), // buf
             Size.wasmValueType, // buf_size
             pointerToType(Size), // expected $size
         ),
@@ -906,7 +906,7 @@ public enum class WasiHostFunction(
         wasmName = "path_remove_directory",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // path
+            witxPointer(U8), // path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -932,9 +932,9 @@ public enum class WasiHostFunction(
         wasmName = "path_rename",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // old_path
+            witxPointer(U8), // old_path
             FdWasmValueType, // new_fd
-            pointerToType(U8), // new_path
+            witxPointer(U8), // new_path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -957,9 +957,9 @@ public enum class WasiHostFunction(
     PATH_SYMLINK(
         wasmName = "path_symlink",
         paramTypes = listOf(
-            pointerToType(U8), // old_path
+            witxPointer(U8), // old_path
             FdWasmValueType, // fd
-            pointerToType(U8), // new_path
+            witxPointer(U8), // new_path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -983,7 +983,7 @@ public enum class WasiHostFunction(
         wasmName = "path_unlink_file",
         paramTypes = listOf(
             FdWasmValueType, // fd
-            pointerToType(U8), // path
+            witxPointer(U8), // path
         ),
         retType = Errno.wasmValueType,
     ),
@@ -1094,7 +1094,7 @@ public enum class WasiHostFunction(
     RANDOM_GET(
         wasmName = "random_get",
         paramTypes = listOf(
-            pointerToType(U8), // buf
+            witxPointer(U8), // buf
             Size.wasmValueType, // size
         ),
         retType = Errno.wasmValueType,
@@ -1120,7 +1120,7 @@ public enum class WasiHostFunction(
         paramTypes = listOf(
             FdWasmValueType, // fd
             FdFlags.wasmValueType, // flags
-            pointerToType(FdWasmValueType), // expected fd
+            witxPointer(FdWasmValueType), // expected fd
         ),
         retType = Errno.wasmValueType,
     ),
