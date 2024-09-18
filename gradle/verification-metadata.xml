@@ -319,6 +319,11 @@
             <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
          </artifact>
       </component>
+      <component group="org.gradle.kotlin" name="gradle-kotlin-dsl-plugins" version="4.5.0">
+         <artifact name="gradle-kotlin-dsl-plugins-4.5.0.jar">
+            <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
+         </artifact>
+      </component>
       <component group="org.hamcrest" name="hamcrest-core" version="1.3">
          <artifact name="hamcrest-core-1.3.jar">
             <pgp value="4DB1A49729B053CAF015CEE9A6ADFC93EF34893E"/>
