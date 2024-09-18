@@ -1,6 +1,6 @@
 package at.released.weh.sample.graalvm.maven;
 
-import at.released.weh.bindings.graalvm240.GraalvmHostFunctionInstaller;
+import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller;
 import java.io.IOException;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;

@@ -29,6 +29,13 @@ kotlin {
     mingwX64()
 
     sourceSets {
+        all {
+            languageSettings {
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
+        }
+
         commonMain.dependencies {
             api(projects.commonApi)
             api(projects.filesystem)

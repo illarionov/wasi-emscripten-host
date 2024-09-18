@@ -29,7 +29,7 @@ tasks.register<Sync>("buildWebsite") {
 dependencies {
     dokkatoo(projects.bindingsChasm)
     dokkatoo(projects.bindingsChicory)
-    dokkatoo(projects.bindingsGraalvm240)
+    dokkatoo(projects.bindingsGraalvm241)
     dokkatoo(projects.commonApi)
     dokkatoo(projects.filesystem)
     dokkatoo(projects.filesystemTestFixtures)

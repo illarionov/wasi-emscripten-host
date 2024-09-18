@@ -14,11 +14,11 @@ on the JVM through [GraalWasm].
 
 ## Requirements
 
-* JVM JDK 22+ (it may also work on JDK21+) 
-* GraalVM SDK Polyglot API 24.0.X 
+* JVM JDK 23+ (it may also work on JDK21+)
+* GraalVM SDK Polyglot API 24.1.X
 
 The current implementation heavily relies on internal GraalWasm APIs, making it compatible only with the
-[GraalVM SDK Polyglot API 24.0.X][Polyglot API 24] for JDK22.
+[GraalVM SDK Polyglot API 24.1.X][Polyglot API 24] for JDK23.
 
 ## Installation
 
@@ -29,9 +29,9 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-graalvm240:0.1-alpha01")
-    implementation("org.graalvm.polyglot:polyglot:24.0.2")
-    implementation("org.graalvm.polyglot:wasm:24.0.2")
+    implementation("at.released.weh:bindings-graalvm241:0.1-alpha02")
+    implementation("org.graalvm.polyglot:polyglot:24.1.0")
+    implementation("org.graalvm.polyglot:wasm:24.1.0")
 }
 ```
     </TabItem>
@@ -49,18 +49,18 @@ dependencies {
     <dependency>
         <groupId>org.graalvm.polyglot</groupId>
         <artifactId>polyglot</artifactId>
-        <version>24.0.2</version>
+        <version>24.1.0</version>
         <type>jar</type>
     </dependency>
     <dependency>
         <groupId>org.graalvm.polyglot</groupId>
         <artifactId>wasm</artifactId>
-        <version>24.0.2</version>
+        <version>24.1.0</version>
         <type>pom</type>
     </dependency>
     <dependency>
         <groupId>at.released.weh</groupId>
-        <artifactId>bindings-graalvm240-jvm</artifactId>
+        <artifactId>bindings-graalvm241-jvm</artifactId>
         <version>0.1-alpha01</version>
     </dependency>
 </dependencies>
@@ -77,7 +77,7 @@ in the "[Emscripten Example](../Emscripten#example)".
     <TabItem value="kotlin" label="Kotlin" default>
 
 ```kotlin
-import at.released.weh.bindings.graalvm240.GraalvmHostFunctionInstaller
+import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 
@@ -128,7 +128,7 @@ private fun run(
     <TabItem value="java" label="Java">
 
 ```java
-import at.released.weh.bindings.graalvm240.GraalvmHostFunctionInstaller;
+import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
     
@@ -225,7 +225,7 @@ You can use Gradle toolchains to run your application on the GraalVM JVM with op
 ```kotlin
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(23)
         vendor = JvmVendorSpec.GRAAL_VM
     }
 }
@@ -244,7 +244,7 @@ To speed up initialization, you can reuse a single instance of the GraalVM Engin
 Check this link for more information: [GraalVM: Managing the Code Cache][graalvm-managing-the-code-cache] 
 
 [GraalWasm]: https://www.graalvm.org/jdk22/reference-manual/wasm/
-[Polyglot API 24]: https://central.sonatype.com/artifact/org.graalvm.sdk/graal-sdk/24.0.2
+[Polyglot API 24]: https://central.sonatype.com/artifact/org.graalvm.sdk/graal-sdk/24.1.0
 [samples/wasm-gradle/app-graalvm]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle/app-graalvm
 [samples/wasm-maven/graalvm-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven/graalvm-maven
 [graalvm-running-webassembly-embedded-in-java]: https://www.graalvm.org/latest/reference-manual/wasm/#running-webassembly-embedded-in-java

@@ -29,7 +29,7 @@ rootProject.name = "wasi-emscripten-host"
 include("aggregate-documentation")
 include("bindings-chasm")
 include("bindings-chicory")
-include("bindings-graalvm240")
+include("bindings-graalvm241")
 include("common-api")
 include("common-util")
 include("filesystem")
