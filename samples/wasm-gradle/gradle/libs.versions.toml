@@ -13,7 +13,7 @@ graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.
 graalvm-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
 weh-chasm = { group = "at.released.weh", name = "bindings-chasm", version.ref = "weh" }
 weh-chicory = { group = "at.released.weh", name = "bindings-chicory", version.ref = "weh" }
-weh-graalvm = { group = "at.released.weh", name = "bindings-graalvm240", version.ref = "weh" }
+weh-graalvm = { group = "at.released.weh", name = "bindings-graalvm241", version.ref = "weh" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

@@ -7,9 +7,12 @@
 package at.released.weh.host.base.memory
 
 public const val WASM_MEMORY_PAGE_SIZE: Long = 65_536L
+
 public val WASM_MEMORY_DEFAULT_MAX_PAGES: Pages = Pages(32_768L)
 public val WASM_MEMORY_32_MAX_PAGES: Pages = Pages(65_536L)
-public val WASM_MEMORY_64_MAX_PAGES: Pages = Pages(281_474_976_710_656)
+
+private const val WASM_MEMORY_64_MAX_PAGES_INT = 281_474_976_710_656
+public val WASM_MEMORY_64_MAX_PAGES: Pages = Pages(WASM_MEMORY_64_MAX_PAGES_INT)
 
 public class Pages(
     public val count: Long,
@@ -18,7 +21,7 @@ public class Pages(
         get() = count * WASM_MEMORY_PAGE_SIZE
 
     init {
-        require(count in 0..WASM_MEMORY_64_MAX_PAGES.count)
+        require(count in 0..WASM_MEMORY_64_MAX_PAGES_INT)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -8,7 +8,7 @@
 
 package at.released.weh.sample.graalvm.gradle.app
 
-import at.released.weh.bindings.graalvm240.GraalvmHostFunctionInstaller
+import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
