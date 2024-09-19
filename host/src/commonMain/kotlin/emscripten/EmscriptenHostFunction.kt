@@ -8,7 +8,6 @@
 
 package at.released.weh.host.emscripten
 
-import at.released.weh.host.base.pointerToType
 import at.released.weh.wasi.preview1.type.FdWasmValueType
 import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.wasm.core.HostFunction
@@ -17,6 +16,7 @@ import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes.F64
 import at.released.weh.wasm.core.WasmValueTypes.I32
 import at.released.weh.wasm.core.WasmValueTypes.I64
+import at.released.weh.wasm.core.witxPointer
 
 public enum class EmscriptenHostFunction(
     public override val wasmName: String,
@@ -29,26 +29,26 @@ public enum class EmscriptenHostFunction(
     ASSERT_FAIL(
         wasmName = "__assert_fail",
         paramTypes = listOf(
-            pointerToType(U8), // pCondition
-            pointerToType(U8), // filename
+            witxPointer(U8), // pCondition
+            witxPointer(U8), // filename
             I32, // line
-            pointerToType(U8), // func
+            witxPointer(U8), // func
         ),
     ),
     EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD(
         wasmName = "emscripten_asm_const_async_on_main_thread",
         paramTypes = listOf(
-            pointerToType(U8), // emAsmAddr
-            pointerToType(U8), // sigPtr
-            pointerToType(U8), // argbuf,
+            witxPointer(U8), // emAsmAddr
+            witxPointer(U8), // sigPtr
+            witxPointer(U8), // argbuf,
         ),
     ),
     EMSCRIPTEN_ASM_CONST_INT(
         wasmName = "emscripten_asm_const_int",
         paramTypes = listOf(
-            pointerToType(U8), // emAsmAddr
-            pointerToType(U8), // sigPtr
-            pointerToType(U8), // argbuf
+            witxPointer(U8), // emAsmAddr
+            witxPointer(U8), // sigPtr
+            witxPointer(U8), // argbuf
         ),
         retType = I32,
     ),
@@ -58,7 +58,7 @@ public enum class EmscriptenHostFunction(
     ),
     EMSCRIPTEN_CONSOLE_ERROR(
         wasmName = "emscripten_console_error",
-        paramTypes = listOf(pointerToType(U8)),
+        paramTypes = listOf(witxPointer(U8)),
     ),
     EMSCRIPTEN_DATE_NOW(
         wasmName = "emscripten_date_now",
@@ -122,7 +122,7 @@ public enum class EmscriptenHostFunction(
     GETENTROPY(
         wasmName = "getentropy",
         paramTypes = listOf(
-            pointerToType(U8), // buffer
+            witxPointer(U8), // buffer
             I32, // size
         ),
         retType = I32,
@@ -194,7 +194,7 @@ public enum class EmscriptenHostFunction(
         wasmName = "__syscall_fstat64",
         paramTypes = listOf(
             FdWasmValueType,
-            pointerToType(U8), // statbuf
+            witxPointer(U8), // statbuf
         ),
         retType = I32,
     ),
@@ -206,7 +206,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_GETCWD(
         wasmName = "__syscall_getcwd",
         paramTypes = listOf(
-            pointerToType(U8), // buf
+            witxPointer(U8), // buf
             I32, // size
         ),
         retType = I32,
@@ -235,7 +235,7 @@ public enum class EmscriptenHostFunction(
         wasmName = "__syscall_openat",
         paramTypes = listOf(
             FdWasmValueType, // dirfd
-            pointerToType(U8), // pathname
+            witxPointer(U8), // pathname
             I32, // flags
             I32, // mode / varargs
         ),
@@ -245,8 +245,8 @@ public enum class EmscriptenHostFunction(
         wasmName = "__syscall_readlinkat",
         paramTypes = listOf(
             FdWasmValueType, // dirfd
-            pointerToType(U8), // pathname
-            pointerToType(U8), // buf
+            witxPointer(U8), // pathname
+            witxPointer(U8), // buf
             I32, // bufsiz
         ),
         retType = I32,
@@ -270,8 +270,8 @@ public enum class EmscriptenHostFunction(
         wasmName = "__syscall_utimensat",
         paramTypes = listOf(
             I32, // dirfd
-            pointerToType(U8), // pathname
-            pointerToType(U8), // times
+            witxPointer(U8), // pathname
+            witxPointer(U8), // times
             I32, // flags
         ),
         retType = I32,

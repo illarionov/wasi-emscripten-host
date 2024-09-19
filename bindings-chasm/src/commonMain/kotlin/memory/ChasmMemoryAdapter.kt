@@ -9,9 +9,9 @@
 package at.released.weh.bindings.chasm.memory
 
 import at.released.weh.bindings.chasm.ext.orThrow
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.Memory
 import com.github.michaelbull.result.fold
 import io.github.charlietap.chasm.embedding.memory.readByte
 import io.github.charlietap.chasm.embedding.memory.readBytes
@@ -117,7 +117,7 @@ public class ChasmMemoryAdapter(
     }
 }
 
+@Suppress("UnusedReceiverParameter", "INVISIBLE_MEMBER")
 private fun Store.defaultMemory(): ChasmMemory {
-    @Suppress("INVISIBLE_MEMBER")
     return ChasmMemory(ExternalValue.Memory(Address.Memory(0)))
 }

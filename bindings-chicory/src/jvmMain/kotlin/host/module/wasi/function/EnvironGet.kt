@@ -9,9 +9,9 @@ package at.released.weh.bindings.chicory.host.module.wasi.function
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.wasi.preview1.function.EnvironGetFunctionHandle
 import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

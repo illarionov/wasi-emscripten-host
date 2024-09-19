@@ -9,9 +9,8 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.EmscriptenConsoleErrorFunctionHandle
-import io.github.charlietap.chasm.embedding.memory
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
 internal class EmscriptenConsoleError(

@@ -7,18 +7,18 @@
 package at.released.weh.bindings.graalvm241.host.pthread.threadfactory
 
 import at.released.weh.common.api.Logger
-import at.released.weh.host.base.POINTER
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
-import at.released.weh.host.base.memory.Memory
-import at.released.weh.host.base.memory.readU64
 import at.released.weh.host.emscripten.export.memory.DynamicMemory
 import at.released.weh.host.emscripten.export.memory.freeSilent
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
 import at.released.weh.host.include.pthread_t
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.POINTER
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.WasmPtrUtil.C_NULL
+import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasm.core.memory.readU64
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.locks.ReentrantLock
@@ -35,7 +35,7 @@ internal class ExternalManagedThreadOrchestrator(
     private val startingManagedThreads = StartingExternalManagedThreadRegistry(logger)
     private val lock = ReentrantLock()
 
-    public fun createWasmPthreadForThread(thread: Thread): pthread_t {
+    fun createWasmPthreadForThread(thread: Thread): pthread_t {
         val token = registerExternalThread(thread)
         try {
             // XXX: native pthread leaks if thread not started
@@ -148,7 +148,7 @@ internal class ExternalManagedThreadOrchestrator(
     )
 
     companion object {
-        public val USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION = object : HostFunction {
+        val USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION = object : HostFunction {
             override val wasmName: String = "use_managed_thread_pthread_routine"
             override val type: HostFunction.HostFunctionType = HostFunction.HostFunctionType(
                 params = listOf(POINTER),

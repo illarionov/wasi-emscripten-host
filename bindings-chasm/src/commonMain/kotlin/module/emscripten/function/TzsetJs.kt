@@ -9,8 +9,8 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.TzsetJsFunctionHandle
+import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
 internal class TzsetJs(

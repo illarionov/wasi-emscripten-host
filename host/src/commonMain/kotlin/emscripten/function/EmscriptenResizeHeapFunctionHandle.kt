@@ -8,9 +8,9 @@ package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.Pages
-import at.released.weh.host.base.memory.WASM_MEMORY_PAGE_SIZE
 import at.released.weh.host.emscripten.EmscriptenHostFunction
+import at.released.weh.wasm.core.memory.Pages
+import at.released.weh.wasm.core.memory.WASM_MEMORY_PAGE_SIZE
 
 public class EmscriptenResizeHeapFunctionHandle(
     host: EmbedderHost,

@@ -17,11 +17,11 @@ import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.host.emscripten.export.EmscriptenRuntime
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
+import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Memory as ChicoryMemory

@@ -8,9 +8,9 @@ package at.released.weh.host.wasi.preview1.function
 
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.wasi.preview1.WasiHostFunction.SCHED_YIELD
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Errno.SUCCESS
+import at.released.weh.wasi.preview1.WasiHostFunction.SCHED_YIELD
 
 public class SchedYieldFunctionHandle(
     host: EmbedderHost,

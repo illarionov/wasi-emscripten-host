@@ -8,10 +8,10 @@ package at.released.weh.host.emscripten.function
 
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.emscripten.FcntlHandler
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
 
 public class SyscallFcntl64FunctionHandle(
     host: EmbedderHost,

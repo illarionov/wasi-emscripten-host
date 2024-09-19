@@ -11,14 +11,14 @@ import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readNullTerminatedString
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.fromRawDirFd
 import at.released.weh.host.ext.negativeErrnoCode
 import at.released.weh.host.include.Fcntl.AT_REMOVEDIR
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.readNullTerminatedString
 
 public class SyscallUnlinkatFunctionHandle(
     host: EmbedderHost,

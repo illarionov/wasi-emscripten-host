@@ -28,7 +28,7 @@ public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/w
 	public fun setTimeZoneInfo (Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;)V
 }
 
-public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/host/base/memory/Memory {
+public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/wasm/core/memory/Memory {
 	public fun <init> ()V
 	public fun <init> (ILat/released/weh/filesystem/FileSystem;Lat/released/weh/common/api/Logger;)V
 	public synthetic fun <init> (ILat/released/weh/filesystem/FileSystem;Lat/released/weh/common/api/Logger;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -50,7 +50,7 @@ public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/hos
 	public fun writeI8 (IB)V
 }
 
-public final class at/released/weh/host/test/fixtures/TestMemoryRawSource : at/released/weh/host/base/memory/MemoryRawSource {
+public final class at/released/weh/host/test/fixtures/TestMemoryRawSource : at/released/weh/wasm/core/memory/MemoryRawSource {
 	public fun <init> (Lat/released/weh/host/test/fixtures/TestMemory;II)V
 }
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.memory
+package at.released.weh.wasm.core.memory
 
 import assertk.assertThat
 import assertk.assertions.containsExactly

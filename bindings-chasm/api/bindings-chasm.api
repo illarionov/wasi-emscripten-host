@@ -37,7 +37,7 @@ public class at/released/weh/bindings/chasm/exception/ChasmException : java/lang
 	public fun <init> (Ljava/lang/Throwable;)V
 }
 
-public final class at/released/weh/bindings/chasm/memory/ChasmMemoryAdapter : at/released/weh/host/base/memory/Memory {
+public final class at/released/weh/bindings/chasm/memory/ChasmMemoryAdapter : at/released/weh/wasm/core/memory/Memory {
 	public fun <init> (Lio/github/charlietap/chasm/embedding/shapes/Store;Lkotlin/jvm/functions/Function1;)V
 	public final fun getLimits ()Lio/github/charlietap/chasm/embedding/shapes/Limits;
 	public final fun getMemoryInstance ()Lio/github/charlietap/chasm/embedding/shapes/Memory;

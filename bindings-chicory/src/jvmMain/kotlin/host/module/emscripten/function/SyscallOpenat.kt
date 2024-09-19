@@ -11,8 +11,8 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.emscripten.function.SyscallOpenatFunctionHandle
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

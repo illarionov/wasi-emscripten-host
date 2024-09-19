@@ -16,9 +16,6 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
-import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readPtr
-import at.released.weh.host.base.memory.sourceWithMaxSize
 import at.released.weh.host.ext.negativeErrnoCode
 import at.released.weh.host.include.Fcntl
 import at.released.weh.host.include.StructFlock
@@ -28,6 +25,9 @@ import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.readPtr
+import at.released.weh.wasm.core.memory.sourceWithMaxSize
 import kotlinx.io.buffered
 
 internal class FcntlHandler(
@@ -100,8 +100,8 @@ internal class FcntlHandler(
             return Advisorylock(
                 type = type,
                 whence = whence,
-                start = this.l_start.toLong(),
-                length = this.l_len.toLong(),
+                start = this.l_start,
+                length = this.l_len,
             ).right()
         }
     }

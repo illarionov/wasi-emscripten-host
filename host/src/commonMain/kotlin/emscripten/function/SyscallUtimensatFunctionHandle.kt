@@ -10,8 +10,6 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readNullTerminatedString
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.fromRawDirFd
 import at.released.weh.host.ext.negativeErrnoCode
@@ -21,6 +19,8 @@ import at.released.weh.host.include.sys.SysStat.UTIME_OMIT
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.WasmPtrUtil.ptrIsNull
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.readNullTerminatedString
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
@@ -38,7 +38,7 @@ public class SyscallUtimensatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0
         val path = memory.readNullTerminatedString(pathnamePtr)
-        var atimeNs: Long?
+        val atimeNs: Long?
         val mtimeNs: Long?
         @Suppress("MagicNumber")
         if (ptrIsNull(times)) {

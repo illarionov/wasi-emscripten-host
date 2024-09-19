@@ -7,7 +7,6 @@
 package at.released.weh.bindings.graalvm241.host
 
 import at.released.weh.common.api.Logger
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.export.EmscriptenMainExports
 import at.released.weh.host.emscripten.export.EmscriptenRuntime
 import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
@@ -18,6 +17,7 @@ import at.released.weh.host.include.StructPthread.Companion.STRUCT_PTHREAD_STACK
 import at.released.weh.host.include.StructPthread.Companion.STRUCT_PTHREAD_STACK_SZIE_OFFSET
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.Memory
 
 public class GraalvmEmscriptenRuntime(
     mainExports: EmscriptenMainExports,

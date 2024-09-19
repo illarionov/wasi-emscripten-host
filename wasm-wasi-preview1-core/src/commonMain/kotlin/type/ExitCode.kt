@@ -6,6 +6,7 @@
 
 package at.released.weh.wasi.preview1.type
 
+import at.released.weh.wasi.preview1.WasiTypename
 import at.released.weh.wasm.core.WasmValueType
 
 public class ExitCode(

@@ -4,19 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base
+package at.released.weh.wasi.preview1
 
-import at.released.weh.wasi.preview1.type.WasiTypename
+import at.released.weh.wasm.core.POINTER
 import at.released.weh.wasm.core.WasmValueType
-import at.released.weh.wasm.core.WasmValueTypes.I32
 
-@WasmValueType
-public val POINTER: Int get() = I32
-
-public fun pointerToType(
-    @Suppress("UNUSED_PARAMETER") @WasmValueType type: Int,
-): @WasmValueType Int = POINTER
-
-public fun pointerToType(
+internal fun pointerToType(
     @Suppress("UNUSED_PARAMETER") type: WasiTypename,
 ): @WasmValueType Int = POINTER
