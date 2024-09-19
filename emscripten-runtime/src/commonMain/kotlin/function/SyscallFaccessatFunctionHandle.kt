@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.fromRawDirFd
+import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.host.include.Fcntl
 import at.released.weh.host.include.Fcntl.AT_EACCESS
 import at.released.weh.host.include.Fcntl.AT_SYMLINK_NOFOLLOW

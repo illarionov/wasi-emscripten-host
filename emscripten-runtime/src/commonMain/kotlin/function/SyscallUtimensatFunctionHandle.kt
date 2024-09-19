@@ -11,7 +11,7 @@ import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.fromRawDirFd
+import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.host.include.Fcntl.AT_SYMLINK_NOFOLLOW
 import at.released.weh.host.include.sys.SysStat.UTIME_NOW
 import at.released.weh.host.include.sys.SysStat.UTIME_OMIT

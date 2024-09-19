@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.fromRawDirFd
+import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.ReadOnlyMemory

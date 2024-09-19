@@ -4,12 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.ext
+package at.released.weh.common.ext
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import kotlinx.io.Sink
 
-@InternalWasiEmscriptenHostApi
 public fun Sink.writeNullTerminatedString(
     string: String,
     truncateAtSize: Int = Int.MAX_VALUE,

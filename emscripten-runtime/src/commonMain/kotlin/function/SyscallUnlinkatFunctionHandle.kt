@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.fromRawDirFd
+import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.host.include.Fcntl.AT_REMOVEDIR
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

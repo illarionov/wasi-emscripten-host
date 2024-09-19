@@ -4,23 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.ext
+package ext
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.common.ext.encodeToNullTerminatedBuffer
+import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import kotlinx.io.readByteArray
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class NullTerminatedStringExtTest {
-    @BeforeTest
-    fun setup() {
-        TestEnvironment.prepare()
-    }
-
     @Test
     fun encodeToNullTerminatedBuffer_test() {
         // TODO: correctly truncate on utf-8 character border

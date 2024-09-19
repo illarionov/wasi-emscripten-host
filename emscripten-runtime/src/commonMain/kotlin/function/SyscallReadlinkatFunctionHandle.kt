@@ -10,7 +10,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_READLINK
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.fromRawDirFd
+import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

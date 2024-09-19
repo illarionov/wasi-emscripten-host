@@ -41,9 +41,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.commonApi)
+            api(libs.kotlinx.io)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.assertk)
         }
     }
 }

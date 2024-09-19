@@ -34,6 +34,7 @@ kotlin {
             api(projects.commonApi)
             api(projects.filesystem)
             api(projects.host)
+            implementation(projects.commonUtil)
         }
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)
