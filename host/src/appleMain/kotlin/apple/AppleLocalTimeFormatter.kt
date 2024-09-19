@@ -6,8 +6,8 @@
 
 package at.released.weh.host.apple
 
-import LocalTimeFormatter
-import at.released.weh.host.include.StructTm
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.LocalTimeFormatter.StructTm
 
 internal class AppleLocalTimeFormatter : LocalTimeFormatter {
     override fun format(epochSeconds: Long): StructTm {

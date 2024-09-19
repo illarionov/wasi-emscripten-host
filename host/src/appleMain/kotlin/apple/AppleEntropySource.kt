@@ -6,7 +6,7 @@
 
 package at.released.weh.host.apple
 
-import EntropySource
+import at.released.weh.host.EntropySource
 
 internal class AppleEntropySource : EntropySource {
     override fun generateEntropy(size: Int): ByteArray {
