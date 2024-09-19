@@ -21,6 +21,38 @@ import at.released.weh.wasm.core.memory.Pages
 import at.released.weh.wasm.core.memory.WASM_MEMORY_PAGE_SIZE
 import org.graalvm.polyglot.Context
 
+/**
+ * Emscripten / WASI Preview 1 module installer.
+ *
+ * This class is responsible for installing Emscripten and WASI Preview 1 host functions.
+ * It prepares the environment and installs WebAssembly modules with the Emscripten env host functions and
+ * WASI Preview 1 host functions into the GraalVM context.
+ *
+ * To create a new instance, use either [Companion.invoke] or [Builder].
+ *
+ * Usage example:
+ *
+ * ```kotlin
+ * // Setup modules
+ * val installer = GraalvmHostFunctionInstaller(context) {
+ *    ...
+ * }
+ * installer.setupWasiPreview1Module()
+ * val emscriptenInstaller = installer.setupEmscriptenFunctions()
+ *
+ * // Evaluate the WebAssembly module
+ * context.eval(source)
+ *
+ * // Finish initialization after module instantiation
+ * emscriptenInstaller.finalize(HELLO_WORLD_MODULE_NAME).use { emscriptenEnv ->
+ *     // Initialize Emscripten runtime environment
+ *     emscriptenEnv.emscriptenRuntime.initMainThread()
+ *
+ *     // Execute code
+ *     run(context)
+ * }
+ * ```
+ */
 public class GraalvmHostFunctionInstaller private constructor(
     private val host: EmbedderHost,
     private val graalWasmContext: Context,

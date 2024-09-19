@@ -140,8 +140,6 @@ public class GraalvmEmscriptenEnvironment internal constructor(
         managedThreadInitializer = lazyManagedThreadInitializer,
         rootLogger = rootLogger,
     )
-
-    @InternalWasiEmscriptenHostApi
     public val emscriptenRuntime: GraalvmEmscriptenRuntime = GraalvmEmscriptenRuntime.multithreadedRuntime(
         mainExports = emscriptenMainExports,
         stackExports = stackExports,

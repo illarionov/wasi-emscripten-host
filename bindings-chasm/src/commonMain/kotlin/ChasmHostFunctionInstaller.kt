@@ -25,6 +25,27 @@ import io.github.charlietap.chasm.embedding.shapes.Memory
 import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
 
+/**
+ * Emscripten / WASI Preview 1 host function installer.
+ *
+ * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
+ *
+ * To create a new instance, use either [Companion.invoke].
+ *
+ * Usage example:
+ *
+ * ```kotlin
+ * // Prepare Host memory
+ * val memory: Memory = memory(store, memoryType)
+ *
+ * // Prepare WASI and Emscripten host imports
+ * val chasmInstaller = ChasmHostFunctionInstaller(store) {
+ *     memoryProvider = { memory }
+ * }
+ * val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
+ * val emscriptenInstaller = chasmInstaller.setupEmscriptenFunctions()
+ * ```
+ */
 public class ChasmHostFunctionInstaller private constructor(
     private val store: Store,
     memoryProvider: (Store.() -> Memory)?,
