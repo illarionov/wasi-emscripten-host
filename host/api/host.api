@@ -86,24 +86,6 @@ public final class at/released/weh/host/base/function/IndirectFunctionTableIndex
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/host/base/memory/DefaultWasiMemoryReader : at/released/weh/host/base/memory/WasiMemoryReader {
-	public fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/filesystem/FileSystem;)V
-	public fun read (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
-}
-
-public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at/released/weh/host/base/memory/WasiMemoryWriter {
-	public fun <init> (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;Lat/released/weh/filesystem/FileSystem;)V
-	public fun write (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
-}
-
-public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
-	public abstract fun read (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
-}
-
-public abstract interface class at/released/weh/host/base/memory/WasiMemoryWriter {
-	public abstract fun write (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
-}
-
 public final class at/released/weh/host/emscripten/AssertionFailedException : java/lang/RuntimeException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
 }

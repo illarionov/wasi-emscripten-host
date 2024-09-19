@@ -36,8 +36,6 @@ public class at/released/weh/host/test/fixtures/TestMemory : at/released/weh/was
 	public final fun getBytes ()[B
 	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
 	public final fun getLogger ()Lat/released/weh/common/api/Logger;
-	public final fun getMemoryReader ()Lat/released/weh/host/base/memory/DefaultWasiMemoryReader;
-	public final fun getMemoryWriter ()Lat/released/weh/host/base/memory/DefaultWasiMemoryWriter;
 	public final fun getSize ()I
 	public fun readI32 (I)I
 	public fun readI64 (I)J

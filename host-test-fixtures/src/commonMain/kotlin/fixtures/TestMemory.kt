@@ -11,8 +11,6 @@ package at.released.weh.host.test.fixtures
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
-import at.released.weh.host.base.memory.DefaultWasiMemoryReader
-import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -26,8 +24,6 @@ public open class TestMemory(
     public val logger: Logger = TestLogger(),
 ) : Memory {
     public val bytes: ByteArray = ByteArray(size) { 0xdc.toByte() }
-    public val memoryReader: DefaultWasiMemoryReader = DefaultWasiMemoryReader(this, fileSystem)
-    public val memoryWriter: DefaultWasiMemoryWriter = DefaultWasiMemoryWriter(this, fileSystem)
 
     public fun fill(value: Byte) {
         bytes.fill(value)

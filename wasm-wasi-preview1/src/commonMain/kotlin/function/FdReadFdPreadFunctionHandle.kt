@@ -9,10 +9,10 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasi.preview1.type.IovecArray
 import at.released.weh.wasi.preview1.type.Size

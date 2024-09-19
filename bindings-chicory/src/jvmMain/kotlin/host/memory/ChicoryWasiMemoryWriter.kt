@@ -14,9 +14,9 @@ import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import at.released.weh.host.base.memory.DefaultWasiMemoryWriter
-import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
+import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.CioVec
 import com.dylibso.chicory.runtime.Memory
 import java.lang.reflect.Field

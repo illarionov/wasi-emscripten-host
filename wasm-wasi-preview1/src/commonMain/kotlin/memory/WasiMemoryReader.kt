@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.memory
+package at.released.weh.wasi.preview1.memory
 
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
