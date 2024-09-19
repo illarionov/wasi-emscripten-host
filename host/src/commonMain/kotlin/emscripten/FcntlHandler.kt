@@ -100,8 +100,8 @@ internal class FcntlHandler(
             return Advisorylock(
                 type = type,
                 whence = whence,
-                start = this.l_start.toLong(),
-                length = this.l_len.toLong(),
+                start = this.l_start,
+                length = this.l_len,
             ).right()
         }
     }

@@ -35,7 +35,7 @@ internal class ExternalManagedThreadOrchestrator(
     private val startingManagedThreads = StartingExternalManagedThreadRegistry(logger)
     private val lock = ReentrantLock()
 
-    public fun createWasmPthreadForThread(thread: Thread): pthread_t {
+    fun createWasmPthreadForThread(thread: Thread): pthread_t {
         val token = registerExternalThread(thread)
         try {
             // XXX: native pthread leaks if thread not started
@@ -148,7 +148,7 @@ internal class ExternalManagedThreadOrchestrator(
     )
 
     companion object {
-        public val USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION = object : HostFunction {
+        val USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION = object : HostFunction {
             override val wasmName: String = "use_managed_thread_pthread_routine"
             override val type: HostFunction.HostFunctionType = HostFunction.HostFunctionType(
                 params = listOf(POINTER),

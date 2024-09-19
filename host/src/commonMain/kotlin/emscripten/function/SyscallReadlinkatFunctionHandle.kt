@@ -46,7 +46,7 @@ public class SyscallReadlinkatFunctionHandle(
         ).fold(
             ifLeft = { -it.errno.code },
         ) { linkPath: String ->
-            val linkpathBuffer = Buffer().also { it.writeString(linkPath.toString()) }
+            val linkpathBuffer = Buffer().also { it.writeString(linkPath) }
             val len = linkpathBuffer.size.toInt().coerceAtMost(bufSize)
 
             memory.sinkWithMaxSize(buf, len).use {

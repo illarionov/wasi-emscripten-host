@@ -38,7 +38,7 @@ public class SyscallUtimensatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0
         val path = memory.readNullTerminatedString(pathnamePtr)
-        var atimeNs: Long?
+        val atimeNs: Long?
         val mtimeNs: Long?
         @Suppress("MagicNumber")
         if (ptrIsNull(times)) {

@@ -66,6 +66,6 @@ public class DefaultWasiMemoryReader(
     }
 
     private fun List<Iovec>.createBuffers(): List<FileSystemByteBuffer> = map { iovec ->
-        FileSystemByteBuffer(ByteArray(iovec.bufLen.value.toInt()))
+        FileSystemByteBuffer(ByteArray(iovec.bufLen.value))
     }
 }

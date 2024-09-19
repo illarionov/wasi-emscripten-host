@@ -117,7 +117,7 @@ public class ChasmMemoryAdapter(
     }
 }
 
+@Suppress("UnusedReceiverParameter", "INVISIBLE_MEMBER")
 private fun Store.defaultMemory(): ChasmMemory {
-    @Suppress("INVISIBLE_MEMBER")
     return ChasmMemory(ExternalValue.Memory(Address.Memory(0)))
 }
