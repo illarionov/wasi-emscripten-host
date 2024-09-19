@@ -67,18 +67,6 @@ public final class at/released/weh/host/base/WasmModules {
 	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
 }
 
-public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
-	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/wasm/core/WasmFunctionBinding;
-}
-
-public final class at/released/weh/host/base/function/IndirectFunctionTableIndex {
-	public fun <init> (I)V
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFuncId ()I
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class at/released/weh/host/include/Fcntl {
 	public static final field AT_EACCESS I
 	public static final field AT_FDCWD I

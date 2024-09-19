@@ -84,6 +84,14 @@ public class at/released/weh/emcripten/runtime/export/EmscriptenRuntime {
 public final class at/released/weh/emcripten/runtime/export/EmscriptenRuntime$Companion {
 }
 
+public final class at/released/weh/emcripten/runtime/export/IndirectFunctionTableIndex {
+	public fun <init> (I)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFuncId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class at/released/weh/emcripten/runtime/export/memory/DynamicMemory$OutOfMemoryException : java/lang/RuntimeException {
 	public fun <init> ()V
 }

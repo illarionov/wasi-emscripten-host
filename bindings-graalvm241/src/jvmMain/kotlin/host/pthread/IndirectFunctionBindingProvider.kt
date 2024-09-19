@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.binding
+package at.released.weh.bindings.graalvm241.host.pthread
 
-import at.released.weh.host.base.function.IndirectFunctionTableIndex
+import at.released.weh.emcripten.runtime.export.IndirectFunctionTableIndex
 import at.released.weh.wasm.core.WasmFunctionBinding
 
 public fun interface IndirectFunctionBindingProvider {

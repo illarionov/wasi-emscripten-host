@@ -6,10 +6,9 @@
 
 package at.released.weh.bindings.graalvm241.host.pthread
 
+import at.released.weh.emcripten.runtime.export.IndirectFunctionTableIndex
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
-import at.released.weh.host.base.binding.IndirectFunctionBindingProvider
-import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.function
+package at.released.weh.emcripten.runtime.export
 
 public class IndirectFunctionTableIndex(
     public val funcId: Int,

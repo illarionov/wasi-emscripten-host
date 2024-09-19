@@ -7,9 +7,9 @@
 package at.released.weh.emcripten.runtime.export.pthread
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.emcripten.runtime.export.IndirectFunctionTableIndex
 import at.released.weh.emcripten.runtime.export.memory.DynamicMemory
 import at.released.weh.emcripten.runtime.export.memory.freeSilent
-import at.released.weh.host.base.function.IndirectFunctionTableIndex
 import at.released.weh.host.include.pthread_t
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
