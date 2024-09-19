@@ -7,13 +7,13 @@
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
+import at.released.weh.emcripten.runtime.function.FdDatasyncFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal class SyscallFdatasync(host: EmbedderHost) : EmscriptenHostFunctionHandle {
-    val handle = FdSyncSyscallFdatasyncFunctionHandle.syscallFdatasync(host)
+    val handle = FdDatasyncFunctionHandle(host)
     override fun apply(instance: Instance, vararg args: Value): Value? {
         return Value.i32(handle.execute(args[0].asInt()).code.toLong())
     }

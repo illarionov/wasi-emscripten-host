@@ -8,9 +8,10 @@ package at.released.weh.bindings.graalvm241.host.pthread.threadfactory
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
+import at.released.weh.bindings.graalvm241.host.pthread.threadfactory.ExternalManagedThreadOrchestrator.Companion.USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION
 import at.released.weh.bindings.graalvm241.host.pthread.threadfactory.UseManagedThreadPthreadRoutineAdapter.UseManagedThreadPthreadRoutineFunctionHandle
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives
@@ -36,7 +37,7 @@ internal class UseManagedThreadPthreadRoutineAdapter(
 
     internal class UseManagedThreadPthreadRoutineFunctionHandle(
         host: EmbedderHost,
-    ) : HostFunctionHandle(ExternalManagedThreadOrchestrator.USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION, host) {
+    ) : EmscriptenHostFunctionHandle(USE_MANAGED_THREAD_PTHREAD_ROUTINE_FUNCTION, host) {
         @CompilerDirectives.TruffleBoundary
         fun execute(@IntWasmPtr arg: WasmPtr): Int {
             logger.v { "Managed thread start_routine called with arg $arg. Do nothing." }

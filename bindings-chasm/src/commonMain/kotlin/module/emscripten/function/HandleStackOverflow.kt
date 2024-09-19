@@ -8,9 +8,9 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
+import at.released.weh.emcripten.runtime.function.HandleStackOverflowFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
-import at.released.weh.host.emscripten.function.HandleStackOverflowFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
 internal class HandleStackOverflow(

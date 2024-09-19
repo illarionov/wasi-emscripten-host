@@ -9,8 +9,8 @@ package at.released.weh.bindings.chasm.module.emscripten.function
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
+import at.released.weh.emcripten.runtime.function.SyscallFtruncate64FunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.SyscallFtruncate64FunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 

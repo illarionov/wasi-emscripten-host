@@ -8,9 +8,9 @@
 
 package at.released.weh.bindings.chasm.exports
 
-import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
-import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
-import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
 import io.github.charlietap.chasm.embedding.shapes.Instance
 import io.github.charlietap.chasm.embedding.shapes.Store
 

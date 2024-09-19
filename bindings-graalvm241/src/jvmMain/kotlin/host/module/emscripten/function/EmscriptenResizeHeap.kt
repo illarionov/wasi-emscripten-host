@@ -9,10 +9,10 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenResizeHeap.ResizeHeapHandle
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
+import at.released.weh.emcripten.runtime.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.emscripten.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.wasi.filesystem.common.Errno.NOMEM
 import at.released.weh.wasm.core.memory.Pages
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -37,7 +37,7 @@ internal class EmscriptenResizeHeap(
 
     internal class ResizeHeapHandle(
         host: EmbedderHost,
-    ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP, host) {
+    ) : EmscriptenHostFunctionHandle(EMSCRIPTEN_RESIZE_HEAP, host) {
         @TruffleBoundary
         fun execute(
             memory: WasmMemory,

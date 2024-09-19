@@ -28,6 +28,7 @@ kotlin {
             api(projects.host)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
+            implementation(projects.emscriptenRuntime)
             implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
         }

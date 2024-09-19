@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
+import at.released.weh.emcripten.runtime.function.EmscriptenGetNowFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.EmscriptenGetNowFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext

@@ -14,11 +14,11 @@ import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryWriter
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenEnvFunctionsBuilder
 import at.released.weh.bindings.chicory.host.module.wasi.WasiSnapshotPreview1ModuleBuilder
 import at.released.weh.common.api.WasiEmscriptenHostDsl
+import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.emscripten.export.EmscriptenRuntime
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.memory.Memory

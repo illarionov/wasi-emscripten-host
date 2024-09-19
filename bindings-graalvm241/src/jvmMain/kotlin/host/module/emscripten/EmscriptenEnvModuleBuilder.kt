@@ -47,13 +47,13 @@ import at.released.weh.bindings.graalvm241.host.module.emscripten.function.Tzset
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.syscallLstat64
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.syscallStat64
 import at.released.weh.bindings.graalvm241.host.module.notImplementedFunctionNodeFactory
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.SyscallFdatasync
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdDataSync
 import at.released.weh.bindings.graalvm241.host.pthread.GraalvmPthreadManager
 import at.released.weh.bindings.graalvm241.host.pthread.PthreadCreateJsWasmNode
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
-import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import org.graalvm.polyglot.Context
 import org.graalvm.wasm.WasmInstance
 import org.graalvm.wasm.WasmLanguage
@@ -98,7 +98,7 @@ internal class EmscriptenEnvModuleBuilder(
             EmscriptenHostFunction.SYSCALL_FCHMOD -> ::SyscallFchmod
             EmscriptenHostFunction.SYSCALL_FCHOWN32 -> ::SyscallFchown32
             EmscriptenHostFunction.SYSCALL_FCNTL64 -> ::SyscallFcntl64
-            EmscriptenHostFunction.SYSCALL_FDATASYNC -> ::SyscallFdatasync
+            EmscriptenHostFunction.SYSCALL_FDATASYNC -> ::FdDataSync
             EmscriptenHostFunction.SYSCALL_FSTAT64 -> ::SyscallFstat64
             EmscriptenHostFunction.SYSCALL_FTRUNCATE64 -> ::SyscallFtruncate64
             EmscriptenHostFunction.SYSCALL_GETCWD -> ::SyscallGetcwd

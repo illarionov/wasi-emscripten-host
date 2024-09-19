@@ -11,12 +11,12 @@ package at.released.weh.bindings.chicory.host.module.wasi.function
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.filesystem.common.Errno
-import at.released.weh.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
+import at.released.weh.wasi.preview1.function.FdSyncFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal class FdSync(host: EmbedderHost) : WasiHostFunctionHandle {
-    private val handle = FdSyncSyscallFdatasyncFunctionHandle.fdSync(host)
+    private val handle = FdSyncFunctionHandle(host)
 
     override fun apply(instance: Instance, vararg args: Value): Errno {
         return handle.execute(args[0].asInt())

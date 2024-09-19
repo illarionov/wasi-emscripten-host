@@ -8,9 +8,9 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
+import at.released.weh.emcripten.runtime.function.HandleStackOverflowFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
-import at.released.weh.host.emscripten.function.HandleStackOverflowFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

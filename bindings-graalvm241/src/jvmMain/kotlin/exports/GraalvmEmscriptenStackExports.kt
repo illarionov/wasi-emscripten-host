@@ -10,8 +10,8 @@ import at.released.weh.bindings.graalvm241.ext.functionMember
 import at.released.weh.bindings.graalvm241.ext.intGlobalMember
 import at.released.weh.bindings.graalvm241.ext.optionalFunctionMember
 import at.released.weh.bindings.graalvm241.ext.optionalIntGlobalMember
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
 import at.released.weh.host.base.binding.WasmFunctionBinding
-import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
 import org.graalvm.polyglot.Value
 
 internal class GraalvmEmscriptenStackExports(
