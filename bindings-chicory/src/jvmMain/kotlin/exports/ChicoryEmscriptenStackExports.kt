@@ -11,7 +11,7 @@ import at.released.weh.bindings.chicory.ext.ChicoryFunctionBindings
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 import com.dylibso.chicory.runtime.Instance
 
 internal class ChicoryEmscriptenStackExports(instance: Instance) : EmscriptenStackExports {

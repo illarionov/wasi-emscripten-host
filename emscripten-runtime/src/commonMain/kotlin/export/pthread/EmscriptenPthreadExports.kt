@@ -8,7 +8,7 @@
 
 package at.released.weh.emcripten.runtime.export.pthread
 
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 
 public interface EmscriptenPthreadExports {
     public var __tls_base: Int

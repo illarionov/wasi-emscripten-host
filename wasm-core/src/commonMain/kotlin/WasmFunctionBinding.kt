@@ -4,13 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.binding
+package at.released.weh.wasm.core
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.wasm.core.IntWasmPtr
-import at.released.weh.wasm.core.WasmPtr
-
-@InternalWasiEmscriptenHostApi
+/**
+ * Abstraction over function binding
+ */
 public interface WasmFunctionBinding {
     public fun executeVoid(vararg args: Any?)
     public fun executeForInt(vararg args: Any?): Int
@@ -22,13 +20,10 @@ public interface WasmFunctionBinding {
     public fun executeForPtr(vararg args: Any?): WasmPtr
 }
 
-@InternalWasiEmscriptenHostApi
 public fun WasmFunctionBinding.executeForUInt(vararg args: Any?): UInt = executeForInt(args).toUInt()
 
-@InternalWasiEmscriptenHostApi
 public fun WasmFunctionBinding.executeForULong(vararg args: Any?): ULong = executeForLong(args).toULong()
 
-@InternalWasiEmscriptenHostApi
 public val BINDING_NOT_INITIALIZED: WasmFunctionBinding = object : WasmFunctionBinding {
     override fun executeVoid(vararg args: Any?) = error("Not initialized")
     override fun executeForInt(vararg args: Any?): Int = error("Not initialized")

@@ -6,13 +6,11 @@
 
 package at.released.weh.wasm.core
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.WasmValueTypes.I32
 
 @WasmValueType
 public val POINTER: Int get() = I32
 
-@InternalWasiEmscriptenHostApi
 public inline fun witxPointer(
     @Suppress("UNUSED_PARAMETER") @WasmValueType type: Int,
 ): @WasmValueType Int = POINTER

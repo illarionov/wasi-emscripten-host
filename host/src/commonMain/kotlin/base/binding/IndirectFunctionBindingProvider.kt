@@ -7,6 +7,7 @@
 package at.released.weh.host.base.binding
 
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
+import at.released.weh.wasm.core.WasmFunctionBinding
 
 public fun interface IndirectFunctionBindingProvider {
     public fun getFunctionBinding(indirectId: IndirectFunctionTableIndex): WasmFunctionBinding?

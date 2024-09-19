@@ -11,8 +11,8 @@ import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.ext.orThrow
-import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmFunctionBinding
 import at.released.weh.wasm.core.WasmPtr
 import io.github.charlietap.chasm.embedding.error.ChasmError
 import io.github.charlietap.chasm.embedding.invoke

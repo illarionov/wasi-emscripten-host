@@ -9,7 +9,7 @@
 package at.released.weh.emcripten.runtime.export.stack
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 
 /**
  * Interface for calling exported functions related to the Emscripten stack

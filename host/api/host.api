@@ -68,7 +68,7 @@ public final class at/released/weh/host/base/WasmModules {
 }
 
 public abstract interface class at/released/weh/host/base/binding/IndirectFunctionBindingProvider {
-	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getFunctionBinding (Lat/released/weh/host/base/function/IndirectFunctionTableIndex;)Lat/released/weh/wasm/core/WasmFunctionBinding;
 }
 
 public final class at/released/weh/host/base/function/IndirectFunctionTableIndex {

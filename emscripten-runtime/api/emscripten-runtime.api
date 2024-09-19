@@ -62,9 +62,9 @@ public final class at/released/weh/emcripten/runtime/EmscriptenHostFunction$Comp
 
 public abstract interface class at/released/weh/emcripten/runtime/export/EmscriptenMainExports {
 	public static final field Companion Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports$Companion;
-	public abstract fun get__errno_location ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get__wasm_call_ctors ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_initialize ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get__errno_location ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get__wasm_call_ctors ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_initialize ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 }
 
 public final class at/released/weh/emcripten/runtime/export/EmscriptenMainExports$Companion {
@@ -89,29 +89,29 @@ public final class at/released/weh/emcripten/runtime/export/memory/DynamicMemory
 }
 
 public abstract interface class at/released/weh/emcripten/runtime/export/memory/DynamicMemoryExports {
-	public abstract fun getFree ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getMalloc ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getFree ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getMalloc ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 }
 
 public abstract interface class at/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadExports {
-	public abstract fun getEmscripten_main_runtime_thread_id ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_main_thread_process_queued_calls ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_main_runtime_thread_id ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_main_thread_process_queued_calls ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 	public abstract fun getG_needs_dynamic_alloc ()I
-	public abstract fun getPthread_create ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getPthread_exit ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getPthread_self ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getPthread_create ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getPthread_exit ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getPthread_self ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 	public abstract fun getSupports_wait ()I
 	public abstract fun getThread_ptr ()I
 	public abstract fun get__tls_align ()I
 	public abstract fun get__tls_base ()I
 	public abstract fun get__tls_size ()I
-	public abstract fun get_emscripten_check_mailbox ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_run_on_main_thread_js ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_thread_crashed ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_thread_exit ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_thread_free_data ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_thread_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_tls_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_check_mailbox ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_run_on_main_thread_js ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_crashed ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_exit ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_free_data ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_thread_init ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_tls_init ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 	public abstract fun is_main_thread ()I
 	public abstract fun is_runtime_thread ()I
 	public abstract fun setG_needs_dynamic_alloc (I)V
@@ -151,18 +151,18 @@ public final class at/released/weh/emcripten/runtime/export/stack/EmscriptenStac
 
 public abstract interface class at/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports {
 	public static final field Companion Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports$Companion;
-	public abstract fun getEmscripten_stack_get_base ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_stack_get_current ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_stack_get_end ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_stack_get_free ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_stack_init ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun getEmscripten_stack_set_limits ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get__set_stack_limits ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_base ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_current ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_end ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_get_free ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_init ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun getEmscripten_stack_set_limits ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get__set_stack_limits ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 	public abstract fun get__stack_base ()Ljava/lang/Integer;
 	public abstract fun get__stack_end ()Ljava/lang/Integer;
 	public abstract fun get__stack_pointer ()I
-	public abstract fun get_emscripten_stack_alloc ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
-	public abstract fun get_emscripten_stack_restore ()Lat/released/weh/host/base/binding/WasmFunctionBinding;
+	public abstract fun get_emscripten_stack_alloc ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+	public abstract fun get_emscripten_stack_restore ()Lat/released/weh/wasm/core/WasmFunctionBinding;
 	public abstract fun set__stack_base (Ljava/lang/Integer;)V
 	public abstract fun set__stack_end (Ljava/lang/Integer;)V
 	public abstract fun set__stack_pointer (I)V

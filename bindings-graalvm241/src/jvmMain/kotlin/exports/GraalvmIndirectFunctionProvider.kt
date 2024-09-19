@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm241.exports
 
 import at.released.weh.host.base.binding.IndirectFunctionBindingProvider
-import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.host.base.function.IndirectFunctionTableIndex
+import at.released.weh.wasm.core.WasmFunctionBinding
 import org.graalvm.polyglot.Value
 
 internal class GraalvmIndirectFunctionProvider(
