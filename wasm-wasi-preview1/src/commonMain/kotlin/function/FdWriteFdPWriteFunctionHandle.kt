@@ -4,18 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1.function
+package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.WasiMemoryReader
+import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
-import at.released.weh.wasi.preview1.type.Iovec
-import at.released.weh.wasi.preview1.type.IovecArray
+import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.CiovecArray
 import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
@@ -24,58 +23,59 @@ import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import at.released.weh.wasm.core.memory.readPtr
 
-public class FdReadFdPreadFunctionHandle private constructor(
+public class FdWriteFdPWriteFunctionHandle private constructor(
     host: EmbedderHost,
     function: HostFunction,
     private val strategy: ReadWriteStrategy,
-) : HostFunctionHandle(function, host) {
+) : WasiHostFunctionHandle(function, host) {
     public fun execute(
         memory: Memory,
-        bulkReader: WasiMemoryReader,
+        bulkWriter: WasiMemoryWriter,
         @Fd fd: Int,
-        @IntWasmPtr(Iovec::class) pIov: WasmPtr,
-        iovCnt: Int,
-        @IntWasmPtr(Iovec::class) pNum: WasmPtr,
+        @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
+        cIovCnt: Int,
+        @IntWasmPtr(Int::class) pNum: WasmPtr,
     ): Errno {
-        val ioVecs: IovecArray = readIovecs(memory, pIov, iovCnt)
-        return bulkReader.read(fd, strategy, ioVecs.iovecList)
-            .onRight { readBytes -> memory.writeI32(pNum, readBytes.toInt()) }
-            .fold(
+        val cioVecs: CiovecArray = readCiovecs(memory, pCiov, cIovCnt)
+        return bulkWriter.write(fd, strategy, cioVecs.ciovecList)
+            .onRight { writtenBytes ->
+                memory.writeI32(pNum, writtenBytes.toInt())
+            }.fold(
                 ifLeft = FileSystemOperationError::errno,
                 ifRight = { Errno.SUCCESS },
             )
     }
 
     public companion object {
-        public fun fdRead(
+        public fun fdWrite(
             host: EmbedderHost,
-        ): FdReadFdPreadFunctionHandle = FdReadFdPreadFunctionHandle(
+        ): FdWriteFdPWriteFunctionHandle = FdWriteFdPWriteFunctionHandle(
             host,
-            WasiHostFunction.FD_READ,
+            WasiHostFunction.FD_WRITE,
             ReadWriteStrategy.CHANGE_POSITION,
         )
 
-        public fun fdPread(
+        public fun fdPwrite(
             host: EmbedderHost,
-        ): FdReadFdPreadFunctionHandle = FdReadFdPreadFunctionHandle(
+        ): FdWriteFdPWriteFunctionHandle = FdWriteFdPWriteFunctionHandle(
             host,
-            WasiHostFunction.FD_PREAD,
+            WasiHostFunction.FD_PWRITE,
             ReadWriteStrategy.DO_NOT_CHANGE_POSITION,
         )
 
-        private fun readIovecs(
+        private fun readCiovecs(
             memory: ReadOnlyMemory,
-            @IntWasmPtr(Iovec::class) pIov: WasmPtr,
-            iovCnt: Int,
-        ): IovecArray {
-            val iovecs = MutableList(iovCnt) { idx ->
-                val pIovec: WasmPtr = pIov + 8 * idx
-                Iovec(
-                    buf = memory.readPtr(pIovec),
-                    bufLen = Size(memory.readI32(pIovec + 4)),
+            @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
+            ciovCnt: Int,
+        ): CiovecArray {
+            val iovecs = MutableList(ciovCnt) { idx ->
+                val pCiovec: WasmPtr = pCiov + 8 * idx
+                CioVec(
+                    buf = memory.readPtr(pCiovec),
+                    bufLen = Size(memory.readI32(pCiovec + 4)),
                 )
             }
-            return IovecArray(iovecs)
+            return CiovecArray(iovecs)
         }
     }
 }

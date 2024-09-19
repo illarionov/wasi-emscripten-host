@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenAsmConstIntFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -23,7 +23,11 @@ internal class EmscriptenAsmConstInt(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EmscriptenAsmConstIntFunctionHandle>(language, module, EmscriptenAsmConstIntFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<EmscriptenAsmConstIntFunctionHandle>(
+    language,
+    module,
+    EmscriptenAsmConstIntFunctionHandle(host),
+) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance) {
         val args = frame.arguments
         asmConstAsyncOnMainThread(

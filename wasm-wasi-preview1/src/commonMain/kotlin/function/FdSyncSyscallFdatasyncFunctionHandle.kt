@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1.function
+package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
@@ -19,7 +18,7 @@ public class FdSyncSyscallFdatasyncFunctionHandle private constructor(
     host: EmbedderHost,
     function: HostFunction,
     private val syncMetadata: Boolean,
-) : HostFunctionHandle(function, host) {
+) : WasiHostFunctionHandle(function, host) {
     public fun execute(
         @Fd fd: Int,
     ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, syncMetadata))

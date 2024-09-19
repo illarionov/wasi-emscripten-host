@@ -32,8 +32,8 @@ kotlin {
         commonMain.dependencies {
             api(projects.commonApi)
             api(projects.filesystem)
-            api(projects.wasmCore)
-            api(projects.wasmWasiPreview1Core)
+            api(projects.wasmCore) // TODO: remove?
+            api(projects.wasmWasiPreview1Core) // TODO: remove
             implementation(libs.arrow.core)
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)

@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallMkdiratFunctionHandle
@@ -26,7 +26,7 @@ internal class SyscallMkdirat(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallMkdiratFunctionHandle>(language, module, SyscallMkdiratFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallMkdiratFunctionHandle>(language, module, SyscallMkdiratFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         val args: Array<Any> = frame.arguments
         return syscallMkdirat(

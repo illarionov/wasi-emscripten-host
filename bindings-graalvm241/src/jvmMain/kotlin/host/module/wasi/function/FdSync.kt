@@ -9,9 +9,9 @@
 package at.released.weh.bindings.graalvm241.host.module.wasi.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
+import at.released.weh.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -23,7 +23,7 @@ internal fun FdSync(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<FdSyncSyscallFdatasyncFunctionHandle> = FdSync(
+): BaseWasiWasmNode<FdSyncSyscallFdatasyncFunctionHandle> = FdSync(
     language,
     module,
     FdSyncSyscallFdatasyncFunctionHandle.fdSync(host),
@@ -33,7 +33,7 @@ internal fun SyscallFdatasync(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<FdSyncSyscallFdatasyncFunctionHandle> = FdSync(
+): BaseWasiWasmNode<FdSyncSyscallFdatasyncFunctionHandle> = FdSync(
     language,
     module,
     FdSyncSyscallFdatasyncFunctionHandle.syscallFdatasync(host),
@@ -43,7 +43,7 @@ private class FdSync(
     language: WasmLanguage,
     module: WasmModule,
     handle: FdSyncSyscallFdatasyncFunctionHandle,
-) : BaseWasmNode<FdSyncSyscallFdatasyncFunctionHandle>(language, module, handle) {
+) : BaseWasiWasmNode<FdSyncSyscallFdatasyncFunctionHandle>(language, module, handle) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         return fdSync(frame.arguments.getArgAsInt(0))
     }

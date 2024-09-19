@@ -4,18 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1.function
+package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
 
 public class FdCloseFunctionHandle(
     host: EmbedderHost,
-) : HostFunctionHandle(WasiHostFunction.FD_CLOSE, host) {
+) : WasiHostFunctionHandle(WasiHostFunction.FD_CLOSE, host) {
     public fun execute(
         @Fd fd: Int,
     ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd))

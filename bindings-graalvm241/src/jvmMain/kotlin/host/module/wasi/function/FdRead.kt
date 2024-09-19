@@ -9,10 +9,10 @@ package at.released.weh.bindings.graalvm241.host.module.wasi.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.memory.GraalInputStreamWasiMemoryReader
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.WasiMemoryReader
-import at.released.weh.host.wasi.preview1.function.FdReadFdPreadFunctionHandle
+import at.released.weh.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -28,7 +28,7 @@ internal fun fdRead(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<FdReadFdPreadFunctionHandle> = FdRead(
+): BaseWasiWasmNode<FdReadFdPreadFunctionHandle> = FdRead(
     language,
     module,
     FdReadFdPreadFunctionHandle.fdRead(host),
@@ -38,7 +38,7 @@ internal fun fdPread(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<FdReadFdPreadFunctionHandle> = FdRead(
+): BaseWasiWasmNode<FdReadFdPreadFunctionHandle> = FdRead(
     language,
     module,
     FdReadFdPreadFunctionHandle.fdPread(host),
@@ -48,7 +48,7 @@ private class FdRead(
     language: WasmLanguage,
     module: WasmModule,
     handle: FdReadFdPreadFunctionHandle,
-) : BaseWasmNode<FdReadFdPreadFunctionHandle>(language, module, handle) {
+) : BaseWasiWasmNode<FdReadFdPreadFunctionHandle>(language, module, handle) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         val args = frame.arguments
         return fdRead(

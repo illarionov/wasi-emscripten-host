@@ -39,5 +39,6 @@ dependencies {
     dokkatoo(projects.testLogger)
     dokkatoo(projects.wasmCore)
     dokkatoo(projects.wasmWasiPreview1Core)
+    dokkatoo(projects.wasmWasiPreview1)
     dokkatoo(projects.wasmWasiCommonPreview1Filesystem)
 }

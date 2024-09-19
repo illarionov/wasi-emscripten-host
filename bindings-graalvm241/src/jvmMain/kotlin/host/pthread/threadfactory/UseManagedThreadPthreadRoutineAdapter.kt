@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.pthread.threadfactory
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.pthread.threadfactory.UseManagedThreadPthreadRoutineAdapter.UseManagedThreadPthreadRoutineFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -24,7 +24,7 @@ internal class UseManagedThreadPthreadRoutineAdapter(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<UseManagedThreadPthreadRoutineFunctionHandle>(
+) : BaseEmscriptenWasmNode<UseManagedThreadPthreadRoutineFunctionHandle>(
     language,
     module,
     UseManagedThreadPthreadRoutineFunctionHandle(host),

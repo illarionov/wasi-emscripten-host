@@ -6,6 +6,7 @@
 
 package at.released.weh.bindings.graalvm241.host.module
 
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.wasm.core.HostFunction
@@ -24,7 +25,11 @@ private class NotImplementedBaseWasmNode(
     module: WasmModule,
     host: EmbedderHost,
     hostFunction: HostFunction,
-) : BaseWasmNode<NotImplementedFunctionHandle>(language, module, NotImplementedFunctionHandle(host, hostFunction)) {
+) : BaseEmscriptenWasmNode<NotImplementedFunctionHandle>(
+    language,
+    module,
+    NotImplementedFunctionHandle(host, hostFunction),
+) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance) {
         handle.execute()
     }

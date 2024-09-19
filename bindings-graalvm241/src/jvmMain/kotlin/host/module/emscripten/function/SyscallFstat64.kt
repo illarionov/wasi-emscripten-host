@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFstat64FunctionHandle
@@ -26,7 +26,7 @@ internal class SyscallFstat64(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallFstat64FunctionHandle>(language, module, SyscallFstat64FunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallFstat64FunctionHandle>(language, module, SyscallFstat64FunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         val args = frame.arguments
         return syscallFstat64(
