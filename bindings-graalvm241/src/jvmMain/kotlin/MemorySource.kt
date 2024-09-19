@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm241
 
-import at.released.weh.host.base.WasmModules
+import at.released.weh.wasm.core.WasmModules
 import org.graalvm.polyglot.Context
 
 public sealed class MemorySource {

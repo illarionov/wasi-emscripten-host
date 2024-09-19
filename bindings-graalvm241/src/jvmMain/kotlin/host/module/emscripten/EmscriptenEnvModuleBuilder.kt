@@ -53,7 +53,7 @@ import at.released.weh.bindings.graalvm241.host.pthread.PthreadCreateJsWasmNode
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
+import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import org.graalvm.polyglot.Context
 import org.graalvm.wasm.WasmInstance
 import org.graalvm.wasm.WasmLanguage

@@ -61,12 +61,6 @@ public abstract interface class at/released/weh/host/EmbedderHost$TimeZoneInfoPr
 	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
 }
 
-public final class at/released/weh/host/base/WasmModules {
-	public static final field ENV_MODULE_NAME Ljava/lang/String;
-	public static final field INSTANCE Lat/released/weh/host/base/WasmModules;
-	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
-}
-
 public final class at/released/weh/host/include/Fcntl {
 	public static final field AT_EACCESS I
 	public static final field AT_FDCWD I

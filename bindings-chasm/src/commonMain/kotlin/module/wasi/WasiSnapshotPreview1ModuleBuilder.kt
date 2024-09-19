@@ -19,7 +19,6 @@ import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Compa
 import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
 import at.released.weh.bindings.chasm.module.wasi.function.NotImplementedWasiFunction
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_GET
 import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_SIZES_GET
@@ -32,6 +31,7 @@ import at.released.weh.wasi.preview1.WasiHostFunction.FD_SYNC
 import at.released.weh.wasi.preview1.WasiHostFunction.FD_WRITE
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
+import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.function
 import io.github.charlietap.chasm.embedding.shapes.Store

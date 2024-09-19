@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base
+package at.released.weh.wasm.core
 
 public object WasmModules {
     public const val ENV_MODULE_NAME: String = "env"

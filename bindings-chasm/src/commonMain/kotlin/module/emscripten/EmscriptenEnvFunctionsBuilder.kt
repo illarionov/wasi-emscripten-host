@@ -76,7 +76,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_UTIMENSA
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.TZSET_JS
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
+import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import io.github.charlietap.chasm.embedding.function
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Store
