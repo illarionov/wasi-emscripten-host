@@ -7,8 +7,8 @@
 package at.released.weh.bindings.chasm.module.emscripten.function
 
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
+import at.released.weh.emcripten.runtime.function.AbortJsFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.AbortJsFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
 internal class AbortJs(host: EmbedderHost) : HostFunctionProvider {

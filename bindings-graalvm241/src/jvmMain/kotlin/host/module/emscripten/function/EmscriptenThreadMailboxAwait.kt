@@ -9,10 +9,10 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenThreadMailboxAwait.EmscriptenThreadMailboxAwaitHandle
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS
+import at.released.weh.emcripten.runtime.export.pthread.PthreadManager
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.emscripten.export.pthread.PthreadManager
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -37,7 +37,7 @@ internal class EmscriptenThreadMailboxAwait(
 
     class EmscriptenThreadMailboxAwaitHandle(
         host: EmbedderHost,
-    ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS, host) {
+    ) : EmscriptenHostFunctionHandle(EMSCRIPTEN_INIT_MAIN_THREAD_JS, host) {
         @TruffleBoundary
         fun execute(threadPtr: Int) {
             logger.v { "_emscripten_thread_mailbox_await($threadPtr): skip, not implemented" }

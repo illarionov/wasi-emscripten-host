@@ -42,10 +42,10 @@ import at.released.weh.bindings.chicory.host.module.emscripten.function.SyscallU
 import at.released.weh.bindings.chicory.host.module.emscripten.function.TzsetJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallLstat64
 import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallStat64
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
-import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.WasmFunctionHandle

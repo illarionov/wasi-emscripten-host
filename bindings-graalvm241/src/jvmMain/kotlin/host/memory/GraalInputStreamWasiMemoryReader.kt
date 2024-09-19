@@ -16,9 +16,9 @@ import at.released.weh.filesystem.ext.readCatching
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.host.base.memory.DefaultWasiMemoryReader
-import at.released.weh.host.base.memory.WasiMemoryReader
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
+import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Iovec
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel

@@ -9,8 +9,8 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
+import at.released.weh.emcripten.runtime.function.SyscallUtimensatFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.SyscallUtimensatFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary

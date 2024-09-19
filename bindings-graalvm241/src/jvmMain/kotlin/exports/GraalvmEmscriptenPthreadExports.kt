@@ -9,7 +9,7 @@ package at.released.weh.bindings.graalvm241.exports
 import at.released.weh.bindings.graalvm241.ext.functionMember
 import at.released.weh.bindings.graalvm241.ext.intGlobalMember
 import at.released.weh.bindings.graalvm241.ext.optionalFunctionMember
-import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadExports
+import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadExports
 import org.graalvm.polyglot.Value
 
 internal class GraalvmEmscriptenPthreadExports(

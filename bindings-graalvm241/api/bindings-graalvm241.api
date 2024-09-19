@@ -109,21 +109,21 @@ public final class at/released/weh/bindings/graalvm241/MemorySpec$Companion {
 	public static synthetic fun invoke$default (Lat/released/weh/bindings/graalvm241/MemorySpec$Companion;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/graalvm241/MemorySpec;
 }
 
-public final class at/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime : at/released/weh/host/emscripten/export/EmscriptenRuntime {
+public final class at/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime : at/released/weh/emcripten/runtime/export/EmscriptenRuntime {
 	public static final field Companion Lat/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime$Companion;
-	public fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)V
+	public fun <init> (Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports;Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthread;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)V
 	public fun initMainThread ()V
 	public final fun initWorkerThread (I)V
 	public fun isMultiThread ()Z
 }
 
 public final class at/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime$Companion {
-	public final fun multithreadedRuntime (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)Lat/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime;
+	public final fun multithreadedRuntime (Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports;Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthread;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)Lat/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime;
 }
 
-public final class at/released/weh/bindings/graalvm241/host/pthread/GraalvmPthreadManager : at/released/weh/host/emscripten/export/pthread/PthreadManager {
-	public fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/emscripten/export/memory/DynamicMemory;Lkotlin/jvm/functions/Function0;Lat/released/weh/bindings/graalvm241/host/pthread/ManagedThreadInitializer;Lat/released/weh/host/base/binding/IndirectFunctionBindingProvider;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;JLat/released/weh/common/api/Logger;)V
-	public synthetic fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/emscripten/export/memory/DynamicMemory;Lkotlin/jvm/functions/Function0;Lat/released/weh/bindings/graalvm241/host/pthread/ManagedThreadInitializer;Lat/released/weh/host/base/binding/IndirectFunctionBindingProvider;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/host/emscripten/export/pthread/EmscriptenPthread;JLat/released/weh/common/api/Logger;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class at/released/weh/bindings/graalvm241/host/pthread/GraalvmPthreadManager : at/released/weh/emcripten/runtime/export/pthread/PthreadManager {
+	public fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/emcripten/runtime/export/memory/DynamicMemory;Lkotlin/jvm/functions/Function0;Lat/released/weh/bindings/graalvm241/host/pthread/ManagedThreadInitializer;Lat/released/weh/host/base/binding/IndirectFunctionBindingProvider;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthread;JLat/released/weh/common/api/Logger;)V
+	public synthetic fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/emcripten/runtime/export/memory/DynamicMemory;Lkotlin/jvm/functions/Function0;Lat/released/weh/bindings/graalvm241/host/pthread/ManagedThreadInitializer;Lat/released/weh/host/base/binding/IndirectFunctionBindingProvider;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthread;JLat/released/weh/common/api/Logger;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun createWasmPthreadForThread-I7RO_PI (Ljava/lang/Thread;)J
 	public final fun joinThreads-LRDsOJo (J)V
 	public static synthetic fun joinThreads-LRDsOJo$default (Lat/released/weh/bindings/graalvm241/host/pthread/GraalvmPthreadManager;JILjava/lang/Object;)V

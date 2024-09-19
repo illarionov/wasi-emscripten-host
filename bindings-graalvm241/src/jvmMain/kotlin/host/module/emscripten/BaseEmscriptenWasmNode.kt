@@ -7,13 +7,13 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten
 
 import at.released.weh.bindings.graalvm241.host.memory.GraalvmWasmHostMemoryAdapter
-import at.released.weh.host.base.function.HostFunctionHandle
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import org.graalvm.wasm.WasmLanguage
 import org.graalvm.wasm.WasmModule
 import org.graalvm.wasm.memory.WasmMemory
 import org.graalvm.wasm.nodes.WasmRootNode
 
-internal open class BaseEmscriptenWasmNode<H : HostFunctionHandle>(
+internal open class BaseEmscriptenWasmNode<H : EmscriptenHostFunctionHandle>(
     language: WasmLanguage,
     private val module: WasmModule,
     val handle: H,

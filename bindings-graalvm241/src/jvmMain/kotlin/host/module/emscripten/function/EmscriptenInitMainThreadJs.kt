@@ -9,10 +9,10 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenInitMainThreadJs.InitMainThreadJsHandle
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS
+import at.released.weh.emcripten.runtime.export.pthread.PthreadManager
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.emscripten.EmscriptenHostFunction
-import at.released.weh.host.emscripten.export.pthread.PthreadManager
 import at.released.weh.host.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -37,7 +37,7 @@ internal class EmscriptenInitMainThreadJs(
     class InitMainThreadJsHandle(
         host: EmbedderHost,
         private val posixThreadRef: () -> PthreadManager,
-    ) : HostFunctionHandle(EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS, host) {
+    ) : EmscriptenHostFunctionHandle(EMSCRIPTEN_INIT_MAIN_THREAD_JS, host) {
         @TruffleBoundary
         fun execute(@IntWasmPtr(StructPthread::class) ptr: WasmPtr) {
             posixThreadRef().initMainThreadJs(ptr)

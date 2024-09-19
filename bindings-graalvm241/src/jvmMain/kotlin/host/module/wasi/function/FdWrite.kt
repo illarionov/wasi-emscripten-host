@@ -11,8 +11,8 @@ import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.memory.GraalOutputStreamWasiMemoryWriter
 import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
+import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.CioVec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

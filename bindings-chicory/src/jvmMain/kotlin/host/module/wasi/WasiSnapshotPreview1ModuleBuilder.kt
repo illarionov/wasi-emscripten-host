@@ -22,8 +22,6 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.base.memory.WasiMemoryReader
-import at.released.weh.host.base.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_GET
 import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_SIZES_GET
@@ -35,6 +33,8 @@ import at.released.weh.wasi.preview1.WasiHostFunction.FD_SEEK
 import at.released.weh.wasi.preview1.WasiHostFunction.FD_SYNC
 import at.released.weh.wasi.preview1.WasiHostFunction.FD_WRITE
 import at.released.weh.wasi.preview1.WasiHostFunction.SCHED_YIELD
+import at.released.weh.wasi.preview1.memory.WasiMemoryReader
+import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance

@@ -14,8 +14,8 @@ import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.State.
 import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.State.NOT_STARTED
 import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.State.RUNNING
 import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.StateListener
-import at.released.weh.host.emscripten.export.pthread.EmscriptenPthread
-import at.released.weh.host.emscripten.export.pthread.EmscriptenPthreadInternal
+import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
+import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.host.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -34,7 +34,7 @@ internal abstract class ManagedThreadBase(
     private var pthreadAttached: Boolean = false
 
     @Volatile
-    public var state: State = NOT_STARTED
+    var state: State = NOT_STARTED
         private set(newState) {
             synchronized(stateLock) {
                 field = newState
@@ -107,7 +107,7 @@ internal abstract class ManagedThreadBase(
         pthreadPtr = null
     }
 
-    public enum class State {
+    enum class State {
         NOT_STARTED,
         LOADING,
         ATTACHING,

@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm241.host.module
 
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
+import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
 import at.released.weh.wasm.core.HostFunction
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -38,7 +38,7 @@ private class NotImplementedBaseWasmNode(
 internal class NotImplementedFunctionHandle(
     host: EmbedderHost,
     private val hostFunction: HostFunction,
-) : HostFunctionHandle(hostFunction, host) {
+) : EmscriptenHostFunctionHandle(hostFunction, host) {
     fun execute() {
         error("`${hostFunction.wasmName}`not implemented")
     }

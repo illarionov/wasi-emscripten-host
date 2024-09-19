@@ -12,10 +12,10 @@ import at.released.weh.bindings.graalvm241.host.memory.SharedMemoryWaiterListSto
 import at.released.weh.bindings.graalvm241.host.module.emscripten.EmscriptenEnvModuleBuilder
 import at.released.weh.bindings.graalvm241.host.module.wasi.WasiSnapshotPreview1ModuleBuilder
 import at.released.weh.bindings.graalvm241.host.pthread.GraalvmPthreadManager
+import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import org.graalvm.polyglot.Context
 
 public class GraalvmEmscriptenWorkerThreadInstaller internal constructor(

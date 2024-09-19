@@ -10,8 +10,8 @@ import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
+import at.released.weh.emcripten.runtime.function.MmapJsFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 

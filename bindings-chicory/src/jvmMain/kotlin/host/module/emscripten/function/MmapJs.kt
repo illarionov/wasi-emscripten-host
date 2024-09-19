@@ -8,8 +8,8 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
+import at.released.weh.emcripten.runtime.function.MmapJsFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.emscripten.function.MmapJsFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

@@ -25,6 +25,7 @@ kotlin {
             api(projects.host)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
+            implementation(projects.emscriptenRuntime)
             implementation(projects.wasmWasiPreview1)
             api(libs.chicory.runtime)
             implementation(libs.kotlinx.io)

@@ -7,9 +7,9 @@
 package at.released.weh.bindings.chicory.exports
 
 import at.released.weh.bindings.chicory.ext.ChicoryFunctionBindings
+import at.released.weh.emcripten.runtime.export.EmscriptenMainExports
+import at.released.weh.emcripten.runtime.export.EmscriptenMainExports.Companion.EMSCRIPTEN_MAIN_EXPORT_NAMES
 import at.released.weh.host.base.binding.WasmFunctionBinding
-import at.released.weh.host.emscripten.export.EmscriptenMainExports
-import at.released.weh.host.emscripten.export.EmscriptenMainExports.Companion.EMSCRIPTEN_MAIN_EXPORT_NAMES
 import com.dylibso.chicory.runtime.Instance
 
 internal class ChicoryEmscriptenMainExports(instance: Instance) : EmscriptenMainExports {
