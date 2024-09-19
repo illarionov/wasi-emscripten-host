@@ -42,3 +42,75 @@ public final class at/released/weh/wasm/core/WasmValueTypes {
 	public static final field V128 I
 }
 
+public abstract interface class at/released/weh/wasm/core/memory/Memory : at/released/weh/wasm/core/memory/ReadOnlyMemory {
+	public abstract fun sink (II)Lkotlinx/io/RawSink;
+	public abstract fun writeI32 (II)V
+	public abstract fun writeI64 (IJ)V
+	public abstract fun writeI8 (IB)V
+}
+
+public final class at/released/weh/wasm/core/memory/MemoryKt {
+	public static final fun sinkWithMaxSize (Lat/released/weh/wasm/core/memory/Memory;II)Lkotlinx/io/RawSink;
+	public static final fun writeNullTerminatedString (Lat/released/weh/wasm/core/memory/Memory;ILjava/lang/String;)I
+	public static final fun writePtr (Lat/released/weh/wasm/core/memory/Memory;II)V
+	public static final fun writeU32-jXDDuk8 (Lat/released/weh/wasm/core/memory/Memory;II)V
+	public static final fun writeU64-aPcrCvc (Lat/released/weh/wasm/core/memory/Memory;IJ)V
+	public static final fun writeU8-sEu17AQ (Lat/released/weh/wasm/core/memory/Memory;IB)V
+}
+
+public abstract class at/released/weh/wasm/core/memory/MemoryRawSink : kotlinx/io/RawSink {
+	public fun <init> (II)V
+	public fun close ()V
+	public fun flush ()V
+	protected final fun getBaseAddr ()I
+	protected final fun getEndAddressOrThrow (J)J
+	protected final fun getToAddrExclusive ()I
+	protected final fun setBaseAddr (I)V
+	public fun write (Lkotlinx/io/Buffer;J)V
+	protected abstract fun writeBytesToMemory (Lkotlinx/io/Buffer;IJ)V
+}
+
+public abstract class at/released/weh/wasm/core/memory/MemoryRawSource : kotlinx/io/RawSource {
+	public fun <init> (II)V
+	public fun close ()V
+	protected final fun getBaseAddr ()I
+	protected final fun getBytesLeft ()J
+	protected final fun getToAddrExclusive ()I
+	public fun readAtMostTo (Lkotlinx/io/Buffer;J)J
+	protected abstract fun readBytesFromMemory (ILkotlinx/io/Buffer;I)V
+	protected final fun setBaseAddr (I)V
+}
+
+public final class at/released/weh/wasm/core/memory/Pages {
+	public fun <init> (J)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCount ()J
+	public final fun getInBytes ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/wasm/core/memory/PagesKt {
+	public static final field WASM_MEMORY_PAGE_SIZE J
+	public static final fun getWASM_MEMORY_32_MAX_PAGES ()Lat/released/weh/wasm/core/memory/Pages;
+	public static final fun getWASM_MEMORY_64_MAX_PAGES ()Lat/released/weh/wasm/core/memory/Pages;
+	public static final fun getWASM_MEMORY_DEFAULT_MAX_PAGES ()Lat/released/weh/wasm/core/memory/Pages;
+}
+
+public abstract interface class at/released/weh/wasm/core/memory/ReadOnlyMemory {
+	public abstract fun readI32 (I)I
+	public abstract fun readI64 (I)J
+	public abstract fun readI8 (I)B
+	public abstract fun source (II)Lkotlinx/io/RawSource;
+}
+
+public final class at/released/weh/wasm/core/memory/ReadOnlyMemoryKt {
+	public static final fun readNullTerminatedString (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)Ljava/lang/String;
+	public static final fun readNullableNullTerminatedString (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)Ljava/lang/String;
+	public static final fun readPtr (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)I
+	public static final fun readU32 (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)I
+	public static final fun readU64 (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)J
+	public static final fun readU8 (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)B
+	public static final fun sourceWithMaxSize (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;II)Lkotlinx/io/RawSource;
+}
+

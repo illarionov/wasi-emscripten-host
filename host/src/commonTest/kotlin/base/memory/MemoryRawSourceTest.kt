@@ -12,6 +12,7 @@ import assertk.assertions.isEqualTo
 import assertk.tableOf
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.MemoryRawSource
 import kotlinx.io.Buffer
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

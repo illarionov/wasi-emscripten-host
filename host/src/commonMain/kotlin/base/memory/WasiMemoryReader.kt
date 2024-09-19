@@ -16,6 +16,8 @@ import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasm.core.memory.sinkWithMaxSize
 import kotlinx.io.buffered
 
 public fun interface WasiMemoryReader {

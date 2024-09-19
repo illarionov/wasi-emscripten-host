@@ -10,10 +10,7 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.Memory
-import at.released.weh.host.base.memory.ReadOnlyMemory
 import at.released.weh.host.base.memory.WasiMemoryWriter
-import at.released.weh.host.base.memory.readPtr
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
@@ -23,6 +20,9 @@ import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.readPtr
 
 public class FdWriteFdPWriteFunctionHandle private constructor(
     host: EmbedderHost,

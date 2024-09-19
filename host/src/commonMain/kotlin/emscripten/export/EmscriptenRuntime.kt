@@ -8,9 +8,9 @@ package at.released.weh.host.emscripten.export
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.common.api.Logger
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.host.emscripten.export.stack.EmscriptenStackExports
+import at.released.weh.wasm.core.memory.Memory
 
 public open class EmscriptenRuntime protected constructor(
     public val mainExports: EmscriptenMainExports,

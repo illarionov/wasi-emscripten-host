@@ -13,12 +13,12 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.ReadOnlyMemory
-import at.released.weh.host.base.memory.readNullTerminatedString
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.fromRawDirFd
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.readNullTerminatedString
 
 public class SyscallOpenatFunctionHandle(
     host: EmbedderHost,

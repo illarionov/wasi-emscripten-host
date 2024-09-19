@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.memory
+package at.released.weh.wasm.core.memory
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.WasmPtrUtil.ptrIsNull
@@ -14,7 +13,6 @@ import kotlinx.io.Buffer
 import kotlinx.io.RawSource
 import kotlinx.io.readString
 
-@InternalWasiEmscriptenHostApi
 public interface ReadOnlyMemory {
     public fun readI8(@IntWasmPtr addr: WasmPtr): Byte
     public fun readI32(@IntWasmPtr addr: WasmPtr): Int
@@ -23,20 +21,15 @@ public interface ReadOnlyMemory {
     public fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource
 }
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readU8(@IntWasmPtr addr: WasmPtr): UByte = readI8(addr).toUByte()
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readU32(@IntWasmPtr addr: WasmPtr): UInt = readI32(addr).toUInt()
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readU64(@IntWasmPtr addr: WasmPtr): ULong = readI64(addr).toULong()
 
-@InternalWasiEmscriptenHostApi
 @IntWasmPtr
 public fun ReadOnlyMemory.readPtr(@IntWasmPtr addr: WasmPtr): WasmPtr = readI32(addr)
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readNullableNullTerminatedString(@IntWasmPtr(ref = Byte::class) offset: WasmPtr): String? {
     return if (!ptrIsNull(offset)) {
         readNullTerminatedString(offset)
@@ -45,7 +38,6 @@ public fun ReadOnlyMemory.readNullableNullTerminatedString(@IntWasmPtr(ref = Byt
     }
 }
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.readNullTerminatedString(@IntWasmPtr(ref = Byte::class) offset: WasmPtr): String {
     check(offset != 0)
 
@@ -63,7 +55,6 @@ public fun ReadOnlyMemory.readNullTerminatedString(@IntWasmPtr(ref = Byte::class
     return mem.readString()
 }
 
-@InternalWasiEmscriptenHostApi
 public fun ReadOnlyMemory.sourceWithMaxSize(
     @IntWasmPtr fromAddr: WasmPtr,
     maxSize: Int,

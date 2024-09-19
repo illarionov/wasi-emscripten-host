@@ -4,15 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.base.memory
+package at.released.weh.wasm.core.memory
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import kotlinx.io.Buffer
 import kotlinx.io.RawSource
 
-@InternalWasiEmscriptenHostApi
 public abstract class MemoryRawSource(
     @IntWasmPtr protected var baseAddr: WasmPtr,
     @IntWasmPtr protected val toAddrExclusive: WasmPtr,

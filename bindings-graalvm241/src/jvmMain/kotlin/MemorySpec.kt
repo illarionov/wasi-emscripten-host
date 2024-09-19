@@ -9,8 +9,8 @@
 package at.released.weh.bindings.graalvm241
 
 import at.released.weh.common.api.WasiEmscriptenHostDsl
-import at.released.weh.host.base.memory.Pages
-import at.released.weh.host.base.memory.WASM_MEMORY_DEFAULT_MAX_PAGES
+import at.released.weh.wasm.core.memory.Pages
+import at.released.weh.wasm.core.memory.WASM_MEMORY_DEFAULT_MAX_PAGES
 
 public class MemorySpec private constructor(
     public val maxSize: Pages,

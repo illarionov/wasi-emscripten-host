@@ -32,6 +32,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.commonApi)
             api(libs.android.annotation)
+            api(libs.kotlinx.io)
         }
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)

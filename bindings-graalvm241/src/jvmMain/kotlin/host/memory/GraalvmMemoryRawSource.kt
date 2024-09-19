@@ -6,9 +6,9 @@
 
 package at.released.weh.bindings.graalvm241.host.memory
 
-import at.released.weh.host.base.memory.MemoryRawSource
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.MemoryRawSource
 import com.oracle.truffle.api.nodes.Node
 import kotlinx.io.Buffer
 import kotlinx.io.asOutputStream

@@ -6,9 +6,9 @@
 
 package at.released.weh.bindings.chasm.memory
 
-import at.released.weh.host.base.memory.MemoryRawSink
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.MemoryRawSink
 import io.github.charlietap.chasm.embedding.memory.writeBytes
 import io.github.charlietap.chasm.embedding.shapes.Memory
 import io.github.charlietap.chasm.embedding.shapes.Store

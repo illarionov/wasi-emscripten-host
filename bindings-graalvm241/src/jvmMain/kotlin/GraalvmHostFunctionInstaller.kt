@@ -16,9 +16,9 @@ import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
 import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.host.base.memory.Pages
-import at.released.weh.host.base.memory.WASM_MEMORY_PAGE_SIZE
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
+import at.released.weh.wasm.core.memory.Pages
+import at.released.weh.wasm.core.memory.WASM_MEMORY_PAGE_SIZE
 import org.graalvm.polyglot.Context
 
 public class GraalvmHostFunctionInstaller private constructor(

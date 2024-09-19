@@ -10,8 +10,8 @@ import at.released.weh.bindings.chasm.ext.asLong
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.function.LocaltimeJsFunctionHandle
+import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
 
 internal class LocaltimeJs(

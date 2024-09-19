@@ -87,29 +87,13 @@ public final class at/released/weh/host/base/function/IndirectFunctionTableIndex
 }
 
 public final class at/released/weh/host/base/memory/DefaultWasiMemoryReader : at/released/weh/host/base/memory/WasiMemoryReader {
-	public fun <init> (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/filesystem/FileSystem;)V
+	public fun <init> (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/filesystem/FileSystem;)V
 	public fun read (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
 }
 
 public final class at/released/weh/host/base/memory/DefaultWasiMemoryWriter : at/released/weh/host/base/memory/WasiMemoryWriter {
-	public fun <init> (Lat/released/weh/host/base/memory/ReadOnlyMemory;Lat/released/weh/filesystem/FileSystem;)V
+	public fun <init> (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;Lat/released/weh/filesystem/FileSystem;)V
 	public fun write (ILat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Ljava/util/List;)Larrow/core/Either;
-}
-
-public final class at/released/weh/host/base/memory/Pages {
-	public fun <init> (J)V
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCount ()J
-	public final fun getInBytes ()J
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class at/released/weh/host/base/memory/PagesKt {
-	public static final field WASM_MEMORY_PAGE_SIZE J
-	public static final fun getWASM_MEMORY_32_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
-	public static final fun getWASM_MEMORY_64_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
-	public static final fun getWASM_MEMORY_DEFAULT_MAX_PAGES ()Lat/released/weh/host/base/memory/Pages;
 }
 
 public abstract interface class at/released/weh/host/base/memory/WasiMemoryReader {
@@ -194,9 +178,9 @@ public final class at/released/weh/host/emscripten/export/EmscriptenMainExports$
 
 public class at/released/weh/host/emscripten/export/EmscriptenRuntime {
 	public static final field Companion Lat/released/weh/host/emscripten/export/EmscriptenRuntime$Companion;
-	protected fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/host/base/memory/Memory;Lat/released/weh/common/api/Logger;)V
+	protected fun <init> (Lat/released/weh/host/emscripten/export/EmscriptenMainExports;Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/common/api/Logger;)V
 	public final fun getMainExports ()Lat/released/weh/host/emscripten/export/EmscriptenMainExports;
-	protected final fun getMemory ()Lat/released/weh/host/base/memory/Memory;
+	protected final fun getMemory ()Lat/released/weh/wasm/core/memory/Memory;
 	public final fun getStack ()Lat/released/weh/host/emscripten/export/stack/EmscriptenStack;
 	public fun initMainThread ()V
 	protected final fun initSingleThreadedMainThread ()V
@@ -259,7 +243,7 @@ public class at/released/weh/host/emscripten/export/pthread/PthreadManager {
 
 public final class at/released/weh/host/emscripten/export/stack/EmscriptenStack {
 	public fun <init> (Lat/released/weh/host/emscripten/export/stack/EmscriptenStackExports;Lat/released/weh/common/api/Logger;)V
-	public final fun checkStackCookie (Lat/released/weh/host/base/memory/ReadOnlyMemory;)V
+	public final fun checkStackCookie (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;)V
 	public final fun emscriptenStackRestore (I)V
 	public final fun emscriptenStackSetLimits (II)V
 	public final fun getEmscriptenStackBase ()I
@@ -267,8 +251,8 @@ public final class at/released/weh/host/emscripten/export/stack/EmscriptenStack 
 	public final fun getEmscriptenStackEnd ()I
 	public final fun getEmscriptenStackFree ()I
 	public final fun setStackLimits ()V
-	public final fun stackCheckInit (Lat/released/weh/host/base/memory/Memory;)V
-	public final fun writeStackCookie (Lat/released/weh/host/base/memory/Memory;)V
+	public final fun stackCheckInit (Lat/released/weh/wasm/core/memory/Memory;)V
+	public final fun writeStackCookie (Lat/released/weh/wasm/core/memory/Memory;)V
 }
 
 public abstract interface class at/released/weh/host/emscripten/export/stack/EmscriptenStackExports {
@@ -300,7 +284,7 @@ public final class at/released/weh/host/emscripten/function/AbortJsFunctionHandl
 
 public final class at/released/weh/host/emscripten/function/AssertFailFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)Ljava/lang/Void;
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;IIII)Ljava/lang/Void;
 }
 
 public final class at/released/weh/host/emscripten/function/EmscriptenAsmConstAsyncOnMainThreadFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -315,7 +299,7 @@ public final class at/released/weh/host/emscripten/function/EmscriptenAsmConstIn
 
 public final class at/released/weh/host/emscripten/function/EmscriptenConsoleErrorFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)V
 }
 
 public final class at/released/weh/host/emscripten/function/EmscriptenDateNowFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -339,12 +323,12 @@ public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeap
 }
 
 public final class at/released/weh/host/emscripten/function/EmscriptenResizeHeapFunctionHandle$Companion {
-	public final fun calculateNewSizePages (JLat/released/weh/host/base/memory/Pages;Lat/released/weh/host/base/memory/Pages;)Lat/released/weh/host/base/memory/Pages;
+	public final fun calculateNewSizePages (JLat/released/weh/wasm/core/memory/Pages;Lat/released/weh/wasm/core/memory/Pages;)Lat/released/weh/wasm/core/memory/Pages;
 }
 
 public final class at/released/weh/host/emscripten/function/GetentropyFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)I
 }
 
 public final class at/released/weh/host/emscripten/function/HandleStackOverflowFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -354,7 +338,7 @@ public final class at/released/weh/host/emscripten/function/HandleStackOverflowF
 
 public final class at/released/weh/host/emscripten/function/LocaltimeJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;JI)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;JI)V
 }
 
 public final class at/released/weh/host/emscripten/function/MmapJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -369,12 +353,12 @@ public final class at/released/weh/host/emscripten/function/MunapJsFunctionHandl
 
 public final class at/released/weh/host/emscripten/function/SyscallChmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;II)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;II)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallFaccessatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallFchmodFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -389,12 +373,12 @@ public final class at/released/weh/host/emscripten/function/SyscallFchown32Funct
 
 public final class at/released/weh/host/emscripten/function/SyscallFcntl64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;III)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallFstat64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallFtruncate64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -404,33 +388,33 @@ public final class at/released/weh/host/emscripten/function/SyscallFtruncate64Fu
 
 public final class at/released/weh/host/emscripten/function/SyscallGetcwdFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallMkdiratFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;III)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallOpenatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallReadlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;IIII)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallRmdirFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;I)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;I)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle$Companion;
 	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;ZLat/released/weh/wasm/core/HostFunction;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallStatLstat64FunctionHandle$Companion {
@@ -440,17 +424,17 @@ public final class at/released/weh/host/emscripten/function/SyscallStatLstat64Fu
 
 public final class at/released/weh/host/emscripten/function/SyscallUnlinkatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;III)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;III)I
 }
 
 public final class at/released/weh/host/emscripten/function/SyscallUtimensatFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/ReadOnlyMemory;IIII)I
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;IIII)I
 }
 
 public final class at/released/weh/host/emscripten/function/TzsetJsFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;IIII)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IIII)V
 }
 
 public final class at/released/weh/host/include/Fcntl {
@@ -747,12 +731,12 @@ public final class at/released/weh/host/wasi/preview1/ext/WasiEnvironmentFunc {
 
 public final class at/released/weh/host/wasi/preview1/function/EnvironGetFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
 public final class at/released/weh/host/wasi/preview1/function/EnvironSizesGetFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;II)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
 public final class at/released/weh/host/wasi/preview1/function/FdCloseFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -763,7 +747,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdCloseFunctionHa
 public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion;
 	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryReader;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryReader;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
 public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion {
@@ -773,7 +757,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdReadFdPreadFunc
 
 public final class at/released/weh/host/wasi/preview1/function/FdSeekFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;IJII)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IJII)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
 public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdatasyncFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
@@ -790,7 +774,7 @@ public final class at/released/weh/host/wasi/preview1/function/FdSyncSyscallFdat
 public final class at/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle : at/released/weh/host/base/function/HostFunctionHandle {
 	public static final field Companion Lat/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion;
 	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun execute (Lat/released/weh/host/base/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryWriter;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/host/base/memory/WasiMemoryWriter;IIII)Lat/released/weh/wasi/filesystem/common/Errno;
 }
 
 public final class at/released/weh/host/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion {

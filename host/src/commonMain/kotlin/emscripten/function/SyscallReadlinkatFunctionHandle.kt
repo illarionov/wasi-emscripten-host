@@ -10,14 +10,14 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.base.memory.Memory
-import at.released.weh.host.base.memory.readNullTerminatedString
-import at.released.weh.host.base.memory.sinkWithMaxSize
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.ext.fromRawDirFd
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasm.core.memory.readNullTerminatedString
+import at.released.weh.wasm.core.memory.sinkWithMaxSize
 import kotlinx.io.Buffer
 import kotlinx.io.writeString
 

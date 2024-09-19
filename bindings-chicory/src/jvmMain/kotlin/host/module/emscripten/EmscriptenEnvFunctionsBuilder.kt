@@ -44,9 +44,9 @@ import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallL
 import at.released.weh.bindings.chicory.host.module.emscripten.function.syscallStat64
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
-import at.released.weh.host.base.memory.Memory
 import at.released.weh.host.emscripten.EmscriptenHostFunction
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
+import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.WasmFunctionHandle
 import com.dylibso.chicory.wasm.types.Value

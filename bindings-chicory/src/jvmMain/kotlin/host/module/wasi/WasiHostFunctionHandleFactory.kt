@@ -7,7 +7,7 @@
 package at.released.weh.bindings.chicory.host.module.wasi
 
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.memory.Memory
+import at.released.weh.wasm.core.memory.Memory
 
 internal typealias WasiHostFunctionHandleFactory = (
     host: EmbedderHost,

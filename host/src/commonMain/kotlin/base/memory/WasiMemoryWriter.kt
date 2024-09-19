@@ -14,6 +14,8 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.sourceWithMaxSize
 import kotlinx.io.buffered
 import kotlinx.io.readByteArray
 
@@ -38,7 +40,7 @@ public class DefaultWasiMemoryWriter(
         memory: ReadOnlyMemory,
     ): List<FileSystemByteBuffer> = map { ciovec ->
         // XXX: too many memory copies
-        val maxSize = ciovec.bufLen.value.toInt()
+        val maxSize = ciovec.bufLen.value
         val bytesBuffer = memory.sourceWithMaxSize(ciovec.buf, maxSize).buffered().use {
             it.readByteArray(maxSize)
         }

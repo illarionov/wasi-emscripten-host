@@ -6,9 +6,9 @@
 
 package at.released.weh.host.test.fixtures
 
-import at.released.weh.host.base.memory.MemoryRawSource
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
+import at.released.weh.wasm.core.memory.MemoryRawSource
 import kotlinx.io.Buffer
 
 public class TestMemoryRawSource(
