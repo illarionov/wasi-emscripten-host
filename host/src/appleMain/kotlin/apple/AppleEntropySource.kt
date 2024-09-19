@@ -6,9 +6,9 @@
 
 package at.released.weh.host.apple
 
-import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EntropySource
 
-internal class AppleEntropySource : EmbedderHost.EntropySource {
+internal class AppleEntropySource : EntropySource {
     override fun generateEntropy(size: Int): ByteArray {
         TODO("Not yet implemented")
     }

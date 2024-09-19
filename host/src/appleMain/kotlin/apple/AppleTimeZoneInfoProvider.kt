@@ -6,10 +6,9 @@
 
 package at.released.weh.host.apple
 
-import at.released.weh.host.EmbedderHost
-import at.released.weh.host.include.TimeZoneInfo
+import at.released.weh.host.TimeZoneInfo
 
-internal class AppleTimeZoneInfoProvider : EmbedderHost.TimeZoneInfoProvider {
+internal class AppleTimeZoneInfoProvider : TimeZoneInfo.Provider {
     override fun getTimeZoneInfo(): TimeZoneInfo {
         error("Not implemented")
     }

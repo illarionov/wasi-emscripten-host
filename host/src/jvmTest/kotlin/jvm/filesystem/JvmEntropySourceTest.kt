@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertFails
 
 class JvmEntropySourceTest {
-    val source = JvmEntropySource()
+    private val source = JvmEntropySource()
 
     @Test
     fun entropySource_successTestCase_check_size() {

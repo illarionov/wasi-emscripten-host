@@ -6,9 +6,9 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import at.released.weh.common.ext.writeNullTerminatedString
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.TZSET_JS
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.writeNullTerminatedString
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

@@ -34,12 +34,16 @@ kotlin {
             api(projects.commonApi)
             api(projects.filesystem)
             api(projects.host)
+            api(projects.wasmCore)
+            api(projects.wasmWasiPreview1Core)
+            implementation(projects.commonUtil)
         }
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
             implementation(projects.testTempfolder)
             implementation(projects.hostTestFixtures)
+            implementation(projects.wasmCoreTestFixtures)
             implementation(kotlin("test"))
             implementation(libs.assertk)
         }

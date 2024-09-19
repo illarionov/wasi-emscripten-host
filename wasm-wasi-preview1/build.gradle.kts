@@ -36,6 +36,7 @@ kotlin {
             api(projects.host)
             api(projects.wasmCore)
             api(projects.wasmWasiPreview1Core)
+            implementation(projects.commonUtil)
         }
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)

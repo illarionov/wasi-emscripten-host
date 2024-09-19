@@ -6,16 +6,15 @@
 
 package at.released.weh.host.jvm
 
-import at.released.weh.host.EmbedderHost.TimeZoneInfoProvider
-import at.released.weh.host.include.TimeZoneInfo
+import at.released.weh.host.TimeZoneInfo
 import java.time.Clock
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-public class JvmTimeZoneInfoProvider(
+internal class JvmTimeZoneInfoProvider(
     private val clock: Clock = Clock.systemDefaultZone(),
-) : TimeZoneInfoProvider {
+) : TimeZoneInfo.Provider {
     private val tzFormatter = DateTimeFormatter.ofPattern("zzz", Locale.ROOT)
 
     override fun getTimeZoneInfo(): TimeZoneInfo {

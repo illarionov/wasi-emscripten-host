@@ -6,7 +6,7 @@
 
 package at.released.weh.emcripten.runtime.export.memory
 
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 
 public interface DynamicMemoryExports {
     /**

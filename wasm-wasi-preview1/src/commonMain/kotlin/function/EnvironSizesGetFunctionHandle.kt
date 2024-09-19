@@ -6,8 +6,8 @@
 
 package at.released.weh.wasi.preview1.function
 
+import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.ext.encodedNullTerminatedStringLength
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi

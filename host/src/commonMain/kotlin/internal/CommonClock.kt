@@ -6,7 +6,7 @@
 
 package at.released.weh.host.internal
 
-import at.released.weh.host.EmbedderHost.Clock
+import at.released.weh.host.Clock
 import kotlinx.datetime.Clock as KotlinxClock
 
 internal class CommonClock(

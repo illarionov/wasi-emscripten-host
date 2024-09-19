@@ -6,14 +6,15 @@
 
 package at.released.weh.host.jvm
 
-import at.released.weh.host.EmbedderHost.LocalTimeFormatter
-import at.released.weh.host.include.StructTm
-import at.released.weh.host.include.asTmIsdstValue
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.LocalTimeFormatter.IsDstFlag
+import at.released.weh.host.LocalTimeFormatter.StructTm
+import at.released.weh.host.asTmIsdstValue
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-public class JvmLocalTimeFormatter(
+internal class JvmLocalTimeFormatter(
     public val localTimeZoneProvider: () -> ZoneId = ZoneId::systemDefault,
 ) : LocalTimeFormatter {
     override fun format(epochSeconds: Long): StructTm {
@@ -35,9 +36,9 @@ public class JvmLocalTimeFormatter(
             tm_wday = date.dayOfWeek.value % 7,
             tm_yday = date.dayOfYear - 1,
             tm_isdst = if (date.zone.rules.isDaylightSavings(date.toInstant())) {
-                StructTm.IsDstFlag.IN_EFFECT
+                IsDstFlag.IN_EFFECT
             } else {
-                StructTm.IsDstFlag.NOT_IN_EFFECT
+                IsDstFlag.NOT_IN_EFFECT
             }.asTmIsdstValue(),
             tm_gmtoff = zone.rules.getOffset(date.toInstant()).totalSeconds.toLong(),
             tm_zone = zone.id,

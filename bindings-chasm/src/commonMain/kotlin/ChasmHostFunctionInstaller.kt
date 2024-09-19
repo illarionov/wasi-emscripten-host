@@ -16,10 +16,10 @@ import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.WasmModules.ENV_MODULE_NAME
-import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
+import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
+import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import io.github.charlietap.chasm.embedding.shapes.Import
 import io.github.charlietap.chasm.embedding.shapes.Memory
 import io.github.charlietap.chasm.embedding.shapes.Store

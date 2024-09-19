@@ -6,10 +6,10 @@
 
 package at.released.weh.host.apple
 
-import at.released.weh.host.EmbedderHost
-import at.released.weh.host.include.StructTm
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.LocalTimeFormatter.StructTm
 
-internal class AppleLocalTimeFormatter : EmbedderHost.LocalTimeFormatter {
+internal class AppleLocalTimeFormatter : LocalTimeFormatter {
     override fun format(epochSeconds: Long): StructTm {
         TODO("Not yet implemented")
     }

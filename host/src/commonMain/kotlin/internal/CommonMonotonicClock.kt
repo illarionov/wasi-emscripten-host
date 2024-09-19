@@ -6,7 +6,7 @@
 
 package at.released.weh.host.internal
 
-import at.released.weh.host.EmbedderHost.MonotonicClock
+import at.released.weh.host.MonotonicClock
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 

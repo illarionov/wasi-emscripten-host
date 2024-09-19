@@ -8,7 +8,7 @@ package at.released.weh.bindings.chasm.exports
 
 import at.released.weh.bindings.chasm.exception.ChasmErrorException
 import at.released.weh.bindings.chasm.ext.asInt
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 import io.github.charlietap.chasm.embedding.exports
 import io.github.charlietap.chasm.embedding.global.readGlobal
 import io.github.charlietap.chasm.embedding.global.writeGlobal

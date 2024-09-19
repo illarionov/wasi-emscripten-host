@@ -6,10 +6,10 @@
 
 package at.released.weh.host.jvm
 
-import at.released.weh.host.EmbedderHost.EntropySource
+import at.released.weh.host.EntropySource
 import java.security.SecureRandom
 
-public class JvmEntropySource(
+internal class JvmEntropySource(
     private val random: SecureRandom = SecureRandom(),
 ) : EntropySource {
     override fun generateEntropy(size: Int): ByteArray = random.generateSeed(size)

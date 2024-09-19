@@ -8,7 +8,7 @@ package at.released.weh.host
 
 import at.released.weh.filesystem.nio.NioFileSystem
 import at.released.weh.host.EmbedderHost.Builder
-import at.released.weh.host.ext.DefaultFileSystem
+import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.jvm.JvmEmbedderHost
 import at.released.weh.host.jvm.JvmEmbedderHost.JvmClock
 import at.released.weh.host.jvm.JvmEmbedderHost.JvmCommandArgsProvider

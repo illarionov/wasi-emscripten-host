@@ -6,7 +6,6 @@
 
 package at.released.weh.wasm.core
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import kotlin.jvm.JvmStatic
 
 /**
@@ -29,7 +28,6 @@ public object WasmPtrUtil {
     /**
      * Checks if [ptr] is NULL.
      */
-    @InternalWasiEmscriptenHostApi
     @JvmStatic
     public fun ptrIsNull(@IntWasmPtr ptr: WasmPtr): Boolean = ptr == C_NULL
 }

@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.exports
 
 import at.released.weh.bindings.graalvm241.ext.optionalFunctionMember
 import at.released.weh.emcripten.runtime.export.memory.DynamicMemoryExports
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 import org.graalvm.polyglot.Value
 
 internal class GraalvmDynamicMemoryExports(

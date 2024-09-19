@@ -6,7 +6,7 @@
 
 package at.released.weh.host.linux
 
-import at.released.weh.host.EmbedderHost.SystemEnvProvider
+import at.released.weh.host.SystemEnvProvider
 import at.released.weh.host.native.parsePosixEnvironToEnvMap
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer

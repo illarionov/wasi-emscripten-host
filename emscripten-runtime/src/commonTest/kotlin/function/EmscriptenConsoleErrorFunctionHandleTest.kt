@@ -13,12 +13,12 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import at.released.weh.host.test.fixtures.TestEmbedderHost
-import at.released.weh.host.test.fixtures.TestMemory
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.test.logger.BaseLogger
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.writeNullTerminatedString
+import at.released.weh.wasm.core.test.fixtures.TestMemory
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

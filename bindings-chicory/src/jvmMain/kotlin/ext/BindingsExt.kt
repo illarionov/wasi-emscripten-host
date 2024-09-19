@@ -7,7 +7,7 @@
 package at.released.weh.bindings.chicory.ext
 
 import at.released.weh.bindings.chicory.exports.ChicoryWasmFunctionBinding
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 import com.dylibso.chicory.runtime.ExportFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.exceptions.ChicoryException

@@ -9,17 +9,17 @@ package at.released.weh.host.linux
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.LinuxFileSystem
+import at.released.weh.host.Clock
+import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.EmbedderHost.Clock
-import at.released.weh.host.EmbedderHost.CommandArgsProvider
-import at.released.weh.host.EmbedderHost.EntropySource
-import at.released.weh.host.EmbedderHost.LocalTimeFormatter
-import at.released.weh.host.EmbedderHost.MonotonicClock
-import at.released.weh.host.EmbedderHost.SystemEnvProvider
-import at.released.weh.host.EmbedderHost.TimeZoneInfoProvider
-import at.released.weh.host.ext.DefaultFileSystem
+import at.released.weh.host.EntropySource
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.MonotonicClock
+import at.released.weh.host.SystemEnvProvider
+import at.released.weh.host.TimeZoneInfo
 import at.released.weh.host.internal.CommonClock
 import at.released.weh.host.internal.CommonMonotonicClock
+import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.internal.EmptyCommandArgsProvider
 
 public class LinuxEmbedderHost(
@@ -30,6 +30,6 @@ public class LinuxEmbedderHost(
     override val monotonicClock: MonotonicClock = CommonMonotonicClock(),
     override val clock: Clock = CommonClock(),
     override val localTimeFormatter: LocalTimeFormatter = LinuxLocalTimeFormatter,
-    override val timeZoneInfo: TimeZoneInfoProvider = LinuxTimeZoneInfoProvider,
+    override val timeZoneInfo: TimeZoneInfo.Provider = LinuxTimeZoneInfoProvider,
     override val entropySource: EntropySource = LinuxEntropySource,
 ) : EmbedderHost

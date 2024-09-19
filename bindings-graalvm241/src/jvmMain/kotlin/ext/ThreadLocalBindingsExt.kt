@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.ext
 
 import at.released.weh.bindings.graalvm241.exports.GraalWasmFunctionBinding
 import at.released.weh.common.SinglePropertyLazyValue
-import at.released.weh.host.base.binding.WasmFunctionBinding
+import at.released.weh.wasm.core.WasmFunctionBinding
 import org.graalvm.polyglot.Value
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty

@@ -9,16 +9,15 @@ package at.released.weh.host.test.fixtures
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
+import at.released.weh.host.Clock
+import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.EmbedderHost.Clock
-import at.released.weh.host.EmbedderHost.CommandArgsProvider
-import at.released.weh.host.EmbedderHost.EntropySource
-import at.released.weh.host.EmbedderHost.LocalTimeFormatter
-import at.released.weh.host.EmbedderHost.MonotonicClock
-import at.released.weh.host.EmbedderHost.SystemEnvProvider
-import at.released.weh.host.EmbedderHost.TimeZoneInfoProvider
-import at.released.weh.host.include.StructTm
-import at.released.weh.host.include.TimeZoneInfo
+import at.released.weh.host.EntropySource
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.LocalTimeFormatter.StructTm
+import at.released.weh.host.MonotonicClock
+import at.released.weh.host.SystemEnvProvider
+import at.released.weh.host.TimeZoneInfo
 import at.released.weh.test.logger.TestLogger
 
 public open class TestEmbedderHost(
@@ -31,7 +30,7 @@ public open class TestEmbedderHost(
     override var localTimeFormatter: LocalTimeFormatter = LocalTimeFormatter {
         StructTm(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
     },
-    override var timeZoneInfo: TimeZoneInfoProvider = TimeZoneInfoProvider {
+    override var timeZoneInfo: TimeZoneInfo.Provider = TimeZoneInfo.Provider {
         TimeZoneInfo(-1, -1, "Dummy", "Dummy")
     },
     override var entropySource: EntropySource = EntropySource { size ->

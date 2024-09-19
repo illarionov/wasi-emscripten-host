@@ -6,7 +6,7 @@
 
 package at.released.weh.host.linux
 
-import at.released.weh.host.EmbedderHost.EntropySource
+import at.released.weh.host.EntropySource
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.linux.SYS_getrandom

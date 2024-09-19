@@ -18,10 +18,32 @@ public abstract interface annotation class at/released/weh/wasm/core/IntWasmPtr 
 	public abstract fun ref ()Ljava/lang/Class;
 }
 
+public abstract interface class at/released/weh/wasm/core/WasmFunctionBinding {
+	public abstract fun executeForDouble ([Ljava/lang/Object;)D
+	public abstract fun executeForFloat ([Ljava/lang/Object;)F
+	public abstract fun executeForInt ([Ljava/lang/Object;)I
+	public abstract fun executeForLong ([Ljava/lang/Object;)J
+	public abstract fun executeForPtr ([Ljava/lang/Object;)I
+	public abstract fun executeVoid ([Ljava/lang/Object;)V
+}
+
+public final class at/released/weh/wasm/core/WasmFunctionBindingKt {
+	public static final fun executeForUInt (Lat/released/weh/wasm/core/WasmFunctionBinding;[Ljava/lang/Object;)I
+	public static final fun executeForULong (Lat/released/weh/wasm/core/WasmFunctionBinding;[Ljava/lang/Object;)J
+	public static final fun getBINDING_NOT_INITIALIZED ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+}
+
+public final class at/released/weh/wasm/core/WasmModules {
+	public static final field ENV_MODULE_NAME Ljava/lang/String;
+	public static final field INSTANCE Lat/released/weh/wasm/core/WasmModules;
+	public static final field WASI_SNAPSHOT_PREVIEW1_MODULE_NAME Ljava/lang/String;
+}
+
 public final class at/released/weh/wasm/core/WasmPtrUtil {
 	public static final field C_NULL I
 	public static final field INSTANCE Lat/released/weh/wasm/core/WasmPtrUtil;
 	public static final field WASM_SIZEOF_PTR I
+	public static final fun ptrIsNull (I)Z
 }
 
 public abstract interface annotation class at/released/weh/wasm/core/WasmValueType : java/lang/annotation/Annotation {
@@ -29,6 +51,7 @@ public abstract interface annotation class at/released/weh/wasm/core/WasmValueTy
 
 public final class at/released/weh/wasm/core/WasmValueTypeExtKt {
 	public static final fun getPOINTER ()I
+	public static final fun witxPointer (I)I
 }
 
 public final class at/released/weh/wasm/core/WasmValueTypes {

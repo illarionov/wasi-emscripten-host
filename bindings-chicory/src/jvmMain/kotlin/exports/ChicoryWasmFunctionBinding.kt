@@ -8,8 +8,8 @@
 
 package at.released.weh.bindings.chicory.exports
 
-import at.released.weh.host.base.binding.WasmFunctionBinding
 import at.released.weh.wasm.core.IntWasmPtr
+import at.released.weh.wasm.core.WasmFunctionBinding
 import at.released.weh.wasm.core.WasmPtr
 import com.dylibso.chicory.runtime.ExportFunction
 import com.dylibso.chicory.wasm.types.Value

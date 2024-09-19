@@ -24,8 +24,8 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPwrite
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdRead
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdWrite
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import org.graalvm.polyglot.Context
 import org.graalvm.wasm.WasmInstance
 import org.graalvm.wasm.WasmModule

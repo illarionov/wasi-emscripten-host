@@ -1,0 +1,11 @@
+public final class at/released/weh/common/ext/NullTerminatedStringExtKt {
+	public static final fun encodeToNullTerminatedBuffer (Ljava/lang/String;I)Lkotlinx/io/Buffer;
+	public static synthetic fun encodeToNullTerminatedBuffer$default (Ljava/lang/String;IILjava/lang/Object;)Lkotlinx/io/Buffer;
+	public static final fun encodedNullTerminatedStringLength (Ljava/lang/String;)I
+}
+
+public final class at/released/weh/common/ext/SinkExtKt {
+	public static final fun writeNullTerminatedString (Lkotlinx/io/Sink;Ljava/lang/String;I)I
+	public static synthetic fun writeNullTerminatedString$default (Lkotlinx/io/Sink;Ljava/lang/String;IILjava/lang/Object;)I
+}
+

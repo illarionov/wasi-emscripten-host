@@ -8,9 +8,9 @@ package at.released.weh.host
 
 import at.released.weh.filesystem.LinuxFileSystem
 import at.released.weh.host.EmbedderHost.Builder
-import at.released.weh.host.ext.DefaultFileSystem
 import at.released.weh.host.internal.CommonClock
 import at.released.weh.host.internal.CommonMonotonicClock
+import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.internal.EmptyCommandArgsProvider
 import at.released.weh.host.linux.LinuxEmbedderHost
 import at.released.weh.host.linux.LinuxEntropySource

@@ -9,8 +9,6 @@ package at.released.weh.host
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.host.EmbedderHost.Builder
-import at.released.weh.host.include.StructTm
-import at.released.weh.host.include.TimeZoneInfo
 
 internal expect fun createDefaultEmbedderHost(builder: Builder): EmbedderHost
 
@@ -22,36 +20,8 @@ public interface EmbedderHost {
     public val monotonicClock: MonotonicClock
     public val clock: Clock
     public val localTimeFormatter: LocalTimeFormatter
-    public val timeZoneInfo: TimeZoneInfoProvider
+    public val timeZoneInfo: TimeZoneInfo.Provider
     public val entropySource: EntropySource
-
-    public fun interface SystemEnvProvider {
-        public fun getSystemEnv(): Map<String, String>
-    }
-
-    public fun interface CommandArgsProvider {
-        public fun getCommandArgs(): List<String>
-    }
-
-    public fun interface Clock {
-        public fun getCurrentTimeEpochMilliseconds(): Long
-    }
-
-    public fun interface MonotonicClock {
-        public fun getTimeMarkNanoseconds(): Long
-    }
-
-    public fun interface LocalTimeFormatter {
-        public fun format(epochSeconds: Long): StructTm
-    }
-
-    public fun interface TimeZoneInfoProvider {
-        public fun getTimeZoneInfo(): TimeZoneInfo
-    }
-
-    public fun interface EntropySource {
-        public fun generateEntropy(size: Int): ByteArray
-    }
 
     public class Builder {
         public var rootLogger: Logger = Logger
@@ -61,7 +31,7 @@ public interface EmbedderHost {
         public var clock: Clock? = null
         public var monotonicClock: MonotonicClock? = null
         public var localTimeFormatter: LocalTimeFormatter? = null
-        public var timeZoneInfo: TimeZoneInfoProvider? = null
+        public var timeZoneInfo: TimeZoneInfo.Provider? = null
         public var entropySource: EntropySource? = null
 
         public fun build(): EmbedderHost = createDefaultEmbedderHost(this)

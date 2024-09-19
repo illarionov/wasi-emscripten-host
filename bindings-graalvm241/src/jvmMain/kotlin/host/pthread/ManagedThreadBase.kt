@@ -16,7 +16,7 @@ import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.State.
 import at.released.weh.bindings.graalvm241.host.pthread.ManagedThreadBase.StateListener
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
-import at.released.weh.host.include.StructPthread
+import at.released.weh.emcripten.runtime.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 

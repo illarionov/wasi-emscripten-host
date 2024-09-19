@@ -1,0 +1,28 @@
+public final class at/released/weh/wasm/core/test/assertions/MemoryAssertionsKt {
+	public static final fun byteAt (Lassertk/Assert;I)Lassertk/Assert;
+	public static final fun bytesAt (Lassertk/Assert;II)Lassertk/Assert;
+	public static final fun hasBytesAt (Lassertk/Assert;I[B)V
+}
+
+public class at/released/weh/wasm/core/test/fixtures/TestMemory : at/released/weh/wasm/core/memory/Memory {
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun fill (B)V
+	public final fun getBytes ()[B
+	public final fun getSize ()I
+	public fun readI32 (I)I
+	public fun readI64 (I)J
+	public fun readI8 (I)B
+	public fun sink (II)Lkotlinx/io/RawSink;
+	public fun source (II)Lkotlinx/io/RawSource;
+	public fun toString ()Ljava/lang/String;
+	public fun writeI32 (II)V
+	public fun writeI64 (IJ)V
+	public fun writeI8 (IB)V
+}
+
+public final class at/released/weh/wasm/core/test/fixtures/TestMemoryRawSource : at/released/weh/wasm/core/memory/MemoryRawSource {
+	public fun <init> (Lat/released/weh/wasm/core/test/fixtures/TestMemory;II)V
+}
+
