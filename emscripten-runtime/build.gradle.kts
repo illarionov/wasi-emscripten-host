@@ -41,6 +41,7 @@ kotlin {
             implementation(projects.testLogger)
             implementation(projects.testTempfolder)
             implementation(projects.hostTestFixtures)
+            implementation(projects.wasmCoreTestFixtures)
             implementation(kotlin("test"))
             implementation(libs.assertk)
         }

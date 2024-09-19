@@ -6,8 +6,8 @@
 
 package at.released.weh.host.internal
 
-import at.released.weh.host.EmbedderHost
+import at.released.weh.host.CommandArgsProvider
 
-internal object EmptyCommandArgsProvider : EmbedderHost.CommandArgsProvider {
+internal object EmptyCommandArgsProvider : CommandArgsProvider {
     override fun getCommandArgs(): List<String> = emptyList()
 }

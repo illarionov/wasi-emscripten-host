@@ -1,186 +1,64 @@
+public abstract interface class at/released/weh/host/Clock {
+	public abstract fun getCurrentTimeEpochMilliseconds ()J
+}
+
+public abstract interface class at/released/weh/host/CommandArgsProvider {
+	public abstract fun getCommandArgs ()Ljava/util/List;
+}
+
 public abstract interface class at/released/weh/host/EmbedderHost {
-	public abstract fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
-	public abstract fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
-	public abstract fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public abstract fun getClock ()Lat/released/weh/host/Clock;
+	public abstract fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
+	public abstract fun getEntropySource ()Lat/released/weh/host/EntropySource;
 	public abstract fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
-	public abstract fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
-	public abstract fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public abstract fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
+	public abstract fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
 	public abstract fun getRootLogger ()Lat/released/weh/common/api/Logger;
-	public abstract fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
-	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
+	public abstract fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
+	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 }
 
 public final class at/released/weh/host/EmbedderHost$Builder {
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/host/EmbedderHost;
-	public final fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
-	public final fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
-	public final fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public final fun getClock ()Lat/released/weh/host/Clock;
+	public final fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
+	public final fun getEntropySource ()Lat/released/weh/host/EntropySource;
 	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
-	public final fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
-	public final fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public final fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
+	public final fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
 	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
-	public final fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
-	public final fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
-	public final fun setClock (Lat/released/weh/host/EmbedderHost$Clock;)V
-	public final fun setCommandArgsProvider (Lat/released/weh/host/EmbedderHost$CommandArgsProvider;)V
-	public final fun setEntropySource (Lat/released/weh/host/EmbedderHost$EntropySource;)V
+	public final fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
+	public final fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
+	public final fun setClock (Lat/released/weh/host/Clock;)V
+	public final fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
+	public final fun setEntropySource (Lat/released/weh/host/EntropySource;)V
 	public final fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
-	public final fun setLocalTimeFormatter (Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;)V
-	public final fun setMonotonicClock (Lat/released/weh/host/EmbedderHost$MonotonicClock;)V
+	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
+	public final fun setMonotonicClock (Lat/released/weh/host/MonotonicClock;)V
 	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
-	public final fun setSystemEnvProvider (Lat/released/weh/host/EmbedderHost$SystemEnvProvider;)V
-	public final fun setTimeZoneInfo (Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;)V
+	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
+	public final fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
 }
 
-public abstract interface class at/released/weh/host/EmbedderHost$Clock {
-	public abstract fun getCurrentTimeEpochMilliseconds ()J
-}
-
-public abstract interface class at/released/weh/host/EmbedderHost$CommandArgsProvider {
-	public abstract fun getCommandArgs ()Ljava/util/List;
-}
-
-public abstract interface class at/released/weh/host/EmbedderHost$EntropySource {
+public abstract interface class at/released/weh/host/EntropySource {
 	public abstract fun generateEntropy (I)[B
 }
 
-public abstract interface class at/released/weh/host/EmbedderHost$LocalTimeFormatter {
-	public abstract fun format (J)Lat/released/weh/host/include/StructTm;
+public abstract interface class at/released/weh/host/LocalTimeFormatter {
+	public abstract fun format (J)Lat/released/weh/host/LocalTimeFormatter$StructTm;
 }
 
-public abstract interface class at/released/weh/host/EmbedderHost$MonotonicClock {
-	public abstract fun getTimeMarkNanoseconds ()J
+public final class at/released/weh/host/LocalTimeFormatter$IsDstFlag : java/lang/Enum {
+	public static final field IN_EFFECT Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
+	public static final field NOT_IN_EFFECT Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
+	public static final field UNKNOWN Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
+	public static fun values ()[Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
 }
 
-public abstract interface class at/released/weh/host/EmbedderHost$SystemEnvProvider {
-	public abstract fun getSystemEnv ()Ljava/util/Map;
-}
-
-public abstract interface class at/released/weh/host/EmbedderHost$TimeZoneInfoProvider {
-	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
-}
-
-public final class at/released/weh/host/include/Fcntl {
-	public static final field AT_EACCESS I
-	public static final field AT_FDCWD I
-	public static final field AT_REMOVEDIR I
-	public static final field AT_SYMLINK_FOLLOW I
-	public static final field AT_SYMLINK_NOFOLLOW I
-	public static final field F_DUPFD I
-	public static final field F_DUPFD_CLOEXEC I
-	public static final field F_GETFD I
-	public static final field F_GETFL I
-	public static final field F_GETLK I
-	public static final field F_GETOWN I
-	public static final field F_GETOWNER_UIDS I
-	public static final field F_GETOWN_EX I
-	public static final field F_GETSIG I
-	public static final field F_OK I
-	public static final field F_RDLCK S
-	public static final field F_SETFD I
-	public static final field F_SETFL I
-	public static final field F_SETLK I
-	public static final field F_SETLKW I
-	public static final field F_SETOWN I
-	public static final field F_SETOWN_EX I
-	public static final field F_SETSIG I
-	public static final field F_UNLCK S
-	public static final field F_WRLCK S
-	public static final field INSTANCE Lat/released/weh/host/include/Fcntl;
-	public static final field O_ACCMODE I
-	public static final field O_APPEND I
-	public static final field O_ASYNC I
-	public static final field O_CLOEXEC I
-	public static final field O_CREAT I
-	public static final field O_DIRECT I
-	public static final field O_DIRECTORY I
-	public static final field O_DSYNC I
-	public static final field O_EXCL I
-	public static final field O_LARGEFILE I
-	public static final field O_NDELAY I
-	public static final field O_NOATIME I
-	public static final field O_NOCTTY I
-	public static final field O_NOFOLLOW I
-	public static final field O_NONBLOCK I
-	public static final field O_PATH I
-	public static final field O_RDONLY I
-	public static final field O_RDWR I
-	public static final field O_SEARCH I
-	public static final field O_SYNC I
-	public static final field O_TMPFILE I
-	public static final field O_TRUNC I
-	public static final field O_WRONLY I
-	public static final field R_OK I
-	public static final field W_OK I
-	public static final field X_OK I
-}
-
-public final class at/released/weh/host/include/FcntlExtKt {
-	public static final fun oMaskToString (Lat/released/weh/host/include/Fcntl;I)Ljava/lang/String;
-}
-
-public final class at/released/weh/host/include/StructFlock {
-	public static final field Companion Lat/released/weh/host/include/StructFlock$Companion;
-	public static final field STRUCT_FLOCK_SIZE I
-	public fun <init> (SSJJI)V
-	public final fun component1 ()S
-	public final fun component2 ()S
-	public final fun component3 ()J
-	public final fun component4 ()J
-	public final fun component5 ()I
-	public final fun copy (SSJJI)Lat/released/weh/host/include/StructFlock;
-	public static synthetic fun copy$default (Lat/released/weh/host/include/StructFlock;SSJJIILjava/lang/Object;)Lat/released/weh/host/include/StructFlock;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getL_len ()J
-	public final fun getL_pid ()I
-	public final fun getL_start ()J
-	public final fun getL_type ()S
-	public final fun getL_whence ()S
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class at/released/weh/host/include/StructFlock$Companion {
-	public final fun unpack (Lkotlinx/io/Source;)Lat/released/weh/host/include/StructFlock;
-}
-
-public final class at/released/weh/host/include/StructPthread {
-	public static final field Companion Lat/released/weh/host/include/StructPthread$Companion;
-	public static final field STRUCT_PTHREAD_STACK_HIGH_OFFSET I
-	public static final field STRUCT_PTHREAD_STACK_SZIE_OFFSET I
-	public fun <init> (IIIIIIIIIB)V
-	public final fun component1 ()I
-	public final fun component10 ()B
-	public final fun component2 ()I
-	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun component5 ()I
-	public final fun component6 ()I
-	public final fun component7 ()I
-	public final fun component8 ()I
-	public final fun component9 ()I
-	public final fun copy (IIIIIIIIIB)Lat/released/weh/host/include/StructPthread;
-	public static synthetic fun copy$default (Lat/released/weh/host/include/StructPthread;IIIIIIIIIBILjava/lang/Object;)Lat/released/weh/host/include/StructPthread;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCanary ()I
-	public final fun getMailbox ()I
-	public final fun getMailboxRefcount ()I
-	public final fun getNext ()I
-	public final fun getPrev ()I
-	public final fun getSelf ()I
-	public final fun getSleeping ()B
-	public final fun getSysinfo ()I
-	public final fun getTlsBase ()I
-	public final fun getWaitingAsync ()I
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class at/released/weh/host/include/StructPthread$Companion {
-}
-
-public final class at/released/weh/host/include/StructTm {
+public final class at/released/weh/host/LocalTimeFormatter$StructTm {
 	public fun <init> (IIIIIIIIIJLjava/lang/String;)V
 	public synthetic fun <init> (IIIIIIIIIJLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
@@ -194,8 +72,8 @@ public final class at/released/weh/host/include/StructTm {
 	public final fun component7 ()I
 	public final fun component8 ()I
 	public final fun component9 ()I
-	public final fun copy (IIIIIIIIIJLjava/lang/String;)Lat/released/weh/host/include/StructTm;
-	public static synthetic fun copy$default (Lat/released/weh/host/include/StructTm;IIIIIIIIIJLjava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/include/StructTm;
+	public final fun copy (IIIIIIIIIJLjava/lang/String;)Lat/released/weh/host/LocalTimeFormatter$StructTm;
+	public static synthetic fun copy$default (Lat/released/weh/host/LocalTimeFormatter$StructTm;IIIIIIIIIJLjava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/LocalTimeFormatter$StructTm;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getTm_gmtoff ()J
 	public final fun getTm_hour ()I
@@ -209,34 +87,26 @@ public final class at/released/weh/host/include/StructTm {
 	public final fun getTm_year ()I
 	public final fun getTm_zone ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun isDstFlag ()Lat/released/weh/host/include/StructTm$IsDstFlag;
+	public final fun isDstFlag ()Lat/released/weh/host/LocalTimeFormatter$IsDstFlag;
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/host/include/StructTm$IsDstFlag : java/lang/Enum {
-	public static final field IN_EFFECT Lat/released/weh/host/include/StructTm$IsDstFlag;
-	public static final field NOT_IN_EFFECT Lat/released/weh/host/include/StructTm$IsDstFlag;
-	public static final field UNKNOWN Lat/released/weh/host/include/StructTm$IsDstFlag;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/include/StructTm$IsDstFlag;
-	public static fun values ()[Lat/released/weh/host/include/StructTm$IsDstFlag;
+public abstract interface class at/released/weh/host/MonotonicClock {
+	public abstract fun getTimeMarkNanoseconds ()J
 }
 
-public final class at/released/weh/host/include/StructTmKt {
-	public static final field STRUCT_TM_PACKED_SIZE I
-	public static final fun asTmIsdstValue (Lat/released/weh/host/include/StructTm$IsDstFlag;)I
-	public static final fun pack (Lat/released/weh/host/include/StructTm;)Lkotlinx/io/Buffer;
-	public static final fun packTo (Lat/released/weh/host/include/StructTm;Lkotlinx/io/Sink;)V
+public abstract interface class at/released/weh/host/SystemEnvProvider {
+	public abstract fun getSystemEnv ()Ljava/util/Map;
 }
 
-public final class at/released/weh/host/include/TimeZoneInfo {
+public final class at/released/weh/host/TimeZoneInfo {
 	public fun <init> (JILjava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()J
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (JILjava/lang/String;Ljava/lang/String;)Lat/released/weh/host/include/TimeZoneInfo;
-	public static synthetic fun copy$default (Lat/released/weh/host/include/TimeZoneInfo;JILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/include/TimeZoneInfo;
+	public final fun copy (JILjava/lang/String;Ljava/lang/String;)Lat/released/weh/host/TimeZoneInfo;
+	public static synthetic fun copy$default (Lat/released/weh/host/TimeZoneInfo;JILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/host/TimeZoneInfo;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDaylight ()I
 	public final fun getDstName ()Ljava/lang/String;
@@ -246,106 +116,22 @@ public final class at/released/weh/host/include/TimeZoneInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/host/include/sys/MemoryProtectionFlag {
-	public static final field INSTANCE Lat/released/weh/host/include/sys/MemoryProtectionFlag;
-	public static final field PROT_EXEC I
-	public static final field PROT_GROWSDOWN I
-	public static final field PROT_GROWSUP I
-	public static final field PROT_NONE I
-	public static final field PROT_READ I
-	public static final field PROT_WRITE I
-}
-
-public final class at/released/weh/host/include/sys/MmapFlag {
-	public static final field INSTANCE Lat/released/weh/host/include/sys/MmapFlag;
-	public static final field MAP_ANON I
-	public static final field MAP_ANONYMOUS I
-	public static final field MAP_DENYWRITE I
-	public static final field MAP_EXECUTABLE I
-	public static final field MAP_FILE I
-	public static final field MAP_FIXED I
-	public static final field MAP_FIXED_NOREPLACE I
-	public static final field MAP_GROWSDOWN I
-	public static final field MAP_HUGETLB I
-	public static final field MAP_HUGE_16GB I
-	public static final field MAP_HUGE_16KB I
-	public static final field MAP_HUGE_16MB I
-	public static final field MAP_HUGE_1GB I
-	public static final field MAP_HUGE_1MB I
-	public static final field MAP_HUGE_256MB I
-	public static final field MAP_HUGE_2GB I
-	public static final field MAP_HUGE_2MB I
-	public static final field MAP_HUGE_32MB I
-	public static final field MAP_HUGE_512KB I
-	public static final field MAP_HUGE_512MB I
-	public static final field MAP_HUGE_64KB I
-	public static final field MAP_HUGE_8MB I
-	public static final field MAP_HUGE_MASK I
-	public static final field MAP_HUGE_SHIFT I
-	public static final field MAP_LOCKED I
-	public static final field MAP_NONBLOCK I
-	public static final field MAP_NORESERVE I
-	public static final field MAP_POPULATE I
-	public static final field MAP_PRIVATE I
-	public static final field MAP_SHARED I
-	public static final field MAP_SHARED_VALIDATE I
-	public static final field MAP_STACK I
-	public static final field MAP_SYNC I
-	public static final field MAP_TYPE I
-}
-
-public final class at/released/weh/host/include/sys/StructStatExtKt {
-	public static final field STRUCT_SIZE_PACKED_SIZE I
-	public static final fun pack (Lat/released/weh/filesystem/op/stat/StructStat;)Lkotlinx/io/Buffer;
-	public static final fun packTo (Lat/released/weh/filesystem/op/stat/StructStat;Lkotlinx/io/Sink;)V
-}
-
-public abstract interface annotation class at/released/weh/host/include/sys/SysMmanMapFlags : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class at/released/weh/host/include/sys/SysMmanProt : java/lang/annotation/Annotation {
-}
-
-public final class at/released/weh/host/include/sys/SysStat {
-	public static final field INSTANCE Lat/released/weh/host/include/sys/SysStat;
-	public static final field UTIME_NOW I
-	public static final field UTIME_OMIT I
+public abstract interface class at/released/weh/host/TimeZoneInfo$Provider {
+	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo;
 }
 
 public final class at/released/weh/host/jvm/JvmEmbedderHost : at/released/weh/host/EmbedderHost {
 	public fun <init> ()V
-	public fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/EmbedderHost$SystemEnvProvider;Lat/released/weh/host/EmbedderHost$CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/EmbedderHost$Clock;Lat/released/weh/host/EmbedderHost$MonotonicClock;Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;Lat/released/weh/host/EmbedderHost$EntropySource;)V
-	public synthetic fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/EmbedderHost$SystemEnvProvider;Lat/released/weh/host/EmbedderHost$CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/EmbedderHost$Clock;Lat/released/weh/host/EmbedderHost$MonotonicClock;Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;Lat/released/weh/host/EmbedderHost$EntropySource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getClock ()Lat/released/weh/host/EmbedderHost$Clock;
-	public fun getCommandArgsProvider ()Lat/released/weh/host/EmbedderHost$CommandArgsProvider;
-	public fun getEntropySource ()Lat/released/weh/host/EmbedderHost$EntropySource;
+	public fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/Clock;Lat/released/weh/host/MonotonicClock;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;)V
+	public synthetic fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/Clock;Lat/released/weh/host/MonotonicClock;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getClock ()Lat/released/weh/host/Clock;
+	public fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
+	public fun getEntropySource ()Lat/released/weh/host/EntropySource;
 	public fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
-	public fun getLocalTimeFormatter ()Lat/released/weh/host/EmbedderHost$LocalTimeFormatter;
-	public fun getMonotonicClock ()Lat/released/weh/host/EmbedderHost$MonotonicClock;
+	public fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
+	public fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
 	public fun getRootLogger ()Lat/released/weh/common/api/Logger;
-	public fun getSystemEnvProvider ()Lat/released/weh/host/EmbedderHost$SystemEnvProvider;
-	public fun getTimeZoneInfo ()Lat/released/weh/host/EmbedderHost$TimeZoneInfoProvider;
-}
-
-public final class at/released/weh/host/jvm/JvmEntropySource : at/released/weh/host/EmbedderHost$EntropySource {
-	public fun <init> ()V
-	public fun <init> (Ljava/security/SecureRandom;)V
-	public synthetic fun <init> (Ljava/security/SecureRandom;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun generateEntropy (I)[B
-}
-
-public final class at/released/weh/host/jvm/JvmLocalTimeFormatter : at/released/weh/host/EmbedderHost$LocalTimeFormatter {
-	public fun <init> ()V
-	public fun <init> (Lkotlin/jvm/functions/Function0;)V
-	public synthetic fun <init> (Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun format (J)Lat/released/weh/host/include/StructTm;
-	public final fun getLocalTimeZoneProvider ()Lkotlin/jvm/functions/Function0;
-}
-
-public final class at/released/weh/host/jvm/JvmTimeZoneInfoProvider : at/released/weh/host/EmbedderHost$TimeZoneInfoProvider {
-	public fun <init> ()V
-	public fun <init> (Ljava/time/Clock;)V
-	public synthetic fun <init> (Ljava/time/Clock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getTimeZoneInfo ()Lat/released/weh/host/include/TimeZoneInfo;
+	public fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
+	public fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 }
 

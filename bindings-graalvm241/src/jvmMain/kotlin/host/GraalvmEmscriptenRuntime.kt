@@ -12,9 +12,9 @@ import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
-import at.released.weh.host.include.StructPthread
-import at.released.weh.host.include.StructPthread.Companion.STRUCT_PTHREAD_STACK_HIGH_OFFSET
-import at.released.weh.host.include.StructPthread.Companion.STRUCT_PTHREAD_STACK_SZIE_OFFSET
+import at.released.weh.emcripten.runtime.include.StructPthread
+import at.released.weh.emcripten.runtime.include.StructPthread.Companion.STRUCT_PTHREAD_STACK_HIGH_OFFSET
+import at.released.weh.emcripten.runtime.include.StructPthread.Companion.STRUCT_PTHREAD_STACK_SZIE_OFFSET
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

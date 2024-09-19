@@ -6,9 +6,9 @@
 
 package at.released.weh.emcripten.runtime.ext
 
+import at.released.weh.emcripten.runtime.include.Fcntl
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
-import at.released.weh.host.include.Fcntl
 
 internal fun BaseDirectory.Companion.fromRawDirFd(rawDirFd: Int): BaseDirectory = when (rawDirFd) {
     Fcntl.AT_FDCWD -> CurrentWorkingDirectory

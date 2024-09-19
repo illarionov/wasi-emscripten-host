@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include.sys
+package at.released.weh.emcripten.runtime.include.sys
 
 import androidx.annotation.IntDef
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -36,7 +36,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     AnnotationTarget.TYPE,
     AnnotationTarget.VALUE_PARAMETER,
 )
-public annotation class SysMmanProt
+internal annotation class SysMmanProt
 
 public object MemoryProtectionFlag {
     public const val PROT_NONE: Int = 0

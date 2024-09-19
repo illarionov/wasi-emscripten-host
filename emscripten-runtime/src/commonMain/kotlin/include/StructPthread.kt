@@ -6,7 +6,7 @@
 
 @file:Suppress("KDOC_NO_CONSTRUCTOR_PROPERTY_WITH_COMMENT")
 
-package at.released.weh.host.include
+package at.released.weh.emcripten.runtime.include
 
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

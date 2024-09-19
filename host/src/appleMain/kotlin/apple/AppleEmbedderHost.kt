@@ -6,29 +6,36 @@
 
 package at.released.weh.host.apple
 
+import Clock
+import CommandArgsProvider
+import EntropySource
+import LocalTimeFormatter
+import MonotonicClock
+import SystemEnvProvider
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.NotImplementedFileSystem
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.TimeZoneInfoProvider
 import at.released.weh.host.internal.CommonClock
 import at.released.weh.host.internal.CommonMonotonicClock
 
 public class AppleEmbedderHost(
     override val rootLogger: Logger,
-    override val systemEnvProvider: EmbedderHost.SystemEnvProvider = AppleSystemEnvProvider,
-    override val commandArgsProvider: EmbedderHost.CommandArgsProvider = AppleCommandArgsProvider,
+    override val systemEnvProvider: SystemEnvProvider = AppleSystemEnvProvider,
+    override val commandArgsProvider: CommandArgsProvider = AppleCommandArgsProvider,
     override val fileSystem: FileSystem = NotImplementedFileSystem,
-    override val monotonicClock: EmbedderHost.MonotonicClock = CommonMonotonicClock(),
-    override val clock: EmbedderHost.Clock = CommonClock(),
-    override val localTimeFormatter: EmbedderHost.LocalTimeFormatter = AppleLocalTimeFormatter(),
-    override val timeZoneInfo: EmbedderHost.TimeZoneInfoProvider = AppleTimeZoneInfoProvider(),
-    override val entropySource: EmbedderHost.EntropySource = AppleEntropySource(),
+    override val monotonicClock: MonotonicClock = CommonMonotonicClock(),
+    override val clock: Clock = CommonClock(),
+    override val localTimeFormatter: LocalTimeFormatter = AppleLocalTimeFormatter(),
+    override val timeZoneInfo: TimeZoneInfoProvider = AppleTimeZoneInfoProvider(),
+    override val entropySource: EntropySource = AppleEntropySource(),
 ) : EmbedderHost {
-    internal object AppleSystemEnvProvider : EmbedderHost.SystemEnvProvider {
+    internal object AppleSystemEnvProvider : SystemEnvProvider {
         override fun getSystemEnv(): Map<String, String> = emptyMap() // TODO:
     }
 
-    internal object AppleCommandArgsProvider : EmbedderHost.CommandArgsProvider {
+    internal object AppleCommandArgsProvider : CommandArgsProvider {
         override fun getCommandArgs(): List<String> = emptyList()
     }
 }

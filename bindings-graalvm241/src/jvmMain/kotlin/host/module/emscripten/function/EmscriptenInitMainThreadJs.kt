@@ -12,8 +12,8 @@ import at.released.weh.bindings.graalvm241.host.module.emscripten.function.Emscr
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS
 import at.released.weh.emcripten.runtime.export.pthread.PthreadManager
 import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
+import at.released.weh.emcripten.runtime.include.StructPthread
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary

@@ -4,13 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ext
+package at.released.weh.common.ext
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.common.ext.encodeToNullTerminatedBuffer
-import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import kotlinx.io.readByteArray
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

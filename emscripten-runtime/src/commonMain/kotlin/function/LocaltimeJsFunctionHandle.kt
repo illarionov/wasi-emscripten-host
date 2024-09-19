@@ -7,10 +7,10 @@
 package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.LOCALTIME_JS
+import at.released.weh.emcripten.runtime.include.STRUCT_TM_PACKED_SIZE
+import at.released.weh.emcripten.runtime.include.packTo
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.include.STRUCT_TM_PACKED_SIZE
-import at.released.weh.host.include.StructTm
-import at.released.weh.host.include.packTo
+import at.released.weh.host.LocalTimeFormatter.StructTm
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

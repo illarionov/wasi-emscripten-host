@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.ext
+package at.released.weh.host.internal
 
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem

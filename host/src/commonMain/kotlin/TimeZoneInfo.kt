@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include
+package at.released.weh.host
 
 /**
  * Time conversion information from <time.h>:
@@ -22,4 +22,8 @@ public data class TimeZoneInfo(
     val daylight: Int,
     val stdName: String,
     val dstName: String,
-)
+) {
+    public fun interface Provider {
+        public fun getTimeZoneInfo(): TimeZoneInfo
+    }
+}

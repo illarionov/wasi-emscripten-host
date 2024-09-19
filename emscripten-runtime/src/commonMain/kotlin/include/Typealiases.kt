@@ -6,17 +6,9 @@
 
 @file:Suppress("TYPEALIAS_NAME_INCORRECT_CASE")
 
-package at.released.weh.host.include
+package at.released.weh.emcripten.runtime.include
 
-public typealias blkcnt_t = ULong
-public typealias blksize_t = ULong
-public typealias dev_t = ULong
-public typealias gid_t = ULong
-public typealias ino_t = ULong
-public typealias nlink_t = ULong
-public typealias off_t = ULong
-public typealias uid_t = ULong
-public typealias pid_t = Int
+internal typealias pid_t = Int
 public typealias pthread_t = ULong
 
-public typealias uintptr_t = Int
+internal typealias uintptr_t = Int

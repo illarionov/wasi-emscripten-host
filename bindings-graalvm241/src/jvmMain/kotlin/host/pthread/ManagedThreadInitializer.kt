@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm241.host.pthread
 
-import at.released.weh.host.include.StructPthread
+import at.released.weh.emcripten.runtime.include.StructPthread
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 

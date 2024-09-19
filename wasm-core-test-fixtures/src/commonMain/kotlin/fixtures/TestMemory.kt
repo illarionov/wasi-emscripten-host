@@ -6,12 +6,8 @@
 
 @file:Suppress("MagicNumber")
 
-package at.released.weh.host.test.fixtures
+package at.released.weh.wasm.core.test.fixtures
 
-import at.released.weh.common.api.Logger
-import at.released.weh.filesystem.FileSystem
-import at.released.weh.filesystem.test.fixtures.TestFileSystem
-import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -20,8 +16,6 @@ import kotlinx.io.RawSource
 
 public open class TestMemory(
     public val size: Int = 1_048_576,
-    public val fileSystem: FileSystem = TestFileSystem(),
-    public val logger: Logger = TestLogger(),
 ) : Memory {
     public val bytes: ByteArray = ByteArray(size) { 0xdc.toByte() }
 

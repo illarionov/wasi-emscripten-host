@@ -6,13 +6,12 @@
 
 package at.released.weh.host.linux
 
-import at.released.weh.host.EmbedderHost.TimeZoneInfoProvider
-import at.released.weh.host.include.TimeZoneInfo
+import at.released.weh.host.TimeZoneInfo
 import kotlinx.cinterop.get
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.tzname
 
-internal object LinuxTimeZoneInfoProvider : TimeZoneInfoProvider {
+internal object LinuxTimeZoneInfoProvider : TimeZoneInfo.Provider {
     override fun getTimeZoneInfo(): TimeZoneInfo {
         return TimeZoneInfo(
             timeZone = platform.posix.timezone_,

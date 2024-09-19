@@ -6,7 +6,7 @@
 
 @file:Suppress("MagicNumber", "ConstructorParameterNaming", "TYPEALIAS_NAME_INCORRECT_CASE")
 
-package at.released.weh.host.include.sys
+package at.released.weh.emcripten.runtime.include.sys
 
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.timeMillis
@@ -15,7 +15,7 @@ import kotlinx.io.Sink
 import kotlinx.io.writeIntLe
 import kotlinx.io.writeLongLe
 
-public fun StructStat.packTo(sink: Sink): Unit = sink.run {
+internal fun StructStat.packTo(sink: Sink): Unit = sink.run {
     writeIntLe(deviceId.toInt()) // 0
     writeIntLe(mode) // 4
     writeIntLe(links.toInt()) // 8
@@ -41,12 +41,12 @@ public fun StructStat.packTo(sink: Sink): Unit = sink.run {
         writeIntLe((1000 * (it % 1000)).toInt()) // 80
         writeIntLe(0) // 84, padding
     }
-    writeLongLe(inode.toLong()) // 88
+    writeLongLe(inode) // 88
 }
 
-public const val STRUCT_SIZE_PACKED_SIZE: Int = 96
+internal const val STRUCT_SIZE_PACKED_SIZE: Int = 96
 
-public fun StructStat.pack(): Buffer = Buffer().also {
+internal fun StructStat.pack(): Buffer = Buffer().also {
     packTo(it)
     check(it.size == STRUCT_SIZE_PACKED_SIZE.toLong())
 }

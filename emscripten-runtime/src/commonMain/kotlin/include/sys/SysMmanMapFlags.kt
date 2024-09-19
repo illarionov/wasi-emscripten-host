@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include.sys
+package at.released.weh.emcripten.runtime.include.sys
 
 import androidx.annotation.IntDef
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -63,44 +63,44 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     AnnotationTarget.TYPE,
     AnnotationTarget.VALUE_PARAMETER,
 )
-public annotation class SysMmanMapFlags
+internal annotation class SysMmanMapFlags
 
 @Suppress("BLANK_LINE_BETWEEN_PROPERTIES")
-public object MmapFlag {
-    public const val MAP_HUGE_SHIFT: Int = 26
-    public const val MAP_HUGE_MASK: Int = 0x3f
+internal object MmapFlag {
+    const val MAP_HUGE_SHIFT: Int = 26
+    const val MAP_HUGE_MASK: Int = 0x3f
 
-    public const val MAP_SHARED: Int = 0x01
-    public const val MAP_PRIVATE: Int = 0x02
-    public const val MAP_SHARED_VALIDATE: Int = 0x03
-    public const val MAP_TYPE: Int = 0x0f
-    public const val MAP_FIXED: Int = 0x10
-    public const val MAP_ANON: Int = 0x20
-    public const val MAP_ANONYMOUS: Int = MAP_ANON
-    public const val MAP_NORESERVE: Int = 0x4000
-    public const val MAP_GROWSDOWN: Int = 0x0100
-    public const val MAP_DENYWRITE: Int = 0x0800
-    public const val MAP_EXECUTABLE: Int = 0x1000
-    public const val MAP_LOCKED: Int = 0x2000
-    public const val MAP_POPULATE: Int = 0x8000
-    public const val MAP_NONBLOCK: Int = 0x10000
-    public const val MAP_STACK: Int = 0x20000
-    public const val MAP_HUGETLB: Int = 0x40000
-    public const val MAP_SYNC: Int = 0x80000
-    public const val MAP_FIXED_NOREPLACE: Int = 0x100000
-    public const val MAP_FILE: Int = 0
+    const val MAP_SHARED: Int = 0x01
+    const val MAP_PRIVATE: Int = 0x02
+    const val MAP_SHARED_VALIDATE: Int = 0x03
+    const val MAP_TYPE: Int = 0x0f
+    const val MAP_FIXED: Int = 0x10
+    const val MAP_ANON: Int = 0x20
+    const val MAP_ANONYMOUS: Int = MAP_ANON
+    const val MAP_NORESERVE: Int = 0x4000
+    const val MAP_GROWSDOWN: Int = 0x0100
+    const val MAP_DENYWRITE: Int = 0x0800
+    const val MAP_EXECUTABLE: Int = 0x1000
+    const val MAP_LOCKED: Int = 0x2000
+    const val MAP_POPULATE: Int = 0x8000
+    const val MAP_NONBLOCK: Int = 0x10000
+    const val MAP_STACK: Int = 0x20000
+    const val MAP_HUGETLB: Int = 0x40000
+    const val MAP_SYNC: Int = 0x80000
+    const val MAP_FIXED_NOREPLACE: Int = 0x100000
+    const val MAP_FILE: Int = 0
 
-    public const val MAP_HUGE_16KB: Int = 14.shl(26)
-    public const val MAP_HUGE_64KB: Int = 16.shl(26)
-    public const val MAP_HUGE_512KB: Int = 19.shl(26)
-    public const val MAP_HUGE_1MB: Int = 20.shl(26)
-    public const val MAP_HUGE_2MB: Int = 21.shl(26)
-    public const val MAP_HUGE_8MB: Int = 23.shl(26)
-    public const val MAP_HUGE_16MB: Int = 24.shl(26)
-    public const val MAP_HUGE_32MB: Int = 25.shl(26)
-    public const val MAP_HUGE_256MB: Int = 28.shl(26)
-    public const val MAP_HUGE_512MB: Int = 29.shl(26)
-    public const val MAP_HUGE_1GB: Int = 30.shl(26)
-    public const val MAP_HUGE_2GB: Int = 31.shl(26)
-    public const val MAP_HUGE_16GB: Int = 34.shl(26)
+    const val MAP_HUGE_16KB: Int = 14.shl(26)
+    const val MAP_HUGE_64KB: Int = 16.shl(26)
+    const val MAP_HUGE_512KB: Int = 19.shl(26)
+    const val MAP_HUGE_1MB: Int = 20.shl(26)
+    const val MAP_HUGE_2MB: Int = 21.shl(26)
+    const val MAP_HUGE_8MB: Int = 23.shl(26)
+    const val MAP_HUGE_16MB: Int = 24.shl(26)
+    const val MAP_HUGE_32MB: Int = 25.shl(26)
+    const val MAP_HUGE_256MB: Int = 28.shl(26)
+    const val MAP_HUGE_512MB: Int = 29.shl(26)
+    const val MAP_HUGE_1GB: Int = 30.shl(26)
+    const val MAP_HUGE_2GB: Int = 31.shl(26)
+    const val MAP_HUGE_16GB: Int = 34.shl(26)
 }

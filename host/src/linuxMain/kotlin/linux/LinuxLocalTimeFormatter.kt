@@ -6,8 +6,8 @@
 
 package at.released.weh.host.linux
 
-import at.released.weh.host.EmbedderHost.LocalTimeFormatter
-import at.released.weh.host.include.StructTm
+import at.released.weh.host.LocalTimeFormatter
+import at.released.weh.host.LocalTimeFormatter.StructTm
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.LongVarOf
 import kotlinx.cinterop.alloc

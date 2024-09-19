@@ -8,7 +8,7 @@ package at.released.weh.host.linux
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import at.released.weh.host.include.StructTm
+import at.released.weh.host.LocalTimeFormatter.StructTm
 import at.released.weh.test.utils.withTimeZone
 import kotlin.test.Test
 

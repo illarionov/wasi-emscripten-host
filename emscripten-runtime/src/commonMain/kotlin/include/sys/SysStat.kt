@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include.sys
+package at.released.weh.emcripten.runtime.include.sys
 
 /**
  * Constants from Emscripten include/sys/stat.h
  */
 @Suppress("NoMultipleSpaces", "TOO_MANY_CONSECUTIVE_SPACES", "BLANK_LINE_BETWEEN_PROPERTIES")
-public object SysStat {
+internal object SysStat {
     public const val UTIME_NOW: UInt = 0x3fff_ffff_U
     public const val UTIME_OMIT: UInt = 0x3fff_fffe_U
 }

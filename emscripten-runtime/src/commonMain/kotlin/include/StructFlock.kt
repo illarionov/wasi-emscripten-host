@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include
+package at.released.weh.emcripten.runtime.include
 
 import kotlinx.io.Source
 import kotlinx.io.readIntLe
@@ -15,17 +15,17 @@ import kotlinx.io.readShortLe
  * <include/fcntl.h> struct flock
  */
 @Suppress("PropertyName", "ConstructorParameterNaming")
-public data class StructFlock(
+internal data class StructFlock(
     val l_type: Short,
     val l_whence: Short,
     val l_start: Long,
     val l_len: Long,
     val l_pid: pid_t,
 ) {
-    public companion object {
-        public const val STRUCT_FLOCK_SIZE: Int = 32
+    companion object {
+        const val STRUCT_FLOCK_SIZE: Int = 32
 
-        public fun unpack(
+        fun unpack(
             source: Source,
         ): StructFlock {
             source.require(STRUCT_FLOCK_SIZE.toLong())

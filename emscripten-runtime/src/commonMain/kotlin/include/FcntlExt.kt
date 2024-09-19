@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.include
+package at.released.weh.emcripten.runtime.include
 
 import at.released.weh.common.ext.maskToString
 
-public fun Fcntl.oMaskToString(
+internal fun Fcntl.oMaskToString(
     mask: Int,
 ): String {
     val startNames = if (mask.and(O_ACCMODE) == 0) {

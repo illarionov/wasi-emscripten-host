@@ -9,12 +9,12 @@ package at.released.weh.emcripten.runtime.function
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_LSTAT64
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_STAT64
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
+import at.released.weh.emcripten.runtime.include.sys.STRUCT_SIZE_PACKED_SIZE
+import at.released.weh.emcripten.runtime.include.sys.packTo
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.include.sys.STRUCT_SIZE_PACKED_SIZE
-import at.released.weh.host.include.sys.packTo
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

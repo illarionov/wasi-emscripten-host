@@ -14,8 +14,8 @@ import at.released.weh.emcripten.runtime.export.memory.DynamicMemory
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.emcripten.runtime.export.pthread.PthreadManager
-import at.released.weh.host.include.StructPthread
-import at.released.weh.host.include.pthread_t
+import at.released.weh.emcripten.runtime.include.StructPthread
+import at.released.weh.emcripten.runtime.include.pthread_t
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

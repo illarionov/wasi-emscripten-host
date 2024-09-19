@@ -351,3 +351,48 @@ public final class at/released/weh/emcripten/runtime/function/TzsetJsFunctionHan
 	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IIII)V
 }
 
+public final class at/released/weh/emcripten/runtime/include/StructPthread {
+	public static final field Companion Lat/released/weh/emcripten/runtime/include/StructPthread$Companion;
+	public static final field STRUCT_PTHREAD_STACK_HIGH_OFFSET I
+	public static final field STRUCT_PTHREAD_STACK_SZIE_OFFSET I
+	public fun <init> (IIIIIIIIIB)V
+	public final fun component1 ()I
+	public final fun component10 ()B
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun component9 ()I
+	public final fun copy (IIIIIIIIIB)Lat/released/weh/emcripten/runtime/include/StructPthread;
+	public static synthetic fun copy$default (Lat/released/weh/emcripten/runtime/include/StructPthread;IIIIIIIIIBILjava/lang/Object;)Lat/released/weh/emcripten/runtime/include/StructPthread;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCanary ()I
+	public final fun getMailbox ()I
+	public final fun getMailboxRefcount ()I
+	public final fun getNext ()I
+	public final fun getPrev ()I
+	public final fun getSelf ()I
+	public final fun getSleeping ()B
+	public final fun getSysinfo ()I
+	public final fun getTlsBase ()I
+	public final fun getWaitingAsync ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/emcripten/runtime/include/StructPthread$Companion {
+}
+
+public final class at/released/weh/emcripten/runtime/include/sys/MemoryProtectionFlag {
+	public static final field INSTANCE Lat/released/weh/emcripten/runtime/include/sys/MemoryProtectionFlag;
+	public static final field PROT_EXEC I
+	public static final field PROT_GROWSDOWN I
+	public static final field PROT_GROWSUP I
+	public static final field PROT_NONE I
+	public static final field PROT_READ I
+	public static final field PROT_WRITE I
+}
+

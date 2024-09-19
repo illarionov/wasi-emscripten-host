@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.test.assertions
+package at.released.weh.wasm.core.test.assertions
 
 import assertk.Assert
 import assertk.assertions.isEqualTo
 import assertk.assertions.support.appendName
-import at.released.weh.host.test.fixtures.TestMemory
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.sourceWithMaxSize
+import at.released.weh.wasm.core.test.fixtures.TestMemory
 import kotlinx.io.buffered
 import kotlinx.io.readByteArray
 

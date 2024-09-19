@@ -12,19 +12,19 @@ import arrow.core.left
 import arrow.core.right
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.weh.emcripten.runtime.include.Fcntl
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
-import at.released.weh.host.include.Fcntl
-import at.released.weh.host.test.assertions.byteAt
-import at.released.weh.host.test.assertions.hasBytesAt
 import at.released.weh.host.test.fixtures.TestEmbedderHost
-import at.released.weh.host.test.fixtures.TestMemory
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.writeNullTerminatedString
+import at.released.weh.wasm.core.test.assertions.byteAt
+import at.released.weh.wasm.core.test.assertions.hasBytesAt
+import at.released.weh.wasm.core.test.fixtures.TestMemory
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -32,7 +32,7 @@ import kotlin.test.Test
 class SyscallReadlinkatFunctionHandleTest {
     private val fileSystem = TestFileSystem()
     private val host = TestEmbedderHost(fileSystem = fileSystem)
-    private val memory = TestMemory(fileSystem = host.fileSystem)
+    private val memory = TestMemory()
     private val readlinkatFunctionHandle = SyscallReadlinkatFunctionHandle(host)
 
     @BeforeTest
