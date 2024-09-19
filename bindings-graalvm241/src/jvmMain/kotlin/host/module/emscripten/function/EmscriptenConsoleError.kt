@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenConsoleErrorFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -24,7 +24,11 @@ internal class EmscriptenConsoleError(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EmscriptenConsoleErrorFunctionHandle>(language, module, EmscriptenConsoleErrorFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<EmscriptenConsoleErrorFunctionHandle>(
+    language,
+    module,
+    EmscriptenConsoleErrorFunctionHandle(host),
+) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance) {
         consoleError(
             memory(frame),

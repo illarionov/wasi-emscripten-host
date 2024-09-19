@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
@@ -28,7 +28,7 @@ internal class SyscallOpenat(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallOpenatFunctionHandle>(language, module, SyscallOpenatFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallOpenatFunctionHandle>(language, module, SyscallOpenatFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         val args = frame.arguments
         val memory = memory(frame)

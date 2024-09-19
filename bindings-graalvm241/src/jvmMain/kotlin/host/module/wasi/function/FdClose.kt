@@ -7,9 +7,9 @@
 package at.released.weh.bindings.graalvm241.host.module.wasi.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.wasi.preview1.function.FdCloseFunctionHandle
+import at.released.weh.wasi.preview1.function.FdCloseFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import org.graalvm.wasm.WasmContext
@@ -21,7 +21,7 @@ internal class FdClose(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<FdCloseFunctionHandle>(language, module, FdCloseFunctionHandle(host)) {
+) : BaseWasiWasmNode<FdCloseFunctionHandle>(language, module, FdCloseFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         val args = frame.arguments
         return fdClose(args.getArgAsInt(0))

@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.AssertFailFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -25,7 +25,7 @@ internal class AssertFail(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<AssertFailFunctionHandle>(language, module, AssertFailFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<AssertFailFunctionHandle>(language, module, AssertFailFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Nothing {
         val args = frame.arguments
         assertFail(

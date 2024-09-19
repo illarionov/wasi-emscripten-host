@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsLong
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.LocaltimeJsFunctionHandle
 import at.released.weh.host.include.StructTm
@@ -26,7 +26,7 @@ internal class LocaltimeJs(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<LocaltimeJsFunctionHandle>(language, module, LocaltimeJsFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<LocaltimeJsFunctionHandle>(language, module, LocaltimeJsFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance) {
         val args = frame.arguments
         localtimeJs(

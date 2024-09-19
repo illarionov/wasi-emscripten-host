@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenInitMainThreadJs.InitMainThreadJsHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -28,7 +28,7 @@ internal class EmscriptenInitMainThreadJs(
     module: WasmModule,
     host: EmbedderHost,
     posixThreadRef: () -> PthreadManager,
-) : BaseWasmNode<InitMainThreadJsHandle>(language, module, InitMainThreadJsHandle(host, posixThreadRef)) {
+) : BaseEmscriptenWasmNode<InitMainThreadJsHandle>(language, module, InitMainThreadJsHandle(host, posixThreadRef)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance) {
         val args = frame.arguments
         handle.execute(args.getArgAsWasmPtr(0))

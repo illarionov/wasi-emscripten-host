@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenResizeHeap.ResizeHeapHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -27,7 +27,7 @@ internal class EmscriptenResizeHeap(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<ResizeHeapHandle>(language, module, ResizeHeapHandle(host)) {
+) : BaseEmscriptenWasmNode<ResizeHeapHandle>(language, module, ResizeHeapHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         return handle.execute(
             memory(frame),

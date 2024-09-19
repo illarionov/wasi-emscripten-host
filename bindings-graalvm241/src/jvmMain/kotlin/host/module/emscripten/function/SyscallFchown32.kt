@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchown32FunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -21,7 +21,7 @@ internal class SyscallFchown32(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallFchown32FunctionHandle>(language, module, SyscallFchown32FunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallFchown32FunctionHandle>(language, module, SyscallFchown32FunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Int {
         val args = frame.arguments
         return syscallFchown32(

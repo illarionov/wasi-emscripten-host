@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallGetcwdFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -25,7 +25,7 @@ internal class SyscallGetcwd(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallGetcwdFunctionHandle>(language, module, SyscallGetcwdFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallGetcwdFunctionHandle>(language, module, SyscallGetcwdFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         val args = frame.arguments
         return syscallGetcwd(

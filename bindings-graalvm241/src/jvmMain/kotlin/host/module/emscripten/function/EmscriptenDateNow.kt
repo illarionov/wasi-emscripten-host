@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenDateNowFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -20,7 +20,7 @@ internal class EmscriptenDateNow(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EmscriptenDateNowFunctionHandle>(language, module, EmscriptenDateNowFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<EmscriptenDateNowFunctionHandle>(language, module, EmscriptenDateNowFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         return emscriptenDateNow()
     }

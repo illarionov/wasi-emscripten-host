@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenAsmConstAsyncOnMainThreadFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -23,7 +23,7 @@ internal class EmscriptenAsmConstAsyncOnMainThread(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EmscriptenAsmConstAsyncOnMainThreadFunctionHandle>(
+) : BaseEmscriptenWasmNode<EmscriptenAsmConstAsyncOnMainThreadFunctionHandle>(
     language,
     module,
     EmscriptenAsmConstAsyncOnMainThreadFunctionHandle(host),

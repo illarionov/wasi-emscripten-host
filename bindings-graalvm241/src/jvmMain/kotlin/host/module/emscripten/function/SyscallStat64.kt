@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallStatLstat64FunctionHandle
@@ -25,7 +25,7 @@ internal fun syscallLstat64(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<SyscallStatLstat64FunctionHandle> = SyscallStat64(
+): BaseEmscriptenWasmNode<SyscallStatLstat64FunctionHandle> = SyscallStat64(
     language = language,
     module = module,
     handle = SyscallStatLstat64FunctionHandle.syscallLstat64(host),
@@ -35,7 +35,7 @@ internal fun syscallStat64(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasmNode<SyscallStatLstat64FunctionHandle> = SyscallStat64(
+): BaseEmscriptenWasmNode<SyscallStatLstat64FunctionHandle> = SyscallStat64(
     language = language,
     module = module,
     handle = SyscallStatLstat64FunctionHandle.syscallStat64(host),
@@ -45,7 +45,7 @@ private class SyscallStat64(
     language: WasmLanguage,
     module: WasmModule,
     handle: SyscallStatLstat64FunctionHandle,
-) : BaseWasmNode<SyscallStatLstat64FunctionHandle>(language, module, handle) {
+) : BaseEmscriptenWasmNode<SyscallStatLstat64FunctionHandle>(language, module, handle) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Int {
         val args = frame.arguments
         return stat64(

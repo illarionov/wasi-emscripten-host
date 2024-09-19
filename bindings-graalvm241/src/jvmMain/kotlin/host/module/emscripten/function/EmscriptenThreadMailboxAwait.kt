@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenThreadMailboxAwait.EmscriptenThreadMailboxAwaitHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.function.HostFunctionHandle
@@ -26,7 +26,11 @@ internal class EmscriptenThreadMailboxAwait(
     host: EmbedderHost,
     @Suppress("UnusedPrivateProperty")
     private val posixThreadRef: () -> PthreadManager,
-) : BaseWasmNode<EmscriptenThreadMailboxAwaitHandle>(language, module, EmscriptenThreadMailboxAwaitHandle(host)) {
+) : BaseEmscriptenWasmNode<EmscriptenThreadMailboxAwaitHandle>(
+    language,
+    module,
+    EmscriptenThreadMailboxAwaitHandle(host),
+) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance) {
         handle.execute(frame.arguments.getArgAsInt(0))
     }

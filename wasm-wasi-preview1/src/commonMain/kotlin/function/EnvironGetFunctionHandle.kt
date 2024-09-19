@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1.function
+package at.released.weh.wasi.preview1.function
 
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.base.function.HostFunctionHandle
-import at.released.weh.host.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -18,7 +17,7 @@ import at.released.weh.wasm.core.memory.writeNullTerminatedString
 
 public class EnvironGetFunctionHandle(
     host: EmbedderHost,
-) : HostFunctionHandle(WasiHostFunction.ENVIRON_GET, host) {
+) : WasiHostFunctionHandle(WasiHostFunction.ENVIRON_GET, host) {
     public fun execute(
         memory: Memory,
         @IntWasmPtr(Int::class) environPAddr: WasmPtr,

@@ -7,9 +7,9 @@
 package at.released.weh.bindings.graalvm241.host.module.wasi.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.wasi.preview1.function.EnvironSizesGetFunctionHandle
+import at.released.weh.wasi.preview1.function.EnvironSizesGetFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -24,7 +24,7 @@ internal class EnvironSizesGet(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EnvironSizesGetFunctionHandle>(language, module, EnvironSizesGetFunctionHandle(host)) {
+) : BaseWasiWasmNode<EnvironSizesGetFunctionHandle>(language, module, EnvironSizesGetFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         val args = frame.arguments
         return environSizesGet(

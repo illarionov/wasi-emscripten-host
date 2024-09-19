@@ -9,7 +9,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsLong
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.MunapJsFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -25,7 +25,7 @@ internal class MunapJs(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<MunapJsFunctionHandle>(language, module, MunapJsFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<MunapJsFunctionHandle>(language, module, MunapJsFunctionHandle(host)) {
     @Suppress("MagicNumber")
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Int {
         val args = frame.arguments

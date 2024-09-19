@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.EmscriptenGetNowIsMonotonicFunctionHandle
 import com.oracle.truffle.api.frame.VirtualFrame
@@ -19,7 +19,7 @@ internal class EmscriptenGetNowIsMonotonic(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<EmscriptenGetNowIsMonotonicFunctionHandle>(
+) : BaseEmscriptenWasmNode<EmscriptenGetNowIsMonotonicFunctionHandle>(
     language,
     module,
     EmscriptenGetNowIsMonotonicFunctionHandle(host),

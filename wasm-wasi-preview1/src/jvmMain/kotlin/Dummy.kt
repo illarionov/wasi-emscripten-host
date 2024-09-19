@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.wasi.preview1.ext
+@file:Suppress("FILE_CONTAINS_ONLY_COMMENTS", "FILE_NO_BLANK_LINE_BETWEEN_BLOCKS")
 
-public object WasiEnvironmentFunc {
-    // TODO: sanitize `=`?
-    internal fun Map.Entry<String, String>.encodeEnvToWasi(): String = "$key=$value"
-}
+// Workaround for https://youtrack.jetbrains.com/issue/KTIJ-15797
+package at.released.weh.wasi.preview1

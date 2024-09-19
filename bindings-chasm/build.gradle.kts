@@ -38,6 +38,7 @@ kotlin {
             api(libs.chasm)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
+            implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
             compileOnly(libs.chasm.memory)
             compileOnly(libs.chasm.runtime)

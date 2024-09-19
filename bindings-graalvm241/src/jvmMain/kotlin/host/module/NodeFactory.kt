@@ -9,9 +9,10 @@ package at.released.weh.bindings.graalvm241.host.module
 import at.released.weh.host.EmbedderHost
 import org.graalvm.wasm.WasmLanguage
 import org.graalvm.wasm.WasmModule
+import org.graalvm.wasm.nodes.WasmRootNode
 
 internal typealias NodeFactory = (
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) -> BaseWasmNode<*>
+) -> WasmRootNode

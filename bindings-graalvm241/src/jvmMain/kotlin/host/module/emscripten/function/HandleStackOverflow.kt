@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.export.stack.EmscriptenStack
 import at.released.weh.host.emscripten.function.HandleStackOverflowFunctionHandle
@@ -25,7 +25,11 @@ internal class HandleStackOverflow(
     module: WasmModule,
     host: EmbedderHost,
     private val stackBindingsRef: () -> EmscriptenStack,
-) : BaseWasmNode<HandleStackOverflowFunctionHandle>(language, module, HandleStackOverflowFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<HandleStackOverflowFunctionHandle>(
+    language,
+    module,
+    HandleStackOverflowFunctionHandle(host),
+) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Nothing {
         handleStackOverflow(frame.arguments.getArgAsWasmPtr(0))
     }

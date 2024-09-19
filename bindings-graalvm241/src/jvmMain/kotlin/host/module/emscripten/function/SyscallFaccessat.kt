@@ -8,7 +8,7 @@ package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFaccessatFunctionHandle
 import at.released.weh.wasm.core.IntWasmPtr
@@ -25,7 +25,7 @@ internal class SyscallFaccessat(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallFaccessatFunctionHandle>(language, module, SyscallFaccessatFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallFaccessatFunctionHandle>(language, module, SyscallFaccessatFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         val args = frame.arguments
         val memory = memory(frame)

@@ -10,8 +10,8 @@ import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.base.memory.WasiMemoryReader
-import at.released.weh.host.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr

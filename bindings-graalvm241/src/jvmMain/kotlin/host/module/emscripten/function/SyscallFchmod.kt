@@ -7,7 +7,7 @@
 package at.released.weh.bindings.graalvm241.host.module.emscripten.function
 
 import at.released.weh.bindings.graalvm241.ext.getArgAsInt
-import at.released.weh.bindings.graalvm241.host.module.BaseWasmNode
+import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.emscripten.function.SyscallFchmodFunctionHandle
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -21,7 +21,7 @@ internal class SyscallFchmod(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasmNode<SyscallFchmodFunctionHandle>(language, module, SyscallFchmodFunctionHandle(host)) {
+) : BaseEmscriptenWasmNode<SyscallFchmodFunctionHandle>(language, module, SyscallFchmodFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Int {
         val args = frame.arguments
         return syscallFchmod(

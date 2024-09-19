@@ -8,7 +8,7 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.host.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
+import at.released.weh.wasi.preview1.function.FdSyncSyscallFdatasyncFunctionHandle
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
