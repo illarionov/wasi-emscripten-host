@@ -129,7 +129,7 @@ public final class at/released/weh/emcripten/runtime/export/pthread/PthreadExcep
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Integer;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getErrCode ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun getErrCode ()Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public class at/released/weh/emcripten/runtime/export/pthread/PthreadManager {
@@ -231,7 +231,7 @@ public final class at/released/weh/emcripten/runtime/function/EmscriptenResizeHe
 
 public final class at/released/weh/emcripten/runtime/function/FdDatasyncFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (I)Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun execute (I)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/emcripten/runtime/function/GetentropyFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {

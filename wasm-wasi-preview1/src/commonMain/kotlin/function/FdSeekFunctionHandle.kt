@@ -9,10 +9,11 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.ext.WhenceMapper
+import at.released.weh.wasi.preview1.ext.wasiErrno
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -34,7 +35,7 @@ public class FdSeekFunctionHandle(
         ).onRight { newPosition ->
             memory.writeI64(pNewOffset, newPosition)
         }.fold(
-            ifLeft = SeekError::errno,
+            ifLeft = SeekError::wasiErrno,
             ifRight = { _ -> Errno.SUCCESS },
         )
     }

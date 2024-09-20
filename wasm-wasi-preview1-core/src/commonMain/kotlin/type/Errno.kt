@@ -6,7 +6,7 @@
 
 @file:Suppress("MagicNumber")
 
-package at.released.weh.wasi.filesystem.common
+package at.released.weh.wasi.preview1.type
 
 /**
  * Errno from Wasi Preview 1
@@ -402,6 +402,8 @@ public enum class Errno(
     ;
 
     public companion object {
-        public fun fromErrNoCode(code: Int): Errno? = entries.firstNotNullOfOrNull { if (it.code == code) it else null }
+        private val entriesMap: Map<Int, Errno> = entries.associateBy(Errno::code)
+
+        public fun fromErrNoCode(code: Int): Errno? = entriesMap[code]
     }
 }

@@ -40,7 +40,7 @@ public final class at/released/weh/filesystem/error/AccessDenied : at/released/w
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/AccessDenied;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/AccessDenied;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/AccessDenied;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -55,7 +55,7 @@ public final class at/released/weh/filesystem/error/Again : at/released/weh/file
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Again;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Again;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Again;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -67,7 +67,7 @@ public final class at/released/weh/filesystem/error/BadFileDescriptor : at/relea
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/BadFileDescriptor;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/BadFileDescriptor;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/BadFileDescriptor;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -79,7 +79,7 @@ public final class at/released/weh/filesystem/error/Busy : at/released/weh/files
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Busy;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Busy;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Busy;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -103,7 +103,7 @@ public final class at/released/weh/filesystem/error/DirectoryNotEmpty : at/relea
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/DirectoryNotEmpty;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/DirectoryNotEmpty;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/DirectoryNotEmpty;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -115,7 +115,7 @@ public final class at/released/weh/filesystem/error/DiskQuota : at/released/weh/
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/DiskQuota;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/DiskQuota;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/DiskQuota;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -127,14 +127,14 @@ public final class at/released/weh/filesystem/error/Exists : at/released/weh/fil
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Exists;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Exists;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Exists;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class at/released/weh/filesystem/error/FileSystemOperationError {
-	public abstract fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public abstract fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public abstract fun getMessage ()Ljava/lang/String;
 }
 
@@ -144,7 +144,7 @@ public final class at/released/weh/filesystem/error/FileTooBig : at/released/weh
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/FileTooBig;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/FileTooBig;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/FileTooBig;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -159,7 +159,7 @@ public final class at/released/weh/filesystem/error/Interrupted : at/released/we
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Interrupted;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Interrupted;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Interrupted;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -171,7 +171,7 @@ public final class at/released/weh/filesystem/error/InvalidArgument : at/release
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/InvalidArgument;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/InvalidArgument;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/InvalidArgument;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -183,7 +183,7 @@ public final class at/released/weh/filesystem/error/IoError : at/released/weh/fi
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/IoError;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/IoError;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/IoError;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -195,7 +195,7 @@ public final class at/released/weh/filesystem/error/Mfile : at/released/weh/file
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Mfile;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Mfile;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Mfile;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -210,7 +210,7 @@ public final class at/released/weh/filesystem/error/Mlink : at/released/weh/file
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Mlink;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Mlink;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Mlink;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -222,7 +222,7 @@ public final class at/released/weh/filesystem/error/NameTooLong : at/released/we
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NameTooLong;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NameTooLong;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NameTooLong;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -234,7 +234,7 @@ public final class at/released/weh/filesystem/error/Nfile : at/released/weh/file
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Nfile;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Nfile;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Nfile;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -246,7 +246,7 @@ public final class at/released/weh/filesystem/error/NoBufferSpace : at/released/
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoBufferSpace;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NoBufferSpace;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NoBufferSpace;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -258,7 +258,7 @@ public final class at/released/weh/filesystem/error/NoEntry : at/released/weh/fi
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoEntry;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NoEntry;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NoEntry;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -270,7 +270,7 @@ public final class at/released/weh/filesystem/error/NoLock : at/released/weh/fil
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoLock;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NoLock;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NoLock;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -282,7 +282,7 @@ public final class at/released/weh/filesystem/error/NoSpace : at/released/weh/fi
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoSpace;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NoSpace;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NoSpace;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -294,7 +294,7 @@ public final class at/released/weh/filesystem/error/NoTty : at/released/weh/file
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoTty;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NoTty;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NoTty;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -306,7 +306,7 @@ public final class at/released/weh/filesystem/error/NotCapable : at/released/weh
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NotCapable;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NotCapable;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NotCapable;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -318,7 +318,7 @@ public final class at/released/weh/filesystem/error/NotDirectory : at/released/w
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NotDirectory;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NotDirectory;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NotDirectory;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -327,7 +327,7 @@ public final class at/released/weh/filesystem/error/NotDirectory : at/released/w
 public final class at/released/weh/filesystem/error/NotImplemented : at/released/weh/filesystem/error/FileSystemOperationError {
 	public static final field INSTANCE Lat/released/weh/filesystem/error/NotImplemented;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -339,7 +339,7 @@ public final class at/released/weh/filesystem/error/NotSupported : at/released/w
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NotSupported;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/NotSupported;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/NotSupported;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -351,7 +351,7 @@ public final class at/released/weh/filesystem/error/Nxio : at/released/weh/files
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Nxio;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Nxio;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Nxio;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -366,7 +366,7 @@ public final class at/released/weh/filesystem/error/Overflow : at/released/weh/f
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Overflow;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Overflow;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Overflow;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -378,7 +378,7 @@ public final class at/released/weh/filesystem/error/PathIsDirectory : at/release
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/PathIsDirectory;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/PathIsDirectory;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/PathIsDirectory;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -390,7 +390,7 @@ public final class at/released/weh/filesystem/error/PermissionDenied : at/releas
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/PermissionDenied;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/PermissionDenied;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/PermissionDenied;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -402,7 +402,7 @@ public final class at/released/weh/filesystem/error/Pipe : at/released/weh/files
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Pipe;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/Pipe;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/Pipe;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -420,7 +420,7 @@ public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/rele
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/ReadOnlyFileSystem;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/ReadOnlyFileSystem;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/ReadOnlyFileSystem;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -447,7 +447,7 @@ public final class at/released/weh/filesystem/error/TextFileBusy : at/released/w
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/TextFileBusy;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/TextFileBusy;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/TextFileBusy;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -459,7 +459,7 @@ public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/re
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/TooManySymbolicLinks;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/error/TooManySymbolicLinks;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/error/TooManySymbolicLinks;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getErrno ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -591,6 +591,56 @@ public final class at/released/weh/filesystem/model/FileModeFlag {
 	public static final field S_IXGRP I
 	public static final field S_IXOTH I
 	public static final field S_IXUSR I
+}
+
+public final class at/released/weh/filesystem/model/FileSystemErrno : java/lang/Enum {
+	public static final field ACCES Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field ADDRINUSE Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field ADDRNOTAVAIL Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field AFNOSUPPORT Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field AGAIN Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field ALREADY Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field BADF Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field BADMSG Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field BUSY Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field CANCELED Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field Companion Lat/released/weh/filesystem/model/FileSystemErrno$Companion;
+	public static final field DQUOT Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field EXIST Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field FBIG Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field INTR Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field INVAL Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field IO Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field ISDIR Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field LOOP Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field MFILE Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field MLINK Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NAMETOOLONG Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NFILE Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOBUFS Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOENT Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOLCK Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOSPC Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOTCAPABLE Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOTDIR Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOTEMPTY Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOTSUP Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NOTTY Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field NXIO Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field OVERFLOW Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field PERM Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field PIPE Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field ROFS Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field SUCCESS Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field TOO_BIG Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final field TXTBSY Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static fun values ()[Lat/released/weh/filesystem/model/FileSystemErrno;
+}
+
+public final class at/released/weh/filesystem/model/FileSystemErrno$Companion {
+	public final fun getWasiPreview1Code (Lat/released/weh/filesystem/model/FileSystemErrno;)I
 }
 
 public final class at/released/weh/filesystem/model/Whence : java/lang/Enum {

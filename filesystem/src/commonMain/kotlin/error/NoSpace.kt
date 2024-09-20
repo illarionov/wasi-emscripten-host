@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class NoSpace(
     override val message: String,
@@ -18,5 +18,5 @@ public data class NoSpace(
     TruncateError,
     UnlinkError,
     WriteError {
-    override val errno: Errno = Errno.NOSPC
+    override val errno: FileSystemErrno = FileSystemErrno.NOSPC
 }

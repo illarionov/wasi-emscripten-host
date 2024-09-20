@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class Overflow(
     override val message: String,
@@ -14,5 +14,5 @@ public data class Overflow(
     AdvisoryLockError,
     ReadError,
     SeekError {
-    override val errno: Errno = Errno.OVERFLOW
+    override val errno: FileSystemErrno = FileSystemErrno.OVERFLOW
 }

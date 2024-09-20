@@ -6,10 +6,10 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class Busy(
     override val message: String,
 ) : FileSystemOperationError, ReadError, UnlinkError {
-    override val errno: Errno = Errno.BUSY
+    override val errno: FileSystemErrno = FileSystemErrno.BUSY
 }

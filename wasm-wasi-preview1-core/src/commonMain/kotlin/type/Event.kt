@@ -6,7 +6,6 @@
 
 package at.released.weh.wasi.preview1.type
 
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.WasiTypename
 import at.released.weh.wasm.core.WasmValueType
 

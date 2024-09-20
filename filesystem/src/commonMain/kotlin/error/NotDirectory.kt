@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class NotDirectory(
     override val message: String,
@@ -22,5 +22,5 @@ public data class NotDirectory(
     StatError,
     TruncateError,
     UnlinkError {
-    override val errno: Errno = Errno.NOTDIR
+    override val errno: FileSystemErrno = FileSystemErrno.NOTDIR
 }

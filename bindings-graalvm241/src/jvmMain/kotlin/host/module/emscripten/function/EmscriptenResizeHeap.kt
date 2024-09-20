@@ -13,7 +13,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_RESIZ
 import at.released.weh.emcripten.runtime.function.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno.NOMEM
+import at.released.weh.wasi.preview1.type.Errno.NOMEM
 import at.released.weh.wasm.core.memory.Pages
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame

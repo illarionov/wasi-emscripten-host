@@ -6,12 +6,12 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class Nfile(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,
     OpenError {
-    override val errno: Errno = Errno.NFILE
+    override val errno: FileSystemErrno = FileSystemErrno.NFILE
 }

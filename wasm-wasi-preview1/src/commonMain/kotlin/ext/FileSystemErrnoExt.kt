@@ -4,18 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.emcripten.runtime.ext
+package at.released.weh.wasi.preview1.ext
 
-import arrow.core.Either
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.wasi.preview1.type.Errno
-
-internal fun Either<FileSystemOperationError, Unit>.negativeErrnoCode(): Int = this.fold(
-    ifLeft = { -it.errno.wasiPreview1Code },
-    ifRight = { Errno.SUCCESS.code },
-)
 
 internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromErrNoCode(this.wasiPreview1Code)!!
 

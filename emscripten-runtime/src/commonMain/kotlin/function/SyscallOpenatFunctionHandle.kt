@@ -11,6 +11,7 @@ import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
@@ -41,7 +42,7 @@ public class SyscallOpenatFunctionHandle(
         )
         return fs.execute(Open, fsOperation)
             .fold(
-                ifLeft = { error: OpenError -> -error.errno.code },
+                ifLeft = { error: OpenError -> -error.errno.wasiPreview1Code },
                 ifRight = { it },
             )
     }

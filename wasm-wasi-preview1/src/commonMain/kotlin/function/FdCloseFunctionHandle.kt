@@ -8,9 +8,10 @@ package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.ext.toWasiErrno
+import at.released.weh.wasi.preview1.type.Errno
 
 public class FdCloseFunctionHandle(
     host: EmbedderHost,
@@ -19,7 +20,7 @@ public class FdCloseFunctionHandle(
         @Fd fd: Int,
     ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd))
         .fold(
-            ifLeft = { it.errno },
+            ifLeft = { it.errno.toWasiErrno() },
             ifRight = { Errno.SUCCESS },
         )
 }

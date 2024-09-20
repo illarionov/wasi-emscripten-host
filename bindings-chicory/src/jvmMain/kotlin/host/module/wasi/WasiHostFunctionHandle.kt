@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.chicory.host.module.wasi
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.Errno
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 

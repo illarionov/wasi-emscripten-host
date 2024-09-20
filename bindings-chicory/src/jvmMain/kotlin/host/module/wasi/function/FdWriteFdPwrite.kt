@@ -9,10 +9,10 @@ package at.released.weh.bindings.chicory.host.module.wasi.function
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class NoEntry(
     override val message: String,
@@ -22,5 +22,5 @@ public data class NoEntry(
     StatError,
     TruncateError,
     UnlinkError {
-    override val errno: Errno = Errno.NOENT
+    override val errno: FileSystemErrno = FileSystemErrno.NOENT
 }

@@ -6,11 +6,11 @@
 
 package at.released.weh.wasi.preview1
 
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.type.Advice
 import at.released.weh.wasi.preview1.type.CiovecArray
 import at.released.weh.wasi.preview1.type.ClockId
 import at.released.weh.wasi.preview1.type.Dircookie
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Event
 import at.released.weh.wasi.preview1.type.ExitCode
 import at.released.weh.wasi.preview1.type.FdFlags

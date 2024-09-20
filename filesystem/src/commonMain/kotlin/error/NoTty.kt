@@ -6,11 +6,11 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class NoTty(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError {
-    override val errno: Errno = Errno.NOTTY
+    override val errno: FileSystemErrno = FileSystemErrno.NOTTY
 }

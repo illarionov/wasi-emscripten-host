@@ -6,9 +6,9 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public interface FileSystemOperationError {
     public val message: String
-    public val errno: Errno
+    public val errno: FileSystemErrno
 }

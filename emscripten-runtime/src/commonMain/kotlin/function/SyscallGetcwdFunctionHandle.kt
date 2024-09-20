@@ -8,9 +8,10 @@ package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.common.ext.encodeToNullTerminatedBuffer
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_GETCWD
+import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -29,7 +30,7 @@ public class SyscallGetcwdFunctionHandle(
         }
         return host.fileSystem.execute(GetCurrentWorkingDirectory, Unit)
             .fold(
-                ifLeft = { -it.errno.code },
+                ifLeft = { -it.errno.wasiPreview1Code },
             ) { currentWorkingDirectory ->
                 val pathBuffer = currentWorkingDirectory.encodeToNullTerminatedBuffer()
                 if (size < pathBuffer.size) {

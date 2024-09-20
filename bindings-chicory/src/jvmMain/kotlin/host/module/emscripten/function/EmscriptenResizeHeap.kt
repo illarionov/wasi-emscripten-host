@@ -10,7 +10,7 @@ import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFun
 import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.memory.Pages
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value

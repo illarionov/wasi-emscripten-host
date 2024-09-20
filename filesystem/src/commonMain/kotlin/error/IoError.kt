@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class IoError(
     override val message: String,
@@ -26,5 +26,5 @@ public data class IoError(
     TruncateError,
     UnlinkError,
     WriteError {
-    override val errno: Errno = Errno.IO
+    override val errno: FileSystemErrno = FileSystemErrno.IO
 }

@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class PermissionDenied(
     override val message: String,
@@ -19,5 +19,5 @@ public data class PermissionDenied(
     TruncateError,
     UnlinkError,
     WriteError {
-    override val errno: Errno = Errno.PERM
+    override val errno: FileSystemErrno = FileSystemErrno.PERM
 }

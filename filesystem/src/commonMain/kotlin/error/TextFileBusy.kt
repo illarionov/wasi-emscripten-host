@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class TextFileBusy(
     override val message: String,
@@ -15,5 +15,5 @@ public data class TextFileBusy(
     OpenError,
     TruncateError,
     UnlinkError {
-    override val errno: Errno = Errno.TXTBSY
+    override val errno: FileSystemErrno = FileSystemErrno.TXTBSY
 }

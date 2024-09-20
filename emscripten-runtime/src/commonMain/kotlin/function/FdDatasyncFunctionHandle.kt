@@ -7,11 +7,12 @@
 package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FDATASYNC
+import at.released.weh.emcripten.runtime.ext.wasiErrno
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.type.Errno
 
 public class FdDatasyncFunctionHandle(
     host: EmbedderHost,
@@ -20,7 +21,7 @@ public class FdDatasyncFunctionHandle(
         @Fd fd: Int,
     ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, false))
         .fold(
-            ifLeft = SyncError::errno,
+            ifLeft = SyncError::wasiErrno,
             ifRight = { Errno.SUCCESS },
         )
 }

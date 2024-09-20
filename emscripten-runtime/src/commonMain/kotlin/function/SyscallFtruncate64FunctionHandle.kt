@@ -7,10 +7,11 @@
 package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction
+import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.type.Errno
 
 public class SyscallFtruncate64FunctionHandle(
     host: EmbedderHost,
@@ -19,7 +20,7 @@ public class SyscallFtruncate64FunctionHandle(
         TruncateFd,
         TruncateFd(fd, length),
     ).fold(
-        ifLeft = { -it.errno.code },
+        ifLeft = { -it.errno.wasiPreview1Code },
         ifRight = { Errno.SUCCESS.code },
     )
 }

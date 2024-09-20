@@ -6,8 +6,8 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
-import at.released.weh.wasi.filesystem.common.Errno.BADF
+import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
 
 public data class BadFileDescriptor(
     override val message: String,
@@ -29,5 +29,5 @@ public data class BadFileDescriptor(
     SyncError,
     TruncateError,
     UnlinkError {
-    override val errno: Errno = BADF
+    override val errno: FileSystemErrno = BADF
 }

@@ -7,13 +7,16 @@
 package at.released.weh.filesystem.internal
 
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
+import at.released.weh.filesystem.model.FileSystemErrno.INVAL
+import at.released.weh.filesystem.model.FileSystemErrno.IO
 
 internal sealed class ChannelPositionError(
-    override val errno: Errno,
+    override val errno: FileSystemErrno,
     override val message: String,
 ) : FileSystemOperationError {
-    internal data class ClosedChannel(override val message: String) : ChannelPositionError(Errno.BADF, message)
-    internal data class IoError(override val message: String) : ChannelPositionError(Errno.IO, message)
-    internal data class InvalidArgument(override val message: String) : ChannelPositionError(Errno.INVAL, message)
+    internal data class ClosedChannel(override val message: String) : ChannelPositionError(BADF, message)
+    internal data class IoError(override val message: String) : ChannelPositionError(IO, message)
+    internal data class InvalidArgument(override val message: String) : ChannelPositionError(INVAL, message)
 }
