@@ -593,6 +593,15 @@ public final class at/released/weh/filesystem/model/FileModeFlag {
 	public static final field S_IXUSR I
 }
 
+public final class at/released/weh/filesystem/model/Whence : java/lang/Enum {
+	public static final field CUR Lat/released/weh/filesystem/model/Whence;
+	public static final field END Lat/released/weh/filesystem/model/Whence;
+	public static final field SET Lat/released/weh/filesystem/model/Whence;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/model/Whence;
+	public static fun values ()[Lat/released/weh/filesystem/model/Whence;
+}
+
 public final class at/released/weh/filesystem/nio/NioFileSystem : at/released/weh/filesystem/FileSystemEngine {
 	public static final field INSTANCE Lat/released/weh/filesystem/nio/NioFileSystem;
 }
@@ -783,18 +792,18 @@ public final class at/released/weh/filesystem/op/lock/AddAdvisoryLockFd$Companio
 }
 
 public final class at/released/weh/filesystem/op/lock/Advisorylock {
-	public fun <init> (Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/wasi/filesystem/common/Whence;JJ)V
+	public fun <init> (Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/filesystem/model/Whence;JJ)V
 	public final fun component1 ()Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;
-	public final fun component2 ()Lat/released/weh/wasi/filesystem/common/Whence;
+	public final fun component2 ()Lat/released/weh/filesystem/model/Whence;
 	public final fun component3 ()J
 	public final fun component4 ()J
-	public final fun copy (Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/wasi/filesystem/common/Whence;JJ)Lat/released/weh/filesystem/op/lock/Advisorylock;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/lock/Advisorylock;Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/wasi/filesystem/common/Whence;JJILjava/lang/Object;)Lat/released/weh/filesystem/op/lock/Advisorylock;
+	public final fun copy (Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/filesystem/model/Whence;JJ)Lat/released/weh/filesystem/op/lock/Advisorylock;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/lock/Advisorylock;Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;Lat/released/weh/filesystem/model/Whence;JJILjava/lang/Object;)Lat/released/weh/filesystem/op/lock/Advisorylock;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getLength ()J
 	public final fun getStart ()J
 	public final fun getType ()Lat/released/weh/filesystem/op/lock/AdvisorylockLockType;
-	public final fun getWhence ()Lat/released/weh/wasi/filesystem/common/Whence;
+	public final fun getWhence ()Lat/released/weh/filesystem/model/Whence;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -980,16 +989,16 @@ public final class at/released/weh/filesystem/op/readwrite/WriteFd$Companion : a
 
 public final class at/released/weh/filesystem/op/seek/SeekFd {
 	public static final field Companion Lat/released/weh/filesystem/op/seek/SeekFd$Companion;
-	public fun <init> (IJLat/released/weh/wasi/filesystem/common/Whence;)V
+	public fun <init> (IJLat/released/weh/filesystem/model/Whence;)V
 	public final fun component1 ()I
 	public final fun component2 ()J
-	public final fun component3 ()Lat/released/weh/wasi/filesystem/common/Whence;
-	public final fun copy (IJLat/released/weh/wasi/filesystem/common/Whence;)Lat/released/weh/filesystem/op/seek/SeekFd;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/seek/SeekFd;IJLat/released/weh/wasi/filesystem/common/Whence;ILjava/lang/Object;)Lat/released/weh/filesystem/op/seek/SeekFd;
+	public final fun component3 ()Lat/released/weh/filesystem/model/Whence;
+	public final fun copy (IJLat/released/weh/filesystem/model/Whence;)Lat/released/weh/filesystem/op/seek/SeekFd;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/seek/SeekFd;IJLat/released/weh/filesystem/model/Whence;ILjava/lang/Object;)Lat/released/weh/filesystem/op/seek/SeekFd;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFd ()I
 	public final fun getFileDelta ()J
-	public final fun getWhence ()Lat/released/weh/wasi/filesystem/common/Whence;
+	public final fun getWhence ()Lat/released/weh/filesystem/model/Whence;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

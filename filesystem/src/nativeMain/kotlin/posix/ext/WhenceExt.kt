@@ -6,16 +6,13 @@
 
 package at.released.weh.filesystem.posix.ext
 
-import at.released.weh.wasi.filesystem.common.Whence
-import at.released.weh.wasi.filesystem.common.Whence.CUR
-import at.released.weh.wasi.filesystem.common.Whence.END
-import at.released.weh.wasi.filesystem.common.Whence.SET
+import at.released.weh.filesystem.model.Whence
 import platform.posix.SEEK_CUR
 import platform.posix.SEEK_END
 import platform.posix.SEEK_SET
 
 internal fun Whence.toPosixWhence(): Int = when (this) {
-    SET -> SEEK_SET
-    CUR -> SEEK_CUR
-    END -> SEEK_END
+    Whence.SET -> SEEK_SET
+    Whence.CUR -> SEEK_CUR
+    Whence.END -> SEEK_END
 }

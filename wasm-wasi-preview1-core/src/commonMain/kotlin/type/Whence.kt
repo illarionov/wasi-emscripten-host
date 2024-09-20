@@ -4,13 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.filesystem.common
+package at.released.weh.wasi.preview1.type
+
+import at.released.weh.wasi.preview1.WasiTypename
+import at.released.weh.wasm.core.WasmValueType
 
 /**
  * The position relative to which to set the offset of the file descriptor.
  */
 public enum class Whence(
-    private val code: Int,
+    public val code: Int,
 ) {
     /**
      * Seek relative to start-of-file.
@@ -29,7 +32,8 @@ public enum class Whence(
 
     ;
 
-    public companion object {
-        public fun fromIdOrNull(whence: Int): Whence? = entries.firstOrNull { it.code == whence }
+    public companion object : WasiTypename {
+        @WasmValueType
+        public override val wasmValueType: Int get() = WasiValueTypes.U8
     }
 }

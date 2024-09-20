@@ -10,9 +10,9 @@ import arrow.core.Either
 import arrow.core.right
 import at.released.weh.filesystem.internal.ChannelPositionError
 import at.released.weh.filesystem.internal.ChannelPositionError.ClosedChannel
+import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioFileSystemState
 import at.released.weh.wasi.filesystem.common.Fd
-import at.released.weh.wasi.filesystem.common.Whence
 import java.io.IOException
 import java.nio.channels.ClosedChannelException
 import java.nio.channels.FileChannel

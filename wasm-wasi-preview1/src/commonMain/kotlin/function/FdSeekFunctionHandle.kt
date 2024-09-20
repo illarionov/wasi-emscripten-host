@@ -11,8 +11,8 @@ import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
-import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.ext.WhenceMapper
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -27,7 +27,7 @@ public class FdSeekFunctionHandle(
         whenceInt: Int,
         @IntWasmPtr(Long::class) pNewOffset: WasmPtr,
     ): Errno {
-        val whence = Whence.fromIdOrNull(whenceInt) ?: return Errno.INVAL
+        val whence = WhenceMapper.fromWasiCodeOrNull(whenceInt) ?: return Errno.INVAL
         return host.fileSystem.execute(
             SeekFd,
             SeekFd(fd = fd, fileDelta = offset, whence = whence),

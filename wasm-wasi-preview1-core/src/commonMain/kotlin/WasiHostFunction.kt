@@ -7,7 +7,6 @@
 package at.released.weh.wasi.preview1
 
 import at.released.weh.wasi.filesystem.common.Errno
-import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasi.preview1.type.Advice
 import at.released.weh.wasi.preview1.type.CiovecArray
 import at.released.weh.wasi.preview1.type.ClockId
@@ -36,6 +35,7 @@ import at.released.weh.wasi.preview1.type.Subscription
 import at.released.weh.wasi.preview1.type.Timestamp
 import at.released.weh.wasi.preview1.type.WasiValueTypes
 import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
+import at.released.weh.wasi.preview1.type.Whence
 import at.released.weh.wasi.preview1.type.wasmValueType
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.WasmValueType

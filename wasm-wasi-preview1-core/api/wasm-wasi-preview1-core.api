@@ -982,7 +982,18 @@ public final class at/released/weh/wasi/preview1/type/WasiValueTypes {
 	public static final field U8 I
 }
 
-public final class at/released/weh/wasi/preview1/type/WhenceExtKt {
-	public static final fun getWasmValueType (Lat/released/weh/wasi/filesystem/common/Whence$Companion;)I
+public final class at/released/weh/wasi/preview1/type/Whence : java/lang/Enum {
+	public static final field CUR Lat/released/weh/wasi/preview1/type/Whence;
+	public static final field Companion Lat/released/weh/wasi/preview1/type/Whence$Companion;
+	public static final field END Lat/released/weh/wasi/preview1/type/Whence;
+	public static final field SET Lat/released/weh/wasi/preview1/type/Whence;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/type/Whence;
+	public static fun values ()[Lat/released/weh/wasi/preview1/type/Whence;
+}
+
+public final class at/released/weh/wasi/preview1/type/Whence$Companion : at/released/weh/wasi/preview1/WasiTypename {
+	public fun getWasmValueType ()I
 }
 
