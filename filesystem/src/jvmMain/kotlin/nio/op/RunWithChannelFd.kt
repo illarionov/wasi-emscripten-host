@@ -9,13 +9,14 @@ package at.released.weh.filesystem.nio.op
 import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 import java.nio.channels.FileChannel
 
 public class RunWithChannelFd<R>(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val block: (
         channel: Either<BadFileDescriptor, FileChannel>,
     ) -> Either<FileSystemOperationError, R>,

@@ -8,14 +8,15 @@ package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FCHOWN32
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 
 public class SyscallFchown32FunctionHandle(
     host: EmbedderHost,
 ) : EmscriptenHostFunctionHandle(SYSCALL_FCHOWN32, host) {
-    public fun execute(@Fd fd: Int, owner: Int, group: Int): Int = host.fileSystem.execute(
+    public fun execute(@IntFileDescriptor fd: FileDescriptor, owner: Int, group: Int): Int = host.fileSystem.execute(
         ChownFd,
         ChownFd(fd, owner, group),
     ).negativeErrnoCode()

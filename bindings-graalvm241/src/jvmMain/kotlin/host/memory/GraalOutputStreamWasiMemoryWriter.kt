@@ -14,10 +14,11 @@ import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.ext.writeCatching
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.CioVec
@@ -33,7 +34,11 @@ internal class GraalOutputStreamWasiMemoryWriter(
     private val wasmMemory = memory.wasmMemory
     private val defaultMemoryWriter = DefaultWasiMemoryWriter(memory, fileSystem)
 
-    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: List<CioVec>): Either<WriteError, ULong> {
+    override fun write(
+        @IntFileDescriptor fd: FileDescriptor,
+        strategy: ReadWriteStrategy,
+        cioVecs: List<CioVec>,
+    ): Either<WriteError, ULong> {
         return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
                 fd = fd,

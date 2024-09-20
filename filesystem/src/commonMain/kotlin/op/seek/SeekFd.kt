@@ -7,13 +7,14 @@
 package at.released.weh.filesystem.op.seek
 
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class SeekFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val fileDelta: Long,
     public val whence: Whence,
 ) {

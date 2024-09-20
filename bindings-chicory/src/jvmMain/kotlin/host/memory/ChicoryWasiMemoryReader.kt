@@ -11,10 +11,11 @@ import at.released.weh.bindings.chicory.ext.isJvmOrAndroidMinApi34
 import at.released.weh.bindings.chicory.ext.trySetAccessibleCompat
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.ReadError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Iovec
@@ -27,7 +28,11 @@ internal class ChicoryWasiMemoryReader(
     private val fileSystem: FileSystem,
     private val bufferField: Field,
 ) : WasiMemoryReader {
-    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: List<Iovec>): Either<ReadError, ULong> {
+    override fun read(
+        @IntFileDescriptor fd: FileDescriptor,
+        strategy: ReadWriteStrategy,
+        iovecs: List<Iovec>,
+    ): Either<ReadError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
         check(memoryByteBuffer.hasArray()) { "MemoryBuffer without array" }

@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasm.core
+package at.released.weh.wasi.preview1.type
 
 import androidx.annotation.IntDef
-import kotlin.reflect.KClass
+import kotlin.annotation.AnnotationRetention.SOURCE
 
-@IntDef(flag = false)
-@Retention(AnnotationRetention.SOURCE)
+/**
+ * A file descriptor handle.
+ */
+@Retention(SOURCE)
 @Target(
     AnnotationTarget.FIELD,
     AnnotationTarget.FUNCTION,
@@ -20,6 +22,5 @@ import kotlin.reflect.KClass
     AnnotationTarget.PROPERTY_SETTER,
     AnnotationTarget.VALUE_PARAMETER,
 )
-public annotation class IntWasmPtr(
-    public val ref: KClass<*> = Unit::class,
-)
+@IntDef(open = true)
+public annotation class Fd

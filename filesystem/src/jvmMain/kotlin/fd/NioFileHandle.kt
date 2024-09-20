@@ -10,9 +10,10 @@ import arrow.core.Either
 import arrow.core.right
 import at.released.weh.filesystem.internal.ChannelPositionError
 import at.released.weh.filesystem.internal.ChannelPositionError.ClosedChannel
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioFileSystemState
-import at.released.weh.wasi.filesystem.common.Fd
 import java.io.IOException
 import java.nio.channels.ClosedChannelException
 import java.nio.channels.FileChannel
@@ -23,7 +24,7 @@ import java.nio.file.Path as NioPath
 
 internal class NioFileHandle(
     val fileSystem: NioFileSystemState,
-    @Fd val fd: Int,
+    @IntFileDescriptor val fd: FileDescriptor,
     val path: NioPath,
     val channel: FileChannel,
 ) {

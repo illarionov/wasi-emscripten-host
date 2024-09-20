@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.settimestamp
 
 import at.released.weh.filesystem.error.SetTimestampError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class SetTimestampFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val atimeNanoseconds: Long?,
     public val mtimeNanoseconds: Long?,
     public val followSymlinks: Boolean,

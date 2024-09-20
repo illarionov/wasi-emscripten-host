@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.close
 
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class CloseFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
 ) {
     public companion object : FileSystemOperation<CloseFd, CloseError, Unit> {
         override val tag: String = "closefd"

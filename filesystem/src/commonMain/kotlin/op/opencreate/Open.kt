@@ -8,11 +8,11 @@ package at.released.weh.filesystem.op.opencreate
 
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToString
 import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
-import at.released.weh.wasi.filesystem.common.Fd
 
 /**
  * Open or create a	file.
@@ -40,7 +40,7 @@ public data class Open(
             "mode=${fileModeTypeToString(mode)}" +
             ")"
 
-    public companion object : FileSystemOperation<Open, OpenError, @Fd Int> {
+    public companion object : FileSystemOperation<Open, OpenError, FileDescriptor> {
         override val tag: String = "open"
     }
 }

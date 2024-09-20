@@ -376,6 +376,9 @@ public final class at/released/weh/wasi/preview1/type/ExitCode$Companion : at/re
 	public fun getWasmValueType ()I
 }
 
+public abstract interface annotation class at/released/weh/wasi/preview1/type/Fd : java/lang/annotation/Annotation {
+}
+
 public final class at/released/weh/wasi/preview1/type/FdExtKt {
 	public static final fun getFdWasmValueType ()I
 }

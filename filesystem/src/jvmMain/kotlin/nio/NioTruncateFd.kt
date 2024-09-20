@@ -13,9 +13,10 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenedMessage
 import at.released.weh.filesystem.op.truncate.TruncateFd
-import at.released.weh.wasi.filesystem.common.Fd
 import java.io.IOException
 import java.nio.channels.ClosedChannelException
 import java.nio.channels.NonReadableChannelException
@@ -35,7 +36,7 @@ internal class NioTruncateFd(
         }
     }
 
-    private fun Throwable.toTruncateError(@Fd fd: Int): TruncateError = when (this) {
+    private fun Throwable.toTruncateError(@IntFileDescriptor fd: FileDescriptor): TruncateError = when (this) {
         is NonReadableChannelException -> InvalidArgument("Read-only channel")
         is ClosedChannelException -> BadFileDescriptor(fileDescriptorNotOpenedMessage(fd))
         is IllegalArgumentException -> InvalidArgument("Negative length")

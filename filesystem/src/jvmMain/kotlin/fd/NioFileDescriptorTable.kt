@@ -10,8 +10,9 @@ import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.NioFileSystemState
-import at.released.weh.wasi.filesystem.common.Fd
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.util.concurrent.locks.Lock
@@ -38,12 +39,12 @@ internal class NioFileDescriptorTable(
         }
     }
 
-    fun remove(@Fd fd: Int): Either<BadFileDescriptor, NioFileHandle> = lock.withLock {
+    fun remove(@IntFileDescriptor fd: FileDescriptor): Either<BadFileDescriptor, NioFileHandle> = lock.withLock {
         return fds.release(fd)
     }
 
     fun get(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): NioFileHandle? = lock.withLock {
         fds[fd]
     }

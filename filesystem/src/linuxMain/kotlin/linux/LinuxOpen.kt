@@ -16,6 +16,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.ext.toDirFd
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ACCMODE
@@ -29,7 +30,6 @@ import at.released.weh.filesystem.platform.linux.RESOLVE_NO_XDEV
 import at.released.weh.filesystem.platform.linux.SYS_openat2
 import at.released.weh.filesystem.platform.linux.open_how
 import at.released.weh.filesystem.posix.base.PosixFileSystemState
-import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
@@ -46,8 +46,8 @@ import platform.posix.syscall
 
 internal class LinuxOpen(
     private val state: PosixFileSystemState,
-) : FileSystemOperationHandler<Open, OpenError, @Fd Int> {
-    override fun invoke(input: Open): Either<OpenError, @Fd Int> {
+) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
+    override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
         val errorOrFd = memScoped {
             val openHow: open_how = alloc<open_how> {
                 memset(ptr, 0, sizeOf<open_how>().toULong())

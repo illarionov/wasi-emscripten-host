@@ -7,12 +7,11 @@
 package at.released.weh.filesystem.op.lock
 
 import at.released.weh.filesystem.error.AdvisoryLockError
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class AddAdvisoryLockFd(
-    @Fd
-    public val fd: Int,
+    public val fd: FileDescriptor,
 
     public val flock: Advisorylock,
 ) {

@@ -11,7 +11,7 @@ import kotlin.jvm.JvmStatic
 /**
  * C pointer in the 32-bit WebAssembly memory.
  */
-public typealias WasmPtr = @IntWasmPtr Int
+public typealias WasmPtr = Int
 
 public object WasmPtrUtil {
     /**

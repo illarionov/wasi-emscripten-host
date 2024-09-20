@@ -17,12 +17,13 @@ import at.released.weh.emcripten.runtime.include.StructFlock
 import at.released.weh.emcripten.runtime.include.StructFlock.Companion.STRUCT_FLOCK_SIZE
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.Errno.INVAL
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -40,7 +41,7 @@ internal class FcntlHandler(
 
     fun invoke(
         memory: ReadOnlyMemory,
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         operation: UInt,
         thirdArg: Int?,
     ): Int {
@@ -51,7 +52,7 @@ internal class FcntlHandler(
     internal fun interface FcntlOperationHandler {
         fun invoke(
             memory: ReadOnlyMemory,
-            @Fd fd: Int,
+            @IntFileDescriptor fd: FileDescriptor,
             varArgs: Int?,
         ): Int
     }
@@ -60,7 +61,7 @@ internal class FcntlHandler(
     internal inner class FcntlSetLockOperation : FcntlOperationHandler {
         override fun invoke(
             memory: ReadOnlyMemory,
-            @Fd fd: Int,
+            @IntFileDescriptor fd: FileDescriptor,
             varArgs: Int?,
         ): Int {
             @IntWasmPtr(StructFlock::class)

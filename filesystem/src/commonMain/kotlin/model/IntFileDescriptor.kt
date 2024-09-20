@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.filesystem.common
+package at.released.weh.filesystem.model
 
 import androidx.annotation.IntDef
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -20,8 +20,9 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     AnnotationTarget.PROPERTY,
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.PROPERTY_SETTER,
-    AnnotationTarget.TYPE,
     AnnotationTarget.VALUE_PARAMETER,
 )
 @IntDef(open = true)
-public annotation class Fd
+public annotation class IntFileDescriptor
+
+public typealias FileDescriptor = Int

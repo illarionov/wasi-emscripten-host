@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.sync
 
 import at.released.weh.filesystem.error.SyncError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class SyncFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
 
     public val syncMetadata: Boolean = true,
 ) {

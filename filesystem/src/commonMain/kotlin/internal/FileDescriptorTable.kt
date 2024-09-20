@@ -11,13 +11,14 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Nfile
-import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 
 internal class FileDescriptorTable<V : Any> {
-    private val fds: MutableMap<@Fd Int, V> = mutableMapOf()
+    private val fds: MutableMap<FileDescriptor, V> = mutableMapOf()
 
     fun allocate(
-        resourceFactory: (@Fd Int) -> V,
+        resourceFactory: (FileDescriptor) -> V,
     ): Either<Nfile, V> = getFreeFd()
         .map { fd ->
             val channel = resourceFactory(fd)
@@ -26,9 +27,9 @@ internal class FileDescriptorTable<V : Any> {
             channel
         }
 
-    operator fun get(@Fd fd: Int): V? = fds[fd]
+    operator fun get(@IntFileDescriptor fd: FileDescriptor): V? = fds[fd]
 
-    fun release(@Fd fd: Int): Either<BadFileDescriptor, V> {
+    fun release(@IntFileDescriptor fd: FileDescriptor): Either<BadFileDescriptor, V> {
         return fds.remove(fd)?.right() ?: BadFileDescriptor("Trying to remove already disposed file descriptor").left()
     }
 
@@ -38,7 +39,7 @@ internal class FileDescriptorTable<V : Any> {
         return values
     }
 
-    private fun getFreeFd(): Either<Nfile, @Fd Int> {
+    private fun getFreeFd(): Either<Nfile, FileDescriptor> {
         for (no in MIN_FD..MAX_FD) {
             if (!fds.containsKey(no)) {
                 return no.right()

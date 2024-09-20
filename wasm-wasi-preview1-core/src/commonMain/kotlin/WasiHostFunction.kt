@@ -1210,8 +1210,8 @@ public enum class WasiHostFunction(
 
     constructor(
         wasmName: String,
-        paramTypes: List<@WasmValueType Int>,
-        retType: @WasmValueType Int? = null,
+        @WasmValueType paramTypes: List<Int>,
+        @WasmValueType retType: Int? = null,
     ) : this(
         wasmName = wasmName,
         type = HostFunction.HostFunctionType(

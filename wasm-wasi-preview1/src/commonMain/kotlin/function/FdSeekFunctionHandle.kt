@@ -7,9 +7,10 @@
 package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
 import at.released.weh.wasi.preview1.ext.WhenceMapper
 import at.released.weh.wasi.preview1.ext.wasiErrno
@@ -23,7 +24,7 @@ public class FdSeekFunctionHandle(
 ) : WasiHostFunctionHandle(WasiHostFunction.FD_SEEK, host) {
     public fun execute(
         memory: Memory,
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         offset: Long,
         whenceInt: Int,
         @IntWasmPtr(Long::class) pNewOffset: WasmPtr,

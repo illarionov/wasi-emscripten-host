@@ -9,16 +9,17 @@ package at.released.weh.emcripten.runtime.function
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FDATASYNC
 import at.released.weh.emcripten.runtime.ext.wasiErrno
 import at.released.weh.filesystem.error.SyncError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.Errno
 
 public class FdDatasyncFunctionHandle(
     host: EmbedderHost,
 ) : EmscriptenHostFunctionHandle(SYSCALL_FDATASYNC, host) {
     public fun execute(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, false))
         .fold(
             ifLeft = SyncError::wasiErrno,

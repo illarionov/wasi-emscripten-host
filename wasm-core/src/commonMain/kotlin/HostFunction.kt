@@ -14,18 +14,27 @@ public interface HostFunction {
     public val type: HostFunctionType
 
     public interface HostFunctionType {
-        public val paramTypes: List<@WasmValueType Int>
-        public val returnTypes: List<@WasmValueType Int>
+        @WasmValueType
+        public val paramTypes: List<Int>
+
+        @WasmValueType
+        public val returnTypes: List<Int>
 
         public companion object {
             public operator fun invoke(
-                params: List<@WasmValueType Int>,
-                returnTypes: List<@WasmValueType Int> = emptyList(),
+                @WasmValueType
+                params: List<Int>,
+
+                @WasmValueType
+                returnTypes: List<Int> = emptyList(),
             ): HostFunctionType = DefaultHostFunctionType(params, returnTypes)
 
             private data class DefaultHostFunctionType(
-                override val paramTypes: List<@WasmValueType Int>,
-                override val returnTypes: List<@WasmValueType Int>,
+                @WasmValueType
+                override val paramTypes: List<Int>,
+
+                @WasmValueType
+                override val returnTypes: List<Int>,
             ) : HostFunctionType
         }
     }

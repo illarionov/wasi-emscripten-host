@@ -13,10 +13,11 @@ import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.ext.readCatching
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Iovec
@@ -31,7 +32,7 @@ internal class GraalInputStreamWasiMemoryReader(
     private val defaultMemoryReader = DefaultWasiMemoryReader(memory, fileSystem)
 
     override fun read(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
         iovecs: List<Iovec>,
     ): Either<ReadError, ULong> {

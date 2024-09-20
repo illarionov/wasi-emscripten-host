@@ -9,10 +9,11 @@ package at.released.weh.wasi.preview1.memory
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.ReadError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -22,7 +23,7 @@ import kotlinx.io.buffered
 
 public fun interface WasiMemoryReader {
     public fun read(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
         iovecs: List<Iovec>,
     ): Either<ReadError, ULong>
@@ -32,7 +33,11 @@ public class DefaultWasiMemoryReader(
     private val memory: Memory,
     private val fileSystem: FileSystem,
 ) : WasiMemoryReader {
-    override fun read(@Fd fd: Int, strategy: ReadWriteStrategy, iovecs: List<Iovec>): Either<ReadError, ULong> {
+    override fun read(
+        @IntFileDescriptor fd: FileDescriptor,
+        strategy: ReadWriteStrategy,
+        iovecs: List<Iovec>,
+    ): Either<ReadError, ULong> {
         val bbufs: List<FileSystemByteBuffer> = iovecs.createBuffers()
         return fileSystem.execute(ReadFd, ReadFd(fd, bbufs, strategy)).onRight { readBytes ->
             writeBuffersToMemory(bbufs, iovecs, readBytes)
