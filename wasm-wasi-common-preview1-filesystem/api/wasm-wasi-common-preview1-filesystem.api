@@ -90,17 +90,3 @@ public final class at/released/weh/wasi/filesystem/common/Errno$Companion {
 public abstract interface annotation class at/released/weh/wasi/filesystem/common/Fd : java/lang/annotation/Annotation {
 }
 
-public final class at/released/weh/wasi/filesystem/common/Whence : java/lang/Enum {
-	public static final field CUR Lat/released/weh/wasi/filesystem/common/Whence;
-	public static final field Companion Lat/released/weh/wasi/filesystem/common/Whence$Companion;
-	public static final field END Lat/released/weh/wasi/filesystem/common/Whence;
-	public static final field SET Lat/released/weh/wasi/filesystem/common/Whence;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/filesystem/common/Whence;
-	public static fun values ()[Lat/released/weh/wasi/filesystem/common/Whence;
-}
-
-public final class at/released/weh/wasi/filesystem/common/Whence$Companion {
-	public final fun fromIdOrNull (I)Lat/released/weh/wasi/filesystem/common/Whence;
-}
-

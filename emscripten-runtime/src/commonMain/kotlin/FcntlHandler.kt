@@ -10,6 +10,7 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.emcripten.runtime.ext.WhenceMapper
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
 import at.released.weh.emcripten.runtime.include.Fcntl
 import at.released.weh.emcripten.runtime.include.StructFlock
@@ -22,7 +23,6 @@ import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.wasi.filesystem.common.Errno.INVAL
 import at.released.weh.wasi.filesystem.common.Fd
-import at.released.weh.wasi.filesystem.common.Whence
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
@@ -94,7 +94,7 @@ internal class FcntlHandler(
                 Fcntl.F_UNLCK -> AdvisorylockLockType.WRITE
                 else -> return InvalidArgument("Incorrect l_type").left()
             }
-            val whence = Whence.fromIdOrNull(this.l_whence.toInt())
+            val whence = WhenceMapper.fromEmscriptenIdOrNull(this.l_whence.toInt())
                 ?: return InvalidArgument("Incorrect whence `${this.l_whence}`").left()
 
             return Advisorylock(
