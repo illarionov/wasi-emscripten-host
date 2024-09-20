@@ -6,8 +6,6 @@
 
 package at.released.weh.filesystem.model
 
-import at.released.weh.wasi.filesystem.common.Fd
-
 /**
  * Base path used to resolve relative paths
  */
@@ -26,7 +24,7 @@ public sealed class BaseDirectory {
     /**
      * Relative paths are resolved relative to the directory associated with the file descriptor [fd]
      */
-    public data class DirectoryFd(@Fd val fd: Int) : BaseDirectory()
+    public data class DirectoryFd(@IntFileDescriptor val fd: FileDescriptor) : BaseDirectory()
 
     public companion object
 }

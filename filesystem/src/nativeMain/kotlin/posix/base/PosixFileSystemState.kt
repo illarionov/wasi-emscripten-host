@@ -6,24 +6,25 @@
 
 package at.released.weh.filesystem.posix.base
 
-import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
 
 internal class PosixFileSystemState : AutoCloseable {
     private val lock: ReentrantLock = reentrantLock()
-    private val openFileDescriptors: MutableSet<@Fd Int> = mutableSetOf()
+    private val openFileDescriptors: MutableSet<FileDescriptor> = mutableSetOf()
 
     fun add(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): Unit = lock.withLock {
         val added = openFileDescriptors.add(fd)
         require(added) { "File descriptor $fd already been allocated" }
     }
 
     fun remove(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): Unit = lock.withLock {
         openFileDescriptors.remove(fd)
     }

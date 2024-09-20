@@ -55,7 +55,7 @@ internal fun allocateFunctionTypes(
 }
 
 private fun paramTypesToGraalvmParamTypes(
-    types: List<@WasmValueType Int>,
+    @WasmValueType types: List<Int>,
 ): ByteArray = ByteArray(types.size) { types[it].toByte() }
 
 internal fun declareExportedFunctions(

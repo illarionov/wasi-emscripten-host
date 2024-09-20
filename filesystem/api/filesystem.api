@@ -643,6 +643,9 @@ public final class at/released/weh/filesystem/model/FileSystemErrno$Companion {
 	public final fun getWasiPreview1Code (Lat/released/weh/filesystem/model/FileSystemErrno;)I
 }
 
+public abstract interface annotation class at/released/weh/filesystem/model/IntFileDescriptor : java/lang/annotation/Annotation {
+}
+
 public final class at/released/weh/filesystem/model/Whence : java/lang/Enum {
 	public static final field CUR Lat/released/weh/filesystem/model/Whence;
 	public static final field END Lat/released/weh/filesystem/model/Whence;

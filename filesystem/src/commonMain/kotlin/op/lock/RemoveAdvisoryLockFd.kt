@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.lock
 
 import at.released.weh.filesystem.error.AdvisoryLockError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class RemoveAdvisoryLockFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val flock: Advisorylock,
 ) {
     public companion object : FileSystemOperation<RemoveAdvisoryLockFd, AdvisoryLockError, Unit> {

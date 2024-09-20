@@ -17,12 +17,12 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
-import at.released.weh.wasi.filesystem.common.Fd
 import com.sun.nio.file.ExtendedOpenOption
 import java.io.IOException
 import java.nio.channels.FileChannel
@@ -35,8 +35,8 @@ import kotlin.concurrent.withLock
 
 internal class NioOpen(
     private val fsState: NioFileSystemState,
-) : FileSystemOperationHandler<Open, OpenError, @Fd Int> {
-    override fun invoke(input: Open): Either<OpenError, @Fd Int> = either {
+) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
+    override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
         val path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
             .mapLeft(ResolvePathError::toCommonError)
             .bind()

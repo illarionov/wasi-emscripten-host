@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.readwrite
 
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class WriteFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val cIovecs: List<FileSystemByteBuffer>,
     public val strategy: ReadWriteStrategy = ReadWriteStrategy.CHANGE_POSITION,
 ) {

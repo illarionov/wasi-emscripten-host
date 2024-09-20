@@ -9,10 +9,11 @@ package at.released.weh.wasi.preview1.memory
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.CioVec
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import at.released.weh.wasm.core.memory.sourceWithMaxSize
@@ -21,7 +22,7 @@ import kotlinx.io.readByteArray
 
 public fun interface WasiMemoryWriter {
     public fun write(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
         cioVecs: List<CioVec>,
     ): Either<WriteError, ULong>
@@ -31,7 +32,11 @@ public class DefaultWasiMemoryWriter(
     private val memory: ReadOnlyMemory,
     private val fileSystem: FileSystem,
 ) : WasiMemoryWriter {
-    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: List<CioVec>): Either<WriteError, ULong> {
+    override fun write(
+        @IntFileDescriptor fd: FileDescriptor,
+        strategy: ReadWriteStrategy,
+        cioVecs: List<CioVec>,
+    ): Either<WriteError, ULong> {
         val bufs = cioVecs.toByteBuffers(memory)
         return fileSystem.execute(WriteFd, WriteFd(fd, bufs, strategy))
     }

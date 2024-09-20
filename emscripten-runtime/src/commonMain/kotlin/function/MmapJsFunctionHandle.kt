@@ -9,8 +9,9 @@ package at.released.weh.emcripten.runtime.function
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.MMAP_JS
 import at.released.weh.emcripten.runtime.include.sys.SysMmanMapFlags
 import at.released.weh.emcripten.runtime.include.sys.SysMmanProt
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -22,7 +23,7 @@ public class MmapJsFunctionHandle(
         len: Int,
         @SysMmanProt prot: Int,
         @SysMmanMapFlags flags: Int,
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         offset: Long,
         @IntWasmPtr(Int::class) pAllocated: WasmPtr,
         @IntWasmPtr(WasmPtr::class) pAddr: WasmPtr, // **byte

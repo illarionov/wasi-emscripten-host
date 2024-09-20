@@ -7,15 +7,16 @@
 package at.released.weh.filesystem.op.stat
 
 import at.released.weh.filesystem.error.StatError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 /**
  * Retrieves information about the currently opened file [fd].
  */
 public data class StatFd(
-    @Fd
-    val fd: Int,
+    @IntFileDescriptor
+    val fd: FileDescriptor,
 ) {
     public companion object : FileSystemOperation<StatFd, StatError, StructStat> {
         override val tag: String = "statfd"

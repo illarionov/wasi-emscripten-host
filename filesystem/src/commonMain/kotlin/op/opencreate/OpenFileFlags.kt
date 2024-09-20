@@ -69,7 +69,6 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     AnnotationTarget.PROPERTY,
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.PROPERTY_SETTER,
-    AnnotationTarget.TYPE,
     AnnotationTarget.VALUE_PARAMETER,
 )
 public annotation class OpenFileFlags

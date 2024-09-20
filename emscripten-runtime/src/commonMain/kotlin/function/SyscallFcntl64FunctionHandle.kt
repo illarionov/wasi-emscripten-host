@@ -8,8 +8,9 @@ package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FCNTL64
 import at.released.weh.emcripten.runtime.FcntlHandler
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 
 public class SyscallFcntl64FunctionHandle(
@@ -19,7 +20,7 @@ public class SyscallFcntl64FunctionHandle(
 
     public fun execute(
         memory: ReadOnlyMemory,
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         cmd: Int,
         thirdArg: Int,
     ): Int {

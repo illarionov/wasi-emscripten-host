@@ -9,6 +9,7 @@ package at.released.weh.wasi.preview1
 import at.released.weh.wasm.core.POINTER
 import at.released.weh.wasm.core.WasmValueType
 
+@WasmValueType
 internal fun pointerToType(
     @Suppress("UNUSED_PARAMETER") type: WasiTypename,
-): @WasmValueType Int = POINTER
+): Int = POINTER

@@ -11,10 +11,11 @@ import at.released.weh.bindings.chicory.ext.isJvmOrAndroidMinApi34
 import at.released.weh.bindings.chicory.ext.trySetAccessibleCompat
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.CioVec
@@ -27,7 +28,11 @@ internal class ChicoryWasiMemoryWriter private constructor(
     private val fileSystem: FileSystem,
     private val bufferField: Field,
 ) : WasiMemoryWriter {
-    override fun write(@Fd fd: Int, strategy: ReadWriteStrategy, cioVecs: List<CioVec>): Either<WriteError, ULong> {
+    override fun write(
+        @IntFileDescriptor fd: FileDescriptor,
+        strategy: ReadWriteStrategy,
+        cioVecs: List<CioVec>,
+    ): Either<WriteError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
         val bbufs = cioVecs.toByteBuffers(memoryByteBuffer)

@@ -284,7 +284,7 @@ public enum class EmscriptenHostFunction(
 
     constructor(
         wasmName: String,
-        paramTypes: List<@WasmValueType Int>,
+        @WasmValueType paramTypes: List<Int>,
         @WasmValueType retType: Int? = null,
     ) : this(
         wasmName = wasmName,

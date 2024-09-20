@@ -7,12 +7,13 @@
 package at.released.weh.filesystem.op.truncate
 
 import at.released.weh.filesystem.error.TruncateError
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class TruncateFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
     public val length: Long,
 ) {
     public companion object : FileSystemOperation<TruncateFd, TruncateError, Unit> {

@@ -15,9 +15,10 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.posix.base.PosixFileSystemState
-import at.released.weh.wasi.filesystem.common.Fd
 import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.EIO
@@ -25,7 +26,7 @@ import platform.posix.ENOSPC
 import platform.posix.close
 import platform.posix.errno
 
-internal expect fun Int.platformSpecificErrnoToCloseError(@Fd fd: Int): CloseError
+internal expect fun Int.platformSpecificErrnoToCloseError(@IntFileDescriptor fd: FileDescriptor): CloseError
 
 internal class PosixCloseFd(
     private val fsState: PosixFileSystemState,
@@ -40,7 +41,7 @@ internal class PosixCloseFd(
         }
     }
 
-    private fun Int.errnoToCloseError(@Fd fd: Int): CloseError = when (this) {
+    private fun Int.errnoToCloseError(@IntFileDescriptor fd: FileDescriptor): CloseError = when (this) {
         EBADF -> BadFileDescriptor("Bad file descriptor $fd")
         EINTR -> Interrupted("Closing $fd interrupted by signal")
         EIO -> IoError("I/O error while closing $fd")

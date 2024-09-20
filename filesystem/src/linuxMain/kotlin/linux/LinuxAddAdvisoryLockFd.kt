@@ -16,13 +16,14 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoLock
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.READ
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.WRITE
 import at.released.weh.filesystem.posix.ext.toPosixWhence
-import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import platform.posix.EACCES
@@ -68,7 +69,10 @@ internal object LinuxAddAdvisoryLockFd : FileSystemOperationHandler<AddAdvisoryL
         WRITE -> F_WRLCK
     }.toShort()
 
-    internal fun Int.errnoToAdvisoryLockError(@Fd fd: Int, lock: Advisorylock): AdvisoryLockError = when (this) {
+    internal fun Int.errnoToAdvisoryLockError(
+        @IntFileDescriptor fd: FileDescriptor,
+        lock: Advisorylock,
+    ): AdvisoryLockError = when (this) {
         EACCES, EAGAIN -> Again("Can not lock `$fd - $lock`, operation prohibited`")
         EBADF -> BadFileDescriptor("Bad file descriptor $fd")
         EINTR -> Interrupted("Locking $fd interrupted by signal")

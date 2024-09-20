@@ -22,11 +22,12 @@ import at.released.weh.filesystem.error.Pipe
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.LinuxReadFd.callReadWrite
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.CPointer
 import platform.posix.EAGAIN
 import platform.posix.EBADF
@@ -67,7 +68,7 @@ internal object LinuxWriteFd : FileSystemOperationHandler<WriteFd, WriteError, U
     }
 
     private fun Int.errnoToWriteError(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         iovecs: List<FileSystemByteBuffer>,
     ): WriteError = when (this) {
         EAGAIN -> Again("Blocking write on non-blocking descriptor")
@@ -84,7 +85,7 @@ internal object LinuxWriteFd : FileSystemOperationHandler<WriteFd, WriteError, U
     }
 
     private fun Int.errnoSeekToWriteError(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): WriteError = when (this) {
         EBADF -> BadFileDescriptor("Cannot seek on $fd: bad file descriptor")
         EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")

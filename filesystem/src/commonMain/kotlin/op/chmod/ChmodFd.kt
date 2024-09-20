@@ -7,14 +7,15 @@
 package at.released.weh.filesystem.op.chmod
 
 import at.released.weh.filesystem.error.ChmodError
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
-import at.released.weh.wasi.filesystem.common.Fd
 
 public data class ChmodFd(
-    @Fd
-    public val fd: Int,
+    @IntFileDescriptor
+    public val fd: FileDescriptor,
 
     @FileMode
     public val mode: Int,

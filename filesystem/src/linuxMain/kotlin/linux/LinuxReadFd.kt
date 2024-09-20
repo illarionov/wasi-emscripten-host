@@ -18,11 +18,12 @@ import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
-import at.released.weh.wasi.filesystem.common.Fd
 import kotlinx.cinterop.CArrayPointer
 import kotlinx.cinterop.Pinned
 import kotlinx.cinterop.addressOf
@@ -65,7 +66,7 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     internal fun callReadWrite(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         iovecs: List<FileSystemByteBuffer>,
         block: (fd: Int, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
     ): Either<Int, ULong> {
@@ -109,7 +110,7 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     private fun Int.errnoToReadError(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         iovecs: List<FileSystemByteBuffer>,
     ): ReadError = when (this) {
         EAGAIN -> NotSupported("Non-blocking read would block. Request: `$fd, $iovecs`")
@@ -122,7 +123,7 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
     }
 
     private fun Int.errnoSeekToReadError(
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
     ): ReadError = when (this) {
         EBADF -> BadFileDescriptor("Can not seek on $fd")
         EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")

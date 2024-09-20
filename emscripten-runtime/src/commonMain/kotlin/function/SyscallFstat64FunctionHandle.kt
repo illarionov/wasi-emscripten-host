@@ -10,10 +10,11 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FSTAT64
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
 import at.released.weh.emcripten.runtime.include.sys.STRUCT_SIZE_PACKED_SIZE
 import at.released.weh.emcripten.runtime.include.sys.packTo
+import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.stat.StatFd
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -25,7 +26,7 @@ public class SyscallFstat64FunctionHandle(
 ) : EmscriptenHostFunctionHandle(SYSCALL_FSTAT64, host) {
     public fun execute(
         memory: Memory,
-        @Fd fd: Int,
+        @IntFileDescriptor fd: FileDescriptor,
         @IntWasmPtr(StructStat::class) dst: WasmPtr,
     ): Int = host.fileSystem.execute(StatFd, StatFd(fd))
         .map { stat: StructStat ->

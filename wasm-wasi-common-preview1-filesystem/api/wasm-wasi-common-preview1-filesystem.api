@@ -1,3 +1,0 @@
-public abstract interface annotation class at/released/weh/wasi/filesystem/common/Fd : java/lang/annotation/Annotation {
-}
-
