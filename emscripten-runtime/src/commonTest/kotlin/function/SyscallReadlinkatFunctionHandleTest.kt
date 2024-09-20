@@ -18,7 +18,7 @@ import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.writeNullTerminatedString

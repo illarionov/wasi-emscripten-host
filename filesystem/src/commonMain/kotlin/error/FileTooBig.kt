@@ -6,12 +6,12 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class FileTooBig(
     override val message: String,
 ) : FileSystemOperationError,
     TruncateError,
     WriteError {
-    override val errno: Errno = Errno.FBIG
+    override val errno: FileSystemErrno = FileSystemErrno.FBIG
 }

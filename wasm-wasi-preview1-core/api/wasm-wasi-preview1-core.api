@@ -199,21 +199,110 @@ public final class at/released/weh/wasi/preview1/type/Dirnamlen$Companion : at/r
 	public fun getWasmValueType ()I
 }
 
+public final class at/released/weh/wasi/preview1/type/Errno : java/lang/Enum {
+	public static final field ACCES Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ADDRINUSE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ADDRNOTAVAIL Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field AFNOSUPPORT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field AGAIN Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ALREADY Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field BADF Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field BADMSG Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field BUSY Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field CANCELED Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field CHILD Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field CONNABORTED Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field CONNREFUSED Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field CONNRESET Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field Companion Lat/released/weh/wasi/preview1/type/Errno$Companion;
+	public static final field DEADLK Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field DESTADDRREQ Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field DOM Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field DQUOT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field EXIST Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field FAULT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field FBIG Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field HOSTUNREACH Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field IDRM Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ILSEQ Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field INPROGRESS Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field INTR Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field INVAL Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field IO Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ISCONN Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ISDIR Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field LOOP Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field MFILE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field MLINK Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field MSGSIZE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field MULTIHOP Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NAMETOOLONG Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NETDOWN Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NETRESET Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NETUNREACH Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NFILE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOBUFS Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NODEV Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOENT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOEXEC Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOLCK Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOLINK Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOMEM Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOMSG Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOPROTOOPT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOSPC Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOSYS Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTCAPABLE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTCONN Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTDIR Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTEMPTY Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTRECOVERABLE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTSOCK Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTSUP Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NOTTY Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field NXIO Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field OVERFLOW Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field OWNERDEAD Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field PERM Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field PIPE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field PROTO Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field PROTONOSUPPORT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field PROTOTYPE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field RANGE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field ROFS Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field SPIPE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field SRCH Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field STALE Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field SUCCESS Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field TIMEDOUT Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field TOO_BIG Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field TXTBSY Lat/released/weh/wasi/preview1/type/Errno;
+	public static final field XDEV Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/type/Errno;
+	public static fun values ()[Lat/released/weh/wasi/preview1/type/Errno;
+}
+
+public final class at/released/weh/wasi/preview1/type/Errno$Companion {
+	public final fun fromErrNoCode (I)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
 public final class at/released/weh/wasi/preview1/type/ErrnoExtKt {
-	public static final fun getWasmValueType (Lat/released/weh/wasi/filesystem/common/Errno$Companion;)I
+	public static final fun getWasmValueType (Lat/released/weh/wasi/preview1/type/Errno$Companion;)I
 }
 
 public final class at/released/weh/wasi/preview1/type/Event {
 	public static final field Companion Lat/released/weh/wasi/preview1/type/Event$Companion;
-	public fun <init> (Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/filesystem/common/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;)V
+	public fun <init> (Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/preview1/type/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;)V
 	public final fun component1 ()Lat/released/weh/wasi/preview1/type/Userdata;
-	public final fun component2 ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun component2 ()Lat/released/weh/wasi/preview1/type/Errno;
 	public final fun component3 ()Lat/released/weh/wasi/preview1/type/Eventtype;
 	public final fun component4 ()Lat/released/weh/wasi/preview1/type/EventFdReadwrite;
-	public final fun copy (Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/filesystem/common/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;)Lat/released/weh/wasi/preview1/type/Event;
-	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/Event;Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/filesystem/common/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;ILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/Event;
+	public final fun copy (Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/preview1/type/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;)Lat/released/weh/wasi/preview1/type/Event;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/Event;Lat/released/weh/wasi/preview1/type/Userdata;Lat/released/weh/wasi/preview1/type/Errno;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/EventFdReadwrite;ILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/Event;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getError ()Lat/released/weh/wasi/filesystem/common/Errno;
+	public final fun getError ()Lat/released/weh/wasi/preview1/type/Errno;
 	public final fun getFdReadwrite ()Lat/released/weh/wasi/preview1/type/EventFdReadwrite;
 	public final fun getType ()Lat/released/weh/wasi/preview1/type/Eventtype;
 	public final fun getUserdata ()Lat/released/weh/wasi/preview1/type/Userdata;

@@ -9,10 +9,11 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.filesystem.common.Fd
 import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasi.preview1.type.IovecArray
 import at.released.weh.wasi.preview1.type.Size
@@ -40,7 +41,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
         return bulkReader.read(fd, strategy, ioVecs.iovecList)
             .onRight { readBytes -> memory.writeI32(pNum, readBytes.toInt()) }
             .fold(
-                ifLeft = FileSystemOperationError::errno,
+                ifLeft = FileSystemOperationError::wasiErrno,
                 ifRight = { Errno.SUCCESS },
             )
     }

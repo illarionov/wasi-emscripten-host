@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class NotSupported(
     override val message: String,
@@ -16,5 +16,5 @@ public data class NotSupported(
     ChownError,
     OpenError,
     ReadError {
-    override val errno: Errno = Errno.NOTSUP
+    override val errno: FileSystemErrno = FileSystemErrno.NOTSUP
 }

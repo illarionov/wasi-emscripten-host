@@ -9,11 +9,11 @@ package at.released.weh.filesystem.nio.cwd
 import arrow.core.Either
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.wasi.filesystem.common.Errno
-import at.released.weh.wasi.filesystem.common.Errno.BADF
-import at.released.weh.wasi.filesystem.common.Errno.INVAL
-import at.released.weh.wasi.filesystem.common.Errno.NOENT
-import at.released.weh.wasi.filesystem.common.Errno.NOTDIR
+import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
+import at.released.weh.filesystem.model.FileSystemErrno.INVAL
+import at.released.weh.filesystem.model.FileSystemErrno.NOENT
+import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
 import java.nio.file.Path
 
 internal interface PathResolver {
@@ -27,27 +27,27 @@ internal interface PathResolver {
     sealed interface ResolvePathError : FileSystemOperationError {
         class RelativePath(
             override val message: String,
-            override val errno: Errno = INVAL,
+            override val errno: FileSystemErrno = INVAL,
         ) : ResolvePathError
 
         class InvalidPath(
             override val message: String,
-            override val errno: Errno = INVAL,
+            override val errno: FileSystemErrno = INVAL,
         ) : ResolvePathError
 
         class NotDirectory(
             override val message: String,
-            override val errno: Errno = NOTDIR,
+            override val errno: FileSystemErrno = NOTDIR,
         ) : ResolvePathError
 
         class FileDescriptorNotOpen(
             override val message: String,
-            override val errno: Errno = BADF,
+            override val errno: FileSystemErrno = BADF,
         ) : ResolvePathError
 
         class EmptyPath(
             override val message: String,
-            override val errno: Errno = NOENT,
+            override val errno: FileSystemErrno = NOENT,
         ) : ResolvePathError
     }
 }

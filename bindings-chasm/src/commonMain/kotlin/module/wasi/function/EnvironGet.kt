@@ -9,8 +9,8 @@ package at.released.weh.bindings.chasm.module.wasi.function
 import at.released.weh.bindings.chasm.ext.asWasmAddr
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno
 import at.released.weh.wasi.preview1.function.EnvironGetFunctionHandle
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.Value
 

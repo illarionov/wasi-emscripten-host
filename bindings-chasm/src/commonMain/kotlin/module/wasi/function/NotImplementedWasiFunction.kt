@@ -7,7 +7,7 @@
 package at.released.weh.bindings.chasm.module.wasi.function
 
 import at.released.weh.bindings.chasm.module.wasi.WasiHostFunctionHandle
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.HostFunction
 import io.github.charlietap.chasm.embedding.shapes.Value
 

@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
+import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class ReadOnlyFileSystem(
     override val message: String,
@@ -20,5 +20,5 @@ public data class ReadOnlyFileSystem(
     TruncateError,
     UnlinkError,
     WriteError {
-    override val errno: Errno = Errno.ROFS
+    override val errno: FileSystemErrno = FileSystemErrno.ROFS
 }

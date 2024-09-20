@@ -17,12 +17,13 @@ import at.released.weh.emcripten.runtime.include.StructFlock
 import at.released.weh.emcripten.runtime.include.StructFlock.Companion.STRUCT_FLOCK_SIZE
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
-import at.released.weh.wasi.filesystem.common.Errno.INVAL
 import at.released.weh.wasi.filesystem.common.Fd
+import at.released.weh.wasi.preview1.type.Errno.INVAL
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
@@ -68,7 +69,7 @@ internal class FcntlHandler(
                 StructFlock.unpack(it)
             }
             val advisoryLock = flock.toAdvisoryLock().getOrElse {
-                return -it.errno.code
+                return -it.errno.wasiPreview1Code
             }
             return when (flock.l_type) {
                 Fcntl.F_RDLCK, Fcntl.F_WRLCK -> fileSystem.execute(

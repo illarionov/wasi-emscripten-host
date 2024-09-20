@@ -14,7 +14,7 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.filesystem.common.Errno.NOMEM
+import at.released.weh.wasi.preview1.type.Errno.NOMEM
 import at.released.weh.wasm.core.memory.Pages
 import at.released.weh.wasm.core.memory.WASM_MEMORY_32_MAX_PAGES
 import io.github.charlietap.chasm.embedding.shapes.HostFunction

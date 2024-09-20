@@ -6,8 +6,8 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.wasi.filesystem.common.Errno
-import at.released.weh.wasi.filesystem.common.Errno.INTR
+import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.INTR
 
 public data class Interrupted(
     override val message: String,
@@ -18,5 +18,5 @@ public data class Interrupted(
     ReadError,
     SyncError,
     WriteError {
-    override val errno: Errno = INTR
+    override val errno: FileSystemErrno = INTR
 }
