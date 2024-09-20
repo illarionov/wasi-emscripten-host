@@ -110,7 +110,7 @@ public final class at/released/weh/bindings/graalvm241/MemorySpec$Companion {
 	public static synthetic fun invoke$default (Lat/released/weh/bindings/graalvm241/MemorySpec$Companion;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/graalvm241/MemorySpec;
 }
 
-public final class at/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime : at/released/weh/emcripten/runtime/export/EmscriptenRuntime {
+public final class at/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime : at/released/weh/emcripten/runtime/export/DefaultEmscriptenRuntime {
 	public static final field Companion Lat/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime$Companion;
 	public fun <init> (Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports;Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthread;Lat/released/weh/emcripten/runtime/export/pthread/EmscriptenPthreadInternal;Lat/released/weh/common/api/Logger;)V
 	public fun initMainThread ()V

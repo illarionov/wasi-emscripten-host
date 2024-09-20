@@ -7,8 +7,8 @@
 package at.released.weh.bindings.graalvm241.host
 
 import at.released.weh.common.api.Logger
+import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenMainExports
-import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthread
 import at.released.weh.emcripten.runtime.export.pthread.EmscriptenPthreadInternal
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
@@ -26,7 +26,7 @@ public class GraalvmEmscriptenRuntime(
     private val emscriptenPthread: EmscriptenPthread?,
     private val emscriptenPthreadInternal: EmscriptenPthreadInternal?,
     rootLogger: Logger,
-) : EmscriptenRuntime(mainExports, stackExports, memory, rootLogger) {
+) : DefaultEmscriptenRuntime(mainExports, stackExports, memory, rootLogger) {
     public override val isMultiThread: Boolean get() = emscriptenPthreadInternal != null
 
     public override fun initMainThread(): Unit = if (isMultiThread) {

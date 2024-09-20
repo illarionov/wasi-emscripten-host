@@ -13,6 +13,7 @@ import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
 import at.released.weh.bindings.chasm.module.emscripten.createEmscriptenHostFunctions
 import at.released.weh.bindings.chasm.module.wasi.createWasiPreview1HostFunctions
 import at.released.weh.common.api.Logger
+import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
@@ -102,7 +103,7 @@ public class ChasmHostFunctionInstaller private constructor(
         }
 
         public fun finalize(instance: ChasmInstance): EmscriptenRuntime {
-            val emscriptenRuntime = EmscriptenRuntime.emscriptenSingleThreadedRuntime(
+            val emscriptenRuntime = DefaultEmscriptenRuntime.emscriptenSingleThreadedRuntime(
                 mainExports = ChasmEmscriptenMainExports(store, instance),
                 stackExports = ChasmEmscriptenStackExports(store, instance),
                 memory = memory,

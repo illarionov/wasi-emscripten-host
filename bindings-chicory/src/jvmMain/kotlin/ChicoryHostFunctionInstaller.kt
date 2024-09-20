@@ -6,6 +6,8 @@
 
 package at.released.weh.bindings.chicory
 
+import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.Builder
+import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.Companion
 import at.released.weh.bindings.chicory.exports.ChicoryEmscriptenMainExports
 import at.released.weh.bindings.chicory.exports.ChicoryEmscriptenStackExports
 import at.released.weh.bindings.chicory.host.memory.ChicoryMemoryAdapter
@@ -14,6 +16,7 @@ import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryWriter
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenEnvFunctionsBuilder
 import at.released.weh.bindings.chicory.host.module.wasi.WasiSnapshotPreview1ModuleBuilder
 import at.released.weh.common.api.WasiEmscriptenHostDsl
+import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
@@ -130,7 +133,7 @@ public class ChicoryHostFunctionInstaller private constructor(
         }
 
         public fun finalize(instance: Instance): EmscriptenRuntime {
-            val emscriptenRuntime = EmscriptenRuntime.emscriptenSingleThreadedRuntime(
+            val emscriptenRuntime = DefaultEmscriptenRuntime.emscriptenSingleThreadedRuntime(
                 mainExports = ChicoryEmscriptenMainExports(instance),
                 stackExports = ChicoryEmscriptenStackExports(instance),
                 memory = memoryAdapter,

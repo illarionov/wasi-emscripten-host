@@ -60,6 +60,9 @@ public final class at/released/weh/emcripten/runtime/EmscriptenHostFunction$Comp
 	public final fun getByWasmName ()Ljava/util/Map;
 }
 
+public final class at/released/weh/emcripten/runtime/export/DefaultEmscriptenRuntime$Companion {
+}
+
 public abstract interface class at/released/weh/emcripten/runtime/export/EmscriptenMainExports {
 	public static final field Companion Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports$Companion;
 	public abstract fun get__errno_location ()Lat/released/weh/wasm/core/WasmFunctionBinding;
@@ -70,18 +73,9 @@ public abstract interface class at/released/weh/emcripten/runtime/export/Emscrip
 public final class at/released/weh/emcripten/runtime/export/EmscriptenMainExports$Companion {
 }
 
-public class at/released/weh/emcripten/runtime/export/EmscriptenRuntime {
-	public static final field Companion Lat/released/weh/emcripten/runtime/export/EmscriptenRuntime$Companion;
-	protected fun <init> (Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports;Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports;Lat/released/weh/wasm/core/memory/Memory;Lat/released/weh/common/api/Logger;)V
-	public final fun getMainExports ()Lat/released/weh/emcripten/runtime/export/EmscriptenMainExports;
-	protected final fun getMemory ()Lat/released/weh/wasm/core/memory/Memory;
-	public final fun getStack ()Lat/released/weh/emcripten/runtime/export/stack/EmscriptenStack;
-	public fun initMainThread ()V
-	protected final fun initSingleThreadedMainThread ()V
-	public fun isMultiThread ()Z
-}
-
-public final class at/released/weh/emcripten/runtime/export/EmscriptenRuntime$Companion {
+public abstract interface class at/released/weh/emcripten/runtime/export/EmscriptenRuntime {
+	public abstract fun initMainThread ()V
+	public abstract fun isMultiThread ()Z
 }
 
 public final class at/released/weh/emcripten/runtime/export/IndirectFunctionTableIndex {
