@@ -182,7 +182,7 @@ public class App {
                 /* tables = */ new HostTable[0]
         );
 
-        // Setup Chicory Module
+        // Build Chicory Module
         var module = Module.builder("helloworld.wasm")
                 .withHostImports(hostImports)
                 .withInitialize(true)

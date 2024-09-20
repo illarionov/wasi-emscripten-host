@@ -26,6 +26,47 @@ import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Memory as ChicoryMemory
 
+/**
+ * Emscripten / WASI Preview 1 host function installer.
+ *
+ * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
+ *
+ * To create a new instance, use either [Companion.invoke] or [Builder].
+ *
+ * Usage example:
+ *
+ * ```kotlin
+ * // Prepare WASI and Emscripten host imports
+ * val installer = ChicoryHostFunctionInstaller(
+ *     memory = memory.memory(),
+ * )
+ * val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
+ * val emscriptenInstaller: ChicoryEmscriptenInstaller = installer.setupEmscriptenFunctions()
+ * val hostImports = HostImports(
+ *     /* functions = */ (emscriptenInstaller.emscriptenFunctions + wasiFunctions).toTypedArray(),
+ *     /* globals = */ arrayOf<HostGlobal>(),
+ *     /* memory = */ memory,
+ *     /* tables = */ arrayOf<HostTable>(),
+ * )
+ *
+ * // Setup Chicory Module
+ * val module = Module
+ *     .builder("helloworld.wasm")
+ *     .withHostImports(hostImports)
+ *     .withInitialize(true)
+ *     .withStart(false)
+ *     .build()
+ *
+ * // Instantiate the WebAssembly module
+ * val instance = module.instantiate()
+ *
+ * // Finalize initialization after module instantiation
+ * val emscriptenRuntime = emscriptenInstaller.finalize(instance)
+ *
+ * // Initialize Emscripten runtime environment
+ * emscriptenRuntime.initMainThread()
+ * ```
+ */
 public class ChicoryHostFunctionInstaller private constructor(
     private val host: EmbedderHost,
     chicoryMemory: ChicoryMemory,

@@ -1,5 +1,6 @@
 public final class at/released/weh/bindings/graalvm241/GraalvmEmscriptenEnvironment : java/lang/AutoCloseable {
 	public fun close ()V
+	public final fun getEmscriptenRuntime ()Lat/released/weh/bindings/graalvm241/host/GraalvmEmscriptenRuntime;
 	public final fun getWorkerThreadInstaller (Lorg/graalvm/polyglot/Context;)Lat/released/weh/bindings/graalvm241/GraalvmEmscriptenWorkerThreadInstaller;
 }
 
