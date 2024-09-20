@@ -6,43 +6,24 @@
 
 package at.released.weh.emcripten.runtime.export
 
-import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.common.api.Logger
-import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
-import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
-import at.released.weh.wasm.core.memory.Memory
+/**
+ * Emscripten environment manager
+ */
+public interface EmscriptenRuntime {
+    /**
+     * Whether environment supports multithreading
+     */
+    public val isMultiThread: Boolean
 
-public open class EmscriptenRuntime protected constructor(
-    public val mainExports: EmscriptenMainExports,
-    stackExports: EmscriptenStackExports,
-    protected val memory: Memory,
-    rootLogger: Logger,
-) {
-    private val logger: Logger = rootLogger.withTag("EmscriptenRuntime")
-    public val stack: EmscriptenStack = EmscriptenStack(stackExports, logger)
-
-    public open val isMultiThread: Boolean get() = false
-
-    public open fun initMainThread(): Unit = initSingleThreadedMainThread()
-
-    protected fun initSingleThreadedMainThread() {
-        stack.stackCheckInit(memory)
-        mainExports.__wasm_call_ctors.executeVoid()
-        stack.checkStackCookie(memory)
-    }
-
-    public companion object {
-        @InternalWasiEmscriptenHostApi
-        public fun emscriptenSingleThreadedRuntime(
-            mainExports: EmscriptenMainExports,
-            stackExports: EmscriptenStackExports,
-            memory: Memory,
-            logger: Logger,
-        ): EmscriptenRuntime = EmscriptenRuntime(
-            mainExports = mainExports,
-            stackExports = stackExports,
-            memory = memory,
-            logger,
-        )
-    }
+    /**
+     * Emscripten WebAssembly start function.
+     *
+     * This function should be invoked first after the module instantiation if the WebAssembly binary was not compiled
+     * in standalone mode. In standalone mode, the "initialize" exported function should be used instead.
+     *
+     * Calls `__wasm_call_ctors` exported function under the hood.
+     *
+     * Emscripten internal static constructors called from this method: [system/lib/README.md](https://github.com/emscripten-core/emscripten/blob/16a0bf174cb85f88b6d9dcc8ee7fbca59390185b/system/lib/README.md)
+     */
+    public fun initMainThread()
 }
