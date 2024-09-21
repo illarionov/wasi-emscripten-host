@@ -3,6 +3,7 @@ androidMinSdk = "26"
 androidCompileSdk = "34"
 
 agp = "8.5.2"
+antlr4 = "4.13.2"
 atomicfu = "0.25.0"
 arrow = "2.0.0-alpha.3"
 android-annotation = "1.9.0-alpha03"
@@ -16,6 +17,7 @@ dokkatoo = "2.4.0"
 graalvm241 = "24.1.0"
 gradle-maven-publish-plugin = "0.29.0"
 kotlin = "2.1.0-Beta1"
+kotlinpoet = "1.18.1"
 kotlinx-binary-compatibility-validator = "0.16.3"
 kotlinx-datetime = "0.6.1"
 kotlinx-io ="0.5.4"
@@ -25,6 +27,8 @@ spotless = "7.0.0.BETA2"
 
 [libraries]
 android-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "android-annotation" }
+antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
+antlr4-runtime = { group = "org.antlr", name = "antlr4-runtime", version.ref = "antlr4" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }
@@ -40,6 +44,7 @@ graalvm241-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language",
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+kotlinpoet = { group = "com.squareup", name = "kotlinpoet-jvm", version.ref = "kotlinpoet" }
 
 # Dependencies of the included build-logic
 agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
