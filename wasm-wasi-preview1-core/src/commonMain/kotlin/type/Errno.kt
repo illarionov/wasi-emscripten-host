@@ -8,6 +8,8 @@
 
 package at.released.weh.wasi.preview1.type
 
+import kotlin.jvm.JvmStatic
+
 /**
  * Errno from Wasi Preview 1
  */
@@ -402,8 +404,10 @@ public enum class Errno(
     ;
 
     public companion object {
+        @JvmStatic
         private val entriesMap: Map<Int, Errno> = entries.associateBy(Errno::code)
 
+        @JvmStatic
         public fun fromErrNoCode(code: Int): Errno? = entriesMap[code]
     }
 }

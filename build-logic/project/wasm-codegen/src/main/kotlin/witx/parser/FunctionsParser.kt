@@ -17,6 +17,7 @@ import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.ModuleInterfac
 import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.ModuleSectionContext
 import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.NumberTypeContext
 import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.PointerTypeContext
+import at.released.weh.gradle.wasm.codegen.witx.parser.ext.RethrowErrorListener
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseComment
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseIdentifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseNumberType

@@ -10,4 +10,5 @@ internal data class WasiTypename(
     val identifier: String,
     val typedef: WasiType,
     val comment: String,
+    val source: String,
 )
