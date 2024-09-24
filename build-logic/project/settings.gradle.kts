@@ -14,18 +14,6 @@ plugins {
     id("at.released.weh.gradle.settings.root")
 }
 
-// Workaround for https://github.com/gradle/gradle/issues/26020
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        google()
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$embeddedKotlinVersion")
-    }
-}
-
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
@@ -42,5 +30,6 @@ dependencyResolutionManagement {
 include("documentation")
 include("lint")
 include("multiplatform")
+include("wasm-codegen")
 
 rootProject.name = "weh-gradle-project-plugins"

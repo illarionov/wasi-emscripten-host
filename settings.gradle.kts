@@ -17,9 +17,14 @@ buildscript {
         classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0.BETA2")
         classpath("com.github.node-gradle:gradle-node-plugin:7.0.2")
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.29.0")
         classpath("dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0-Beta1")
+        classpath(
+            "org.jetbrains.kotlinx.binary-compatibility-validator:" +
+                    "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.16.3",
+        )
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.25.0")
     }
 }
