@@ -7,7 +7,7 @@
 package at.released.weh.wasi.preview1.type
 
 import at.released.weh.wasi.preview1.WasiTypename
-import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
+import at.released.weh.wasi.preview1.WasiValueTypes.U8
 import at.released.weh.wasm.core.WasmValueType
 import kotlin.experimental.or
 

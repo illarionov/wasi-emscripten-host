@@ -31,12 +31,10 @@ internal class ListTypeGenerator(
     private val className = identifier.className(typenamesPackage)
     private val annotationClassName = identifier.markerAnnotationClassName(typenamesPackage)
 
-    fun generate(): FileSpec {
-        val builder = FileSpec.builder(className)
-        builder.addTypeAlias(generateTypealias())
-        builder.addType(generateMarkerAnnotation())
-        return builder.build()
-    }
+    fun generate(): FileSpec = FileSpec.builder(className)
+        .addTypeAlias(generateTypealias())
+        .addType(generateMarkerAnnotation())
+        .build()
 
     private fun generateTypealias(): TypeAliasSpec {
         val listType = typedef.identifier.className(typenamesPackage)

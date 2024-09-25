@@ -18,6 +18,7 @@ import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.ModuleSectionC
 import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.NumberTypeContext
 import at.released.weh.gradle.wasm.codegen.antlr.WitxModuleParser.PointerTypeContext
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.RethrowErrorListener
+import at.released.weh.gradle.wasm.codegen.witx.parser.ext.getRawSource
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseComment
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseIdentifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseNumberType
@@ -75,6 +76,7 @@ internal object FunctionsParser {
             params = context.funcParam().map(::parseParam),
             result = result,
             comment = parseComment(context.COMMENT()),
+            source = context.getRawSource(),
         )
     }
 

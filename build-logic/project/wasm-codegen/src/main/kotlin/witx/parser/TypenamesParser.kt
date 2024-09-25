@@ -21,6 +21,7 @@ import at.released.weh.gradle.wasm.codegen.antlr.WitxTypenamesParser.TypedefCont
 import at.released.weh.gradle.wasm.codegen.antlr.WitxTypenamesParser.TypenameWithCommentContext
 import at.released.weh.gradle.wasm.codegen.antlr.WitxTypenamesParser.UnionTypedefContext
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.RethrowErrorListener
+import at.released.weh.gradle.wasm.codegen.witx.parser.ext.getRawSource
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseComment
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseIdentifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.ext.parseNumberType
@@ -40,7 +41,6 @@ import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiTypename
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.misc.Interval
 import org.antlr.v4.runtime.tree.TerminalNode
 import java.io.File
 
@@ -78,10 +78,7 @@ internal object TypenamesParser {
             comment = parseComment(typename.COMMENT()),
             identifier = parseIdentifier(typename.item().IDENTIFIER()),
             typedef = parseTypedef(typename.item().typedef()),
-            source = typename.item().run {
-                val interval = Interval(start.startIndex, stop.stopIndex)
-                start.inputStream.getText(interval)
-            },
+            source = typename.item().getRawSource(),
         )
     }
 

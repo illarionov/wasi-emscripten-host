@@ -24,18 +24,14 @@ internal class UnionTypeGenerator(
 ) {
     private val className = identifier.className(typenamesPackage)
 
-    fun generate(): FileSpec {
-        val builder = FileSpec.builder(className)
-        builder.addType(generateSealedInterface())
-        return builder.build()
-    }
+    fun generate(): FileSpec = FileSpec.builder(className)
+        .addType(generateSealedInterface())
+        .build()
 
-    private fun generateSealedInterface(): TypeSpec {
-        return TypeSpec.interfaceBuilder(className)
-            .addModifiers(PUBLIC, SEALED)
-            .addWasiPrevie1UnionTypeKdoc()
-            .build()
-    }
+    private fun generateSealedInterface(): TypeSpec = TypeSpec.interfaceBuilder(className)
+        .addModifiers(PUBLIC, SEALED)
+        .addWasiPrevie1UnionTypeKdoc()
+        .build()
 
     private fun TypeSpec.Builder.addWasiPrevie1UnionTypeKdoc(): TypeSpec.Builder {
         val members: List<ClassName> = typedef.members.toSet().map {

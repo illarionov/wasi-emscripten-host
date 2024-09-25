@@ -10,6 +10,8 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.asClassName
 
+internal val JVM_STATIC_CLASS_NAME = JvmStatic::class.asClassName()
+
 private val annotationRetentionClassName = AnnotationRetention::class.asClassName()
 private val annotationTargetClassName = AnnotationTarget::class.asClassName()
 

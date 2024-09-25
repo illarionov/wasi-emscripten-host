@@ -6,6 +6,7 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
+import at.released.weh.gradle.wasm.codegen.witx.generator.ext.JVM_STATIC_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1EnumTypeKdoc
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toUppercaseWithUnderscores
@@ -17,7 +18,6 @@ import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeSpec.Companion.anonymousClassBuilder
-import com.squareup.kotlinpoet.asClassName
 
 internal class EnumTypeGenerator(
     private val identifier: String,
@@ -72,9 +72,5 @@ internal class EnumTypeGenerator(
         return TypeSpec.companionObjectBuilder()
             .addFunction(fromCodeBuilder)
             .build()
-    }
-
-    private companion object {
-        val JVM_STATIC_CLASS_NAME = JvmStatic::class.asClassName()
     }
 }

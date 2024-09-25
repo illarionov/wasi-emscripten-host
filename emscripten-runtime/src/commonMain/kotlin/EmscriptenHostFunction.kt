@@ -8,8 +8,8 @@
 
 package at.released.weh.emcripten.runtime
 
+import at.released.weh.wasi.preview1.WasiValueTypes.U8
 import at.released.weh.wasi.preview1.type.FdWasmValueType
-import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
