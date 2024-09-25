@@ -37,7 +37,7 @@ internal sealed interface WasiType {
         )
 
         sealed class RecordFieldType {
-            data class IdentifierField(val id: Identifier) : RecordFieldType()
+            data class IdentifierField(val identifier: Identifier) : RecordFieldType()
             data class Pointer(
                 val dstType: UnsignedNumber,
                 val isConstPointer: Boolean,

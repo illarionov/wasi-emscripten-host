@@ -8,5 +8,5 @@ package at.released.weh.gradle.wasm.codegen.witx.parser.model
 
 internal data class IdentifierWithComment(
     val identifier: Identifier,
-    val comment: String?,
+    val comment: String,
 )

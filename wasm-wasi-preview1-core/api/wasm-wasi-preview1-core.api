@@ -61,6 +61,582 @@ public abstract interface class at/released/weh/wasi/preview1/WasiTypename {
 	public abstract fun getWasmValueType ()I
 }
 
+public final class at/released/weh/wasi/preview1/gen/type/Advice : java/lang/Enum {
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Advice$Companion;
+	public static final field DONTNEED Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final field NOREUSE Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final field NORMAL Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final field RANDOM Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final field SEQUENTIAL Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final field WILLNEED Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Advice;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Advice;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Advice$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Advice;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Ciovec {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lat/released/weh/wasi/preview1/gen/type/Ciovec;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Ciovec;IIILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Ciovec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuf ()I
+	public final fun getBufLen ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/CiovecArrayDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Clockid : java/lang/Enum {
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Clockid$Companion;
+	public static final field MONOTONIC Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public static final field PROCESS_CPUTIME_ID Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public static final field REALTIME Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public static final field THREAD_CPUTIME_ID Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Clockid;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Clockid$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Clockid;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/DeviceDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/DircookieDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Dirent {
+	public fun <init> (JJILat/released/weh/wasi/preview1/gen/type/Filetype;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun component4 ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun copy (JJILat/released/weh/wasi/preview1/gen/type/Filetype;)Lat/released/weh/wasi/preview1/gen/type/Dirent;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Dirent;JJILat/released/weh/wasi/preview1/gen/type/Filetype;ILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Dirent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDIno ()J
+	public final fun getDNamlen ()I
+	public final fun getDNext ()J
+	public final fun getDType ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/DirnamlenDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Errno : java/lang/Enum {
+	public static final field ACCES Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ADDRINUSE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ADDRNOTAVAIL Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field AFNOSUPPORT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field AGAIN Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ALREADY Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field BADF Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field BADMSG Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field BUSY Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field CANCELED Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field CHILD Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field CONNABORTED Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field CONNREFUSED Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field CONNRESET Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Errno$Companion;
+	public static final field DEADLK Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field DESTADDRREQ Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field DOM Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field DQUOT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field EXIST Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field FAULT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field FBIG Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field HOSTUNREACH Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field IDRM Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ILSEQ Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field INPROGRESS Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field INTR Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field INVAL Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field IO Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ISCONN Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ISDIR Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field LOOP Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field MFILE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field MLINK Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field MSGSIZE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field MULTIHOP Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NAMETOOLONG Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NETDOWN Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NETRESET Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NETUNREACH Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NFILE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOBUFS Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NODEV Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOENT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOEXEC Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOLCK Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOLINK Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOMEM Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOMSG Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOPROTOOPT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOSPC Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOSYS Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTCAPABLE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTCONN Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTDIR Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTEMPTY Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTRECOVERABLE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTSOCK Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTSUP Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NOTTY Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field NXIO Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field OVERFLOW Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field OWNERDEAD Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field PERM Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field PIPE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field PROTO Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field PROTONOSUPPORT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field PROTOTYPE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field RANGE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field ROFS Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field SPIPE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field SRCH Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field STALE Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field SUCCESS Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field TIMEDOUT Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field TOO_BIG Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field TXTBSY Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final field XDEV Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Errno;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Errno$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Errno;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Event {
+	public fun <init> (JLat/released/weh/wasi/preview1/gen/type/Errno;Lat/released/weh/wasi/preview1/gen/type/Eventtype;Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;)V
+	public final fun component1 ()J
+	public final fun component2 ()Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public final fun component3 ()Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public final fun component4 ()Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;
+	public final fun copy (JLat/released/weh/wasi/preview1/gen/type/Errno;Lat/released/weh/wasi/preview1/gen/type/Eventtype;Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;)Lat/released/weh/wasi/preview1/gen/type/Event;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Event;JLat/released/weh/wasi/preview1/gen/type/Errno;Lat/released/weh/wasi/preview1/gen/type/Eventtype;Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;ILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Event;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Lat/released/weh/wasi/preview1/gen/type/Errno;
+	public final fun getFdReadwrite ()Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;
+	public final fun getType ()Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public final fun getUserdata ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/EventFdReadwrite {
+	public fun <init> (JS)V
+	public final fun component1 ()J
+	public final fun component2 ()S
+	public final fun copy (JS)Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;JSILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/EventFdReadwrite;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFlags ()S
+	public final fun getNbytes ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/EventrwflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/EventrwflagsFlag {
+	public static final field FD_READWRITE_HANGUP S
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/EventrwflagsFlag;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Eventtype : java/lang/Enum {
+	public static final field CLOCK Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Eventtype$Companion;
+	public static final field FD_READ Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public static final field FD_WRITE Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Eventtype$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Eventtype;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/ExitcodeDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/FdDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/FdflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/FdflagsFlag {
+	public static final field APPEND S
+	public static final field DSYNC S
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/FdflagsFlag;
+	public static final field NONBLOCK S
+	public static final field RSYNC S
+	public static final field SYNC S
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Fdstat {
+	public fun <init> (Lat/released/weh/wasi/preview1/gen/type/Filetype;SJJ)V
+	public final fun component1 ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun component2 ()S
+	public final fun component3 ()J
+	public final fun component4 ()J
+	public final fun copy (Lat/released/weh/wasi/preview1/gen/type/Filetype;SJJ)Lat/released/weh/wasi/preview1/gen/type/Fdstat;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Fdstat;Lat/released/weh/wasi/preview1/gen/type/Filetype;SJJILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Fdstat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFsFiletype ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun getFsFlags ()S
+	public final fun getFsRightsBase ()J
+	public final fun getFsRightsInheriting ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/FiledeltaDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/FilesizeDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Filestat {
+	public fun <init> (JJLat/released/weh/wasi/preview1/gen/type/Filetype;JJJJJ)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun component4 ()J
+	public final fun component5 ()J
+	public final fun component6 ()J
+	public final fun component7 ()J
+	public final fun component8 ()J
+	public final fun copy (JJLat/released/weh/wasi/preview1/gen/type/Filetype;JJJJJ)Lat/released/weh/wasi/preview1/gen/type/Filestat;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Filestat;JJLat/released/weh/wasi/preview1/gen/type/Filetype;JJJJJILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Filestat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAtim ()J
+	public final fun getCtim ()J
+	public final fun getDev ()J
+	public final fun getFiletype ()Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun getIno ()J
+	public final fun getMtim ()J
+	public final fun getNlink ()J
+	public final fun getSize ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Filetype : java/lang/Enum {
+	public static final field BLOCK_DEVICE Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field CHARACTER_DEVICE Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Filetype$Companion;
+	public static final field DIRECTORY Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field REGULAR_FILE Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field SOCKET_DGRAM Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field SOCKET_STREAM Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field SYMBOLIC_LINK Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final field UNKNOWN Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Filetype;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Filetype;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Filetype$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Filetype;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/FstflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/FstflagsFlag {
+	public static final field ATIM S
+	public static final field ATIM_NOW S
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/FstflagsFlag;
+	public static final field MTIM S
+	public static final field MTIM_NOW S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/InodeDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Iovec {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lat/released/weh/wasi/preview1/gen/type/Iovec;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Iovec;IIILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Iovec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuf ()I
+	public final fun getBufLen ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/IovecArrayDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/LinkcountDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/LookupflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/LookupflagsFlag {
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/LookupflagsFlag;
+	public static final field SYMLINK_FOLLOW I
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/OflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/OflagsFlag {
+	public static final field CREAT S
+	public static final field DIRECTORY S
+	public static final field EXCL S
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/OflagsFlag;
+	public static final field TRUNC S
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Preopentype : java/lang/Enum {
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Preopentype$Companion;
+	public static final field DIR Lat/released/weh/wasi/preview1/gen/type/Preopentype;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Preopentype;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Preopentype;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Preopentype;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Preopentype$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Preopentype;
+}
+
+public abstract interface class at/released/weh/wasi/preview1/gen/type/Prestat {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/PrestatDir : at/released/weh/wasi/preview1/gen/type/Prestat {
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lat/released/weh/wasi/preview1/gen/type/PrestatDir;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/PrestatDir;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/PrestatDir;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrNameLen ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/RiflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/RiflagsFlag {
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/RiflagsFlag;
+	public static final field RECV_PEEK S
+	public static final field RECV_WAITALL S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/RightsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/RightsFlag {
+	public static final field FD_ADVISE J
+	public static final field FD_ALLOCATE J
+	public static final field FD_DATASYNC J
+	public static final field FD_FDSTAT_SET_FLAGS J
+	public static final field FD_FILESTAT_GET J
+	public static final field FD_FILESTAT_SET_SIZE J
+	public static final field FD_FILESTAT_SET_TIMES J
+	public static final field FD_READ J
+	public static final field FD_READDIR J
+	public static final field FD_SEEK J
+	public static final field FD_SYNC J
+	public static final field FD_TELL J
+	public static final field FD_WRITE J
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/RightsFlag;
+	public static final field PATH_CREATE_DIRECTORY J
+	public static final field PATH_CREATE_FILE J
+	public static final field PATH_FILESTAT_GET J
+	public static final field PATH_FILESTAT_SET_SIZE J
+	public static final field PATH_FILESTAT_SET_TIMES J
+	public static final field PATH_LINK_SOURCE J
+	public static final field PATH_LINK_TARGET J
+	public static final field PATH_OPEN J
+	public static final field PATH_READLINK J
+	public static final field PATH_REMOVE_DIRECTORY J
+	public static final field PATH_RENAME_SOURCE J
+	public static final field PATH_RENAME_TARGET J
+	public static final field PATH_SYMLINK J
+	public static final field PATH_UNLINK_FILE J
+	public static final field POLL_FD_READWRITE J
+	public static final field SOCK_ACCEPT J
+	public static final field SOCK_SHUTDOWN J
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/RoflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/RoflagsFlag {
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/RoflagsFlag;
+	public static final field RECV_DATA_TRUNCATED S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/SdflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/SdflagsFlag {
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/SdflagsFlag;
+	public static final field RD B
+	public static final field WR B
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/SiflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Signal : java/lang/Enum {
+	public static final field ABRT Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field ALRM Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field BUS Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field CHLD Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field CONT Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Signal$Companion;
+	public static final field FPE Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field HUP Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field ILL Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field INT Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field KILL Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field NONE Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field PIPE Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field POLL Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field PROF Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field PWR Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field QUIT Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field SEGV Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field STOP Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field SYS Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field TERM Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field TRAP Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field TSTP Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field TTIN Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field TTOU Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field URG Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field USR1 Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field USR2 Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field VTALRM Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field WINCH Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field XCPU Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final field XFSZ Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Signal;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Signal;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Signal$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Signal;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/SizeDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/SubclockflagsDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/SubclockflagsFlag {
+	public static final field INSTANCE Lat/released/weh/wasi/preview1/gen/type/SubclockflagsFlag;
+	public static final field SUBSCRIPTION_CLOCK_ABSTIME S
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Subscription {
+	public fun <init> (JLat/released/weh/wasi/preview1/gen/type/SubscriptionU;)V
+	public final fun component1 ()J
+	public final fun component2 ()Lat/released/weh/wasi/preview1/gen/type/SubscriptionU;
+	public final fun copy (JLat/released/weh/wasi/preview1/gen/type/SubscriptionU;)Lat/released/weh/wasi/preview1/gen/type/Subscription;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/Subscription;JLat/released/weh/wasi/preview1/gen/type/SubscriptionU;ILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/Subscription;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getU ()Lat/released/weh/wasi/preview1/gen/type/SubscriptionU;
+	public final fun getUserdata ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/SubscriptionClock : at/released/weh/wasi/preview1/gen/type/SubscriptionU {
+	public fun <init> (Lat/released/weh/wasi/preview1/gen/type/Clockid;JJS)V
+	public final fun component1 ()Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun component4 ()S
+	public final fun copy (Lat/released/weh/wasi/preview1/gen/type/Clockid;JJS)Lat/released/weh/wasi/preview1/gen/type/SubscriptionClock;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/SubscriptionClock;Lat/released/weh/wasi/preview1/gen/type/Clockid;JJSILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/SubscriptionClock;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFlags ()S
+	public final fun getId ()Lat/released/weh/wasi/preview1/gen/type/Clockid;
+	public final fun getPrecision ()J
+	public final fun getTimeout ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/SubscriptionFdReadwrite : at/released/weh/wasi/preview1/gen/type/SubscriptionU {
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lat/released/weh/wasi/preview1/gen/type/SubscriptionFdReadwrite;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/gen/type/SubscriptionFdReadwrite;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/gen/type/SubscriptionFdReadwrite;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFileDescriptor ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class at/released/weh/wasi/preview1/gen/type/SubscriptionU {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/TimestampDef : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/gen/type/UserdataDef : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Whence : java/lang/Enum {
+	public static final field CUR Lat/released/weh/wasi/preview1/gen/type/Whence;
+	public static final field Companion Lat/released/weh/wasi/preview1/gen/type/Whence$Companion;
+	public static final field END Lat/released/weh/wasi/preview1/gen/type/Whence;
+	public static final field SET Lat/released/weh/wasi/preview1/gen/type/Whence;
+	public static final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Whence;
+	public final fun getCode ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/gen/type/Whence;
+	public static fun values ()[Lat/released/weh/wasi/preview1/gen/type/Whence;
+}
+
+public final class at/released/weh/wasi/preview1/gen/type/Whence$Companion {
+	public final fun fromCode (I)Lat/released/weh/wasi/preview1/gen/type/Whence;
+}
+
 public final class at/released/weh/wasi/preview1/type/Advice : java/lang/Enum {
 	public static final field Companion Lat/released/weh/wasi/preview1/type/Advice$Companion;
 	public static final field DONTNEED Lat/released/weh/wasi/preview1/type/Advice;
@@ -278,6 +854,7 @@ public final class at/released/weh/wasi/preview1/type/Errno : java/lang/Enum {
 	public static final field TOO_BIG Lat/released/weh/wasi/preview1/type/Errno;
 	public static final field TXTBSY Lat/released/weh/wasi/preview1/type/Errno;
 	public static final field XDEV Lat/released/weh/wasi/preview1/type/Errno;
+	public static final fun fromErrNoCode (I)Lat/released/weh/wasi/preview1/type/Errno;
 	public final fun getCode ()I
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/wasi/preview1/type/Errno;
