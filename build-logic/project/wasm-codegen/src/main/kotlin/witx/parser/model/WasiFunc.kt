@@ -11,6 +11,7 @@ internal data class WasiFunc(
     val params: List<WasiFuncParam>,
     val result: WasiFuncResult?,
     val comment: String,
+    val source: String,
 ) {
     internal data class WasiFuncParam(
         val name: Identifier,

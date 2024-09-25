@@ -7,8 +7,10 @@
 package at.released.weh.gradle.wasm.codegen.witx
 
 import at.released.weh.gradle.wasm.codegen.witx.generator.Wasi1TypenamesGenerator
+import at.released.weh.gradle.wasm.codegen.witx.generator.WasiFunctionsGenerator
 import at.released.weh.gradle.wasm.codegen.witx.parser.FunctionsParser
 import at.released.weh.gradle.wasm.codegen.witx.parser.TypenamesParser
+import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiTypename
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
@@ -40,7 +42,7 @@ public abstract class GenerateWasi1InterfacesTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val typenames = TypenamesParser.parse(typenamesSpec.get().asFile)
+        val typenames: List<WasiTypename> = TypenamesParser.parse(typenamesSpec.get().asFile)
         Wasi1TypenamesGenerator.generate(
             typenames = typenames,
             typenamesPackage = typenamesPackage.get(),
@@ -48,6 +50,11 @@ public abstract class GenerateWasi1InterfacesTask : DefaultTask() {
         )
 
         val functions = FunctionsParser.parse(functionsSpec.get().asFile)
-        logger.debug("functions: $functions")
+        WasiFunctionsGenerator(
+            functions = functions,
+            functionsPackage = functionsPackage.get(),
+            outputDirectory = outputDirectory.get().asFile,
+            wasiTypes = typenames.associate { it.identifier to it.typedef },
+        ).generate()
     }
 }

@@ -8,7 +8,7 @@
 
 package at.released.weh.wasi.preview1.type
 
-import at.released.weh.wasi.preview1.type.WasiValueTypes.U16
+import at.released.weh.wasi.preview1.WasiValueTypes.U16
 import at.released.weh.wasm.core.WasmValueType
 
 @WasmValueType

@@ -49,11 +49,9 @@ internal class RecordTypeGenerator(
         it.className(typenamesPackage)
     }
 
-    fun generate(): FileSpec {
-        val builder = FileSpec.builder(className)
-        builder.addType(generateRecordDataClass())
-        return builder.build()
-    }
+    fun generate(): FileSpec = FileSpec.builder(className)
+        .addType(generateRecordDataClass())
+        .build()
 
     private fun generateRecordDataClass(): TypeSpec {
         val paramsDescription = typedef.fields.map {

@@ -6,6 +6,7 @@
 
 package at.released.weh.wasi.preview1
 
+import at.released.weh.wasi.preview1.WasiValueTypes.U8
 import at.released.weh.wasi.preview1.type.Advice
 import at.released.weh.wasi.preview1.type.CiovecArray
 import at.released.weh.wasi.preview1.type.ClockId
@@ -33,14 +34,13 @@ import at.released.weh.wasi.preview1.type.Signal
 import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasi.preview1.type.Subscription
 import at.released.weh.wasi.preview1.type.Timestamp
-import at.released.weh.wasi.preview1.type.WasiValueTypes
-import at.released.weh.wasi.preview1.type.WasiValueTypes.U8
 import at.released.weh.wasi.preview1.type.Whence
 import at.released.weh.wasi.preview1.type.wasmValueType
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes.I32
 import at.released.weh.wasm.core.witxPointer
+import kotlin.jvm.JvmStatic
 
 /**
  * WASI Preview1 function descriptors
@@ -1225,6 +1225,7 @@ public enum class WasiHostFunction(
     )
 
     public companion object {
+        @JvmStatic
         public val byWasmName: Map<String, WasiHostFunction> = entries.associateBy(WasiHostFunction::wasmName)
     }
 }

@@ -64,4 +64,4 @@ fun buildWasiPreviewTypeKdoc(
 
 private fun formatIdentifierHeader(identifier: String) = "WASI Preview1 type `$$identifier`"
 
-private fun formatDefinition(typenameRaw: String) = "Definition:\n```\n$typenameRaw\n```"
+internal fun formatDefinition(typenameRaw: String) = "Definition:\n```\n$typenameRaw\n```"
