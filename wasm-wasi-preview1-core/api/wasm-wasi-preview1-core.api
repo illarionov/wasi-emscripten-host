@@ -101,7 +101,7 @@ public final class at/released/weh/wasi/preview1/type/Ciovec {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/CiovecArrayDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/CiovecArrayType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Clockid : java/lang/Enum {
@@ -121,10 +121,10 @@ public final class at/released/weh/wasi/preview1/type/Clockid$Companion {
 	public final fun fromCode (I)Lat/released/weh/wasi/preview1/type/Clockid;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/DeviceDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/DeviceType : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/DircookieDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/DircookieType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Dirent {
@@ -144,7 +144,7 @@ public final class at/released/weh/wasi/preview1/type/Dirent {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/DirnamlenDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/DirnamlenType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Errno : java/lang/Enum {
@@ -267,12 +267,12 @@ public final class at/released/weh/wasi/preview1/type/EventFdReadwrite {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/EventrwflagsDef : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/wasi/preview1/type/EventrwflagsFlag {
 	public static final field FD_READWRITE_HANGUP S
 	public static final field INSTANCE Lat/released/weh/wasi/preview1/type/EventrwflagsFlag;
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/EventrwflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Eventtype : java/lang/Enum {
@@ -291,13 +291,10 @@ public final class at/released/weh/wasi/preview1/type/Eventtype$Companion {
 	public final fun fromCode (I)Lat/released/weh/wasi/preview1/type/Eventtype;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/ExitcodeDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/ExitcodeType : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/FdDef : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class at/released/weh/wasi/preview1/type/FdflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/FdType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/FdflagsFlag {
@@ -307,6 +304,9 @@ public final class at/released/weh/wasi/preview1/type/FdflagsFlag {
 	public static final field NONBLOCK S
 	public static final field RSYNC S
 	public static final field SYNC S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/FdflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Fdstat {
@@ -326,10 +326,10 @@ public final class at/released/weh/wasi/preview1/type/Fdstat {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/FiledeltaDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/FiledeltaType : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/FilesizeDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/FilesizeType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Filestat {
@@ -378,9 +378,6 @@ public final class at/released/weh/wasi/preview1/type/Filetype$Companion {
 	public final fun fromCode (I)Lat/released/weh/wasi/preview1/type/Filetype;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/FstflagsDef : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/wasi/preview1/type/FstflagsFlag {
 	public static final field ATIM S
 	public static final field ATIM_NOW S
@@ -389,7 +386,10 @@ public final class at/released/weh/wasi/preview1/type/FstflagsFlag {
 	public static final field MTIM_NOW S
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/InodeDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/FstflagsType : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/InodeType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Iovec {
@@ -405,13 +405,10 @@ public final class at/released/weh/wasi/preview1/type/Iovec {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/IovecArrayDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/IovecArrayType : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/LinkcountDef : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class at/released/weh/wasi/preview1/type/LookupflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/LinkcountType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/LookupflagsFlag {
@@ -419,7 +416,7 @@ public final class at/released/weh/wasi/preview1/type/LookupflagsFlag {
 	public static final field SYMLINK_FOLLOW I
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/OflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/LookupflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/OflagsFlag {
@@ -428,6 +425,9 @@ public final class at/released/weh/wasi/preview1/type/OflagsFlag {
 	public static final field EXCL S
 	public static final field INSTANCE Lat/released/weh/wasi/preview1/type/OflagsFlag;
 	public static final field TRUNC S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/OflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Preopentype : java/lang/Enum {
@@ -458,16 +458,13 @@ public final class at/released/weh/wasi/preview1/type/PrestatDir : at/released/w
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/RiflagsDef : java/lang/annotation/Annotation {
-}
-
 public final class at/released/weh/wasi/preview1/type/RiflagsFlag {
 	public static final field INSTANCE Lat/released/weh/wasi/preview1/type/RiflagsFlag;
 	public static final field RECV_PEEK S
 	public static final field RECV_WAITALL S
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/RightsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/RiflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/RightsFlag {
@@ -504,7 +501,7 @@ public final class at/released/weh/wasi/preview1/type/RightsFlag {
 	public static final field SOCK_SHUTDOWN J
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/RoflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/RightsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/RoflagsFlag {
@@ -512,7 +509,7 @@ public final class at/released/weh/wasi/preview1/type/RoflagsFlag {
 	public static final field RECV_DATA_TRUNCATED S
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/SdflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/RoflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/SdflagsFlag {
@@ -521,7 +518,10 @@ public final class at/released/weh/wasi/preview1/type/SdflagsFlag {
 	public static final field WR B
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/SiflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/SdflagsType : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/SiflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Signal : java/lang/Enum {
@@ -568,15 +568,15 @@ public final class at/released/weh/wasi/preview1/type/Signal$Companion {
 	public final fun fromCode (I)Lat/released/weh/wasi/preview1/type/Signal;
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/SizeDef : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class at/released/weh/wasi/preview1/type/SubclockflagsDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/SizeType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/SubclockflagsFlag {
 	public static final field INSTANCE Lat/released/weh/wasi/preview1/type/SubclockflagsFlag;
 	public static final field SUBSCRIPTION_CLOCK_ABSTIME S
+}
+
+public abstract interface annotation class at/released/weh/wasi/preview1/type/SubclockflagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Subscription {
@@ -623,10 +623,10 @@ public final class at/released/weh/wasi/preview1/type/SubscriptionFdReadwrite : 
 public abstract interface class at/released/weh/wasi/preview1/type/SubscriptionU {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/TimestampDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/TimestampType : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class at/released/weh/wasi/preview1/type/UserdataDef : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/wasi/preview1/type/UserdataType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/wasi/preview1/type/Whence : java/lang/Enum {

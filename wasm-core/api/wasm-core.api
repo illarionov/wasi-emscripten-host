@@ -50,7 +50,7 @@ public abstract interface annotation class at/released/weh/wasm/core/WasmValueTy
 }
 
 public final class at/released/weh/wasm/core/WasmValueTypeExtKt {
-	public static final fun getPOINTER ()I
+	public static final field POINTER I
 	public static final fun witxPointer (I)I
 }
 
