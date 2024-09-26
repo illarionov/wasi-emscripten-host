@@ -26,9 +26,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.host)
+            api(projects.wasmCore)
+            api(projects.emscriptenRuntime)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
-            implementation(projects.emscriptenRuntime)
             implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
         }

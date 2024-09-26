@@ -36,9 +36,9 @@ kotlin {
         commonMain.dependencies {
             api(projects.host)
             api(libs.chasm)
+            api(projects.emscriptenRuntime)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
-            implementation(projects.emscriptenRuntime)
             implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
             compileOnly(libs.chasm.memory)
