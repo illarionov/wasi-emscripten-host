@@ -7,13 +7,13 @@
 package at.released.weh.wasi.preview1.function
 
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction.SCHED_YIELD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.SCHED_YIELD
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 
 public class SchedYieldFunctionHandle(
     host: EmbedderHost,
-) : WasiHostFunctionHandle(SCHED_YIELD, host) {
+) : WasiPreview1HostFunctionHandle(SCHED_YIELD, host) {
     public fun execute(): Errno {
         Thread.yield()
         return SUCCESS

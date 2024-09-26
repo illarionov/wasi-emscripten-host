@@ -46,7 +46,7 @@ internal class ChicoryWasiMemoryReader(
         FileSystemByteBuffer(
             memoryBuffer.array(),
             memoryBuffer.arrayOffset() + iovec.buf,
-            iovec.bufLen.value,
+            iovec.bufLen,
         )
     }
 

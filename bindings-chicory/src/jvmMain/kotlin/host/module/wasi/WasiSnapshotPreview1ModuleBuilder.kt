@@ -21,17 +21,17 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrit
 import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
-import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_GET
-import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_SIZES_GET
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_CLOSE
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_PREAD
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_PWRITE
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_READ
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_SEEK
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_SYNC
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_WRITE
-import at.released.weh.wasi.preview1.WasiHostFunction.SCHED_YIELD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_GET
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_SIZES_GET
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_CLOSE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PREAD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PWRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SYNC
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_WRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.SCHED_YIELD
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
@@ -51,7 +51,7 @@ internal class WasiSnapshotPreview1ModuleBuilder(
     fun asChicoryHostFunctions(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
     ): List<HostFunction> {
-        return WasiHostFunction.entries.map { wasiFunc ->
+        return WasiPreview1HostFunction.entries.map { wasiFunc ->
             val functionHandle = wasiFunc.createWasiHostFunctionHandle(host, memory, wasiMemoryReader, wasiMemoryWriter)
             HostFunction(
                 WasiHostFunctionAdapter(functionHandle),
@@ -63,7 +63,7 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         }
     }
 
-    private fun WasiHostFunction.createWasiHostFunctionHandle(
+    private fun WasiPreview1HostFunction.createWasiHostFunctionHandle(
         host: EmbedderHost,
         memory: Memory,
         wasiMemoryReader: WasiMemoryReader,

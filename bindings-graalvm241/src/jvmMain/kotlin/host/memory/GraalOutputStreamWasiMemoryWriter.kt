@@ -21,7 +21,7 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
-import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Ciovec
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
 
@@ -37,7 +37,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
     override fun write(
         @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
-        cioVecs: List<CioVec>,
+        cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong> {
         return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
@@ -53,9 +53,9 @@ internal class GraalOutputStreamWasiMemoryWriter(
 
     private fun writeChangePosition(
         channelResult: Either<BadFileDescriptor, FileChannel>,
-        cioVecs: List<CioVec>,
+        cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong> {
-        logger.v { "writeChangePosition($channelResult, ${cioVecs.map { it.bufLen.value }})" }
+        logger.v { "writeChangePosition($channelResult, ${cioVecs.map(Ciovec::bufLen)})" }
         val channel = channelResult.mapLeft {
             BadFileDescriptor(it.message)
         }.getOrElse {
@@ -66,7 +66,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
             var totalBytesWritten: ULong = 0U
             val outputStream = Channels.newOutputStream(channel).buffered()
             for (vec in cioVecs) {
-                val limit = vec.bufLen.value.toInt()
+                val limit = vec.bufLen
                 wasmMemory.copyToStream(memory.node, outputStream, vec.buf, limit)
                 totalBytesWritten += limit.toUInt()
             }

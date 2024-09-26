@@ -11,6 +11,6 @@ import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.wasi.preview1.type.Errno
 
-internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromErrNoCode(this.wasiPreview1Code)!!
+internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromCode(this.wasiPreview1Code)!!
 
 internal fun FileSystemOperationError.wasiErrno(): Errno = this.errno.toWasiErrno()

@@ -14,7 +14,7 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Ciovec
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import at.released.weh.wasm.core.memory.sourceWithMaxSize
 import kotlinx.io.buffered
@@ -24,7 +24,7 @@ public fun interface WasiMemoryWriter {
     public fun write(
         @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
-        cioVecs: List<CioVec>,
+        cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong>
 }
 
@@ -35,17 +35,17 @@ public class DefaultWasiMemoryWriter(
     override fun write(
         @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
-        cioVecs: List<CioVec>,
+        cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong> {
         val bufs = cioVecs.toByteBuffers(memory)
         return fileSystem.execute(WriteFd, WriteFd(fd, bufs, strategy))
     }
 
-    private fun List<CioVec>.toByteBuffers(
+    private fun List<Ciovec>.toByteBuffers(
         memory: ReadOnlyMemory,
     ): List<FileSystemByteBuffer> = map { ciovec ->
         // XXX: too many memory copies
-        val maxSize = ciovec.bufLen.value
+        val maxSize = ciovec.bufLen
         val bytesBuffer = memory.sourceWithMaxSize(ciovec.buf, maxSize).buffered().use {
             it.readByteArray(maxSize)
         }

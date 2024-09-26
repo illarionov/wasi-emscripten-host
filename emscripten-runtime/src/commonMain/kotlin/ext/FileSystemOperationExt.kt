@@ -17,6 +17,6 @@ internal fun Either<FileSystemOperationError, Unit>.negativeErrnoCode(): Int = t
     ifRight = { Errno.SUCCESS.code },
 )
 
-internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromErrNoCode(this.wasiPreview1Code)!!
+internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromCode(this.wasiPreview1Code)!!
 
 internal fun FileSystemOperationError.wasiErrno(): Errno = this.errno.toWasiErrno()

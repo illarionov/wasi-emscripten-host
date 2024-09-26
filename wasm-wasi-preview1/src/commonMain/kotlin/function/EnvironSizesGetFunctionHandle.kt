@@ -8,7 +8,7 @@ package at.released.weh.wasi.preview1.function
 
 import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WasiEnvironmentFunc.encodeEnvToWasi
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
@@ -17,7 +17,7 @@ import at.released.weh.wasm.core.memory.Memory
 
 public class EnvironSizesGetFunctionHandle(
     host: EmbedderHost,
-) : WasiHostFunctionHandle(WasiHostFunction.ENVIRON_SIZES_GET, host) {
+) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.ENVIRON_SIZES_GET, host) {
     public fun execute(
         memory: Memory,
         @IntWasmPtr(Int::class) environCountAddr: WasmPtr,

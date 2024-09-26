@@ -61,7 +61,7 @@ internal class GraalInputStreamWasiMemoryReader(
             var totalBytesRead: ULong = 0U
             val inputStream = Channels.newInputStream(channel).buffered()
             for (vec in iovecs) {
-                val limit = vec.bufLen.value.toInt()
+                val limit = vec.bufLen
                 val bytesRead = wasmMemory.copyFromStream(memory.node, inputStream, vec.buf, limit)
                 if (bytesRead > 0) {
                     totalBytesRead += bytesRead.toULong()

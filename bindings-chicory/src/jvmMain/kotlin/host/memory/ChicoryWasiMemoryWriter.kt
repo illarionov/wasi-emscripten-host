@@ -18,7 +18,7 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.WriteFd
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
-import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Ciovec
 import com.dylibso.chicory.runtime.Memory
 import java.lang.reflect.Field
 import java.nio.ByteBuffer
@@ -31,7 +31,7 @@ internal class ChicoryWasiMemoryWriter private constructor(
     override fun write(
         @IntFileDescriptor fd: FileDescriptor,
         strategy: ReadWriteStrategy,
-        cioVecs: List<CioVec>,
+        cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong> {
         val memoryByteBuffer = bufferField.get(memory) as? ByteBuffer
             ?: error("Can not get memory byte buffer")
@@ -39,13 +39,13 @@ internal class ChicoryWasiMemoryWriter private constructor(
         return fileSystem.execute(WriteFd, WriteFd(fd, bbufs, strategy))
     }
 
-    private fun List<CioVec>.toByteBuffers(
+    private fun List<Ciovec>.toByteBuffers(
         memoryBuffer: ByteBuffer,
-    ): List<FileSystemByteBuffer> = map { cioVec ->
+    ): List<FileSystemByteBuffer> = map { ciovec ->
         FileSystemByteBuffer(
             memoryBuffer.array(),
-            memoryBuffer.arrayOffset() + cioVec.buf,
-            cioVec.bufLen.value,
+            memoryBuffer.arrayOffset() + ciovec.buf,
+            ciovec.bufLen,
         )
     }
 

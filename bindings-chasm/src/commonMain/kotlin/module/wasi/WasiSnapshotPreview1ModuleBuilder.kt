@@ -19,16 +19,16 @@ import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Compa
 import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
 import at.released.weh.bindings.chasm.module.wasi.function.NotImplementedWasiFunction
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
-import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_GET
-import at.released.weh.wasi.preview1.WasiHostFunction.ENVIRON_SIZES_GET
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_CLOSE
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_PREAD
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_PWRITE
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_READ
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_SEEK
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_SYNC
-import at.released.weh.wasi.preview1.WasiHostFunction.FD_WRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_GET
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_SIZES_GET
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_CLOSE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PREAD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PWRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SYNC
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_WRITE
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
@@ -47,8 +47,8 @@ internal fun createWasiPreview1HostFunctions(
     host: EmbedderHost,
     moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
 ): List<ChasmImport> {
-    val functionTypes = WasiHostFunction.entries.map(WasiHostFunction::type).toChasmFunctionTypes()
-    return WasiHostFunction.entries.map { wasiFunc ->
+    val functionTypes = WasiPreview1HostFunction.entries.map(WasiPreview1HostFunction::type).toChasmFunctionTypes()
+    return WasiPreview1HostFunction.entries.map { wasiFunc ->
         ChasmImport(
             moduleName = moduleName,
             entityName = wasiFunc.wasmName,
@@ -66,7 +66,7 @@ private fun WasiHostFunctionHandle.toChasmHostFunction(): ChasmHostFunction = { 
     listOf(Value.Number.I32(this@toChasmHostFunction(args).code))
 }
 
-private fun WasiHostFunction.createWasiHostFunctionHandle(
+private fun WasiPreview1HostFunction.createWasiHostFunctionHandle(
     host: EmbedderHost,
     memory: Memory,
     wasiMemoryReader: WasiMemoryReader,
