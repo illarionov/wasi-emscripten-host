@@ -16,27 +16,22 @@ import com.vanniktech.maven.publish.SonatypeHost
  */
 plugins {
     id("at.released.weh.gradle.documentation.dokkatoo.subproject")
+    id("at.released.weh.gradle.multiplatform.distribution.subproject")
     id("org.jetbrains.kotlin.multiplatform")
     id("com.vanniktech.maven.publish.base")
 }
-
-createWehVersionsExtension()
 
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
 
-private val publishedMavenLocalRoot = project.rootProject.layout.buildDirectory.dir("localMaven")
+createWehVersionsExtension()
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     publishing {
         repositories {
-            maven {
-                name = "test"
-                setUrl(publishedMavenLocalRoot.map { it.dir("test") })
-            }
             maven {
                 name = "PixnewsS3"
                 setUrl("s3://maven.pixnews.ru/")

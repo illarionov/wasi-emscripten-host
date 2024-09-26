@@ -19,6 +19,7 @@ private val apiReferenceDirectory = tasks.named("dokkatooGeneratePublicationHtml
 private val docusaurusWebsiteDirectory = tasks.named("buildDocusaurusWebsite")
 
 tasks.register<Sync>("buildWebsite") {
+    description = "Assembles the final website from docusaurus output and api refernce into outputs/website"
     from(docusaurusWebsiteDirectory)
     from(apiReferenceDirectory) {
         into("api")

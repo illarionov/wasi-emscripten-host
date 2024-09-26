@@ -74,6 +74,7 @@ jobs:
           ./gradlew -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           --no-configuration-cache
           build
+          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'aggregate-distribution:foldDistribution' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_mavencentral) && 'publishAllPublicationsToMavenCentralRepository' || '' }}
           --stacktrace
@@ -91,6 +92,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Build №${{ github.run_number }}
+          files: |
+            aggregate-distribution/build/distribution/maven-wasi-emscripten-host-*.zip
           draft: true
           prerelease: true

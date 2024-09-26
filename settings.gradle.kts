@@ -32,6 +32,7 @@ buildscript {
 rootProject.name = "wasi-emscripten-host"
 
 include("aggregate-documentation")
+include("aggregate-distribution")
 include("bindings-chasm")
 include("bindings-chicory")
 include("bindings-graalvm241")
