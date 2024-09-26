@@ -16,7 +16,7 @@ internal fun Identifier.className(
 
 internal fun Identifier.markerAnnotationClassName(
     typenamesPackage: String,
-): ClassName = ClassName(typenamesPackage, this.toUpperCamelCaseClassName() + "Def")
+): ClassName = ClassName(typenamesPackage, this.toUpperCamelCaseClassName() + "Type")
 
 internal fun Identifier.flagsObjectName(
     typenamesPackage: String,
