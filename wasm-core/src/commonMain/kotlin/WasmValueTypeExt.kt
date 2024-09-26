@@ -9,7 +9,7 @@ package at.released.weh.wasm.core
 import at.released.weh.wasm.core.WasmValueTypes.I32
 
 @WasmValueType
-public val POINTER: Int get() = I32
+public const val POINTER: Int = I32
 
 @WasmValueType
 public inline fun witxPointer(
