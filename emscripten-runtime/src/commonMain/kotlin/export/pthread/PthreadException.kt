@@ -15,7 +15,7 @@ public class PthreadException : RuntimeException {
         message: String?,
         errCode: Int? = null,
     ) : super(message) {
-        this.errCode = errCode?.let { Errno.fromErrNoCode(it) }
+        this.errCode = errCode?.let(Errno::fromCode)
     }
 
     public constructor(
@@ -23,6 +23,6 @@ public class PthreadException : RuntimeException {
         cause: Throwable?,
         errCode: Int? = null,
     ) : super(message, cause) {
-        this.errCode = errCode?.let { Errno.fromErrNoCode(it) }
+        this.errCode = errCode?.let(Errno::fromCode)
     }
 }

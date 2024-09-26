@@ -13,7 +13,7 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
-import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Ciovec
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
@@ -59,7 +59,7 @@ private class FdWrite(
     private fun fdWrite(
         memory: WasmMemory,
         fd: Int,
-        @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
+        @IntWasmPtr(Ciovec::class) pCiov: WasmPtr,
         cIovCnt: Int,
         @IntWasmPtr(Int::class) pNum: WasmPtr,
     ): Int {

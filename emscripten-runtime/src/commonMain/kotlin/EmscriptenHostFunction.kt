@@ -8,8 +8,8 @@
 
 package at.released.weh.emcripten.runtime
 
+import at.released.weh.wasi.preview1.WasiValueTypes.HANDLE
 import at.released.weh.wasi.preview1.WasiValueTypes.U8
-import at.released.weh.wasi.preview1.type.FdWasmValueType
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
@@ -170,7 +170,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FCHOWN32(
         wasmName = "__syscall_fchown32",
         paramTypes = listOf(
-            FdWasmValueType, // fd
+            HANDLE, // fd
             I32, // owner,
             I32, // group,
         ),
@@ -193,7 +193,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_FSTAT64(
         wasmName = "__syscall_fstat64",
         paramTypes = listOf(
-            FdWasmValueType,
+            HANDLE, // fd
             witxPointer(U8), // statbuf
         ),
         retType = I32,
@@ -234,7 +234,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_OPENAT(
         wasmName = "__syscall_openat",
         paramTypes = listOf(
-            FdWasmValueType, // dirfd
+            HANDLE, // dirfd
             witxPointer(U8), // pathname
             I32, // flags
             I32, // mode / varargs
@@ -244,7 +244,7 @@ public enum class EmscriptenHostFunction(
     SYSCALL_READLINKAT(
         wasmName = "__syscall_readlinkat",
         paramTypes = listOf(
-            FdWasmValueType, // dirfd
+            HANDLE, // dirfd
             witxPointer(U8), // pathname
             witxPointer(U8), // buf
             I32, // bufsiz

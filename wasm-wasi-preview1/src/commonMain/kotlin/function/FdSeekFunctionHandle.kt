@@ -11,7 +11,7 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WhenceMapper
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
@@ -21,7 +21,7 @@ import at.released.weh.wasm.core.memory.Memory
 
 public class FdSeekFunctionHandle(
     host: EmbedderHost,
-) : WasiHostFunctionHandle(WasiHostFunction.FD_SEEK, host) {
+) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_SEEK, host) {
     public fun execute(
         memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,

@@ -7,13 +7,13 @@
 package at.released.weh.bindings.graalvm241.host.module.wasi
 
 import at.released.weh.bindings.graalvm241.host.memory.GraalvmWasmHostMemoryAdapter
-import at.released.weh.wasi.preview1.function.WasiHostFunctionHandle
+import at.released.weh.wasi.preview1.function.WasiPreview1HostFunctionHandle
 import org.graalvm.wasm.WasmLanguage
 import org.graalvm.wasm.WasmModule
 import org.graalvm.wasm.memory.WasmMemory
 import org.graalvm.wasm.nodes.WasmRootNode
 
-internal open class BaseWasiWasmNode<H : WasiHostFunctionHandle>(
+internal open class BaseWasiWasmNode<H : WasiPreview1HostFunctionHandle>(
     language: WasmLanguage,
     private val module: WasmModule,
     val handle: H,

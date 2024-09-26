@@ -11,13 +11,12 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
-import at.released.weh.wasi.preview1.type.CioVec
+import at.released.weh.wasi.preview1.type.Ciovec
 import at.released.weh.wasi.preview1.type.CiovecArray
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -29,17 +28,17 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
     host: EmbedderHost,
     function: HostFunction,
     private val strategy: ReadWriteStrategy,
-) : WasiHostFunctionHandle(function, host) {
+) : WasiPreview1HostFunctionHandle(function, host) {
     public fun execute(
         memory: Memory,
         bulkWriter: WasiMemoryWriter,
         @IntFileDescriptor fd: FileDescriptor,
-        @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
+        @IntWasmPtr(Ciovec::class) pCiov: WasmPtr,
         cIovCnt: Int,
         @IntWasmPtr(Int::class) pNum: WasmPtr,
     ): Errno {
         val cioVecs: CiovecArray = readCiovecs(memory, pCiov, cIovCnt)
-        return bulkWriter.write(fd, strategy, cioVecs.ciovecList)
+        return bulkWriter.write(fd, strategy, cioVecs)
             .onRight { writtenBytes ->
                 memory.writeI32(pNum, writtenBytes.toInt())
             }.fold(
@@ -53,7 +52,7 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
             host: EmbedderHost,
         ): FdWriteFdPWriteFunctionHandle = FdWriteFdPWriteFunctionHandle(
             host,
-            WasiHostFunction.FD_WRITE,
+            WasiPreview1HostFunction.FD_WRITE,
             ReadWriteStrategy.CHANGE_POSITION,
         )
 
@@ -61,23 +60,23 @@ public class FdWriteFdPWriteFunctionHandle private constructor(
             host: EmbedderHost,
         ): FdWriteFdPWriteFunctionHandle = FdWriteFdPWriteFunctionHandle(
             host,
-            WasiHostFunction.FD_PWRITE,
+            WasiPreview1HostFunction.FD_PWRITE,
             ReadWriteStrategy.DO_NOT_CHANGE_POSITION,
         )
 
         private fun readCiovecs(
             memory: ReadOnlyMemory,
-            @IntWasmPtr(CioVec::class) pCiov: WasmPtr,
+            @IntWasmPtr(Ciovec::class) pCiov: WasmPtr,
             ciovCnt: Int,
         ): CiovecArray {
             val iovecs = MutableList(ciovCnt) { idx ->
                 val pCiovec: WasmPtr = pCiov + 8 * idx
-                CioVec(
+                Ciovec(
                     buf = memory.readPtr(pCiovec),
-                    bufLen = Size(memory.readI32(pCiovec + 4)),
+                    bufLen = memory.readI32(pCiovec + 4),
                 )
             }
-            return CiovecArray(iovecs)
+            return iovecs
         }
     }
 }

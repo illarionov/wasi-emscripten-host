@@ -33,7 +33,7 @@ public open class Witx2KotlinExtension @Inject constructor(
     public val outputDirectory: DirectoryProperty = objects.directoryProperty()
         .convention(projectLayout.buildDirectory.dir("generated/witx"))
     public val typenamesPackage: Property<String> = objects.property<String>()
-        .convention("at.released.weh.wasi.preview1.gen.type")
+        .convention("at.released.weh.wasi.preview1.type")
     public val functionsPackage: Property<String> = objects.property<String>()
-        .convention("at.released.weh.wasi.preview1.gen.func")
+        .convention("at.released.weh.wasi.preview1")
 }

@@ -24,61 +24,61 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPwrite
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdRead
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdWrite
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import org.graalvm.polyglot.Context
 import org.graalvm.wasm.WasmInstance
 import org.graalvm.wasm.WasmModule
 
 internal object WasiSnapshotPreview1ModuleBuilder {
-    private val WasiHostFunction.nodeFactory: NodeFactory
+    private val WasiPreview1HostFunction.nodeFactory: NodeFactory
         get() = when (this) {
-            WasiHostFunction.ENVIRON_GET -> ::EnvironGet
-            WasiHostFunction.ENVIRON_SIZES_GET -> ::EnvironSizesGet
-            WasiHostFunction.FD_CLOSE -> ::FdClose
-            WasiHostFunction.FD_PREAD -> ::fdPread
-            WasiHostFunction.FD_PWRITE -> ::fdPwrite
-            WasiHostFunction.FD_READ -> ::fdRead
-            WasiHostFunction.FD_SEEK -> ::FdSeek
-            WasiHostFunction.FD_SYNC -> ::FdSync
-            WasiHostFunction.FD_WRITE -> ::fdWrite
-            WasiHostFunction.SCHED_YIELD -> ::SchedYield
-            WasiHostFunction.ARGS_GET,
-            WasiHostFunction.ARGS_SIZES_GET,
-            WasiHostFunction.CLOCK_RES_GET,
-            WasiHostFunction.CLOCK_TIME_GET,
-            WasiHostFunction.FD_ADVISE,
-            WasiHostFunction.FD_ALLOCATE,
-            WasiHostFunction.FD_DATASYNC,
-            WasiHostFunction.FD_FDSTAT_GET,
-            WasiHostFunction.FD_FDSTAT_SET_FLAGS,
-            WasiHostFunction.FD_FDSTAT_SET_RIGHTS,
-            WasiHostFunction.FD_FILESTAT_GET,
-            WasiHostFunction.FD_FILESTAT_SET_SIZE,
-            WasiHostFunction.FD_FILESTAT_SET_TIMES,
-            WasiHostFunction.FD_PRESTAT_DIR_NAME,
-            WasiHostFunction.FD_PRESTAT_GET,
-            WasiHostFunction.FD_READDIR,
-            WasiHostFunction.FD_RENUMBER,
-            WasiHostFunction.FD_TELL,
-            WasiHostFunction.PATH_CREATE_DIRECTORY,
-            WasiHostFunction.PATH_FILESTAT_GET,
-            WasiHostFunction.PATH_FILESTAT_SET_TIMES,
-            WasiHostFunction.PATH_LINK,
-            WasiHostFunction.PATH_OPEN,
-            WasiHostFunction.PATH_READLINK,
-            WasiHostFunction.PATH_REMOVE_DIRECTORY,
-            WasiHostFunction.PATH_RENAME,
-            WasiHostFunction.PATH_SYMLINK,
-            WasiHostFunction.PATH_UNLINK_FILE,
-            WasiHostFunction.POLL_ONEOFF,
-            WasiHostFunction.PROC_EXIT,
-            WasiHostFunction.PROC_RAISE,
-            WasiHostFunction.RANDOM_GET,
-            WasiHostFunction.SOCK_ACCEPT,
-            WasiHostFunction.SOCK_RECV,
-            WasiHostFunction.SOCK_SEND,
-            WasiHostFunction.SOCK_SHUTDOWN,
+            WasiPreview1HostFunction.ENVIRON_GET -> ::EnvironGet
+            WasiPreview1HostFunction.ENVIRON_SIZES_GET -> ::EnvironSizesGet
+            WasiPreview1HostFunction.FD_CLOSE -> ::FdClose
+            WasiPreview1HostFunction.FD_PREAD -> ::fdPread
+            WasiPreview1HostFunction.FD_PWRITE -> ::fdPwrite
+            WasiPreview1HostFunction.FD_READ -> ::fdRead
+            WasiPreview1HostFunction.FD_SEEK -> ::FdSeek
+            WasiPreview1HostFunction.FD_SYNC -> ::FdSync
+            WasiPreview1HostFunction.FD_WRITE -> ::fdWrite
+            WasiPreview1HostFunction.SCHED_YIELD -> ::SchedYield
+            WasiPreview1HostFunction.ARGS_GET,
+            WasiPreview1HostFunction.ARGS_SIZES_GET,
+            WasiPreview1HostFunction.CLOCK_RES_GET,
+            WasiPreview1HostFunction.CLOCK_TIME_GET,
+            WasiPreview1HostFunction.FD_ADVISE,
+            WasiPreview1HostFunction.FD_ALLOCATE,
+            WasiPreview1HostFunction.FD_DATASYNC,
+            WasiPreview1HostFunction.FD_FDSTAT_GET,
+            WasiPreview1HostFunction.FD_FDSTAT_SET_FLAGS,
+            WasiPreview1HostFunction.FD_FDSTAT_SET_RIGHTS,
+            WasiPreview1HostFunction.FD_FILESTAT_GET,
+            WasiPreview1HostFunction.FD_FILESTAT_SET_SIZE,
+            WasiPreview1HostFunction.FD_FILESTAT_SET_TIMES,
+            WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME,
+            WasiPreview1HostFunction.FD_PRESTAT_GET,
+            WasiPreview1HostFunction.FD_READDIR,
+            WasiPreview1HostFunction.FD_RENUMBER,
+            WasiPreview1HostFunction.FD_TELL,
+            WasiPreview1HostFunction.PATH_CREATE_DIRECTORY,
+            WasiPreview1HostFunction.PATH_FILESTAT_GET,
+            WasiPreview1HostFunction.PATH_FILESTAT_SET_TIMES,
+            WasiPreview1HostFunction.PATH_LINK,
+            WasiPreview1HostFunction.PATH_OPEN,
+            WasiPreview1HostFunction.PATH_READLINK,
+            WasiPreview1HostFunction.PATH_REMOVE_DIRECTORY,
+            WasiPreview1HostFunction.PATH_RENAME,
+            WasiPreview1HostFunction.PATH_SYMLINK,
+            WasiPreview1HostFunction.PATH_UNLINK_FILE,
+            WasiPreview1HostFunction.POLL_ONEOFF,
+            WasiPreview1HostFunction.PROC_EXIT,
+            WasiPreview1HostFunction.PROC_RAISE,
+            WasiPreview1HostFunction.RANDOM_GET,
+            WasiPreview1HostFunction.SOCK_ACCEPT,
+            WasiPreview1HostFunction.SOCK_RECV,
+            WasiPreview1HostFunction.SOCK_SEND,
+            WasiPreview1HostFunction.SOCK_SHUTDOWN,
                 -> notImplementedFunctionNodeFactory(this)
         }
 
@@ -102,7 +102,7 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             context = wasmContext,
             host = host,
             module = wasiModule,
-            functions = WasiHostFunction.entries.associateWith { it.nodeFactory },
+            functions = WasiPreview1HostFunction.entries.associateWith { it.nodeFactory },
         )
     }
 }

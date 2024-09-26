@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.preview1
+package at.released.weh.wasi.preview1.function
 
-import at.released.weh.wasm.core.WasmValueType
+import at.released.weh.host.EmbedderHost
+import at.released.weh.wasm.core.HostFunction
 
-public interface WasiTypename {
-    @WasmValueType
-    public val wasmValueType: Int
-}
+public abstract class WasiPreview1HostFunctionHandle(
+    public val function: HostFunction,
+    public val host: EmbedderHost,
+)

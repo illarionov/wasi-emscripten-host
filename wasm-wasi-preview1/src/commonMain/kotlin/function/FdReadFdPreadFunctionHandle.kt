@@ -11,13 +11,12 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.WasiHostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Iovec
 import at.released.weh.wasi.preview1.type.IovecArray
-import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -29,7 +28,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
     host: EmbedderHost,
     function: HostFunction,
     private val strategy: ReadWriteStrategy,
-) : WasiHostFunctionHandle(function, host) {
+) : WasiPreview1HostFunctionHandle(function, host) {
     public fun execute(
         memory: Memory,
         bulkReader: WasiMemoryReader,
@@ -39,7 +38,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
         @IntWasmPtr(Iovec::class) pNum: WasmPtr,
     ): Errno {
         val ioVecs: IovecArray = readIovecs(memory, pIov, iovCnt)
-        return bulkReader.read(fd, strategy, ioVecs.iovecList)
+        return bulkReader.read(fd, strategy, ioVecs)
             .onRight { readBytes -> memory.writeI32(pNum, readBytes.toInt()) }
             .fold(
                 ifLeft = FileSystemOperationError::wasiErrno,
@@ -52,7 +51,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
             host: EmbedderHost,
         ): FdReadFdPreadFunctionHandle = FdReadFdPreadFunctionHandle(
             host,
-            WasiHostFunction.FD_READ,
+            WasiPreview1HostFunction.FD_READ,
             ReadWriteStrategy.CHANGE_POSITION,
         )
 
@@ -60,7 +59,7 @@ public class FdReadFdPreadFunctionHandle private constructor(
             host: EmbedderHost,
         ): FdReadFdPreadFunctionHandle = FdReadFdPreadFunctionHandle(
             host,
-            WasiHostFunction.FD_PREAD,
+            WasiPreview1HostFunction.FD_PREAD,
             ReadWriteStrategy.DO_NOT_CHANGE_POSITION,
         )
 
@@ -73,10 +72,10 @@ public class FdReadFdPreadFunctionHandle private constructor(
                 val pIovec: WasmPtr = pIov + 8 * idx
                 Iovec(
                     buf = memory.readPtr(pIovec),
-                    bufLen = Size(memory.readI32(pIovec + 4)),
+                    bufLen = memory.readI32(pIovec + 4),
                 )
             }
-            return IovecArray(iovecs)
+            return iovecs
         }
     }
 }
