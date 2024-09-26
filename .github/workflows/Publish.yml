@@ -51,6 +51,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
           cache-encryption-key: ${{ secrets.GRADLEENCRYPTIONKEY }}
           dependency-graph: generate
 
@@ -74,9 +77,10 @@ jobs:
           ./gradlew -Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"
           --no-configuration-cache
           build
+          ${{ (github.event_name == 'push' || inputs.create_github_release) && 'aggregate-distribution:foldDistribution' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_s3) && 'publishAllPublicationsToPixnewsS3Repository' || '' }}
           ${{ (github.event_name == 'push' || inputs.upload_to_mavencentral) && 'publishAllPublicationsToMavenCentralRepository' || '' }}
-          --stacktrace
+          --stacktrace --scan
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -91,6 +95,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Build №${{ github.run_number }}
+          files: |
+            aggregate-distribution/build/distribution/maven-wasi-emscripten-host-*.zip
           draft: true
           prerelease: true
