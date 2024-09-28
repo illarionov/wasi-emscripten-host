@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.test
+@file:Suppress("FILE_CONTAINS_ONLY_COMMENTS", "FILE_NO_BLANK_LINE_BETWEEN_BLOCKS")
 
-/*
- * Convention plugin that configures unit tests in projects with the Kotlin Multiplatform plugin
- */
-tasks.withType<Test> {
-    configureTestTaskDefaults(this)
-}
+// Workaround for https://youtrack.jetbrains.com/issue/KTIJ-15797
+package at.released.weh.wasi.bindings.test

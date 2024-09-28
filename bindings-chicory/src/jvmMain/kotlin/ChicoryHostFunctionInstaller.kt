@@ -88,6 +88,7 @@ public class ChicoryHostFunctionInstaller private constructor(
             memoryAdapter,
             host.fileSystem,
         )
+
         return WasiSnapshotPreview1ModuleBuilder(
             memory = memoryAdapter,
             wasiMemoryReader = wasiMemoryReader,

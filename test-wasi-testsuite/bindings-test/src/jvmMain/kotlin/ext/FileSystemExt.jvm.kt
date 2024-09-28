@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.test
+package at.released.weh.wasi.bindings.test.ext
 
-/*
- * Convention plugin that configures unit tests in projects with the Kotlin Multiplatform plugin
- */
-tasks.withType<Test> {
-    configureTestTaskDefaults(this)
+import kotlinx.io.files.FileSystem
+import kotlinx.io.files.Path
+
+internal actual fun FileSystem.setCurrentWorkingDirectory(path: Path) {
+    // XXX: rewrite, ignore for now
 }

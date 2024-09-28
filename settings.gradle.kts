@@ -21,6 +21,7 @@ buildscript {
         classpath("dev.adamko.dokkatoo:dokkatoo-plugin:2.3.1")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0-Beta1")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.0-Beta1")
         classpath(
             "org.jetbrains.kotlinx.binary-compatibility-validator:" +
                     "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.16.3",
@@ -47,6 +48,7 @@ include("test-filesystem-assertions")
 include("test-io-bootstrap")
 include("test-logger")
 include("test-tempfolder")
+include("test-wasi-testsuite:bindings-test")
 include("wasm-core")
 include("wasm-core-test-fixtures")
 include("wasm-wasi-preview1-core")

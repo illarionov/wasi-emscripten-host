@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.test
+plugins {
+    `kotlin-dsl`
+}
 
-/*
- * Convention plugin that configures unit tests in projects with the Kotlin Multiplatform plugin
- */
-tasks.withType<Test> {
-    configureTestTaskDefaults(this)
+group = "at.released.weh.gradle.wasi.testsuite.codegen"
+
+dependencies {
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.kotlinpoet)
 }
