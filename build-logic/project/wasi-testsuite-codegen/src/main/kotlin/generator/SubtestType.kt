@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.multiplatform.test
+package at.released.weh.gradle.wasi.testsuite.codegen.generator
 
-/*
- * Convention plugin that configures unit tests in projects with the Kotlin Multiplatform plugin
- */
-tasks.withType<Test> {
-    configureTestTaskDefaults(this)
+@Suppress("IDENTIFIER_LENGTH")
+internal enum class SubtestType {
+    ASSEMBLYSCRIPT,
+    C,
+    RUST,
+    ;
+
+    val testsuiteSubdir: String get() = "${this.name.lowercase()}/testsuite"
 }

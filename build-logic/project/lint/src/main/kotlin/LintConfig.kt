@@ -29,7 +29,7 @@ internal fun PatternFilterable.excludeNonLintedDirectories() {
         it.isDirectory && it.relativePath.startsWith("config/copyright")
     }
     exclude {
-        it.isDirectory && it.relativePath.startsWith("vendor")
+        it.isDirectory && it.relativePath.startsWith("test-wasi-testsuite/wasi-testsuite")
     }
     exclude("**/api/**/*.api")
 }
