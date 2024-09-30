@@ -34,4 +34,5 @@ fun registerGenerateTestsTask(
     assemblyscriptIgnores = extension.assemblyscriptIgnores
     cIgnores = extension.cIgnores
     rustIgnores = extension.rustIgnores
+    runtimes = extension.runtimes
 }

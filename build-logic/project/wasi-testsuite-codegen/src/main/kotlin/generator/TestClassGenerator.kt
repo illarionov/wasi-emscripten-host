@@ -24,7 +24,7 @@ internal class TestClassGenerator(
     private val ignoredTestNames: Set<String>,
 ) {
     private val testClassName = ClassName(
-        "$ROOT_PACKAGE.${runtimeBindings.name.lowercase()}",
+        "$ROOT_PACKAGE.${runtimeBindings.name.lowercase().replace("_", "")}",
         formatClassName(runtimeBindings, subtrestType),
     )
 
@@ -68,7 +68,7 @@ internal class TestClassGenerator(
             runtimeBindings: WasmRuntimeBindings,
             subtrestType: SubtestType,
         ) = listOf(
-            runtimeBindings.name,
+            runtimeBindings.name.replace("_", ""),
             subtrestType.name,
             "TestSuite",
         ).joinToString("", transform = ::capitalizeAscii)

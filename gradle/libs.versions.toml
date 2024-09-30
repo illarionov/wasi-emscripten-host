@@ -37,6 +37,7 @@ chasm-memory = { group = "io.github.charlietap.chasm", name = "memory", version.
 chasm-runtime = { group = "io.github.charlietap.chasm", name = "runtime", version.ref = "chasm" }
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 chicory-aot = { group = "com.dylibso.chicory", name = "aot", version.ref = "chicory" }
+chicory-wasi = { group = "com.dylibso.chicory", name = "wasi", version.ref = "chicory" }
 graalvm241-polyglot-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm241" }
 graalvm241-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm-community", version.ref = "graalvm241" }
 graalvm241-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm241" }

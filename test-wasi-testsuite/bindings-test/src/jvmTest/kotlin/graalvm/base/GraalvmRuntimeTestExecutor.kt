@@ -9,6 +9,7 @@ package at.released.weh.wasi.bindings.test.graalvm.base
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
+import kotlinx.io.files.Path
 
 object GraalvmRuntimeTestExecutor : RuntimeTestExecutor {
     object Factory : RuntimeTestExecutor.Factory {
@@ -19,6 +20,7 @@ object GraalvmRuntimeTestExecutor : RuntimeTestExecutor {
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
+        rootDir: Path,
     ): Int {
         TODO("Not yet implemented")
     }

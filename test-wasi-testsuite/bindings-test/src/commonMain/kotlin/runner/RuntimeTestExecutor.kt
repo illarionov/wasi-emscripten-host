@@ -7,12 +7,14 @@
 package at.released.weh.wasi.bindings.test.runner
 
 import at.released.weh.host.EmbedderHost
+import kotlinx.io.files.Path
 
 public interface RuntimeTestExecutor : AutoCloseable {
     public fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
+        rootDir: Path,
     ): Int
 
     public fun interface Factory {
