@@ -139,8 +139,12 @@ kotlin {
             implementation(projects.testLogger)
             implementation(projects.testFilesystemAssertions)
         }
+        jvmMain.dependencies {
+            implementation(kotlin("test-junit"))
+        }
         commonTest.dependencies {
             implementation(projects.bindingsChasm)
+            implementation(kotlin("test"))
         }
         jvmTest.dependencies {
             implementation(libs.chicory.wasi)

@@ -7,7 +7,7 @@
 package at.released.weh.test.utils
 
 internal expect fun createPlatformTempFolder(
-    namePrefix: String = "wsohTest",
+    namePrefix: String = "wehTest",
 ): TempFolder
 
 public interface TempFolder {
@@ -18,7 +18,7 @@ public interface TempFolder {
 
     public companion object {
         public fun create(
-            namePrefix: String = "wsohTest",
+            namePrefix: String = "wehTest",
         ): TempFolder = createPlatformTempFolder(namePrefix)
     }
 }

@@ -6,6 +6,7 @@
 
 package at.released.weh.wasi.bindings.test.ext
 
+import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
 
@@ -14,3 +15,33 @@ internal fun FileSystem.isRegularFile(path: Path) = metadataOrNull(path)?.isRegu
 internal fun FileSystem.isDirectory(path: Path) = metadataOrNull(path)?.isDirectory ?: false
 
 internal expect fun FileSystem.setCurrentWorkingDirectory(path: Path)
+
+internal fun FileSystem.copyRecursively(
+    srcDir: Path,
+    dstDir: Path,
+) {
+    val srcAbsolutePath = resolve(srcDir).toString()
+    walkTopDown(srcDir)
+        .forEach { path ->
+            val srcPath = resolve(path).toString()
+            val isRoot = srcPath == srcAbsolutePath
+
+            if (!srcPath.startsWith(srcAbsolutePath)) {
+                error("Unexpected src path: `$path`")
+            }
+            val srcRelativePath = srcPath.removePrefix(srcAbsolutePath)
+            val dstPath = Path(dstDir, srcRelativePath)
+
+            when {
+                this.isDirectory(path) -> this.createDirectories(dstPath, mustCreate = !isRoot)
+
+                this.isRegularFile(path) -> this.source(path).buffered().use { source ->
+                    this.sink(dstPath).use { sink ->
+                        source.transferTo(sink)
+                    }
+                }
+
+                else -> error("Not a directory or a file")
+            }
+        }
+}
