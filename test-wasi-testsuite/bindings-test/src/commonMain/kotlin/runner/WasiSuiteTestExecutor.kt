@@ -11,6 +11,7 @@ import assertk.assertions.isEqualTo
 import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
+import at.released.weh.wasi.bindings.test.ext.copyRecursively
 import at.released.weh.wasi.bindings.test.ext.setCurrentWorkingDirectory
 import at.released.weh.wasi.bindings.test.ext.walkBottomUp
 import kotlinx.io.buffered
@@ -30,6 +31,7 @@ public class WasiSuiteTestExecutor(
     private val testsRoot: Path,
     private val testName: String,
     private val runtimeTestExecutor: RuntimeTestExecutor,
+    private val tempRoot: Path,
     private val fileSystem: FileSystem = SystemFileSystem,
 ) {
     private val argumentsFilePath: Path get() = Path(testsRoot, "$testName.json")
@@ -39,13 +41,15 @@ public class WasiSuiteTestExecutor(
         val wasmFilename = readWasm()
         val arguments = readArguments()
         val host = setupHost(arguments)
-        fileSystem.setCurrentWorkingDirectory(testsRoot)
+        prepareTempRoot(arguments.dirs)
+
+        fileSystem.setCurrentWorkingDirectory(tempRoot)
         val exitCode = try {
             runtimeTestExecutor.runTest(
                 wasmFile = wasmFilename,
                 host = host,
                 arguments = arguments,
-                rootDir = testsRoot,
+                rootDir = tempRoot,
             )
         } finally {
             cleanup()
@@ -67,6 +71,16 @@ public class WasiSuiteTestExecutor(
 
     private fun readWasm(): ByteArray = fileSystem.source(wasmFilePath).buffered().readByteArray()
 
+    private fun prepareTempRoot(
+        dirs: List<String>,
+    ) {
+        for (dir in dirs) {
+            val srcDir = Path(testsRoot, dir)
+            val dstDir = Path(tempRoot, dir)
+            fileSystem.copyRecursively(srcDir, dstDir)
+        }
+    }
+
     private fun setupHost(
         arguments: WasiTestsuiteArguments,
     ): EmbedderHost {
@@ -78,8 +92,8 @@ public class WasiSuiteTestExecutor(
     }
 
     private fun cleanup() {
-        fileSystem.walkBottomUp(testsRoot)
-            .filter { it.name.endsWith(".cleanup") }
-            .forEach { fileSystem.delete(it) }
+        fileSystem.walkBottomUp(tempRoot)
+            .filter { it != tempRoot }
+            .forEach { fileSystem.delete(it, mustExist = true) }
     }
 }

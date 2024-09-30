@@ -6,19 +6,39 @@
 
 package at.released.weh.wasi.bindings.test
 
+import at.released.weh.test.utils.TempFolder
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiSuiteTestExecutor
 import kotlinx.io.files.Path
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 public abstract class WasiTestSuiteBaseTest(
     public val wasiTestsRoot: Path,
     public val wasmRuntimeExecutorFactory: RuntimeTestExecutor.Factory,
 ) {
+    private var tempFolder: TempFolder? = null
+
+    @BeforeTest
+    public fun setup() {
+        tempFolder = TempFolder.create()
+    }
+
+    @AfterTest
+    public fun cleanup() {
+        tempFolder?.delete()
+    }
+
     protected fun runTest(
         testName: String,
     ) {
         wasmRuntimeExecutorFactory().use { executor ->
-            WasiSuiteTestExecutor(wasiTestsRoot, testName, executor).runTest()
+            WasiSuiteTestExecutor(
+                testsRoot = wasiTestsRoot,
+                testName = testName,
+                runtimeTestExecutor = executor,
+                tempRoot = Path(tempFolder!!.path),
+            ).runTest()
         }
     }
 }
