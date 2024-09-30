@@ -21,6 +21,7 @@ import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Internal
@@ -29,6 +30,7 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.listProperty
+import org.gradle.kotlin.dsl.setProperty
 import java.io.File
 import javax.inject.Inject
 
@@ -52,6 +54,10 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
     val rustIgnores: ListProperty<String> = objects.listProperty<String>()
         .convention(emptyList())
 
+    @get:Input
+    val runtimes: SetProperty<WasmRuntimeBindings> = objects.setProperty<WasmRuntimeBindings>()
+        .convention(WasmRuntimeBindings.values().toList())
+
     @get:Internal
     val codegenRoot: Provider<Directory> = projectLayout.buildDirectory.dir("generated/wasi-testsuite-tests")
 
@@ -66,7 +72,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
     @TaskAction
     fun generate() {
         val testSpecs: Map<WasmRuntimeBindings, List<FileSpec>> =
-            WasmRuntimeBindings.values().associateWith { bindings ->
+            runtimes.get().associateWith { bindings: WasmRuntimeBindings ->
                 SubtestType.values().map { subtestType ->
                     TestClassGenerator(
                         runtimeBindings = bindings,
@@ -79,7 +85,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
 
         val commonTestOutputDirectory = commonTestOutputDirectory.get().asFile
         commonTestOutputDirectory.deleteContentRecursively()
-        testSpecs[CHASM]!!.forEach { it.writeTo(commonTestOutputDirectory) }
+        testSpecs[CHASM]?.forEach { it.writeTo(commonTestOutputDirectory) }
 
         val jvmTestOutputDirectory = jvmTestOutputDirectory.get().asFile
         jvmTestOutputDirectory.deleteContentRecursively()

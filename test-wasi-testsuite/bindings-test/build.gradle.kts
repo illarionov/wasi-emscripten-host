@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.jetbrains.kotlin.gradle.plugin.ExecutionTaskHolder
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
@@ -22,6 +23,11 @@ private val wasiTestSuiteRoot = layout.projectDirectory.dir("../wasi-testsuite/t
 
 wasiTestsuiteTestGen {
     wasiTestsuiteTestsRoot = wasiTestSuiteRoot
+    runtimes = setOf(
+        WasmRuntimeBindings.CHASM,
+        WasmRuntimeBindings.CHICORY,
+        WasmRuntimeBindings.GRAALVM,
+    )
     assemblyscriptIgnores = listOf(
         "args_get-multiple-arguments",
         "args_sizes_get-multiple-arguments",
@@ -135,6 +141,11 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.bindingsChasm)
+        }
+        jvmTest.dependencies {
+            implementation(libs.chicory.wasi)
+            implementation(projects.bindingsChicory)
+            implementation(projects.bindingsGraalvm241)
         }
     }
 }

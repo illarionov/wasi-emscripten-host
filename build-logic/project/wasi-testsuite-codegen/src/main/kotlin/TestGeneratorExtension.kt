@@ -6,13 +6,17 @@
 
 package at.released.weh.gradle.wasi.testsuite.codegen
 
+import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.SetProperty
 import org.gradle.kotlin.dsl.create
 
 internal fun Project.createTestGeneratorExtension(): TestGeneratorExtension {
-    return extensions.create<TestGeneratorExtension>("wasiTestsuiteTestGen")
+    return extensions.create<TestGeneratorExtension>("wasiTestsuiteTestGen").apply {
+        this.runtimes.convention(WasmRuntimeBindings.values().toList())
+    }
 }
 
 public interface TestGeneratorExtension {
@@ -20,4 +24,5 @@ public interface TestGeneratorExtension {
     val assemblyscriptIgnores: ListProperty<String>
     val cIgnores: ListProperty<String>
     val rustIgnores: ListProperty<String>
+    val runtimes: SetProperty<WasmRuntimeBindings>
 }

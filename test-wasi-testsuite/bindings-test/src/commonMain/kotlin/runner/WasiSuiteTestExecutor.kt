@@ -45,6 +45,7 @@ public class WasiSuiteTestExecutor(
                 wasmFile = wasmFilename,
                 host = host,
                 arguments = arguments,
+                rootDir = testsRoot,
             )
         } finally {
             cleanup()
@@ -54,9 +55,15 @@ public class WasiSuiteTestExecutor(
         // XXX: check stderr
     }
 
-    private fun readArguments(): WasiTestsuiteArguments = Json.decodeFromString(
-        fileSystem.source(argumentsFilePath).buffered().readString(),
-    )
+    private fun readArguments(): WasiTestsuiteArguments {
+        if (!fileSystem.exists(argumentsFilePath)) {
+            return WasiTestsuiteArguments()
+        }
+
+        return Json.decodeFromString(
+            fileSystem.source(argumentsFilePath).buffered().readString(),
+        )
+    }
 
     private fun readWasm(): ByteArray = fileSystem.source(wasmFilePath).buffered().readByteArray()
 

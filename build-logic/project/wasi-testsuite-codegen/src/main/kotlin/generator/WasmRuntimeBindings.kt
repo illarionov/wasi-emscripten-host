@@ -8,7 +8,7 @@ package at.released.weh.gradle.wasi.testsuite.codegen.generator
 
 import com.squareup.kotlinpoet.ClassName
 
-internal enum class WasmRuntimeBindings(
+public enum class WasmRuntimeBindings(
     val testExecutorfactoryClassName: ClassName,
 ) {
     CHASM(
@@ -21,6 +21,12 @@ internal enum class WasmRuntimeBindings(
         testExecutorfactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.chicory.base",
             "ChicoryRuntimeTestExecutor",
+        ).nestedClass("Factory"),
+    ),
+    CHICORY_NATIVE(
+        testExecutorfactoryClassName = ClassName(
+            "at.released.weh.wasi.bindings.test.chicory.base",
+            "ChicoryNativeRuntimeTestExecutor",
         ).nestedClass("Factory"),
     ),
     GRAALVM(

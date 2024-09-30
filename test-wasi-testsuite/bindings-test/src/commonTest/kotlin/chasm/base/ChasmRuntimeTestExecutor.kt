@@ -20,6 +20,7 @@ import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32
 import io.github.charlietap.chasm.embedding.shapes.flatMap
 import io.github.charlietap.chasm.embedding.shapes.fold
 import io.github.charlietap.chasm.embedding.store
+import kotlinx.io.files.Path
 
 object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
     object Factory : RuntimeTestExecutor.Factory {
@@ -30,6 +31,7 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
+        rootDir: Path,
     ): Int {
         val store: Store = store()
         val instance = setupInstance(store, wasmFile, host)
