@@ -24,13 +24,13 @@ public class ArgsGetFunctionHandle(
         @IntWasmPtr(Int::class) argvSizesAddr: WasmPtr,
     ): Errno {
         var argvPointer = argvAddr
-        var argSizesPointer = argvSizesAddr
+        var argBufPointer = argvSizesAddr
         host.commandArgsProvider.getCommandArgs()
             .map(WasiArgsEnvironmentFunc::cleanupProgramArgument)
             .forEach { argString ->
-                memory.writeI32(addr = argvPointer, data = argSizesPointer)
+                memory.writeI32(addr = argvPointer, data = argBufPointer)
                 argvPointer += 4
-                argSizesPointer += memory.writeNullTerminatedString(argSizesPointer, argString)
+                argBufPointer += memory.writeNullTerminatedString(argBufPointer, argString)
             }
         return Errno.SUCCESS
     }

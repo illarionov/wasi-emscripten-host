@@ -39,11 +39,13 @@ kotlin {
             implementation(projects.commonUtil)
         }
         commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.assertk)
+            implementation(projects.hostTestFixtures)
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
             implementation(projects.testTempfolder)
-            implementation(kotlin("test"))
-            implementation(libs.assertk)
+            implementation(projects.wasmCoreTestFixtures)
         }
     }
 }

@@ -17,7 +17,7 @@ import kotlinx.io.RawSource
 public open class TestMemory(
     public val size: Int = 1_048_576,
 ) : Memory {
-    public val bytes: ByteArray = ByteArray(size) { 0xdc.toByte() }
+    public val bytes: ByteArray = ByteArray(size) { MEMORY_FILL_BYTE }
 
     public fun fill(value: Byte) {
         bytes.fill(value)
@@ -73,5 +73,9 @@ public open class TestMemory(
 
     override fun toString(): String {
         return "TestMemory(size=$size)"
+    }
+
+    public companion object {
+        public const val MEMORY_FILL_BYTE: Byte = 0xdc.toByte()
     }
 }
