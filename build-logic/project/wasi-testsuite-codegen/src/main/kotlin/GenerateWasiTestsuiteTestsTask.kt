@@ -79,6 +79,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
                         subtrestType = subtestType,
                         testNames = subtestType.getWasiTestNames(),
                         ignoredTestNames = subtestType.getIgnoredTestNames(),
+                        generateJvmCompanionObjects = bindings.isJvmOnly,
                     ).generate()
                 }
             }
@@ -89,7 +90,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
 
         val jvmTestOutputDirectory = jvmTestOutputDirectory.get().asFile
         jvmTestOutputDirectory.deleteContentRecursively()
-        testSpecs.filter { it.key != CHASM }.forEach { (_, specs) ->
+        testSpecs.filter { it.key.isJvmOnly }.forEach { (_, specs) ->
             specs.forEach {
                 it.writeTo(jvmTestOutputDirectory)
             }
@@ -107,6 +108,9 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
     }.toSet()
 
     private companion object {
+        private val WasmRuntimeBindings.isJvmOnly: Boolean
+            get() = this != CHASM
+
         private fun File.deleteContentRecursively() = this.walkBottomUp()
             .filter { it != this }
             .forEach(File::delete)

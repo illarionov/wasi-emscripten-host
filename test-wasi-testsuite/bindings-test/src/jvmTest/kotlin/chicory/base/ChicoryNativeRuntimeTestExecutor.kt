@@ -26,10 +26,6 @@ import kotlin.text.Charsets.UTF_8
  * Chicory implementation of WASI Preview 1 for reference
  */
 object ChicoryNativeRuntimeTestExecutor : RuntimeTestExecutor {
-    object Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChicoryNativeRuntimeTestExecutor
-    }
-
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -80,5 +76,8 @@ object ChicoryNativeRuntimeTestExecutor : RuntimeTestExecutor {
         }
     }
 
-    override fun close() = Unit
+    class Factory : RuntimeTestExecutor.Factory {
+        override fun invoke(): RuntimeTestExecutor = ChicoryNativeRuntimeTestExecutor
+        override fun close() = Unit
+    }
 }

@@ -6,24 +6,57 @@
 
 package at.released.weh.wasi.bindings.test.graalvm.base
 
+import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
+import at.released.weh.bindings.graalvm241.MemorySource
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import kotlinx.io.files.Path
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.io.ByteSequence
 
-object GraalvmRuntimeTestExecutor : RuntimeTestExecutor {
-    object Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = GraalvmRuntimeTestExecutor
-    }
-
+class GraalvmRuntimeTestExecutor(
+    private val engine: Engine,
+) : RuntimeTestExecutor {
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
         rootDir: Path,
     ): Int {
-        TODO("Not yet implemented")
+        val source = Source.newBuilder("wasm", ByteSequence.create(wasmFile), "testproc").build()
+
+        val context: Context = Context.newBuilder()
+            .engine(engine)
+            .build()
+        context.use {
+            context.initialize("wasm")
+
+            val installer = GraalvmHostFunctionInstaller(context) {
+                this.host = host
+            }
+            installer.setupWasiPreview1Module(
+                // XXX remove
+                memory = MemorySource.ExportedMemory(),
+            )
+
+            context.eval(source)
+
+            val startFunc = context
+                .getBindings("wasm")
+                .getMember("testproc")
+                .getMember("_start")
+
+            startFunc.execute()
+            return 0
+        }
     }
 
-    override fun close() = Unit
+    class Factory : RuntimeTestExecutor.Factory {
+        private val engine = Engine.newBuilder("wasm").build()
+        override fun invoke(): RuntimeTestExecutor = GraalvmRuntimeTestExecutor(engine)
+        override fun close() = engine.close()
+    }
 }

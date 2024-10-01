@@ -32,7 +32,7 @@ public abstract class WasiTestSuiteBaseTest(
     protected fun runTest(
         testName: String,
     ) {
-        wasmRuntimeExecutorFactory().use { executor ->
+        wasmRuntimeExecutorFactory().let { executor ->
             WasiSuiteTestExecutor(
                 testsRoot = wasiTestsRoot,
                 testName = testName,
