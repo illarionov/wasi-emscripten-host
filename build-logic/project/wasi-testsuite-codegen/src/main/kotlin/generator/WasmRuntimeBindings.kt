@@ -35,4 +35,10 @@ public enum class WasmRuntimeBindings(
             "GraalvmRuntimeTestExecutor",
         ).nestedClass("Factory"),
     ),
+    GRAALVM_NATIVE(
+        testExecutorfactoryClassName = ClassName(
+            "at.released.weh.wasi.bindings.test.graalvm.base",
+            "GraalvmNativeRuntimeTestExecutor",
+        ).nestedClass("Factory"),
+    ),
 }

@@ -14,6 +14,7 @@ import at.released.weh.host.SystemEnvProvider
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
 import at.released.weh.wasi.bindings.test.ext.setCurrentWorkingDirectory
 import at.released.weh.wasi.bindings.test.ext.walkBottomUp
+import kotlinx.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
@@ -94,6 +95,14 @@ public class WasiSuiteTestExecutor(
     private fun cleanup() {
         fileSystem.walkBottomUp(tempRoot)
             .filter { it != tempRoot }
-            .forEach { fileSystem.delete(it, mustExist = true) }
+            .forEach {
+                try {
+                    fileSystem.delete(it, mustExist = false)
+                } catch (deletionFailed: IOException) {
+                    // XXX: usually symlink, IGNORE for now
+                    @Suppress("DEBUG_PRINT")
+                    println("Can not delete `$it`: $deletionFailed")
+                }
+            }
     }
 }
