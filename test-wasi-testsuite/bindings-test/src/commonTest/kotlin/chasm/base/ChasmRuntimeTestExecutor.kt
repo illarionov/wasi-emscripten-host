@@ -23,10 +23,6 @@ import io.github.charlietap.chasm.embedding.store
 import kotlinx.io.files.Path
 
 object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
-    object Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChasmRuntimeTestExecutor
-    }
-
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -41,8 +37,6 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
         )
         return exitCode
     }
-
-    override fun close() = Unit
 
     private fun setupInstance(
         store: Store,
@@ -69,4 +63,9 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
     }
 
     class WasmException(message: String) : RuntimeException(message)
+
+    class Factory : RuntimeTestExecutor.Factory {
+        override fun invoke(): RuntimeTestExecutor = ChasmRuntimeTestExecutor
+        override fun close() = Unit
+    }
 }

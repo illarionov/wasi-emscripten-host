@@ -23,10 +23,6 @@ import kotlinx.io.files.Path
 object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
     private const val INITIAL_MEMORY_SIZE_PAGES = 258
 
-    object Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChicoryRuntimeTestExecutor
-    }
-
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -63,5 +59,8 @@ object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
         return instance.export("_start").apply()[0].asInt()
     }
 
-    override fun close() = Unit
+    class Factory : RuntimeTestExecutor.Factory {
+        override fun invoke(): RuntimeTestExecutor = ChicoryRuntimeTestExecutor
+        override fun close() = Unit
+    }
 }
