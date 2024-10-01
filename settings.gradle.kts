@@ -19,7 +19,7 @@ buildscript {
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.29.0")
         classpath("dev.adamko.dokkatoo:dokkatoo-plugin:2.4.0")
-        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
+        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0-Beta1")
         classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.0-Beta1")
         classpath(
