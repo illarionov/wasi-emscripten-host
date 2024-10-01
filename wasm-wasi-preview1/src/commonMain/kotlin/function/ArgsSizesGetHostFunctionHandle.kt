@@ -21,14 +21,14 @@ public class ArgsSizesGetHostFunctionHandle(
     public fun execute(
         memory: Memory,
         @IntWasmPtr(Int::class) argvAddr: WasmPtr,
-        @IntWasmPtr(Int::class) argvBufAddr: WasmPtr,
+        @IntWasmPtr(Int::class) argvBufSizeAddr: WasmPtr,
     ): Errno {
         val args = host.commandArgsProvider.getCommandArgs()
         val count = args.size
         val dataLength = args.sumOf { cleanupProgramArgument(it).encodedNullTerminatedStringLength() }
 
         memory.writeI32(addr = argvAddr, data = count)
-        memory.writeI32(addr = argvBufAddr, data = dataLength)
+        memory.writeI32(addr = argvBufSizeAddr, data = dataLength)
         return Errno.SUCCESS
     }
 }
