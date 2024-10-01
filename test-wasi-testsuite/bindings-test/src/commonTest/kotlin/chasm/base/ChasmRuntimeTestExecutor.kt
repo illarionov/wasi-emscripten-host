@@ -16,7 +16,6 @@ import io.github.charlietap.chasm.embedding.module
 import io.github.charlietap.chasm.embedding.shapes.Import
 import io.github.charlietap.chasm.embedding.shapes.Instance
 import io.github.charlietap.chasm.embedding.shapes.Store
-import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32
 import io.github.charlietap.chasm.embedding.shapes.flatMap
 import io.github.charlietap.chasm.embedding.shapes.fold
 import io.github.charlietap.chasm.embedding.store
@@ -31,9 +30,13 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
     ): Int {
         val store: Store = store()
         val instance = setupInstance(store, wasmFile, host)
+
         val exitCode = invoke(store, instance, "_start").fold(
-            onSuccess = { (it[0] as I32).value },
-            onError = { error("Chasm error: $it") },
+            onSuccess = { 0 },
+            onError = {
+                // TODO: read exit code
+                -1
+            },
         )
         return exitCode
     }

@@ -17,6 +17,8 @@ import com.dylibso.chicory.runtime.HostMemory
 import com.dylibso.chicory.runtime.HostTable
 import com.dylibso.chicory.runtime.Memory
 import com.dylibso.chicory.runtime.Module
+import com.dylibso.chicory.runtime.exceptions.WASMMachineException
+import com.dylibso.chicory.wasi.WasiExitException
 import com.dylibso.chicory.wasm.types.MemoryLimits
 import kotlinx.io.files.Path
 
@@ -56,7 +58,16 @@ object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
 
         // Instantiate the WebAssembly module
         val instance = module.instantiate()
-        return instance.export("_start").apply()[0].asInt()
+        val exitCode = try {
+            instance.export("_start").apply()
+            0
+        } catch (exit: WasiExitException) {
+            exit.exitCode()
+        } catch (machineException: WASMMachineException) {
+            (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
+        }
+
+        return exitCode
     }
 
     class Factory : RuntimeTestExecutor.Factory {

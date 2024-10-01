@@ -13,6 +13,8 @@ import at.released.weh.bindings.graalvm241.ext.withWasmContext
 import at.released.weh.bindings.graalvm241.host.memory.SharedMemoryWaiterListStore
 import at.released.weh.bindings.graalvm241.host.module.NodeFactory
 import at.released.weh.bindings.graalvm241.host.module.notImplementedFunctionNodeFactory
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.ArgsGet
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.ArgsSizesGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdClose
@@ -43,8 +45,8 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.FD_SYNC -> ::FdSync
             WasiPreview1HostFunction.FD_WRITE -> ::fdWrite
             WasiPreview1HostFunction.SCHED_YIELD -> ::SchedYield
-            WasiPreview1HostFunction.ARGS_GET,
-            WasiPreview1HostFunction.ARGS_SIZES_GET,
+            WasiPreview1HostFunction.ARGS_GET -> ::ArgsGet
+            WasiPreview1HostFunction.ARGS_SIZES_GET -> ::ArgsSizesGet
             WasiPreview1HostFunction.CLOCK_RES_GET,
             WasiPreview1HostFunction.CLOCK_TIME_GET,
             WasiPreview1HostFunction.FD_ADVISE,

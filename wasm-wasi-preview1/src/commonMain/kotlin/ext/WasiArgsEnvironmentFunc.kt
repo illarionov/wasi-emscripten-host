@@ -6,7 +6,11 @@
 
 package at.released.weh.wasi.preview1.ext
 
-internal object WasiEnvironmentFunc {
+internal object WasiArgsEnvironmentFunc {
     // TODO: sanitize `=`?
     internal fun Map.Entry<String, String>.encodeEnvToWasi(): String = "$key=$value"
+
+    internal fun cleanupProgramArgument(
+        arg: String,
+    ): String = arg.replace("\u0000", "")
 }
