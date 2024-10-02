@@ -5,6 +5,8 @@ public final class at/released/weh/wasm/core/test/assertions/MemoryAssertionsKt 
 }
 
 public class at/released/weh/wasm/core/test/fixtures/TestMemory : at/released/weh/wasm/core/memory/Memory {
+	public static final field Companion Lat/released/weh/wasm/core/test/fixtures/TestMemory$Companion;
+	public static final field MEMORY_FILL_BYTE B
 	public fun <init> ()V
 	public fun <init> (I)V
 	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -20,6 +22,9 @@ public class at/released/weh/wasm/core/test/fixtures/TestMemory : at/released/we
 	public fun writeI32 (II)V
 	public fun writeI64 (IJ)V
 	public fun writeI8 (IB)V
+}
+
+public final class at/released/weh/wasm/core/test/fixtures/TestMemory$Companion {
 }
 
 public final class at/released/weh/wasm/core/test/fixtures/TestMemoryRawSource : at/released/weh/wasm/core/memory/MemoryRawSource {

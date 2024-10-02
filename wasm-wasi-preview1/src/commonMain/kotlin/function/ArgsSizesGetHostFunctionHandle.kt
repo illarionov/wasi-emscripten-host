@@ -9,31 +9,26 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
-import at.released.weh.wasi.preview1.ext.WasiArgsEnvironmentFunc.encodeEnvToWasi
+import at.released.weh.wasi.preview1.ext.WasiArgsEnvironmentFunc.cleanupProgramArgument
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
 
-public class EnvironSizesGetFunctionHandle(
+public class ArgsSizesGetHostFunctionHandle(
     host: EmbedderHost,
-) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.ENVIRON_SIZES_GET, host) {
+) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.ARGS_SIZES_GET, host) {
     public fun execute(
         memory: Memory,
-        @IntWasmPtr(Int::class) environCountAddr: WasmPtr,
-        @IntWasmPtr(Int::class) environSizeAddr: WasmPtr,
+        @IntWasmPtr(Int::class) argvAddr: WasmPtr,
+        @IntWasmPtr(Int::class) argvBufSizeAddr: WasmPtr,
     ): Errno {
-        val env = host.systemEnvProvider.getSystemEnv()
-        val count = env.size
-        val dataLength = env.entries.sumOf { it.encodeEnvToWasi().encodedNullTerminatedStringLength() }
-        memory.writeI32(
-            addr = environCountAddr,
-            data = count,
-        )
-        memory.writeI32(
-            addr = environSizeAddr,
-            data = dataLength,
-        )
+        val args = host.commandArgsProvider.getCommandArgs()
+        val count = args.size
+        val dataLength = args.sumOf { cleanupProgramArgument(it).encodedNullTerminatedStringLength() }
+
+        memory.writeI32(addr = argvAddr, data = count)
+        memory.writeI32(addr = argvBufSizeAddr, data = dataLength)
         return Errno.SUCCESS
     }
 }

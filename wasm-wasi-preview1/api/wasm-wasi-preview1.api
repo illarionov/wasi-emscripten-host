@@ -1,3 +1,13 @@
+public final class at/released/weh/wasi/preview1/function/ArgsGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
+public final class at/released/weh/wasi/preview1/function/ArgsSizesGetHostFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
 public final class at/released/weh/wasi/preview1/function/EnvironGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;

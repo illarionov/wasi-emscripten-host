@@ -6,6 +6,13 @@
 
 package at.released.weh.host
 
+/**
+ * Provides command line arguments passed to an application.
+ */
 public fun interface CommandArgsProvider {
+    /**
+     * Returns the command line arguments of the application.
+     * The first argument should be the "name" of the program.
+     */
     public fun getCommandArgs(): List<String>
 }

@@ -9,6 +9,8 @@
 package at.released.weh.bindings.chicory.host.module.wasi
 
 import at.released.weh.bindings.chicory.ext.wasmValueTypeToChicoryValueType
+import at.released.weh.bindings.chicory.host.module.wasi.function.ArgsGet
+import at.released.weh.bindings.chicory.host.module.wasi.function.ArgsSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdClose
@@ -22,6 +24,8 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ARGS_GET
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ARGS_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_CLOSE
@@ -69,6 +73,8 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         wasiMemoryReader: WasiMemoryReader,
         wasiMemoryWriter: WasiMemoryWriter,
     ): WasiHostFunctionHandle = when (this) {
+        ARGS_GET -> ArgsGet(host, memory)
+        ARGS_SIZES_GET -> ArgsSizesGet(host, memory)
         ENVIRON_GET -> EnvironGet(host, memory)
         ENVIRON_SIZES_GET -> EnvironSizesGet(host, memory)
         FD_CLOSE -> FdClose(host)

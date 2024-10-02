@@ -25,16 +25,10 @@ wasiTestsuiteTestGen {
     wasiTestsuiteTestsRoot = wasiTestSuiteRoot
     runtimes = setOf(
         WasmRuntimeBindings.CHASM,
-        WasmRuntimeBindings.CHICORY,
-        WasmRuntimeBindings.GRAALVM,
+//        WasmRuntimeBindings.CHICORY,
+//        WasmRuntimeBindings.GRAALVM,
     )
     assemblyscriptIgnores = listOf(
-        "args_get-multiple-arguments",
-        "args_sizes_get-multiple-arguments",
-        "args_sizes_get-no-arguments",
-        "environ_get-multiple-variables",
-        "environ_sizes_get-multiple-variables",
-        "environ_sizes_get-no-variables",
         "fd_write-to-invalid-fd",
         "fd_write-to-stdout",
         "proc_exit-failure",

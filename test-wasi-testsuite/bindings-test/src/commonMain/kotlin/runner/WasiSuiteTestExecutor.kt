@@ -86,7 +86,7 @@ public class WasiSuiteTestExecutor(
         arguments: WasiTestsuiteArguments,
     ): EmbedderHost {
         return EmbedderHost.Builder().apply {
-            commandArgsProvider = CommandArgsProvider(arguments::args)
+            commandArgsProvider = CommandArgsProvider { listOf("testproc") + arguments.args }
             systemEnvProvider = SystemEnvProvider(arguments::env)
             // XXX: setup stdout / stderr / preopen directories / current working directory
         }.build()
