@@ -20,6 +20,7 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironSize
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdClose
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSeek
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSync
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.SchedYield
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPread
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPwrite
@@ -47,6 +48,7 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.SCHED_YIELD -> ::SchedYield
             WasiPreview1HostFunction.ARGS_GET -> ::ArgsGet
             WasiPreview1HostFunction.ARGS_SIZES_GET -> ::ArgsSizesGet
+            WasiPreview1HostFunction.RANDOM_GET -> ::RandomGet
             WasiPreview1HostFunction.CLOCK_RES_GET,
             WasiPreview1HostFunction.CLOCK_TIME_GET,
             WasiPreview1HostFunction.FD_ADVISE,
@@ -76,7 +78,6 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.POLL_ONEOFF,
             WasiPreview1HostFunction.PROC_EXIT,
             WasiPreview1HostFunction.PROC_RAISE,
-            WasiPreview1HostFunction.RANDOM_GET,
             WasiPreview1HostFunction.SOCK_ACCEPT,
             WasiPreview1HostFunction.SOCK_RECV,
             WasiPreview1HostFunction.SOCK_SEND,

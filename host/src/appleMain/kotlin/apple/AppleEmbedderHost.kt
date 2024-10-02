@@ -19,23 +19,20 @@ import at.released.weh.host.SystemEnvProvider
 import at.released.weh.host.TimeZoneInfo
 import at.released.weh.host.internal.CommonClock
 import at.released.weh.host.internal.CommonMonotonicClock
+import at.released.weh.host.internal.EmptyCommandArgsProvider
 
 public class AppleEmbedderHost(
     override val rootLogger: Logger,
     override val systemEnvProvider: SystemEnvProvider = AppleSystemEnvProvider,
-    override val commandArgsProvider: CommandArgsProvider = AppleCommandArgsProvider,
+    override val commandArgsProvider: CommandArgsProvider = EmptyCommandArgsProvider,
     override val fileSystem: FileSystem = NotImplementedFileSystem,
     override val monotonicClock: MonotonicClock = CommonMonotonicClock(),
     override val clock: Clock = CommonClock(),
     override val localTimeFormatter: LocalTimeFormatter = AppleLocalTimeFormatter(),
     override val timeZoneInfo: TimeZoneInfo.Provider = AppleTimeZoneInfoProvider(),
-    override val entropySource: EntropySource = AppleEntropySource(),
+    override val entropySource: EntropySource = AppleEntropySource,
 ) : EmbedderHost {
     internal object AppleSystemEnvProvider : SystemEnvProvider {
-        override fun getSystemEnv(): Map<String, String> = emptyMap() // TODO:
-    }
-
-    internal object AppleCommandArgsProvider : CommandArgsProvider {
-        override fun getCommandArgs(): List<String> = emptyList()
+        override fun getSystemEnv(): Map<String, String> = emptyMap()
     }
 }
