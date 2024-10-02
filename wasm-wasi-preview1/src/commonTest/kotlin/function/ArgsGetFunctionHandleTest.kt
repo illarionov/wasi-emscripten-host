@@ -58,9 +58,9 @@ class ArgsGetFunctionHandleTest {
 
         assertThat(code).isEqualTo(SUCCESS)
 
-        testArgOffsets.forEach { (argvOffset, bufOffsset) ->
+        testArgOffsets.forEach { (argvOffset, bufOffset) ->
             assertThat(memory.readI32(argvAddr + argvOffset))
-                .isEqualTo(argvBufAddr + bufOffsset)
+                .isEqualTo(argvBufAddr + bufOffset)
         }
 
         testArgs.forEachIndexed { index, testArg ->
