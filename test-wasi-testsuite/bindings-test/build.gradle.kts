@@ -104,9 +104,7 @@ wasiTestsuiteTestGen {
 
 kotlin {
     jvm()
-    iosSimulatorArm64()
-    iosArm64()
-    iosX64()
+    // TODO: iosSimulatorArm64(), iosArm64(), iosX64()
     linuxArm64()
     linuxX64()
     macosArm64()

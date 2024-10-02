@@ -7,8 +7,11 @@
 package at.released.weh.wasi.preview1.ext
 
 internal object WasiArgsEnvironmentFunc {
-    // TODO: sanitize `=`?
-    internal fun Map.Entry<String, String>.encodeEnvToWasi(): String = "$key=$value"
+    internal fun Map.Entry<String, String>.encodeEnvToWasi(): String {
+        val key = cleanupProgramArgument(this.key).replace("=", "")
+        val value = cleanupProgramArgument(value)
+        return "$key=$value"
+    }
 
     internal fun cleanupProgramArgument(
         arg: String,
