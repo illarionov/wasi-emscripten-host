@@ -33,8 +33,6 @@ wasiTestsuiteTestGen {
         "fd_write-to-stdout",
         "proc_exit-failure",
         "proc_exit-success",
-        "random_get-non-zero-length",
-        "random_get-zero-length",
     )
     cIgnores = listOf(
         "clock_getres-monotonic",

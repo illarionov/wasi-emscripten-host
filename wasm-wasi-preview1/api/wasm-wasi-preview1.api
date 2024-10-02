@@ -55,6 +55,11 @@ public final class at/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctio
 	public final fun fdWrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
 }
 
+public final class at/released/weh/wasi/preview1/function/RandomGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
 public final class at/released/weh/wasi/preview1/function/SchedYieldFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute ()Lat/released/weh/wasi/preview1/type/Errno;

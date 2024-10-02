@@ -20,6 +20,7 @@ import at.released.weh.bindings.chasm.module.wasi.function.FdSync
 import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Companion.fdPwrite
 import at.released.weh.bindings.chasm.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
 import at.released.weh.bindings.chasm.module.wasi.function.NotImplementedWasiFunction
+import at.released.weh.bindings.chasm.module.wasi.function.RandomGet
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ARGS_GET
@@ -33,6 +34,7 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SYNC
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_WRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.RANDOM_GET
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
@@ -87,5 +89,6 @@ private fun WasiPreview1HostFunction.createWasiHostFunctionHandle(
     FD_SEEK -> FdSeek(host, memory)
     FD_SYNC -> FdSync(host)
     FD_WRITE -> fdWrite(host, memory, wasiMemoryWriter)
+    RANDOM_GET -> RandomGet(host, memory)
     else -> NotImplementedWasiFunction(this)
 }

@@ -21,6 +21,7 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.FdSync
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdPwrite
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
 import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
+import at.released.weh.bindings.chicory.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
@@ -35,6 +36,7 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SYNC
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_WRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.RANDOM_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.SCHED_YIELD
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
@@ -67,6 +69,7 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun WasiPreview1HostFunction.createWasiHostFunctionHandle(
         host: EmbedderHost,
         memory: Memory,
@@ -85,6 +88,7 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         FD_SYNC -> FdSync(host)
         FD_WRITE -> fdWrite(host, memory, wasiMemoryWriter)
         SCHED_YIELD -> SchedYield(host)
+        RANDOM_GET -> RandomGet(host, memory)
         else -> NotImplemented
     }
 
