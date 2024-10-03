@@ -70,10 +70,6 @@ internal object LinuxReadFd : FileSystemOperationHandler<ReadFd, ReadError, ULon
         iovecs: List<FileSystemByteBuffer>,
         block: (fd: Int, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
     ): Either<Int, ULong> {
-        if (iovecs.isEmpty()) {
-            return 0UL.right()
-        }
-
         val bytesMoved = memScoped {
             val size = iovecs.size
             val posixIovecs: CArrayPointer<iovec> = allocArray(size)

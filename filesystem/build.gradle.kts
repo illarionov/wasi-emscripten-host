@@ -41,12 +41,14 @@ kotlin {
             api(libs.android.annotation)
             api(libs.arrow.core)
             implementation(projects.commonUtil)
+            implementation(projects.testLogger)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(projects.testFilesystemAssertions)
-            implementation(projects.testTempfolder)
             implementation(projects.filesystemTestFixtures)
+            implementation(projects.testFilesystemAssertions)
+            implementation(projects.testIgnoreAnnotations)
+            implementation(projects.testTempfolder)
             implementation(libs.assertk)
         }
     }

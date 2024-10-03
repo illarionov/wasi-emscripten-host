@@ -8,9 +8,11 @@ package at.released.weh.wasi.bindings.test.runner
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.weh.common.api.Logger
 import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
+import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
 import at.released.weh.wasi.bindings.test.ext.setCurrentWorkingDirectory
 import at.released.weh.wasi.bindings.test.ext.walkBottomUp
@@ -34,6 +36,7 @@ public class WasiSuiteTestExecutor(
     private val runtimeTestExecutor: RuntimeTestExecutor,
     private val tempRoot: Path,
     private val fileSystem: FileSystem = SystemFileSystem,
+    private val logger: Logger = TestLogger(),
 ) {
     private val argumentsFilePath: Path get() = Path(testsRoot, "$testName.json")
     private val wasmFilePath: Path get() = Path(testsRoot, "$testName.wasm")
@@ -86,6 +89,7 @@ public class WasiSuiteTestExecutor(
         arguments: WasiTestsuiteArguments,
     ): EmbedderHost {
         return EmbedderHost.Builder().apply {
+            rootLogger = logger
             commandArgsProvider = CommandArgsProvider { listOf("testproc") + arguments.args }
             systemEnvProvider = SystemEnvProvider(arguments::env)
             // XXX: setup stdout / stderr / preopen directories / current working directory
