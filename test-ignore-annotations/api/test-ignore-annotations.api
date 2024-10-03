@@ -1,0 +1,24 @@
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreApple : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreIos : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreJs : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreLinux : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreMacos : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreMingw : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreNative : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreWasmJs : java/lang/annotation/Annotation {
+}
+

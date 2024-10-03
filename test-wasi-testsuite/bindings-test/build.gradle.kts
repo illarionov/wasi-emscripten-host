@@ -29,10 +29,7 @@ wasiTestsuiteTestGen {
 //        WasmRuntimeBindings.GRAALVM,
     )
     assemblyscriptIgnores = listOf(
-        "fd_write-to-invalid-fd",
         "fd_write-to-stdout",
-        "proc_exit-failure",
-        "proc_exit-success",
     )
     cIgnores = listOf(
         "clock_getres-monotonic",

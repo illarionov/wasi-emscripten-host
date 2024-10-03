@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.bindings.chasm.module.wasi
+package at.released.weh.bindings.chasm.exception
 
-import at.released.weh.wasi.preview1.type.Errno
-import io.github.charlietap.chasm.embedding.shapes.Value
-
-internal fun interface WasiHostFunctionHandle {
-    operator fun invoke(args: List<Value>): Errno
-}
+/**
+ * Thrown when application calls "proc_exit" WASI function.
+ */
+public class ProcExitException(
+    public val exitCode: Int,
+) : ChasmException()

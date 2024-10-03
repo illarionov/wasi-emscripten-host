@@ -1,3 +1,10 @@
+public class at/released/weh/wasi/preview1/WasiPreview1Exception : java/lang/RuntimeException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
 public final class at/released/weh/wasi/preview1/function/ArgsGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
@@ -53,6 +60,16 @@ public final class at/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctio
 public final class at/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion {
 	public final fun fdPwrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
 	public final fun fdWrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
+}
+
+public final class at/released/weh/wasi/preview1/function/ProcExitFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (I)Ljava/lang/Void;
+}
+
+public final class at/released/weh/wasi/preview1/function/ProcExitFunctionHandle$ProcExitException : at/released/weh/wasi/preview1/WasiPreview1Exception {
+	public fun <init> (I)V
+	public final fun getExitCode ()I
 }
 
 public final class at/released/weh/wasi/preview1/function/RandomGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {

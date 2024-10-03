@@ -7,6 +7,7 @@
 package at.released.weh.wasi.bindings.test.chasm.base
 
 import at.released.weh.bindings.chasm.ChasmHostFunctionInstaller
+import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
@@ -31,13 +32,17 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
         val store: Store = store()
         val instance = setupInstance(store, wasmFile, host)
 
-        val exitCode = invoke(store, instance, "_start").fold(
-            onSuccess = { 0 },
-            onError = {
-                // TODO: read exit code
-                -1
-            },
-        )
+        val exitCode = try {
+            invoke(store, instance, "_start").fold(
+                onSuccess = { 0 },
+                onError = {
+                    // XXX read exit code
+                    -1
+                },
+            )
+        } catch (pre: ProcExitException) {
+            pre.exitCode
+        }
         return exitCode
     }
 
