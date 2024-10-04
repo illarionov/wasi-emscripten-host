@@ -28,9 +28,6 @@ wasiTestsuiteTestGen {
 //        WasmRuntimeBindings.CHICORY,
 //        WasmRuntimeBindings.GRAALVM,
     )
-    assemblyscriptIgnores = listOf(
-        "fd_write-to-stdout",
-    )
     cIgnores = listOf(
         "clock_getres-monotonic",
         "clock_getres-realtime",
@@ -120,6 +117,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.serialization.json)
+            implementation(projects.filesystemTestFixtures)
             implementation(projects.host)
             implementation(projects.testTempfolder)
             implementation(projects.testIoBootstrap)

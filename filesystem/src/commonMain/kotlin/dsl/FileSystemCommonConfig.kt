@@ -12,4 +12,5 @@ import at.released.weh.filesystem.FileSystemInterceptor
 @InternalWasiEmscriptenHostApi
 public interface FileSystemCommonConfig {
     public val interceptors: List<FileSystemInterceptor>
+    public val stdioConfig: StandardInputOutputConfigBlock
 }

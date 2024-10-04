@@ -11,16 +11,15 @@ import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.NioChmod.Companion.setPosixFilePermissions
+import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.chmod.ChmodFd
-import java.nio.file.Path
 
 internal class NioChmodFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<ChmodFd, ChmodError, Unit> {
     override fun invoke(input: ChmodFd): Either<ChmodError, Unit> {
-        val path: Path = fsState.fileDescriptors.get(input.fd)?.path
-            ?: return BadFileDescriptor("File descriptor `${input.fd}` is not opened").left()
-        return setPosixFilePermissions(path, input.mode)
+        val channel = fsState.get(input.fd)
+            ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
+        return channel.chmod(input.mode)
     }
 }

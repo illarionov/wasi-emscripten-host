@@ -11,16 +11,14 @@ import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.NioSetTimestamp.Companion.setTimestamp
 import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
-import java.nio.file.Path
 
 internal class NioSetTimestampFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<SetTimestampFd, SetTimestampError, Unit> {
     override fun invoke(input: SetTimestampFd): Either<SetTimestampError, Unit> {
-        val path: Path = fsState.fileDescriptors.get(input.fd)?.path
-            ?: return BadFileDescriptor("File descriptor `${input.fd}` is not opened").left()
-        return setTimestamp(path, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
+        val resource = fsState.get(input.fd)
+            ?: return BadFileDescriptor("File descriptor `${input.fd}` is not open").left()
+        return resource.setTimestamp(input.atimeNanoseconds, input.mtimeNanoseconds)
     }
 }

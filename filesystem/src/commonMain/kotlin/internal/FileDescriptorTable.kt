@@ -17,14 +17,24 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 internal class FileDescriptorTable<V : Any> {
     private val fds: MutableMap<FileDescriptor, V> = mutableMapOf()
 
-    fun allocate(
-        resourceFactory: (FileDescriptor) -> V,
-    ): Either<Nfile, V> = getFreeFd()
+    fun set(
+        descriptor: FileDescriptor,
+        handle: V,
+    ) {
+        require(!fds.containsKey(descriptor)) {
+            "$descriptor already set"
+        }
+        fds[descriptor] = handle
+    }
+
+    fun <R : V> allocate(
+        resourceFactory: (FileDescriptor) -> R,
+    ): Either<Nfile, Pair<FileDescriptor, R>> = getFreeFd()
         .map { fd ->
             val channel = resourceFactory(fd)
             val old = fds.put(fd, channel)
             require(old == null) { "File descriptor $fd already been allocated" }
-            channel
+            fd to channel
         }
 
     operator fun get(@IntFileDescriptor fd: FileDescriptor): V? = fds[fd]

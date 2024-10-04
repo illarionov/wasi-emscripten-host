@@ -28,7 +28,7 @@ import platform.posix.PATH_MAX
 import platform.posix.errno
 import platform.posix.getcwd
 
-internal object LinuxGetCurrentWorkingDirectory :
+internal class LinuxGetCurrentWorkingDirectory :
     FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, String> {
     override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, String> {
         val byteArray = ByteArray(PATH_MAX)

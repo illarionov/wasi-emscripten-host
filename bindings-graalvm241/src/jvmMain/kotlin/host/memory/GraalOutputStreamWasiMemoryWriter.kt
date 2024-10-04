@@ -13,7 +13,7 @@ import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.WriteError
-import at.released.weh.filesystem.ext.writeCatching
+import at.released.weh.filesystem.fdresource.nio.writeCatching
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.op.RunWithChannelFd

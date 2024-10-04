@@ -10,3 +10,49 @@ public abstract interface class at/released/weh/filesystem/test/fixtures/TestFil
 	public abstract fun invoke (Ljava/lang/Object;)Larrow/core/Either;
 }
 
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider : at/released/weh/filesystem/stdio/SinkProvider {
+	public fun <init> ()V
+	public final fun getSink ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider$TestSink;
+	public fun open ()Lkotlinx/io/RawSink;
+	public final fun readContent ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider$TestSink : kotlinx/io/RawSink {
+	public fun <init> ()V
+	public fun close ()V
+	public fun flush ()V
+	public final fun getBuffer ()Lkotlinx/io/Buffer;
+	public fun write (Lkotlinx/io/Buffer;J)V
+}
+
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider : at/released/weh/filesystem/stdio/SourceProvider {
+	public static final field Companion Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider$Companion;
+	public fun <init> ()V
+	public final fun getSource ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider$TestRawSource;
+	public fun open ()Lkotlinx/io/RawSource;
+}
+
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider$Companion {
+	public final fun invoke (Ljava/lang/String;)Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider;
+	public final fun invoke ([B)Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider;
+}
+
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider$TestRawSource : kotlinx/io/RawSource {
+	public fun <init> ()V
+	public fun close ()V
+	public final fun getBuffer ()Lkotlinx/io/Buffer;
+	public fun readAtMostTo (Lkotlinx/io/Buffer;J)J
+}
+
+public final class at/released/weh/filesystem/test/fixtures/stdio/TestStandardInputOutput : at/released/weh/filesystem/stdio/StandardInputOutput {
+	public fun <init> ()V
+	public fun <init> (Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider;Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider;Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public fun getStderrProvider ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;
+	public synthetic fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
+	public fun getStdinProvider ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSourceProvider;
+	public synthetic fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public fun getStdoutProvider ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider;
+}
+

@@ -12,7 +12,7 @@ import arrow.core.left
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadError
-import at.released.weh.filesystem.ext.readCatching
+import at.released.weh.filesystem.fdresource.nio.readCatching
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.op.RunWithChannelFd

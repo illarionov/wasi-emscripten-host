@@ -26,12 +26,22 @@ public final class at/released/weh/filesystem/dsl/FileSystemConfigBlock {
 	public final fun addInterceptor (Lat/released/weh/filesystem/FileSystemInterceptor;)V
 	public final fun addInterceptor (Lkotlin/jvm/functions/Function1;)V
 	public final fun engine (Lkotlin/jvm/functions/Function1;)V
+	public final fun stdio (Lkotlin/jvm/functions/Function1;)V
 }
 
 public abstract interface annotation class at/released/weh/filesystem/dsl/FileSystemDsl : java/lang/annotation/Annotation {
 }
 
 public abstract interface class at/released/weh/filesystem/dsl/FileSystemEngineConfig {
+}
+
+public final class at/released/weh/filesystem/dsl/StandardInputOutputConfigBlock {
+	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
+	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
+	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/SourceProvider;)V
+	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 }
 
 public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
@@ -1299,5 +1309,29 @@ public final class at/released/weh/filesystem/op/unlink/UnlinkFile {
 
 public final class at/released/weh/filesystem/op/unlink/UnlinkFile$Companion : at/released/weh/filesystem/op/FileSystemOperation {
 	public fun getTag ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/stdio/JvmStandardInputOutput : at/released/weh/filesystem/stdio/StandardInputOutput {
+	public static final field INSTANCE Lat/released/weh/filesystem/stdio/JvmStandardInputOutput;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
+	public fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/SinkProvider {
+	public abstract fun open ()Lkotlinx/io/RawSink;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/SourceProvider {
+	public abstract fun open ()Lkotlinx/io/RawSource;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/StandardInputOutput {
+	public abstract fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public abstract fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
+	public abstract fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
 }
 

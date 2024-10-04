@@ -11,19 +11,21 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
+import at.released.weh.filesystem.fdresource.NioFileFdResource
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.nio.NioFileSystemState.Companion.getFileResource
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
-import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenedMessage
+import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import kotlin.concurrent.withLock
 
 internal class NioRunWithRawChannelFd<R : Any> internal constructor(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<RunWithChannelFd<R>, FileSystemOperationError, R> {
     override fun invoke(input: RunWithChannelFd<R>): Either<FileSystemOperationError, R> = fsState.fsLock.withLock {
-        val channel = fsState.fileDescriptors.get(input.fd)
-            ?: return input.block(BadFileDescriptor(fileDescriptorNotOpenedMessage(input.fd)).left())
-        return channel.lock.withLock {
-            input.block(channel.channel.right())
+        val nioFileResource: NioFileFdResource = fsState.getFileResource(input.fd)
+            ?: return input.block(BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left())
+        return nioFileResource.lock.withLock {
+            input.block(nioFileResource.channel.channel.right())
         }
     }
 }

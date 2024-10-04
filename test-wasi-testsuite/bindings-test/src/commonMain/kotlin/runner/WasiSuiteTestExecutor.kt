@@ -9,6 +9,7 @@ package at.released.weh.wasi.bindings.test.runner
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.common.api.Logger
+import at.released.weh.filesystem.test.fixtures.stdio.TestSinkProvider
 import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
@@ -40,6 +41,8 @@ public class WasiSuiteTestExecutor(
 ) {
     private val argumentsFilePath: Path get() = Path(testsRoot, "$testName.json")
     private val wasmFilePath: Path get() = Path(testsRoot, "$testName.wasm")
+    private val testStdout = TestSinkProvider()
+    private val testStderr = TestSinkProvider()
 
     public fun runTest() {
         val wasmFilename = readWasm()
@@ -59,8 +62,8 @@ public class WasiSuiteTestExecutor(
             cleanup()
         }
         assertThat(exitCode).isEqualTo(arguments.exitCode)
-        // XXX: check stdout
-        // XXX: check stderr
+        assertThat(testStdout.readContent()).isEqualTo(arguments.stdout)
+        assertThat(testStderr.readContent()).isEqualTo(arguments.stderr)
     }
 
     private fun readArguments(): WasiTestsuiteArguments {
@@ -92,7 +95,9 @@ public class WasiSuiteTestExecutor(
             rootLogger = logger
             commandArgsProvider = CommandArgsProvider { listOf("testproc") + arguments.args }
             systemEnvProvider = SystemEnvProvider(arguments::env)
-            // XXX: setup stdout / stderr / preopen directories / current working directory
+            stdoutProvider = testStdout
+            stderrProvider = testStderr
+            // XXX: setup preopen directories / current working directory
         }.build()
     }
 

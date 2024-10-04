@@ -12,6 +12,7 @@ import at.released.weh.filesystem.FileSystemInterceptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.chmod.Chmod
@@ -36,37 +37,37 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
-import at.released.weh.filesystem.posix.PosixCloseFd
-import at.released.weh.filesystem.posix.base.PosixFileSystemState
+import at.released.weh.filesystem.stdio.StandardInputOutput
 
 public class LinuxFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
+    stdio: StandardInputOutput,
 ) : FileSystem {
-    private val fsState = PosixFileSystemState()
+    private val fsState = LinuxFileSystemState(stdio)
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to LinuxOpen(fsState),
-        CloseFd to PosixCloseFd(fsState),
-        AddAdvisoryLockFd to LinuxAddAdvisoryLockFd,
-        RemoveAdvisoryLockFd to LinuxRemoveAdvisoryLockFd,
-        CheckAccess to LinuxCheckAccess,
-        Chmod to LinuxChmod,
-        ChmodFd to LinuxChmodFd,
-        Chown to LinuxChown,
-        ChownFd to LinuxChownFd,
-        GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory,
-        Mkdir to LinuxMkdir,
-        ReadFd to LinuxReadFd,
-        ReadLink to LinuxReadLink,
-        SeekFd to LinuxSeekFd,
-        SetTimestamp to LinuxSetTimestamp,
-        SetTimestampFd to LinuxSetTimestampFd,
-        Stat to LinuxStat,
-        StatFd to LinuxStatFd,
-        SyncFd to LinuxSync,
-        TruncateFd to LinuxTruncateFd,
-        UnlinkFile to LinuxUnlinkFile,
-        UnlinkDirectory to LinuxUnlinkDirectory,
-        WriteFd to LinuxWriteFd,
+        CloseFd to LinuxCloseFd(fsState),
+        AddAdvisoryLockFd to LinuxAddAdvisoryLockFd(fsState),
+        RemoveAdvisoryLockFd to LinuxRemoveAdvisoryLockFd(fsState),
+        CheckAccess to LinuxCheckAccess(fsState),
+        Chmod to LinuxChmod(fsState),
+        ChmodFd to LinuxChmodFd(fsState),
+        Chown to LinuxChown(fsState),
+        ChownFd to LinuxChownFd(fsState),
+        GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
+        Mkdir to LinuxMkdir(fsState),
+        ReadFd to LinuxReadFd(fsState),
+        ReadLink to LinuxReadLink(fsState),
+        SeekFd to LinuxSeekFd(fsState),
+        SetTimestamp to LinuxSetTimestamp(fsState),
+        SetTimestampFd to LinuxSetTimestampFd(fsState),
+        Stat to LinuxStat(fsState),
+        StatFd to LinuxStatFd(fsState),
+        SyncFd to LinuxSync(fsState),
+        TruncateFd to LinuxTruncateFd(fsState),
+        UnlinkFile to LinuxUnlinkFile(fsState),
+        UnlinkDirectory to LinuxUnlinkDirectory(fsState),
+        WriteFd to LinuxWriteFd(fsState),
     )
     private val fsAdapter = DelegateOperationsFileSystem(operations, interceptors)
 

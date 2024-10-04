@@ -56,10 +56,10 @@ internal class NioOpen(
             }
                 .mapLeft { error -> error.toOpenError(path) }
                 .bind()
-            val fdChannel = fsState.fileDescriptors.add(path, nioChannel)
+            val fdChannelFd = fsState.addFile(path, nioChannel)
                 .mapLeft { noFileDescriptorError -> Nfile(noFileDescriptorError.message) }
                 .bind()
-            fdChannel.fd
+            fdChannelFd.first
         }
     }
 }

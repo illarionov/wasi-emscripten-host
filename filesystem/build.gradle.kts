@@ -40,6 +40,7 @@ kotlin {
             api(projects.commonApi)
             api(libs.android.annotation)
             api(libs.arrow.core)
+            api(libs.kotlinx.io)
             implementation(projects.commonUtil)
             implementation(projects.testLogger)
         }

@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
 /**
- * Retrieves information about the currently opened file [fd].
+ * Retrieves information about the currently open file [fd].
  */
 public data class StatFd(
     @IntFileDescriptor

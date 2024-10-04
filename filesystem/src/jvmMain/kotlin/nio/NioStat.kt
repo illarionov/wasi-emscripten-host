@@ -9,156 +9,20 @@ package at.released.weh.filesystem.nio
 import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
-import arrow.core.raise.either
-import at.released.weh.filesystem.error.AccessDenied
-import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.StatError
-import at.released.weh.filesystem.ext.asLinkOptions
+import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
-import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
-import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
-import at.released.weh.filesystem.op.stat.FileModeType
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.op.stat.StructTimespec
-import java.io.IOException
 import java.nio.file.Path
-import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.attribute.FileTime
-import kotlin.io.path.exists
-import kotlin.io.path.readAttributes
-import at.released.weh.filesystem.error.NotDirectory as BaseNotDirectory
 
 internal class NioStat(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
     override fun invoke(input: Stat): Either<StatError, StructStat> {
         val path: Path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft { it.toStatError() }
+            .mapLeft { NioFileStat.toStatError(it) }
             .getOrElse { return it.left() }
-        return statCatching(path, input.followSymlinks)
-    }
-
-    internal companion object {
-        const val ATTR_UNI_CTIME = "ctime"
-        const val ATTR_UNI_DEV = "dev"
-        const val ATTR_UNI_GID = "gid"
-        const val ATTR_UNI_INO = "ino"
-        const val ATTR_UNI_MODE = "mode"
-        const val ATTR_UNI_NLINK = "nlink"
-        const val ATTR_UNI_RDEV = "rdev"
-        const val ATTR_UNI_UID = "uid"
-        val UNIX_REQUESTED_ATTRIBUTES = "unix:" + listOf(
-            ATTR_UNI_DEV,
-            ATTR_UNI_INO,
-            ATTR_UNI_MODE,
-            ATTR_UNI_NLINK,
-            ATTR_UNI_UID,
-            ATTR_UNI_GID,
-            ATTR_UNI_RDEV,
-            ATTR_UNI_CTIME,
-        ).joinToString(",")
-
-        fun statCatching(
-            path: Path,
-            followSymlinks: Boolean,
-            blockSize: Long = 512L,
-        ): Either<StatError, StructStat> = either {
-            val linkOptions = asLinkOptions(followSymlinks)
-
-            if (!path.exists(options = linkOptions)) {
-                raise(NoEntry("No such file file: `$path`"))
-            }
-
-            val basicFileAttrs: BasicFileAttributes = Either.catch {
-                path.readAttributes<BasicFileAttributes>(options = linkOptions)
-            }
-                .mapLeft { it.readAttributesToStatError() }
-                .bind()
-
-            val unixAttrs: Map<String, Any?> = Either.catch {
-                path.readAttributes(UNIX_REQUESTED_ATTRIBUTES, options = linkOptions)
-            }
-                .mapLeft { it.readAttributesToStatError() }
-                .bind()
-
-            val dev: Long = (unixAttrs[ATTR_UNI_DEV] as? Long) ?: 1L
-            val ino: Long = (unixAttrs[ATTR_UNI_INO] as? Long)
-                ?: basicFileAttrs.fileKey().hashCode().toLong()
-
-            @FileModeType
-            val mode: Int = getModeType(basicFileAttrs, unixAttrs)
-            val nlink: Long = (unixAttrs[ATTR_UNI_NLINK] as? Int)?.toLong() ?: 1L
-            val uid: Long = (unixAttrs[ATTR_UNI_UID] as? Int)?.toLong() ?: 0L
-            val gid: Long = (unixAttrs[ATTR_UNI_GID] as? Int)?.toLong() ?: 0L
-            val rdev: Long = (unixAttrs[ATTR_UNI_RDEV] as? Long)?.toLong() ?: 1L
-            val size: Long = basicFileAttrs.size()
-            val blksize: Long = blockSize
-            val blocks: Long = (size + blksize - 1L) / blksize
-            val mtim: StructTimespec = basicFileAttrs.lastModifiedTime().toTimeSpec()
-
-            val cTimeFileTime = unixAttrs[ATTR_UNI_CTIME] ?: basicFileAttrs.creationTime()
-            val ctim: StructTimespec = (cTimeFileTime as? FileTime)?.toTimeSpec()
-                ?: raise(IoError("Can not get file creation time"))
-            val atim: StructTimespec = basicFileAttrs.lastAccessTime().toTimeSpec()
-
-            StructStat(
-                deviceId = dev,
-                inode = ino,
-                mode = mode,
-                links = nlink,
-                usedId = uid,
-                groupId = gid,
-                specialFileDeviceId = rdev,
-                size = size,
-                blockSize = blksize,
-                blocks = blocks,
-                accessTime = atim,
-                modificationTime = mtim,
-                changeStatusTime = ctim,
-            )
-        }
-
-        @FileModeType
-        private fun getModeType(
-            @Suppress("UnusedParameter") basicAttrs: BasicFileAttributes,
-            unixAttrs: Map<String, Any?>,
-        ): Int {
-            val unixMode = unixAttrs[ATTR_UNI_MODE] as? Int
-            if (unixMode != null) {
-                return unixMode
-            }
-
-            // TODO: guess from Basic mode?
-            // TODO: Add type
-
-            return S_IRWXU or S_IRWXG or S_IRWXO
-        }
-
-        private fun FileTime.toTimeSpec(): StructTimespec = toInstant().run {
-            StructTimespec(
-                seconds = epochSecond,
-                nanoseconds = nano.toLong(),
-            )
-        }
-
-        private fun Throwable.readAttributesToStatError(): StatError = when (this) {
-            is UnsupportedOperationException -> AccessDenied("Can not get BasicFileAttributeView")
-            is IOException -> IoError("Can not read attributes: $message")
-            is SecurityException -> AccessDenied("Can not read attributes: $message")
-            else -> throw IllegalStateException("Unexpected error", this)
-        }
-
-        private fun ResolvePathError.toStatError(): StatError = when (this) {
-            is ResolvePathError.EmptyPath -> NoEntry(message)
-            is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
-            is ResolvePathError.InvalidPath -> BadFileDescriptor(message)
-            is ResolvePathError.NotDirectory -> BaseNotDirectory(message)
-            is ResolvePathError.RelativePath -> BadFileDescriptor(message)
-        }
+        return NioFileStat.getStat(path, input.followSymlinks)
     }
 }

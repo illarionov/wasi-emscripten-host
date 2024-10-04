@@ -29,7 +29,7 @@ internal object MingwSeekFd : FileSystemOperationHandler<SeekFd, SeekError, Long
         return if (offset >= 0) {
             offset.toLong().right()
         } else {
-            errno.errnoToSeekError(input).left()
+            errno.errnoToSeekError().left()
         }
     }
 }

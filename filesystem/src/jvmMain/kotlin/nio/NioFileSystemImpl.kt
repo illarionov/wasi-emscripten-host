@@ -39,14 +39,16 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.nio.file.FileSystems
 
 internal class NioFileSystemImpl(
     javaFs: java.nio.file.FileSystem = FileSystems.getDefault(),
     interceptors: List<FileSystemInterceptor>,
+    stdio: StandardInputOutput,
 ) : FileSystem {
     private val currentDirectoryProvider: CurrentDirectoryProvider = JvmCurrentDirectoryProvider(javaFs)
-    private val fsState = NioFileSystemState(javaFs)
+    private val fsState = NioFileSystemState(javaFs, stdio)
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to NioOpen(fsState),
         CloseFd to NioCloseFd(fsState),

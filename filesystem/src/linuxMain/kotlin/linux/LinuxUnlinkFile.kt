@@ -7,68 +7,17 @@
 package at.released.weh.filesystem.linux
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import at.released.weh.filesystem.error.AccessDenied
-import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.Busy
-import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.NameTooLong
-import at.released.weh.filesystem.error.NoEntry
-import at.released.weh.filesystem.error.NotDirectory
-import at.released.weh.filesystem.error.PathIsDirectory
-import at.released.weh.filesystem.error.PermissionDenied
-import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.ext.toDirFd
+import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
+import at.released.weh.filesystem.linux.native.linuxUnlinkFile
 import at.released.weh.filesystem.op.unlink.UnlinkFile
-import at.released.weh.filesystem.platform.linux.unlinkat
-import platform.posix.EACCES
-import platform.posix.EBADF
-import platform.posix.EBUSY
-import platform.posix.EINVAL
-import platform.posix.EIO
-import platform.posix.EISDIR
-import platform.posix.ELOOP
-import platform.posix.ENAMETOOLONG
-import platform.posix.ENOENT
-import platform.posix.ENOMEM
-import platform.posix.ENOTDIR
-import platform.posix.EPERM
-import platform.posix.EROFS
-import platform.posix.errno
 
-internal object LinuxUnlinkFile : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
-    override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
-        val resultCode = unlinkat(
-            input.baseDirectory.toDirFd(),
-            input.path,
-            0,
-        )
-        return if (resultCode == 0) {
-            Unit.right()
-        } else {
-            errno.errnoToUnlinkFileError(input).left()
+internal class LinuxUnlinkFile(
+    private val fsState: LinuxFileSystemState,
+) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
+    override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> =
+        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
+            linuxUnlinkFile(it, input.path)
         }
-    }
-
-    @Suppress("CyclomaticComplexMethod")
-    fun Int.errnoToUnlinkFileError(request: UnlinkFile): UnlinkError = when (this) {
-        EACCES -> AccessDenied("Cannot unlink file, access denied. Request: $request")
-        EBADF -> BadFileDescriptor("Bad file descriptor `${request.baseDirectory}`")
-        EBUSY -> Busy("Cannot delete file because it is being used by another process. Request: $request")
-        EINVAL -> InvalidArgument("Invalid flag value specified in unlinkat()")
-        EIO -> IoError("Cannot delete file: I/O error.`")
-        EISDIR -> PathIsDirectory("`$request` refers to directory")
-        ELOOP -> TooManySymbolicLinks("Too many symlinks while resolving `$request`")
-        ENAMETOOLONG -> NameTooLong("Name too long while resolving `$request`")
-        ENOENT -> NoEntry("Component of `${request.path}` does not exist or empty")
-        ENOMEM -> IoError("No memory")
-        ENOTDIR -> NotDirectory("`${request.path}` is not a directory")
-        EPERM -> PermissionDenied("Can not delete `$request`: permission denied")
-        EROFS -> InvalidArgument("Can node delete file: read-only file system")
-        else -> InvalidArgument("Other error. Errno: $this")
-    }
 }
