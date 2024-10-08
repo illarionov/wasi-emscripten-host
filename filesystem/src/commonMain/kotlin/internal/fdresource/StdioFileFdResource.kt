@@ -35,6 +35,7 @@ import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.stdio.ExhaustedRawSource
 import at.released.weh.filesystem.stdio.SinkProvider
@@ -55,47 +56,6 @@ internal class StdioFileFdResource(
     private var isOpen: Boolean = true
     private var source: RawSource? = null
     private var sink: RawSink? = null
-
-    override fun readDoNotChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> {
-        return readChangePosition(iovecs)
-    }
-
-    override fun readChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> {
-        val source = readLock.withLock {
-            getOrOpenSourceUnsafe()
-        }
-
-        return source
-            .mapLeft { error ->
-                when (error) {
-                    is StdioReadWriteError.Closed -> BadFileDescriptor(error.message)
-                    is StdioReadWriteError.IoError -> IoError(error.message)
-                }
-            }.flatMap {
-                // TODO: transfers should be atomic
-                it.transferTo(iovecs)
-            }
-    }
-
-    override fun writeDoNotChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> {
-        return writeChangePosition(cIovecs)
-    }
-
-    override fun writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> {
-        val sink = writeLock.withLock {
-            getOrOpenSinkUnsafe()
-        }
-        return sink
-            .mapLeft { error ->
-                when (error) {
-                    is StdioReadWriteError.Closed -> BadFileDescriptor(error.message)
-                    is StdioReadWriteError.IoError -> IoError(error.message)
-                }
-            }.flatMap {
-                // TODO: transfers should be atomic
-                it.transferFrom(cIovecs)
-            }
-    }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
         val sink = writeLock.withLock {
@@ -141,6 +101,35 @@ internal class StdioFileFdResource(
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
         return BadFileDescriptor("Can not seek on stdio descriptor").left()
+    }
+
+    override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
+        val source = readLock.withLock { getOrOpenSourceUnsafe() }
+
+        return source
+            .mapLeft { error ->
+                when (error) {
+                    is StdioReadWriteError.Closed -> BadFileDescriptor(error.message)
+                    is StdioReadWriteError.IoError -> IoError(error.message)
+                }
+            }.flatMap {
+                // TODO: transfers should be atomic
+                it.transferTo(iovecs)
+            }
+    }
+
+    override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
+        val sink = writeLock.withLock { getOrOpenSinkUnsafe() }
+        return sink
+            .mapLeft { error ->
+                when (error) {
+                    is StdioReadWriteError.Closed -> BadFileDescriptor(error.message)
+                    is StdioReadWriteError.IoError -> IoError(error.message)
+                }
+            }.flatMap {
+                // TODO: transfers should be atomic
+                it.transferFrom(cIovecs)
+            }
     }
 
     private fun getOrOpenSinkUnsafe(): Either<StdioReadWriteError, RawSink> {

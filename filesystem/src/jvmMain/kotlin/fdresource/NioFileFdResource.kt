@@ -24,23 +24,22 @@ import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.fdresource.nio.nioAddAdvisoryLock
+import at.released.weh.filesystem.fdresource.nio.nioRead
 import at.released.weh.filesystem.fdresource.nio.nioRemoveAdvisoryLock
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
-import at.released.weh.filesystem.fdresource.nio.readChangePosition
-import at.released.weh.filesystem.fdresource.nio.readDoNotChangePosition
+import at.released.weh.filesystem.fdresource.nio.nioWrite
 import at.released.weh.filesystem.fdresource.nio.setPosition
 import at.released.weh.filesystem.fdresource.nio.sync
 import at.released.weh.filesystem.fdresource.nio.truncate
-import at.released.weh.filesystem.fdresource.nio.writeChangePosition
-import at.released.weh.filesystem.fdresource.nio.writeDoNotChangePosition
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioFileSystemState
 import at.released.weh.filesystem.nio.NioSeekFd.Companion.toSeekError
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import kotlinx.io.IOException
 import java.nio.channels.FileChannel
@@ -58,18 +57,6 @@ internal class NioFileFdResource(
     val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
     val channel = NioFileChannel(path, channel)
 
-    override fun readDoNotChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> =
-        channel.readDoNotChangePosition(iovecs)
-
-    override fun readChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> =
-        channel.readChangePosition(iovecs)
-
-    override fun writeDoNotChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> =
-        channel.writeDoNotChangePosition(cIovecs)
-
-    override fun writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> =
-        channel.writeChangePosition(cIovecs)
-
     override fun stat(): Either<StatError, StructStat> {
         return NioFileStat.getStat(channel.path, true)
     }
@@ -77,6 +64,14 @@ internal class NioFileFdResource(
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
         return channel.setPosition(fileDelta, whence)
             .mapLeft { error -> error.toSeekError() }
+    }
+
+    override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
+        return channel.nioRead(iovecs, strategy)
+    }
+
+    override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
+        return channel.nioWrite(cIovecs, strategy)
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = channel.sync(syncMetadata)

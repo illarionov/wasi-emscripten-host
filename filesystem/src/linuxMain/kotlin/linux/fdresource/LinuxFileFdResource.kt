@@ -29,13 +29,12 @@ import at.released.weh.filesystem.linux.native.linuxStatFd
 import at.released.weh.filesystem.linux.native.linuxSync
 import at.released.weh.filesystem.linux.native.linuxTruncate
 import at.released.weh.filesystem.linux.native.posixClose
-import at.released.weh.filesystem.linux.native.posixReadChangePosition
-import at.released.weh.filesystem.linux.native.posixReadDoNotChangePosition
-import at.released.weh.filesystem.linux.native.posixWriteChangePosition
-import at.released.weh.filesystem.linux.native.posixWriteDoNotChangePosition
+import at.released.weh.filesystem.linux.native.posixRead
+import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeFd
 import at.released.weh.filesystem.posix.fdresource.PosixFileFdResource
@@ -43,22 +42,18 @@ import at.released.weh.filesystem.posix.fdresource.PosixFileFdResource
 internal class LinuxFileFdResource(
     override val nativeFd: NativeFd,
 ) : PosixFileFdResource, FdResource {
-    override fun readDoNotChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> =
-        posixReadDoNotChangePosition(nativeFd, iovecs)
-
-    override fun readChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> =
-        posixReadChangePosition(nativeFd, iovecs)
-
-    override fun writeDoNotChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> =
-        posixWriteDoNotChangePosition(nativeFd, cIovecs)
-
-    override fun writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> =
-        posixWriteChangePosition(nativeFd, cIovecs)
-
     override fun stat(): Either<StatError, StructStat> = linuxStatFd(nativeFd)
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
         return linuxSeek(nativeFd, fileDelta, whence)
+    }
+
+    override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
+        return posixRead(nativeFd, iovecs, strategy)
+    }
+
+    override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
+        return posixWrite(nativeFd, cIovecs, strategy)
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(nativeFd, syncMetadata)

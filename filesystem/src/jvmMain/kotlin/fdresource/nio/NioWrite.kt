@@ -16,13 +16,24 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.ext.asByteBuffer
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import java.io.IOException
 import java.nio.channels.AsynchronousCloseException
 import java.nio.channels.ClosedByInterruptException
 import java.nio.channels.ClosedChannelException
 import java.nio.channels.NonWritableChannelException
 
-internal fun NioFileChannel.writeDoNotChangePosition(
+internal fun NioFileChannel.nioWrite(
+    cIovecs: List<FileSystemByteBuffer>,
+    strategy: ReadWriteStrategy,
+) = when (strategy) {
+    CHANGE_POSITION -> writeChangePosition(cIovecs)
+    DO_NOT_CHANGE_POSITION -> writeDoNotChangePosition(cIovecs)
+}
+
+private fun NioFileChannel.writeDoNotChangePosition(
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> = either {
     var position = getPosition()
@@ -46,7 +57,7 @@ internal fun NioFileChannel.writeDoNotChangePosition(
     totalBytesWritten
 }
 
-internal fun NioFileChannel.writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> {
+private fun NioFileChannel.writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> {
     val byteBuffers = Array(cIovecs.size) { cIovecs[it].asByteBuffer() }
     return writeCatching {
         channel.write(byteBuffers).toULong()

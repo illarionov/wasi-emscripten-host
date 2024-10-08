@@ -22,6 +22,7 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 
 internal interface FdResource {
@@ -29,13 +30,9 @@ internal interface FdResource {
 
     fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long>
 
-    fun readDoNotChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong>
+    fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong>
 
-    fun readChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong>
-
-    fun writeDoNotChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong>
-
-    fun writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong>
+    fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong>
 
     fun sync(syncMetadata: Boolean): Either<SyncError, Unit>
 

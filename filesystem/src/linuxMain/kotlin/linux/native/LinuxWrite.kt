@@ -21,6 +21,9 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.Pipe
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import at.released.weh.filesystem.posix.NativeFd
 import kotlinx.cinterop.CArrayPointer
 import platform.posix.EAGAIN
@@ -41,7 +44,16 @@ import platform.posix.lseek
 import platform.posix.pwritev
 import platform.posix.writev
 
-internal fun posixWriteChangePosition(
+internal fun posixWrite(
+    nativeFd: NativeFd,
+    cIovecs: List<FileSystemByteBuffer>,
+    strategy: ReadWriteStrategy,
+) = when (strategy) {
+    CHANGE_POSITION -> posixWriteChangePosition(nativeFd, cIovecs)
+    DO_NOT_CHANGE_POSITION -> posixWriteDoNotChangePosition(nativeFd, cIovecs)
+}
+
+private fun posixWriteChangePosition(
     nativeFd: NativeFd,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> =
@@ -49,7 +61,7 @@ internal fun posixWriteChangePosition(
         writev(fd.fd, iovecs, size)
     }.mapLeft { errNo -> errNo.errnoToWriteError(nativeFd, cIovecs) }
 
-internal fun posixWriteDoNotChangePosition(
+private fun posixWriteDoNotChangePosition(
     nativeFd: NativeFd,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> {

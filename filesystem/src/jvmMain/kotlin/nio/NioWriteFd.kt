@@ -12,8 +12,6 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.WriteFd
 import kotlin.concurrent.withLock
 
@@ -23,9 +21,6 @@ internal class NioWriteFd(
     override fun invoke(input: WriteFd): Either<WriteError, ULong> = fsState.fsLock.withLock {
         val channel = fsState.get(input.fd)
             ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
-        return when (input.strategy) {
-            DO_NOT_CHANGE_POSITION -> channel.writeDoNotChangePosition(input.cIovecs)
-            CHANGE_POSITION -> channel.writeChangePosition(input.cIovecs)
-        }
+        return channel.write(input.cIovecs, input.strategy)
     }
 }

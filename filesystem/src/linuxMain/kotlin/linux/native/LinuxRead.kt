@@ -18,6 +18,9 @@ import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
 import at.released.weh.filesystem.posix.NativeFd
 import kotlinx.cinterop.CArrayPointer
 import kotlinx.cinterop.CPointer
@@ -41,7 +44,16 @@ import platform.posix.lseek
 import platform.posix.preadv
 import platform.posix.readv
 
-internal fun posixReadChangePosition(
+internal fun posixRead(
+    nativeFd: NativeFd,
+    iovecs: List<FileSystemByteBuffer>,
+    strategy: ReadWriteStrategy,
+) = when (strategy) {
+    CHANGE_POSITION -> posixReadChangePosition(nativeFd, iovecs)
+    DO_NOT_CHANGE_POSITION -> posixReadDoNotChangePosition(nativeFd, iovecs)
+}
+
+private fun posixReadChangePosition(
     nativeFd: NativeFd,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
@@ -50,7 +62,7 @@ internal fun posixReadChangePosition(
     }.mapLeft { errNo -> errNo.errnoToReadError(nativeFd, iovecs) }
 }
 
-internal fun posixReadDoNotChangePosition(
+private fun posixReadDoNotChangePosition(
     nativeFd: NativeFd,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
