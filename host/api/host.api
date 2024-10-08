@@ -28,6 +28,9 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
 	public final fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
 	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
+	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
+	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
 	public final fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
 	public final fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 	public final fun setClock (Lat/released/weh/host/Clock;)V
@@ -37,6 +40,9 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
 	public final fun setMonotonicClock (Lat/released/weh/host/MonotonicClock;)V
 	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
+	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
+	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/SourceProvider;)V
+	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
 	public final fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
 }
@@ -118,20 +124,5 @@ public final class at/released/weh/host/TimeZoneInfo {
 
 public abstract interface class at/released/weh/host/TimeZoneInfo$Provider {
 	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo;
-}
-
-public final class at/released/weh/host/jvm/JvmEmbedderHost : at/released/weh/host/EmbedderHost {
-	public fun <init> ()V
-	public fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/Clock;Lat/released/weh/host/MonotonicClock;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;)V
-	public synthetic fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/Clock;Lat/released/weh/host/MonotonicClock;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getClock ()Lat/released/weh/host/Clock;
-	public fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
-	public fun getEntropySource ()Lat/released/weh/host/EntropySource;
-	public fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
-	public fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
-	public fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
-	public fun getRootLogger ()Lat/released/weh/common/api/Logger;
-	public fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
-	public fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 }
 

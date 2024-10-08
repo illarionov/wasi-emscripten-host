@@ -11,16 +11,14 @@ import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.NioChown.Companion.setPosixUserGroup
+import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.chown.ChownFd
-import java.nio.file.Path
 
 internal class NioChownFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<ChownFd, ChownError, Unit> {
     override fun invoke(input: ChownFd): Either<ChownError, Unit> {
-        val path: Path = fsState.fileDescriptors.get(input.fd)?.path
-            ?: return BadFileDescriptor("File descriptor `${input.fd}` is not opened").left()
-        return setPosixUserGroup(fsState.javaFs, path, input.owner, input.group)
+        val channel = fsState.get(input.fd) ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
+        return channel.chown(input.owner, input.group)
     }
 }

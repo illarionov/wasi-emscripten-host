@@ -8,6 +8,8 @@ package at.released.weh.host
 
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
+import at.released.weh.filesystem.stdio.SinkProvider
+import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.host.EmbedderHost.Builder
 
 internal expect fun createDefaultEmbedderHost(builder: Builder): EmbedderHost
@@ -25,6 +27,9 @@ public interface EmbedderHost {
 
     public class Builder {
         public var rootLogger: Logger = Logger
+        public var stdinProvider: SourceProvider? = null
+        public var stdoutProvider: SinkProvider? = null
+        public var stderrProvider: SinkProvider? = null
         public var systemEnvProvider: SystemEnvProvider? = null
         public var commandArgsProvider: CommandArgsProvider? = null
         public var fileSystem: FileSystem? = null

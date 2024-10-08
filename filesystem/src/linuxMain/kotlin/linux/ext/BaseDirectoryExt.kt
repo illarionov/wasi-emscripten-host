@@ -10,9 +10,11 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.BaseDirectory.None
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.platform.linux.AT_FDCWD
 
-internal fun BaseDirectory.toDirFd(): Int = when (this) {
+@Deprecated("Incorrect, should not be used")
+internal fun BaseDirectory.toDirFd(): FileDescriptor = when (this) {
     None -> AT_FDCWD
     CurrentWorkingDirectory -> AT_FDCWD
     is DirectoryFd -> this.fd

@@ -10,6 +10,7 @@ import arrow.core.Either
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.dsl.FileSystemConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
+import at.released.weh.filesystem.dsl.StandardInputOutputConfigBlock
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.op.FileSystemOperation
 
@@ -18,8 +19,10 @@ public fun <E : FileSystemEngineConfig> FileSystem(
     block: FileSystemConfigBlock<E>.() -> Unit = {},
 ): FileSystem {
     val config = FileSystemConfigBlock<E>().apply(block)
+    val stdioConfig = StandardInputOutputConfigBlock().apply(config.stdioConfig)
     val commonConfig = object : FileSystemCommonConfig {
         override val interceptors: List<FileSystemInterceptor> = config.interceptors
+        override val stdioConfig: StandardInputOutputConfigBlock = stdioConfig
     }
     return engine.create(
         commonConfig = commonConfig,

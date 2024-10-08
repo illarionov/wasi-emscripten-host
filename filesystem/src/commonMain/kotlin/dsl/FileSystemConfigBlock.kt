@@ -19,6 +19,9 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
     internal var engineConfig: E.() -> Unit = {}
         private set
 
+    internal var stdioConfig: StandardInputOutputConfigBlock.() -> Unit = {}
+        private set
+
     public fun addInterceptor(interceptor: FileSystemInterceptor) {
         _interceptors += interceptor
     }
@@ -39,6 +42,14 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
     public fun engine(block: E.() -> Unit) {
         val oldConfig = engineConfig
         engineConfig = {
+            oldConfig()
+            block()
+        }
+    }
+
+    public fun stdio(block: StandardInputOutputConfigBlock.() -> Unit) {
+        val oldConfig = stdioConfig
+        stdioConfig = {
             oldConfig()
             block()
         }

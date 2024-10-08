@@ -9,23 +9,28 @@ package at.released.weh.host
 import at.released.weh.filesystem.nio.NioFileSystem
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.internal.DefaultFileSystem
-import at.released.weh.host.jvm.JvmEmbedderHost
-import at.released.weh.host.jvm.JvmEmbedderHost.JvmClock
-import at.released.weh.host.jvm.JvmEmbedderHost.JvmCommandArgsProvider
-import at.released.weh.host.jvm.JvmEmbedderHost.JvmMonotonicClock
-import at.released.weh.host.jvm.JvmEmbedderHost.JvmSystemEnvProvider
+import at.released.weh.host.jvm.JvmClock
+import at.released.weh.host.jvm.JvmCommandArgsProvider
 import at.released.weh.host.jvm.JvmEntropySource
 import at.released.weh.host.jvm.JvmLocalTimeFormatter
+import at.released.weh.host.jvm.JvmMonotonicClock
+import at.released.weh.host.jvm.JvmSystemEnvProvider
 import at.released.weh.host.jvm.JvmTimeZoneInfoProvider
 
-internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = JvmEmbedderHost(
-    rootLogger = builder.rootLogger,
-    systemEnvProvider = builder.systemEnvProvider ?: JvmSystemEnvProvider,
-    commandArgsProvider = builder.commandArgsProvider ?: JvmCommandArgsProvider,
-    fileSystem = builder.fileSystem ?: DefaultFileSystem(NioFileSystem, builder.rootLogger.withTag("FSnio")),
-    clock = builder.clock ?: JvmClock,
-    monotonicClock = builder.monotonicClock ?: JvmMonotonicClock,
-    localTimeFormatter = builder.localTimeFormatter ?: JvmLocalTimeFormatter(),
-    timeZoneInfo = builder.timeZoneInfo ?: JvmTimeZoneInfoProvider(),
-    entropySource = builder.entropySource ?: JvmEntropySource(),
-)
+internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = object : EmbedderHost {
+    override val rootLogger = builder.rootLogger
+    override val systemEnvProvider = builder.systemEnvProvider ?: JvmSystemEnvProvider
+    override val commandArgsProvider = builder.commandArgsProvider ?: JvmCommandArgsProvider
+    override val fileSystem = builder.fileSystem ?: DefaultFileSystem(
+        NioFileSystem,
+        builder.stdinProvider,
+        builder.stdoutProvider,
+        builder.stderrProvider,
+        builder.rootLogger.withTag("FSnio"),
+    )
+    override val clock = builder.clock ?: JvmClock
+    override val monotonicClock = builder.monotonicClock ?: JvmMonotonicClock
+    override val localTimeFormatter = builder.localTimeFormatter ?: JvmLocalTimeFormatter()
+    override val timeZoneInfo = builder.timeZoneInfo ?: JvmTimeZoneInfoProvider()
+    override val entropySource = builder.entropySource ?: JvmEntropySource()
+}

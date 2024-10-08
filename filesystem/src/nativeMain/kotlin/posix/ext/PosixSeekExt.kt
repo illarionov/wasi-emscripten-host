@@ -12,18 +12,17 @@ import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.Overflow
 import at.released.weh.filesystem.error.Pipe
 import at.released.weh.filesystem.error.SeekError
-import at.released.weh.filesystem.op.seek.SeekFd
 import platform.posix.EBADF
 import platform.posix.EINVAL
 import platform.posix.ENXIO
 import platform.posix.EOVERFLOW
 import platform.posix.ESPIPE
 
-internal fun Int.errnoToSeekError(request: SeekFd): SeekError = when (this) {
-    EBADF -> BadFileDescriptor("Bad file descriptor ${request.fd}")
-    EINVAL -> InvalidArgument("Whence is not valid. Request: $request")
-    ENXIO -> Nxio("Invalid offset. Request: $request")
-    EOVERFLOW -> Overflow("Resulting offset is out of range. Request: $request")
-    ESPIPE -> Pipe("${request.fd} is not a file")
+internal fun Int.errnoToSeekError(): SeekError = when (this) {
+    EBADF -> BadFileDescriptor("Bad file descriptor")
+    EINVAL -> InvalidArgument("Whence is not valid.")
+    ENXIO -> Nxio("Invalid offset.")
+    EOVERFLOW -> Overflow("Resulting offset is out of range.")
+    ESPIPE -> Pipe("fd is not a file")
     else -> InvalidArgument("Other error. Errno: $this")
 }

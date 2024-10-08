@@ -31,6 +31,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.filesystem)
+            api(libs.kotlinx.io)
         }
     }
 }

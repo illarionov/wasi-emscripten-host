@@ -10,6 +10,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 
 internal object Messages {
-    internal fun fileDescriptorNotOpenedMessage(@IntFileDescriptor fd: FileDescriptor) =
-        "File descriptor `$fd` is not opened"
+    internal fun fileDescriptorNotOpenMessage(@IntFileDescriptor fd: FileDescriptor) =
+        "File descriptor `$fd` is not open"
 }

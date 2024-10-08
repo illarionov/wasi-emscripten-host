@@ -7,29 +7,15 @@
 package at.released.weh.filesystem.linux
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import at.released.weh.filesystem.error.Overflow
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.op.seek.SeekFd
-import at.released.weh.filesystem.posix.ext.errnoToSeekError
-import at.released.weh.filesystem.posix.ext.toPosixWhence
-import platform.posix.errno
-import platform.posix.lseek
 
-internal object LinuxSeekFd : FileSystemOperationHandler<SeekFd, SeekError, Long> {
-    override fun invoke(input: SeekFd): Either<SeekError, Long> {
-        if (input.fileDelta > Int.MAX_VALUE) {
-            return Overflow("input.fileDelta too big. Request: $input").left()
-        }
-
-        val offset = lseek(input.fd, input.fileDelta, input.whence.toPosixWhence())
-
-        return if (offset >= 0) {
-            offset.right()
-        } else {
-            errno.errnoToSeekError(input).left()
-        }
+internal class LinuxSeekFd(
+    private val fsState: LinuxFileSystemState,
+) : FileSystemOperationHandler<SeekFd, SeekError, Long> {
+    override fun invoke(input: SeekFd): Either<SeekError, Long> = fsState.executeWithResource(input.fd) {
+        it.seek(input.fileDelta, input.whence)
     }
 }
