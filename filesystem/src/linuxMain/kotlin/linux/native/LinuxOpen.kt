@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ACCMODE
@@ -26,7 +27,7 @@ import at.released.weh.filesystem.platform.linux.RESOLVE_NO_SYMLINKS
 import at.released.weh.filesystem.platform.linux.RESOLVE_NO_XDEV
 import at.released.weh.filesystem.platform.linux.SYS_openat2
 import at.released.weh.filesystem.platform.linux.open_how
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
@@ -42,21 +43,22 @@ import platform.posix.memset
 import platform.posix.syscall
 
 internal fun linuxOpen(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlags flags: Int,
     @FileMode mode: Int,
-): Either<OpenError, NativeFd> {
+    resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
+): Either<OpenError, Int> {
     val errorOrFd = memScoped {
         val openHow: open_how = alloc<open_how> {
             memset(ptr, 0, sizeOf<open_how>().toULong())
             this.flags = openFileFlagsToLinuxMask(flags)
             this.mode = mode.toULong()
-            this.resolve = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS).toResolveMask()
+            this.resolve = resolveFlags.toResolveMask()
         }
         syscall(
             __sysno = SYS_openat2.toLong(),
-            baseDirectoryFd.fd,
+            baseDirectoryFd.linuxFd,
             path.cstr,
             openHow.ptr,
             sizeOf<open_how>().toULong(),
@@ -65,8 +67,7 @@ internal fun linuxOpen(
     return if (errorOrFd < 0) {
         errno.errNoToOpenError().left()
     } else {
-        val nativeFd = NativeFd(errorOrFd.toInt())
-        nativeFd.right()
+        errorOrFd.toInt().right()
     }
 }
 

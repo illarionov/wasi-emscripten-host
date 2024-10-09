@@ -14,8 +14,6 @@ internal fun FileSystem.isRegularFile(path: Path) = metadataOrNull(path)?.isRegu
 
 internal fun FileSystem.isDirectory(path: Path) = metadataOrNull(path)?.isDirectory ?: false
 
-internal expect fun FileSystem.setCurrentWorkingDirectory(path: Path)
-
 internal fun FileSystem.copyRecursively(
     srcDir: Path,
     dstDir: Path,

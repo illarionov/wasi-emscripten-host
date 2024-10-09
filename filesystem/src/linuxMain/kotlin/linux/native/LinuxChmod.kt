@@ -20,10 +20,12 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fchmodat
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EINVAL
@@ -40,13 +42,13 @@ import platform.posix.errno
 import platform.posix.fchmod
 
 internal fun linuxChmod(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @FileMode mode: Int,
     followSymlinks: Boolean,
 ): Either<ChmodError, Unit> {
     val resultCode = fchmodat(
-        baseDirectoryFd.fd,
+        baseDirectoryFd.linuxFd,
         path,
         mode.toUInt(),
         getChmodFlags(followSymlinks),
@@ -59,7 +61,20 @@ internal fun linuxChmod(
 }
 
 internal fun linuxChmodFd(
-    nativeFd: NativeFd,
+    fd: NativeDirectoryFd,
+    @FileMode mode: Int,
+): Either<ChmodError, Unit> {
+    require(fd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
+    val resultCode = fchmod(fd.raw, mode.toUInt())
+    return if (resultCode == 0) {
+        Unit.right()
+    } else {
+        errno.errnoToChmodFdError().left()
+    }
+}
+
+internal fun linuxChmodFd(
+    nativeFd: NativeFileFd,
     @FileMode mode: Int,
 ): Either<ChmodError, Unit> {
     val resultCode = fchmod(nativeFd.fd, mode.toUInt())

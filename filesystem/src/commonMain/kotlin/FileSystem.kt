@@ -7,6 +7,7 @@
 package at.released.weh.filesystem
 
 import arrow.core.Either
+import at.released.weh.filesystem.dsl.DirectoryConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.dsl.FileSystemConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
@@ -20,9 +21,11 @@ public fun <E : FileSystemEngineConfig> FileSystem(
 ): FileSystem {
     val config = FileSystemConfigBlock<E>().apply(block)
     val stdioConfig = StandardInputOutputConfigBlock().apply(config.stdioConfig)
+    val directoryConfig = DirectoryConfigBlock().apply(config.directoryConfigBlock)
     val commonConfig = object : FileSystemCommonConfig {
         override val interceptors: List<FileSystemInterceptor> = config.interceptors
         override val stdioConfig: StandardInputOutputConfigBlock = stdioConfig
+        override val directoryConfig: DirectoryConfigBlock = directoryConfig
     }
     return engine.create(
         commonConfig = commonConfig,

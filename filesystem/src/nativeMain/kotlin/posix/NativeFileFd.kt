@@ -4,11 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.bindings.test.ext
+package at.released.weh.filesystem.posix
 
-import kotlinx.io.files.FileSystem
-import kotlinx.io.files.Path
-
-internal actual fun FileSystem.setCurrentWorkingDirectory(path: Path) {
-    // XXX: rewrite, ignore for now
-}
+internal value class NativeFileFd(
+    val fd: Int,
+)

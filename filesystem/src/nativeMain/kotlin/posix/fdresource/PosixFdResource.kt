@@ -7,8 +7,13 @@
 package at.released.weh.filesystem.posix.fdresource
 
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.posix.NativeFd
 
-internal interface PosixFileFdResource : FdResource {
-    val nativeFd: NativeFd
+internal interface PosixFdResource : FdResource {
+    val fdResourceType: FdResourceType
+
+    public enum class FdResourceType {
+        DIRECTORY,
+        FILE,
+        OTHER,
+    }
 }

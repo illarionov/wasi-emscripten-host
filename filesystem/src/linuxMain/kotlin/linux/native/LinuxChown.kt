@@ -19,9 +19,11 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fchownat
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EINVAL
@@ -37,14 +39,14 @@ import platform.posix.errno
 import platform.posix.fchown
 
 internal fun linuxChown(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     owner: Int,
     group: Int,
     followSymlinks: Boolean,
 ): Either<ChownError, Unit> {
     val resultCode = fchownat(
-        baseDirectoryFd.fd,
+        baseDirectoryFd.linuxFd,
         path,
         owner,
         group,
@@ -58,7 +60,16 @@ internal fun linuxChown(
 }
 
 internal fun linuxChownFd(
-    nativeFd: NativeFd,
+    fd: NativeDirectoryFd,
+    owner: Int,
+    group: Int,
+): Either<ChownError, Unit> {
+    require(fd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
+    return linuxChownFd(NativeFileFd(fd.raw), owner, group)
+}
+
+internal fun linuxChownFd(
+    nativeFd: NativeFileFd,
     owner: Int,
     group: Int,
 ): Either<ChownError, Unit> {

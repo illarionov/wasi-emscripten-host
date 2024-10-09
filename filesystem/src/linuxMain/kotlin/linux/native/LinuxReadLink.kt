@@ -19,10 +19,11 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.fstatat
 import at.released.weh.filesystem.platform.linux.readlinkat
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -46,7 +47,7 @@ private val MAX_PATH_SIZE = maxOf(1024 * 1024, PATH_MAX)
 
 @Suppress("ReturnCount")
 internal fun linuxReadLink(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
 ): Either<ReadLinkError, String> {
     var bufSize = getInitialBufSize(baseDirectoryFd, path)
@@ -55,7 +56,7 @@ internal fun linuxReadLink(
         val buf = ByteArray(bufSize)
         val bytesWritten = buf.usePinned {
             readlinkat(
-                baseDirectoryFd.fd,
+                baseDirectoryFd.linuxFd,
                 path,
                 it.addressOf(0),
                 (bufSize - 1).toULong(),
@@ -75,12 +76,12 @@ internal fun linuxReadLink(
 }
 
 private fun getInitialBufSize(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
 ): Either<ReadLinkError, Int> = memScoped {
     val statBuf: stat = alloc()
     val exitCode = fstatat(
-        baseDirectoryFd.fd,
+        baseDirectoryFd.linuxFd,
         path,
         statBuf.ptr,
         AT_EMPTY_PATH,

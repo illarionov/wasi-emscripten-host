@@ -37,13 +37,22 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 
 public class LinuxFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
+    isRootAccessAllowed: Boolean,
+    currentWorkingDirectory: String?,
+    preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
-    private val fsState = LinuxFileSystemState(stdio)
+    private val fsState = LinuxFileSystemState.create(
+        stdio = stdio,
+        isRootAccessAllowed = isRootAccessAllowed,
+        currentWorkingDirectory = currentWorkingDirectory ?: "",
+        preopenedDirectories = preopenedDirectories,
+    )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to LinuxOpen(fsState),
         CloseFd to LinuxCloseFd(fsState),

@@ -20,7 +20,7 @@ internal class LinuxCheckAccess(
         fsState.executeWithBaseDirectoryResource(input.baseDirectory) { nativeFdOrAtCwd ->
             linuxCheckAccess(
                 path = input.path,
-                nativeFdOrArCwd = nativeFdOrAtCwd,
+                baseDirectoryFd = nativeFdOrAtCwd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
                 allowEmptyPath = input.allowEmptyPath,

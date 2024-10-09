@@ -24,7 +24,7 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CArrayPointer
 import platform.posix.EAGAIN
 import platform.posix.EBADF
@@ -45,7 +45,7 @@ import platform.posix.pwritev
 import platform.posix.writev
 
 internal fun posixWrite(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ) = when (strategy) {
@@ -54,29 +54,29 @@ internal fun posixWrite(
 }
 
 private fun posixWriteChangePosition(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> =
-    callReadWrite(nativeFd, cIovecs) { fd: NativeFd, iovecs: CArrayPointer<iovec>, size: Int ->
+    callReadWrite(nativeFd, cIovecs) { fd: NativeFileFd, iovecs: CArrayPointer<iovec>, size: Int ->
         writev(fd.fd, iovecs, size)
     }.mapLeft { errNo -> errNo.errnoToWriteError(nativeFd, cIovecs) }
 
 private fun posixWriteDoNotChangePosition(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> {
     val currentPosition = lseek(nativeFd.fd, 0, SEEK_CUR)
     return if (currentPosition < 0) {
         errno.errnoSeekToWriteError(nativeFd).left()
     } else {
-        callReadWrite(nativeFd, cIovecs) { fd: NativeFd, iovecs: CArrayPointer<iovec>, size: Int ->
+        callReadWrite(nativeFd, cIovecs) { fd: NativeFileFd, iovecs: CArrayPointer<iovec>, size: Int ->
             pwritev(fd.fd, iovecs, size, currentPosition)
         }.mapLeft { errNo -> errNo.errnoToWriteError(nativeFd, cIovecs) }
     }
 }
 
 private fun Int.errnoToWriteError(
-    fd: NativeFd,
+    fd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): WriteError = when (this) {
     EAGAIN -> Again("Blocking write on non-blocking descriptor")
@@ -92,7 +92,7 @@ private fun Int.errnoToWriteError(
     else -> InvalidArgument("Write error. Errno: `$this`")
 }
 
-private fun Int.errnoSeekToWriteError(fd: NativeFd): WriteError = when (this) {
+private fun Int.errnoSeekToWriteError(fd: NativeFileFd): WriteError = when (this) {
     EBADF -> BadFileDescriptor("Cannot seek on $fd: bad file descriptor")
     EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")
     ENXIO -> Nxio("Trying to seek beyond end of file. Fd: $fd")

@@ -20,10 +20,12 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.UTIME_OMIT
 import at.released.weh.filesystem.platform.linux.utimensat
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CArrayPointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.allocArray
@@ -45,7 +47,7 @@ import platform.posix.futimens
 import platform.posix.timespec
 
 internal fun linuxSetTimestamp(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     atimeNanoseconds: Long?,
     mtimeNanoseconds: Long?,
@@ -56,7 +58,7 @@ internal fun linuxSetTimestamp(
     timespec[1].set(mtimeNanoseconds)
 
     val resultCode = utimensat(
-        baseDirectoryFd.fd,
+        baseDirectoryFd.linuxFd,
         path,
         timespec,
         getTimensatFlags(followSymlinks),
@@ -69,7 +71,16 @@ internal fun linuxSetTimestamp(
 }
 
 internal fun linuxSetTimestamp(
-    fd: NativeFd,
+    fd: NativeDirectoryFd,
+    atimeNanoseconds: Long?,
+    mtimeNanoseconds: Long?,
+): Either<SetTimestampError, Unit> {
+    require(fd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
+    return linuxSetTimestamp(NativeFileFd(fd.raw), atimeNanoseconds, mtimeNanoseconds)
+}
+
+internal fun linuxSetTimestamp(
+    fd: NativeFileFd,
     atimeNanoseconds: Long?,
     mtimeNanoseconds: Long?,
 ): Either<SetTimestampError, Unit> = memScoped {

@@ -13,4 +13,5 @@ import at.released.weh.filesystem.FileSystemInterceptor
 public interface FileSystemCommonConfig {
     public val interceptors: List<FileSystemInterceptor>
     public val stdioConfig: StandardInputOutputConfigBlock
+    public val directoryConfig: DirectoryConfigBlock
 }

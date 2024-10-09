@@ -14,7 +14,8 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoSpace
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.platformSpecificErrnoToCloseError
 import platform.posix.EBADF
 import platform.posix.EINTR
@@ -23,7 +24,14 @@ import platform.posix.ENOSPC
 import platform.posix.errno
 
 internal fun posixClose(
-    nativeFd: NativeFd,
+    fd: NativeDirectoryFd,
+): Either<CloseError, Unit> {
+    require(fd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
+    return posixClose(NativeFileFd(fd.raw))
+}
+
+internal fun posixClose(
+    nativeFd: NativeFileFd,
 ): Either<CloseError, Unit> {
     val retval = platform.posix.close(nativeFd.fd)
     return if (retval == 0) {
@@ -33,7 +41,7 @@ internal fun posixClose(
     }
 }
 
-private fun Int.errnoToCloseError(fd: NativeFd): CloseError = when (this) {
+private fun Int.errnoToCloseError(fd: NativeFileFd): CloseError = when (this) {
     EBADF -> BadFileDescriptor("Bad file descriptor $fd")
     EINTR -> Interrupted("Closing $fd interrupted by signal")
     EIO -> IoError("I/O error while closing $fd")

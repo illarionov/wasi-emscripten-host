@@ -21,6 +21,7 @@ public abstract interface class at/released/weh/host/EmbedderHost {
 public final class at/released/weh/host/EmbedderHost$Builder {
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/host/EmbedderHost;
+	public final fun directories ()Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
 	public final fun getClock ()Lat/released/weh/host/Clock;
 	public final fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
 	public final fun getEntropySource ()Lat/released/weh/host/EntropySource;
@@ -45,6 +46,13 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
 	public final fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
+}
+
+public final class at/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder {
+	public final fun addDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
+	public final fun done ()Lat/released/weh/host/EmbedderHost$Builder;
+	public final fun setAllowRootAccess (Z)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
+	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
 }
 
 public abstract interface class at/released/weh/host/EntropySource {

@@ -15,7 +15,6 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
-import at.released.weh.wasi.bindings.test.ext.setCurrentWorkingDirectory
 import at.released.weh.wasi.bindings.test.ext.walkBottomUp
 import kotlinx.io.IOException
 import kotlinx.io.buffered
@@ -50,7 +49,6 @@ public class WasiSuiteTestExecutor(
         val host = setupHost(arguments)
         prepareTempRoot(arguments.dirs)
 
-        fileSystem.setCurrentWorkingDirectory(tempRoot)
         val exitCode = try {
             runtimeTestExecutor.runTest(
                 wasmFile = wasmFilename,
@@ -97,7 +95,14 @@ public class WasiSuiteTestExecutor(
             systemEnvProvider = SystemEnvProvider(arguments::env)
             stdoutProvider = testStdout
             stderrProvider = testStderr
-            // XXX: setup preopen directories / current working directory
+            directories()
+                .setAllowRootAccess(false)
+                .setCurrentWorkingDirectory(tempRoot.toString())
+                .apply {
+                    for (subdirectory in arguments.dirs) {
+                        addDirectory(subdirectory)
+                    }
+                }
         }.build()
     }
 

@@ -15,7 +15,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.SyncError
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EBADF
 import platform.posix.EDQUOT
 import platform.posix.EINTR
@@ -28,7 +28,7 @@ import platform.posix.fdatasync
 import platform.posix.fsync
 
 internal fun linuxSync(
-    fd: NativeFd,
+    fd: NativeFileFd,
     syncMetadata: Boolean = true,
 ): Either<SyncError, Unit> {
     val resultCode = if (syncMetadata) {

@@ -20,6 +20,7 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TextFileBusy
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE
@@ -28,7 +29,7 @@ import at.released.weh.filesystem.platform.linux.AT_EACCESS
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.SYS_faccessat2
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EINVAL
@@ -49,8 +50,18 @@ import platform.posix.errno
 import platform.posix.syscall
 
 internal fun linuxCheckAccess(
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
-    nativeFdOrArCwd: NativeFd,
+    mode: Set<FileAccessibilityCheck>,
+    useEffectiveUserId: Boolean = false,
+    allowEmptyPath: Boolean = false,
+    followSymlinks: Boolean = false,
+): Either<CheckAccessError, Unit> =
+    linuxCheckAccess(baseDirectoryFd.linuxFd, path, mode, useEffectiveUserId, allowEmptyPath, followSymlinks)
+
+private fun linuxCheckAccess(
+    nativeFdOrArCwd: Int,
+    path: String,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean = false,
     allowEmptyPath: Boolean = false,
@@ -58,7 +69,7 @@ internal fun linuxCheckAccess(
 ): Either<CheckAccessError, Unit> {
     val resultCode = syscall(
         SYS_faccessat2.toLong(),
-        nativeFdOrArCwd.fd,
+        nativeFdOrArCwd,
         path,
         mode.toModeFlags(),
         getCheckAccessFlags(useEffectiveUserId, allowEmptyPath, followSymlinks),

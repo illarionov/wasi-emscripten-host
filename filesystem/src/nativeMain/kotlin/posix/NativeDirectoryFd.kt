@@ -4,8 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.dsl
+package at.released.weh.filesystem.posix
 
-@DslMarker
-@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
-public annotation class FileSystemDsl
+internal value class NativeDirectoryFd(
+    val raw: Int,
+) {
+    public companion object {
+        val CURRENT_WORKING_DIRECTORY = NativeDirectoryFd(-100)
+    }
+}

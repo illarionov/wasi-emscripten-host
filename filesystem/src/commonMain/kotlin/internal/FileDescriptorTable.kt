@@ -61,5 +61,6 @@ internal class FileDescriptorTable<V : Any> {
     companion object {
         const val MIN_FD: Int = 4
         const val MAX_FD: Int = 1024
+        const val INVALID_FD: FileDescriptor = -1
     }
 }

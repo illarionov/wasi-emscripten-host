@@ -7,7 +7,9 @@
 package at.released.weh.filesystem.linux.fdresource
 
 import arrow.core.Either
+import arrow.core.left
 import at.released.weh.filesystem.error.AdvisoryLockError
+import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
@@ -19,49 +21,54 @@ import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.linux.native.linuxAddAdvisoryLockFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
 import at.released.weh.filesystem.linux.native.linuxChownFd
-import at.released.weh.filesystem.linux.native.linuxRemoveAdvisoryLock
-import at.released.weh.filesystem.linux.native.linuxSeek
 import at.released.weh.filesystem.linux.native.linuxSetTimestamp
 import at.released.weh.filesystem.linux.native.linuxStatFd
-import at.released.weh.filesystem.linux.native.linuxSync
-import at.released.weh.filesystem.linux.native.linuxTruncate
 import at.released.weh.filesystem.linux.native.posixClose
-import at.released.weh.filesystem.linux.native.posixRead
-import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.posix.NativeFileFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 
-internal class LinuxFileFdResource(
-    val nativeFd: NativeFileFd,
+internal class LinuxDirectoryFdResource(
+    val nativeFd: NativeDirectoryFd,
+    val isPreopened: Boolean = false,
 ) : PosixFdResource, FdResource {
-    override val fdResourceType: FdResourceType = FdResourceType.FILE
+    override val fdResourceType: FdResourceType = DIRECTORY
 
-    override fun stat(): Either<StatError, StructStat> = linuxStatFd(nativeFd)
+    init {
+        require(nativeFd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
+    }
+
+    override fun stat(): Either<StatError, StructStat> {
+        return linuxStatFd(nativeFd)
+    }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        return linuxSeek(nativeFd, fileDelta, whence)
+        return BadFileDescriptor("Can not seek on a directory").left()
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        return posixRead(nativeFd, iovecs, strategy)
+        return BadFileDescriptor("Can not read on a directory").left()
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        return posixWrite(nativeFd, cIovecs, strategy)
+        return BadFileDescriptor("Can not write on a directory").left()
     }
 
-    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(nativeFd, syncMetadata)
+    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
+        return BadFileDescriptor("Can not sync on a directory").left()
+    }
 
-    override fun truncate(length: Long): Either<TruncateError, Unit> = linuxTruncate(nativeFd, length)
+    override fun truncate(length: Long): Either<TruncateError, Unit> {
+        return BadFileDescriptor("Can not truncate on a directory").left()
+    }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> = linuxChmodFd(nativeFd, mode)
 
@@ -71,12 +78,13 @@ internal class LinuxFileFdResource(
         return linuxSetTimestamp(nativeFd, atimeNanoseconds, mtimeNanoseconds)
     }
 
-    override fun close(): Either<CloseError, Unit> = posixClose(nativeFd)
-
-    override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
-        linuxAddAdvisoryLockFd(nativeFd, flock)
+    override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
+        return BadFileDescriptor("Can not add advisory lock on a directory").left()
+    }
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
-        return linuxRemoveAdvisoryLock(nativeFd, flock)
+        return BadFileDescriptor("Can not add remove lock on a directory").left()
     }
+
+    override fun close(): Either<CloseError, Unit> = posixClose(nativeFd)
 }

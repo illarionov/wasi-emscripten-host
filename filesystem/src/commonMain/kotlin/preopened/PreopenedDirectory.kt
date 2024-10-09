@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.posix
+package at.released.weh.filesystem.preopened
 
-internal value class NativeFd(
-    val fd: Int,
+public data class PreopenedDirectory(
+    val realPath: RealPath,
 )
