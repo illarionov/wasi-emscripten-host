@@ -16,9 +16,10 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EINVAL
@@ -37,12 +38,12 @@ internal expect fun platformFstatat(
 internal expect fun platformFstatFd(fd: Int): Either<Int, StructStat>
 
 internal fun linuxStat(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     followSymlinks: Boolean,
 ): Either<StatError, StructStat> {
     return platformFstatat(
-        baseDirectoryFd.fd,
+        baseDirectoryFd.linuxFd,
         path,
         getStatFlags(followSymlinks),
     ).mapLeft {
@@ -51,11 +52,9 @@ internal fun linuxStat(
 }
 
 internal fun linuxStatFd(
-    fd: NativeFd,
+    fd: Int,
 ): Either<StatError, StructStat> {
-    return platformFstatFd(fd.fd).mapLeft {
-        it.errnoToStatFdError()
-    }
+    return platformFstatFd(fd).mapLeft(Int::errnoToStatFdError)
 }
 
 private fun getStatFlags(followSymlinks: Boolean): Int = if (followSymlinks) {

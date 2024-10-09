@@ -9,6 +9,7 @@ package at.released.weh.host.internal
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemEngine
+import at.released.weh.filesystem.dsl.DirectoryConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor
@@ -39,6 +40,7 @@ internal fun <E : FileSystemEngineConfig> DefaultFileSystem(
     stdinProvider: SourceProvider?,
     stdoutProvider: SinkProvider?,
     stderrProvider: SinkProvider?,
+    directoriesConfig: DirectoryConfigBlock,
     rootLogger: Logger,
     block: FileSystemConfigBlock<E>.() -> Unit = {},
 ): FileSystem = FileSystem(engine) {
@@ -47,6 +49,13 @@ internal fun <E : FileSystemEngineConfig> DefaultFileSystem(
         this.stdinProvider = stdinProvider
         this.stdoutProvider = stdoutProvider
         this.stderrProvider = stderrProvider
+    }
+    this.directories {
+        this.isRootAccessAllowed = directoriesConfig.isRootAccessAllowed
+        this.currentWorkingDirectory = directoriesConfig.currentWorkingDirectory
+        this.preopened {
+            addAll(directoriesConfig.preopenedDirectories)
+        }
     }
     block()
 }

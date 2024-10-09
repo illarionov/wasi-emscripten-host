@@ -12,11 +12,6 @@ package at.released.weh.filesystem.model
 @Suppress("WRONG_ORDER_IN_CLASS_LIKE_STRUCTURES")
 public sealed class BaseDirectory {
     /**
-     * Relative paths are not allowed
-     */
-    public data object None : BaseDirectory()
-
-    /**
      * Paths are resolved relative to the current working directory
      */
     public data object CurrentWorkingDirectory : BaseDirectory()

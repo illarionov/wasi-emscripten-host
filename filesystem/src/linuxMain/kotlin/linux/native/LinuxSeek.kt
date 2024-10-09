@@ -12,14 +12,14 @@ import arrow.core.right
 import at.released.weh.filesystem.error.Overflow
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.model.Whence
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.ext.errnoToSeekError
 import at.released.weh.filesystem.posix.ext.toPosixWhence
 import platform.posix.errno
 import platform.posix.lseek
 
 internal fun linuxSeek(
-    fd: NativeFd,
+    fd: NativeFileFd,
     fileDelta: Long,
     whence: Whence,
 ): Either<SeekError, Long> {

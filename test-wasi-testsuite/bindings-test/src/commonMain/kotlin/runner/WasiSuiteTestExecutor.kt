@@ -15,8 +15,8 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
-import at.released.weh.wasi.bindings.test.ext.setCurrentWorkingDirectory
 import at.released.weh.wasi.bindings.test.ext.walkBottomUp
+import co.touchlab.kermit.Severity.Verbose
 import kotlinx.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
@@ -37,7 +37,7 @@ public class WasiSuiteTestExecutor(
     private val runtimeTestExecutor: RuntimeTestExecutor,
     private val tempRoot: Path,
     private val fileSystem: FileSystem = SystemFileSystem,
-    private val logger: Logger = TestLogger(),
+    private val logger: Logger = TestLogger(minSeverity = Verbose),
 ) {
     private val argumentsFilePath: Path get() = Path(testsRoot, "$testName.json")
     private val wasmFilePath: Path get() = Path(testsRoot, "$testName.wasm")
@@ -47,10 +47,10 @@ public class WasiSuiteTestExecutor(
     public fun runTest() {
         val wasmFilename = readWasm()
         val arguments = readArguments()
-        val host = setupHost(arguments)
-        prepareTempRoot(arguments.dirs)
 
-        fileSystem.setCurrentWorkingDirectory(tempRoot)
+        prepareTempRoot(arguments.dirs)
+        val host = setupHost(arguments)
+
         val exitCode = try {
             runtimeTestExecutor.runTest(
                 wasmFile = wasmFilename,
@@ -61,9 +61,12 @@ public class WasiSuiteTestExecutor(
         } finally {
             cleanup()
         }
+        val stdout = testStdout.readContent()
+        val stdErr = testStderr.readContent()
+
         assertThat(exitCode).isEqualTo(arguments.exitCode)
-        assertThat(testStdout.readContent()).isEqualTo(arguments.stdout)
-        assertThat(testStderr.readContent()).isEqualTo(arguments.stderr)
+        assertThat(stdout).isEqualTo(arguments.stdout)
+        assertThat(stdErr).isEqualTo(arguments.stderr)
     }
 
     private fun readArguments(): WasiTestsuiteArguments {
@@ -97,7 +100,14 @@ public class WasiSuiteTestExecutor(
             systemEnvProvider = SystemEnvProvider(arguments::env)
             stdoutProvider = testStdout
             stderrProvider = testStderr
-            // XXX: setup preopen directories / current working directory
+            directories()
+                .setAllowRootAccess(false)
+                .setCurrentWorkingDirectory(tempRoot.toString())
+                .apply {
+                    for (subdirectory in arguments.dirs) {
+                        addDirectory(subdirectory)
+                    }
+                }
         }.build()
     }
 

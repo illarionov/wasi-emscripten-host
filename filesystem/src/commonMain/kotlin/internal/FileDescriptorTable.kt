@@ -17,7 +17,7 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 internal class FileDescriptorTable<V : Any> {
     private val fds: MutableMap<FileDescriptor, V> = mutableMapOf()
 
-    fun set(
+    operator fun set(
         descriptor: FileDescriptor,
         handle: V,
     ) {
@@ -59,7 +59,12 @@ internal class FileDescriptorTable<V : Any> {
     }
 
     companion object {
-        const val MIN_FD: Int = 4
+        const val WASI_STDIN_FD: Int = 0
+        const val WASI_STDOUT_FD: Int = 1
+        const val WASI_STDERR_FD: Int = 2
+        const val WASI_FIRST_PREOPEN_FD: Int = 3
+        const val MIN_FD: Int = 5
         const val MAX_FD: Int = 1024
+        const val INVALID_FD: FileDescriptor = -1
     }
 }

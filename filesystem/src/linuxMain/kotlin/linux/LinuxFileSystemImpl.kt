@@ -21,10 +21,12 @@ import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
@@ -37,13 +39,22 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 
 public class LinuxFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
+    isRootAccessAllowed: Boolean,
+    currentWorkingDirectory: String?,
+    preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
-    private val fsState = LinuxFileSystemState(stdio)
+    private val fsState = LinuxFileSystemState.create(
+        stdio = stdio,
+        isRootAccessAllowed = isRootAccessAllowed,
+        currentWorkingDirectory = currentWorkingDirectory ?: "",
+        preopenedDirectories = preopenedDirectories,
+    )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to LinuxOpen(fsState),
         CloseFd to LinuxCloseFd(fsState),
@@ -54,8 +65,10 @@ public class LinuxFileSystemImpl(
         ChmodFd to LinuxChmodFd(fsState),
         Chown to LinuxChown(fsState),
         ChownFd to LinuxChownFd(fsState),
+        FdAttributes to LinuxFdstat(fsState),
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
         Mkdir to LinuxMkdir(fsState),
+        PrestatFd to LinuxPrestatFd(fsState),
         ReadFd to LinuxReadFd(fsState),
         ReadLink to LinuxReadLink(fsState),
         SeekFd to LinuxSeekFd(fsState),

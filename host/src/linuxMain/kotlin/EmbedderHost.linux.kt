@@ -26,6 +26,7 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
         builder.stdinProvider,
         builder.stdoutProvider,
         builder.stderrProvider,
+        builder.directoriesConfigBlock,
         builder.rootLogger.withTag("FSlnx"),
     )
     override val monotonicClock = builder.monotonicClock ?: CommonMonotonicClock()

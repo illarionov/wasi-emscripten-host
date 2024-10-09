@@ -11,12 +11,13 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.Again
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.linux.ext.openFileFlagsToLinuxMask
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ACCMODE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
 import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
@@ -26,7 +27,7 @@ import at.released.weh.filesystem.platform.linux.RESOLVE_NO_SYMLINKS
 import at.released.weh.filesystem.platform.linux.RESOLVE_NO_XDEV
 import at.released.weh.filesystem.platform.linux.SYS_openat2
 import at.released.weh.filesystem.platform.linux.open_how
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
@@ -36,27 +37,29 @@ import platform.posix.E2BIG
 import platform.posix.EAGAIN
 import platform.posix.EINVAL
 import platform.posix.ELOOP
+import platform.posix.ENOENT
 import platform.posix.EXDEV
 import platform.posix.errno
 import platform.posix.memset
 import platform.posix.syscall
 
 internal fun linuxOpen(
-    baseDirectoryFd: NativeFd,
+    baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlags flags: Int,
     @FileMode mode: Int,
-): Either<OpenError, NativeFd> {
+    resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
+): Either<OpenError, Int> {
     val errorOrFd = memScoped {
         val openHow: open_how = alloc<open_how> {
             memset(ptr, 0, sizeOf<open_how>().toULong())
             this.flags = openFileFlagsToLinuxMask(flags)
             this.mode = mode.toULong()
-            this.resolve = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS).toResolveMask()
+            this.resolve = resolveFlags.toResolveMask()
         }
         syscall(
             __sysno = SYS_openat2.toLong(),
-            baseDirectoryFd.fd,
+            baseDirectoryFd.linuxFd,
             path.cstr,
             openHow.ptr,
             sizeOf<open_how>().toULong(),
@@ -65,55 +68,17 @@ internal fun linuxOpen(
     return if (errorOrFd < 0) {
         errno.errNoToOpenError().left()
     } else {
-        val nativeFd = NativeFd(errorOrFd.toInt())
-        nativeFd.right()
+        errorOrFd.toInt().right()
     }
-}
-
-private val openFileFlagsMaskToPosixMask = listOf(
-    OpenFileFlag.O_CREAT to platform.posix.O_CREAT,
-    OpenFileFlag.O_EXCL to platform.posix.O_EXCL,
-    OpenFileFlag.O_NOCTTY to platform.posix.O_NOCTTY,
-    OpenFileFlag.O_TRUNC to platform.posix.O_TRUNC,
-    OpenFileFlag.O_APPEND to platform.posix.O_APPEND,
-    OpenFileFlag.O_NONBLOCK to platform.posix.O_NONBLOCK,
-    OpenFileFlag.O_NDELAY to platform.posix.O_NDELAY,
-    OpenFileFlag.O_DSYNC to platform.posix.O_DSYNC,
-    OpenFileFlag.O_ASYNC to platform.posix.O_ASYNC,
-    OpenFileFlag.O_DIRECTORY to platform.posix.O_DIRECTORY,
-    OpenFileFlag.O_NOFOLLOW to platform.posix.O_NOFOLLOW,
-    OpenFileFlag.O_CLOEXEC to platform.posix.O_CLOEXEC,
-    OpenFileFlag.O_SYNC to platform.posix.O_SYNC,
-)
-
-@Suppress("CyclomaticComplexMethod")
-internal fun openFileFlagsToLinuxMask(
-    @OpenFileFlags openFlags: Int,
-): ULong {
-    var mask = when (val mode = (openFlags and O_ACCMODE)) {
-        OpenFileFlag.O_RDONLY -> platform.posix.O_RDONLY
-        OpenFileFlag.O_WRONLY -> platform.posix.O_WRONLY
-        OpenFileFlag.O_RDWR -> platform.posix.O_RDWR
-        else -> error("Unknown mode $mode")
-    }
-
-    openFileFlagsMaskToPosixMask.forEach { (testMask, posixMask) ->
-        if (openFlags and testMask == testMask) {
-            mask = mask or posixMask
-        }
-    }
-    // O_DIRECT, O_LARGEFILE, O_NOATIME: Not supported
-    // O_PATH, O_TMPFILE: not supported, should be added?
-
-    return mask.toULong()
 }
 
 private fun Int.errNoToOpenError(): OpenError = when (this) {
     E2BIG -> InvalidArgument("E2BIG: extension is not supported")
-    EAGAIN -> Again("operation cannot be performed")
+    EAGAIN -> Again("Operation cannot be performed")
     EINVAL -> InvalidArgument("Invalid argument")
     ELOOP -> TooManySymbolicLinks("Too many symbolic or magic links")
     EXDEV -> NotCapable("Escape from the root detected")
+    ENOENT -> NoEntry("No such file or directory")
     else -> InvalidArgument("Unknown errno $this")
 }
 

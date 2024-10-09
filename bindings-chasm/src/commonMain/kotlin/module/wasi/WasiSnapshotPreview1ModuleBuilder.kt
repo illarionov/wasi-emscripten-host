@@ -19,7 +19,10 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ARGS_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_CLOSE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_FDSTAT_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PREAD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PRESTAT_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PWRITE
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
@@ -32,10 +35,13 @@ import at.released.weh.wasi.preview1.function.ArgsSizesGetHostFunctionHandle
 import at.released.weh.wasi.preview1.function.EnvironGetFunctionHandle
 import at.released.weh.wasi.preview1.function.EnvironSizesGetFunctionHandle
 import at.released.weh.wasi.preview1.function.FdCloseFunctionHandle
+import at.released.weh.wasi.preview1.function.FdPrestatDirNameFunctionHandle
+import at.released.weh.wasi.preview1.function.FdPrestatGetFunctionHandle
 import at.released.weh.wasi.preview1.function.FdReadFdPreadFunctionHandle
 import at.released.weh.wasi.preview1.function.FdSeekFunctionHandle
 import at.released.weh.wasi.preview1.function.FdSyncFunctionHandle
 import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
+import at.released.weh.wasi.preview1.function.FdstatGetFunctionHandle
 import at.released.weh.wasi.preview1.function.RandomGetFunctionHandle
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
@@ -84,14 +90,17 @@ private fun createChasmHostFunction(
     ENVIRON_GET -> functions.environGet
     ENVIRON_SIZES_GET -> functions.environSizesGet
     FD_CLOSE -> functions.fdClose
-    FD_READ -> functions.fdRead
+    FD_FDSTAT_GET -> functions.fdstatGet
     FD_PREAD -> functions.fdPread
+    FD_PRESTAT_DIR_NAME -> functions.fdPrestatDirname
+    FD_PRESTAT_GET -> functions.fdPrestatGet
     FD_PWRITE -> functions.fdPwrite
+    FD_READ -> functions.fdRead
     FD_SEEK -> functions.fdSeek
     FD_SYNC -> functions.fdSync
     FD_WRITE -> functions.fdwrite
-    RANDOM_GET -> functions.randomGet
     PROC_EXIT -> functions.procExit
+    RANDOM_GET -> functions.randomGet
     else -> NotImplementedWasiFunction(wasiHostFunction)::invoke
 }
 
@@ -108,7 +117,10 @@ private class ChasmWasiPreview1Functions(
     private val environSizesGetHandle = EnvironSizesGetFunctionHandle(host)
     private val fdCloseHandle = FdCloseFunctionHandle(host)
     private val fdReadHandle = FdReadFdPreadFunctionHandle.fdRead(host)
+    private val fdstatGetHandle = FdstatGetFunctionHandle(host)
     private val fdPreadHandle = FdReadFdPreadFunctionHandle.fdPread(host)
+    private val fdPrestatGetHandle = FdPrestatGetFunctionHandle(host)
+    private val fdPrestatDirNameHandle = FdPrestatDirNameFunctionHandle(host)
     private val fdWriteHandle = FdWriteFdPWriteFunctionHandle.fdWrite(host)
     private val fdPwriteHandle = FdWriteFdPWriteFunctionHandle.fdPwrite(host)
     private val fdSeekHandle = FdSeekFunctionHandle(host)
@@ -135,6 +147,10 @@ private class ChasmWasiPreview1Functions(
         fdCloseHandle.execute(args[0].asInt()).toListOfReturnValues()
     }
 
+    val fdstatGet: ChasmHostFunction = { args ->
+        fdstatGetHandle.execute(memory, args[0].asInt(), args[1].asWasmAddr()).toListOfReturnValues()
+    }
+
     val fdRead: ChasmHostFunction = { args ->
         fdReadHandle.execute(
             memory = memory,
@@ -154,6 +170,23 @@ private class ChasmWasiPreview1Functions(
             pIov = args[1].asWasmAddr(),
             iovCnt = args[2].asInt(),
             pNum = args[3].asWasmAddr(),
+        ).toListOfReturnValues()
+    }
+
+    val fdPrestatGet: ChasmHostFunction = { args ->
+        fdPrestatGetHandle.execute(
+            memory = memory,
+            fd = args[0].asInt(),
+            dstAddr = args[1].asWasmAddr(),
+        ).toListOfReturnValues()
+    }
+
+    val fdPrestatDirname: ChasmHostFunction = { args ->
+        fdPrestatDirNameHandle.execute(
+            memory = memory,
+            fd = args[0].asInt(),
+            dstPath = args[1].asWasmAddr(),
+            dstPathLen = args[2].asInt(),
         ).toListOfReturnValues()
     }
 

@@ -19,7 +19,7 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.READ
 import at.released.weh.filesystem.op.lock.AdvisorylockLockType.WRITE
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.ext.toPosixWhence
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -36,9 +36,10 @@ import platform.posix.F_WRLCK
 import platform.posix.errno
 import platform.posix.fcntl
 import platform.posix.flock
+import platform.posix.strerror
 
 internal fun linuxAddAdvisoryLockFd(
-    fd: NativeFd,
+    fd: NativeFileFd,
     flock: Advisorylock,
 ): Either<AdvisoryLockError, Unit> = memScoped {
     val structFlockInstance: flock = alloc<flock> {
@@ -53,7 +54,7 @@ internal fun linuxAddAdvisoryLockFd(
 }
 
 internal fun linuxRemoveAdvisoryLock(
-    fd: NativeFd,
+    fd: NativeFileFd,
     flock: Advisorylock,
 ): Either<AdvisoryLockError, Unit> = memScoped {
     val structFlockInstance: flock = alloc<flock> {
@@ -93,5 +94,5 @@ internal fun Int.errnoToAdvisoryLockError(
     EINTR -> Interrupted("Locking interrupted by signal")
     EINVAL -> InvalidArgument("Can not lock `$lock`, invalid argument")
     ENOLCK -> NoLock("Can not lock `$lock`, too many locks open")
-    else -> InvalidArgument("Can not lock `$lock`: unknown error `$this`")
+    else -> InvalidArgument("Can not lock `$lock`: $this `${strerror(this)}`")
 }

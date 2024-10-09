@@ -21,7 +21,7 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CArrayPointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.Pinned
@@ -45,7 +45,7 @@ import platform.posix.preadv
 import platform.posix.readv
 
 internal fun posixRead(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ) = when (strategy) {
@@ -54,7 +54,7 @@ internal fun posixRead(
 }
 
 private fun posixReadChangePosition(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
     return callReadWrite(nativeFd, iovecs) { fd, iovecsPointer: CPointer<iovec>, size ->
@@ -63,7 +63,7 @@ private fun posixReadChangePosition(
 }
 
 private fun posixReadDoNotChangePosition(
-    nativeFd: NativeFd,
+    nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
     val currentPosition = lseek(nativeFd.fd, 0, SEEK_CUR)
@@ -77,9 +77,9 @@ private fun posixReadDoNotChangePosition(
 }
 
 internal fun callReadWrite(
-    fd: NativeFd,
+    fd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
-    block: (fd: NativeFd, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
+    block: (fd: NativeFileFd, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
 ): Either<Int, ULong> {
     val bytesMoved = memScoped {
         val size = iovecs.size
@@ -117,7 +117,7 @@ private inline fun <R : Any> List<FileSystemByteBuffer>.withPinnedByteArrays(
 }
 
 private fun Int.errnoToReadError(
-    fd: NativeFd,
+    fd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): ReadError = when (this) {
     EAGAIN -> NotSupported("Non-blocking read would block. Request: `$fd, $iovecs`")
@@ -130,7 +130,7 @@ private fun Int.errnoToReadError(
 }
 
 private fun Int.errnoSeekToReadError(
-    fd: NativeFd,
+    fd: NativeFileFd,
 ): ReadError = when (this) {
     EBADF -> BadFileDescriptor("Can not seek on $fd")
     EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")

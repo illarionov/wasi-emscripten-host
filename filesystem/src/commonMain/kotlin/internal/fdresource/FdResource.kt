@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetTimestampError
@@ -20,12 +21,15 @@ import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.Whence
+import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 
 internal interface FdResource {
+    fun fdAttributes(): Either<FdAttributesError, FdAttributesResult>
+
     fun stat(): Either<StatError, StructStat>
 
     fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long>

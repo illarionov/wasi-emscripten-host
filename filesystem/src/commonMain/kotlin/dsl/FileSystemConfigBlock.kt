@@ -7,11 +7,12 @@
 package at.released.weh.filesystem.dsl
 
 import arrow.core.Either
+import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystemInterceptor
 import at.released.weh.filesystem.FileSystemInterceptor.Chain
 import at.released.weh.filesystem.error.FileSystemOperationError
 
-@FileSystemDsl
+@WasiEmscriptenHostDsl
 public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
     private val _interceptors: MutableList<FileSystemInterceptor> = mutableListOf()
     internal val interceptors: List<FileSystemInterceptor> get() = _interceptors
@@ -20,6 +21,9 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
         private set
 
     internal var stdioConfig: StandardInputOutputConfigBlock.() -> Unit = {}
+        private set
+
+    internal var directoryConfigBlock: DirectoryConfigBlock.() -> Unit = {}
         private set
 
     public fun addInterceptor(interceptor: FileSystemInterceptor) {
@@ -50,6 +54,16 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
     public fun stdio(block: StandardInputOutputConfigBlock.() -> Unit) {
         val oldConfig = stdioConfig
         stdioConfig = {
+            oldConfig()
+            block()
+        }
+    }
+
+    public fun directories(
+        block: DirectoryConfigBlock.() -> Unit,
+    ) {
+        val oldConfig = directoryConfigBlock
+        directoryConfigBlock = {
             oldConfig()
             block()
         }

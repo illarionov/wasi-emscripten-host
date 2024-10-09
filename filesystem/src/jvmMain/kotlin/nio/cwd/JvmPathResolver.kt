@@ -14,7 +14,6 @@ import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
-import at.released.weh.filesystem.model.BaseDirectory.None
 import at.released.weh.filesystem.nio.NioFileSystemState
 import at.released.weh.filesystem.nio.NioFileSystemState.Companion.getFileResource
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
@@ -22,7 +21,6 @@ import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPat
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.RelativePath
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -55,7 +53,6 @@ internal class JvmPathResolver(
         }
 
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
-            None -> RelativePath("Can not resolve `$path`: path should be absolute").left()
             CurrentWorkingDirectory -> javaFs.getPath("").right()
             is DirectoryFd -> {
                 val fdPath = fsState.getFileResource(baseDirectory.fd)?.channel?.path

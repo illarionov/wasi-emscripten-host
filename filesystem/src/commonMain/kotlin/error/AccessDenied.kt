@@ -14,6 +14,7 @@ public data class AccessDenied(
     CheckAccessError,
     ChmodError,
     ChownError,
+    FdAttributesError,
     GetCurrentWorkingDirectoryError,
     MkdirError,
     OpenError,
