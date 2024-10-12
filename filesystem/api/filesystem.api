@@ -1254,21 +1254,6 @@ public final class at/released/weh/filesystem/op/stat/FileTypeFlag {
 	public static final field S_IFSOCK I
 }
 
-public final class at/released/weh/filesystem/op/stat/Filetype : java/lang/Enum {
-	public static final field BLOCK_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field CHARACTER_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field DIRECTORY Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field REGULAR_FILE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SOCKET_DGRAM Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SOCKET_STREAM Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SYMBOLIC_LINK Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field UNKNOWN Lat/released/weh/filesystem/op/stat/Filetype;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getId ()I
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/op/stat/Filetype;
-	public static fun values ()[Lat/released/weh/filesystem/op/stat/Filetype;
-}
-
 public final class at/released/weh/filesystem/op/stat/Stat {
 	public static final field Companion Lat/released/weh/filesystem/op/stat/Stat$Companion;
 	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
