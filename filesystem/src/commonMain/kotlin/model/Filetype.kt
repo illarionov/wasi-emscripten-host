@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.op.stat
+package at.released.weh.filesystem.model
 
 /**
  * The type of a file descriptor or file.

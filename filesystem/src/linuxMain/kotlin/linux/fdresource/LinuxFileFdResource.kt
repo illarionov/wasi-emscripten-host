@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetTimestampError
@@ -22,6 +23,7 @@ import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.linux.native.linuxAddAdvisoryLockFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
 import at.released.weh.filesystem.linux.native.linuxChownFd
+import at.released.weh.filesystem.linux.native.linuxFdAttributes
 import at.released.weh.filesystem.linux.native.linuxRemoveAdvisoryLock
 import at.released.weh.filesystem.linux.native.linuxSeek
 import at.released.weh.filesystem.linux.native.linuxSetTimestamp
@@ -32,17 +34,23 @@ import at.released.weh.filesystem.linux.native.posixClose
 import at.released.weh.filesystem.linux.native.posixRead
 import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Whence
+import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.posix.NativeFd
-import at.released.weh.filesystem.posix.fdresource.PosixFileFdResource
+import at.released.weh.filesystem.posix.NativeFileFd
+import at.released.weh.filesystem.posix.fdresource.PosixFdResource
+import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 
 internal class LinuxFileFdResource(
-    override val nativeFd: NativeFd,
-) : PosixFileFdResource, FdResource {
-    override fun stat(): Either<StatError, StructStat> = linuxStatFd(nativeFd)
+    val nativeFd: NativeFileFd,
+) : PosixFdResource, FdResource {
+    override val fdResourceType: FdResourceType = FdResourceType.FILE
+
+    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(nativeFd)
+
+    override fun stat(): Either<StatError, StructStat> = linuxStatFd(nativeFd.fd)
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
         return linuxSeek(nativeFd, fileDelta, whence)

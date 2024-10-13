@@ -33,6 +33,9 @@ public object LinuxFileSystem : FileSystemEngine<Nothing> {
         return LinuxFileSystemImpl(
             interceptors = commonConfig.interceptors,
             stdio = stdio,
+            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
+            currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
+            preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
         )
     }
 }

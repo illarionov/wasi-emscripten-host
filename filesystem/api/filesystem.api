@@ -21,15 +21,24 @@ public final class at/released/weh/filesystem/FileSystemKt {
 	public static synthetic fun FileSystem$default (Lat/released/weh/filesystem/FileSystemEngine;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/filesystem/FileSystem;
 }
 
+public final class at/released/weh/filesystem/dsl/DirectoryConfigBlock {
+	public fun <init> ()V
+	public final fun addPreopenedDirectory (Ljava/lang/String;)Lat/released/weh/filesystem/dsl/DirectoryConfigBlock;
+	public final fun getCurrentWorkingDirectory ()Ljava/lang/String;
+	public final fun getPreopenedDirectories ()Ljava/util/List;
+	public final fun isRootAccessAllowed ()Z
+	public final fun preopened (Lkotlin/jvm/functions/Function1;)V
+	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)V
+	public final fun setRootAccessAllowed (Z)V
+}
+
 public final class at/released/weh/filesystem/dsl/FileSystemConfigBlock {
 	public fun <init> ()V
 	public final fun addInterceptor (Lat/released/weh/filesystem/FileSystemInterceptor;)V
 	public final fun addInterceptor (Lkotlin/jvm/functions/Function1;)V
+	public final fun directories (Lkotlin/jvm/functions/Function1;)V
 	public final fun engine (Lkotlin/jvm/functions/Function1;)V
 	public final fun stdio (Lkotlin/jvm/functions/Function1;)V
-}
-
-public abstract interface annotation class at/released/weh/filesystem/dsl/FileSystemDsl : java/lang/annotation/Annotation {
 }
 
 public abstract interface class at/released/weh/filesystem/dsl/FileSystemEngineConfig {
@@ -44,7 +53,7 @@ public final class at/released/weh/filesystem/dsl/StandardInputOutputConfigBlock
 	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 }
 
-public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/AccessDenied;
@@ -71,7 +80,7 @@ public final class at/released/weh/filesystem/error/Again : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/PrestatError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/BadFileDescriptor;
@@ -143,6 +152,9 @@ public final class at/released/weh/filesystem/error/Exists : at/released/weh/fil
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class at/released/weh/filesystem/error/FdAttributesError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
 public abstract interface class at/released/weh/filesystem/error/FileSystemOperationError {
 	public abstract fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public abstract fun getMessage ()Ljava/lang/String;
@@ -163,7 +175,7 @@ public final class at/released/weh/filesystem/error/FileTooBig : at/released/weh
 public abstract interface class at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
-public final class at/released/weh/filesystem/error/Interrupted : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/Interrupted : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Interrupted;
@@ -175,7 +187,7 @@ public final class at/released/weh/filesystem/error/Interrupted : at/released/we
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/InvalidArgument : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/InvalidArgument : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/InvalidArgument;
@@ -187,7 +199,7 @@ public final class at/released/weh/filesystem/error/InvalidArgument : at/release
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/IoError;
@@ -418,6 +430,9 @@ public final class at/released/weh/filesystem/error/Pipe : at/released/weh/files
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class at/released/weh/filesystem/error/PrestatError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
 public abstract interface class at/released/weh/filesystem/error/ReadError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
@@ -463,7 +478,7 @@ public final class at/released/weh/filesystem/error/TextFileBusy : at/released/w
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/TooManySymbolicLinks;
@@ -574,13 +589,6 @@ public final class at/released/weh/filesystem/model/BaseDirectory$DirectoryFd : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/model/BaseDirectory$None : at/released/weh/filesystem/model/BaseDirectory {
-	public static final field INSTANCE Lat/released/weh/filesystem/model/BaseDirectory$None;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public abstract interface annotation class at/released/weh/filesystem/model/FileMode : java/lang/annotation/Annotation {
 }
 
@@ -651,6 +659,21 @@ public final class at/released/weh/filesystem/model/FileSystemErrno : java/lang/
 
 public final class at/released/weh/filesystem/model/FileSystemErrno$Companion {
 	public final fun getWasiPreview1Code (Lat/released/weh/filesystem/model/FileSystemErrno;)I
+}
+
+public final class at/released/weh/filesystem/model/Filetype : java/lang/Enum {
+	public static final field BLOCK_DEVICE Lat/released/weh/filesystem/model/Filetype;
+	public static final field CHARACTER_DEVICE Lat/released/weh/filesystem/model/Filetype;
+	public static final field DIRECTORY Lat/released/weh/filesystem/model/Filetype;
+	public static final field REGULAR_FILE Lat/released/weh/filesystem/model/Filetype;
+	public static final field SOCKET_DGRAM Lat/released/weh/filesystem/model/Filetype;
+	public static final field SOCKET_STREAM Lat/released/weh/filesystem/model/Filetype;
+	public static final field SYMBOLIC_LINK Lat/released/weh/filesystem/model/Filetype;
+	public static final field UNKNOWN Lat/released/weh/filesystem/model/Filetype;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/model/Filetype;
+	public static fun values ()[Lat/released/weh/filesystem/model/Filetype;
 }
 
 public abstract interface annotation class at/released/weh/filesystem/model/IntFileDescriptor : java/lang/annotation/Annotation {
@@ -836,6 +859,76 @@ public final class at/released/weh/filesystem/op/cwd/GetCurrentWorkingDirectory 
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/filesystem/op/fdattributes/FdAttributes {
+	public static final field Companion Lat/released/weh/filesystem/op/fdattributes/FdAttributes$Companion;
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lat/released/weh/filesystem/op/fdattributes/FdAttributes;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/fdattributes/FdAttributes;IILjava/lang/Object;)Lat/released/weh/filesystem/op/fdattributes/FdAttributes;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFd ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fdattributes/FdAttributes$Companion : at/released/weh/filesystem/op/FileSystemOperation {
+	public fun getTag ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fdattributes/FdAttributesResult {
+	public fun <init> (Lat/released/weh/filesystem/model/Filetype;IJJ)V
+	public final fun component1 ()Lat/released/weh/filesystem/model/Filetype;
+	public final fun component2 ()I
+	public final fun component3 ()J
+	public final fun component4 ()J
+	public final fun copy (Lat/released/weh/filesystem/model/Filetype;IJJ)Lat/released/weh/filesystem/op/fdattributes/FdAttributesResult;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/fdattributes/FdAttributesResult;Lat/released/weh/filesystem/model/Filetype;IJJILjava/lang/Object;)Lat/released/weh/filesystem/op/fdattributes/FdAttributesResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFlags ()I
+	public final fun getInheritingRights ()J
+	public final fun getRights ()J
+	public final fun getType ()Lat/released/weh/filesystem/model/Filetype;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fdattributes/FdRightsFlag {
+	public static final field FD_ADVISE J
+	public static final field FD_ALLOCATE J
+	public static final field FD_DATASYNC J
+	public static final field FD_FDSTAT_SET_FLAGS J
+	public static final field FD_FILESTAT_GET J
+	public static final field FD_FILESTAT_SET_SIZE J
+	public static final field FD_FILESTAT_SET_TIMES J
+	public static final field FD_READ J
+	public static final field FD_READDIR J
+	public static final field FD_SEEK J
+	public static final field FD_SYNC J
+	public static final field FD_TELL J
+	public static final field FD_WRITE J
+	public static final field INSTANCE Lat/released/weh/filesystem/op/fdattributes/FdRightsFlag;
+	public static final field PATH_CREATE_DIRECTORY J
+	public static final field PATH_CREATE_FILE J
+	public static final field PATH_FILESTAT_GET J
+	public static final field PATH_FILESTAT_SET_SIZE J
+	public static final field PATH_FILESTAT_SET_TIMES J
+	public static final field PATH_LINK_SOURCE J
+	public static final field PATH_LINK_TARGET J
+	public static final field PATH_OPEN J
+	public static final field PATH_READLINK J
+	public static final field PATH_REMOVE_DIRECTORY J
+	public static final field PATH_RENAME_SOURCE J
+	public static final field PATH_RENAME_TARGET J
+	public static final field PATH_SYMLINK J
+	public static final field PATH_UNLINK_FILE J
+	public static final field POLL_FD_READWRITE J
+	public static final field SOCK_ACCEPT J
+	public static final field SOCK_SHUTDOWN J
+}
+
+public abstract interface annotation class at/released/weh/filesystem/op/fdattributes/FdRightsType : java/lang/annotation/Annotation {
+}
+
 public final class at/released/weh/filesystem/op/lock/AddAdvisoryLockFd {
 	public static final field Companion Lat/released/weh/filesystem/op/lock/AddAdvisoryLockFd$Companion;
 	public fun <init> (ILat/released/weh/filesystem/op/lock/Advisorylock;)V
@@ -969,6 +1062,35 @@ public final class at/released/weh/filesystem/op/opencreate/OpenFileFlag {
 }
 
 public abstract interface annotation class at/released/weh/filesystem/op/opencreate/OpenFileFlags : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/filesystem/op/prestat/PrestatFd {
+	public static final field Companion Lat/released/weh/filesystem/op/prestat/PrestatFd$Companion;
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lat/released/weh/filesystem/op/prestat/PrestatFd;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/prestat/PrestatFd;IILjava/lang/Object;)Lat/released/weh/filesystem/op/prestat/PrestatFd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFd ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/prestat/PrestatFd$Companion : at/released/weh/filesystem/op/FileSystemOperation {
+	public fun getTag ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/prestat/PrestatResult {
+	public fun <init> (ILjava/lang/String;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;)Lat/released/weh/filesystem/op/prestat/PrestatResult;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/prestat/PrestatResult;ILjava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/op/prestat/PrestatResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFd ()I
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/op/readlink/ReadLink {
@@ -1130,21 +1252,6 @@ public final class at/released/weh/filesystem/op/stat/FileTypeFlag {
 	public static final field S_IFMT I
 	public static final field S_IFREG I
 	public static final field S_IFSOCK I
-}
-
-public final class at/released/weh/filesystem/op/stat/Filetype : java/lang/Enum {
-	public static final field BLOCK_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field CHARACTER_DEVICE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field DIRECTORY Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field REGULAR_FILE Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SOCKET_DGRAM Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SOCKET_STREAM Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field SYMBOLIC_LINK Lat/released/weh/filesystem/op/stat/Filetype;
-	public static final field UNKNOWN Lat/released/weh/filesystem/op/stat/Filetype;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getId ()I
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/op/stat/Filetype;
-	public static fun values ()[Lat/released/weh/filesystem/op/stat/Filetype;
 }
 
 public final class at/released/weh/filesystem/op/stat/Stat {
@@ -1309,6 +1416,17 @@ public final class at/released/weh/filesystem/op/unlink/UnlinkFile {
 
 public final class at/released/weh/filesystem/op/unlink/UnlinkFile$Companion : at/released/weh/filesystem/op/FileSystemOperation {
 	public fun getTag ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/preopened/PreopenedDirectory {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/preopened/PreopenedDirectory;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRealPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/stdio/JvmStandardInputOutput : at/released/weh/filesystem/stdio/StandardInputOutput {

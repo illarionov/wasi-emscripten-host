@@ -16,6 +16,7 @@ public data class IoError(
     ChmodError,
     ChownError,
     CloseError,
+    FdAttributesError,
     MkdirError,
     OpenError,
     ReadError,

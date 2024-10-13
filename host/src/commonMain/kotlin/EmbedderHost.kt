@@ -7,10 +7,15 @@
 package at.released.weh.host
 
 import at.released.weh.common.api.Logger
+import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystem
+import at.released.weh.filesystem.dsl.DirectoryConfigBlock
+import at.released.weh.filesystem.preopened.PreopenedDirectory
+import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.host.EmbedderHost.Builder
+import kotlin.jvm.JvmSynthetic
 
 internal expect fun createDefaultEmbedderHost(builder: Builder): EmbedderHost
 
@@ -25,6 +30,7 @@ public interface EmbedderHost {
     public val timeZoneInfo: TimeZoneInfo.Provider
     public val entropySource: EntropySource
 
+    @WasiEmscriptenHostDsl
     public class Builder {
         public var rootLogger: Logger = Logger
         public var stdinProvider: SourceProvider? = null
@@ -39,6 +45,31 @@ public interface EmbedderHost {
         public var timeZoneInfo: TimeZoneInfo.Provider? = null
         public var entropySource: EntropySource? = null
 
+        @JvmSynthetic // Hide from Java
+        internal val directoriesConfigBlock: DirectoryConfigBlock = DirectoryConfigBlock()
+
+        public fun directories(): DirectoriesBuilder = DirectoriesBuilder()
+
         public fun build(): EmbedderHost = createDefaultEmbedderHost(this)
+
+        @WasiEmscriptenHostDsl
+        public inner class DirectoriesBuilder internal constructor() {
+            public fun setCurrentWorkingDirectory(directory: String): DirectoriesBuilder = apply {
+                this@Builder.directoriesConfigBlock.currentWorkingDirectory = directory
+            }
+
+            public fun setAllowRootAccess(allowRootAccess: Boolean): DirectoriesBuilder = apply {
+                this@Builder.directoriesConfigBlock.isRootAccessAllowed = allowRootAccess
+            }
+
+            public fun addDirectory(realPath: RealPath): DirectoriesBuilder {
+                this@Builder.directoriesConfigBlock.preopened {
+                    add(PreopenedDirectory(realPath))
+                }
+                return this
+            }
+
+            public fun done(): Builder = this@Builder
+        }
     }
 }

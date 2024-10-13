@@ -9,6 +9,7 @@ package at.released.weh.filesystem.op.stat
 import androidx.annotation.IntDef
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileModeFlag
+import at.released.weh.filesystem.model.Filetype
 import kotlin.annotation.AnnotationRetention.SOURCE
 import kotlin.jvm.JvmStatic
 

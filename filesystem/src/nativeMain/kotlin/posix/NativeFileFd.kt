@@ -6,6 +6,6 @@
 
 package at.released.weh.filesystem.posix
 
-internal value class NativeFd(
+internal value class NativeFileFd(
     val fd: Int,
 )

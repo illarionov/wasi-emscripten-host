@@ -20,7 +20,7 @@ import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.TextFileBusy
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.TruncateError
-import at.released.weh.filesystem.posix.NativeFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EDQUOT
@@ -39,7 +39,7 @@ import platform.posix.errno
 import platform.posix.ftruncate
 
 internal fun linuxTruncate(
-    fd: NativeFd,
+    fd: NativeFileFd,
     length: Long,
 ): Either<TruncateError, Unit> {
     val resultCode = ftruncate(fd.fd, length)

@@ -14,6 +14,7 @@ import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxOpen
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.posix.NativeFileFd
 
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
@@ -21,7 +22,7 @@ internal class LinuxOpen(
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> =
         fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
             linuxOpen(directoryFd, input.path, input.flags, input.mode)
-                .flatMap { nativeFd -> fsState.addFile(nativeFd) }
+                .flatMap { nativeFd -> fsState.add(NativeFileFd(nativeFd)) }
                 .map { (fd: FileDescriptor, _) -> fd }
         }
 }

@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
@@ -37,6 +38,7 @@ import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioFileSystemState
 import at.released.weh.filesystem.nio.NioSeekFd.Companion.toSeekError
+import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
@@ -56,6 +58,9 @@ internal class NioFileFdResource(
     val lock: Lock = ReentrantLock()
     val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
     val channel = NioFileChannel(path, channel)
+    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
+        TODO("Not yet implemented")
+    }
 
     override fun stat(): Either<StatError, StructStat> {
         return NioFileStat.getStat(channel.path, true)

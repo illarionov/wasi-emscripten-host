@@ -14,6 +14,7 @@ public data class TooManySymbolicLinks(
     CheckAccessError,
     ChmodError,
     ChownError,
+    FdAttributesError,
     MkdirError,
     OpenError,
     ReadLinkError,

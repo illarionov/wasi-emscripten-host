@@ -16,6 +16,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotSupported
@@ -27,13 +28,24 @@ import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.FileDescriptorTable
+import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDERR_FD
+import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDIN_FD
+import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDOUT_FD
 import at.released.weh.filesystem.internal.fdresource.stdio.StdioReadWriteError
 import at.released.weh.filesystem.internal.fdresource.stdio.StdioReadWriteError.Closed
 import at.released.weh.filesystem.internal.fdresource.stdio.flushNoThrow
 import at.released.weh.filesystem.internal.fdresource.stdio.transferFrom
 import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
+import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
+import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
+import at.released.weh.filesystem.op.fdattributes.FdRights
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_DATASYNC
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_SYNC
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.lock.Advisorylock
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
@@ -56,6 +68,15 @@ internal class StdioFileFdResource(
     private var isOpen: Boolean = true
     private var source: RawSource? = null
     private var sink: RawSink? = null
+
+    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
+        return FdAttributesResult(
+            type = CHARACTER_DEVICE,
+            flags = OpenFileFlag.O_RDWR,
+            rights = STDIO_FD_RIGHTS,
+            inheritingRights = 0,
+        ).right()
+    }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
         val sink = writeLock.withLock {
@@ -196,6 +217,8 @@ internal class StdioFileFdResource(
     }
 
     companion object {
+        const val STDIO_FD_RIGHTS: FdRights = FD_DATASYNC or FD_READ or FD_SYNC or FD_WRITE
+
         internal fun initStdioDescriptors(
             table: FileDescriptorTable<in FdResource>,
             stdio: StandardInputOutput,
@@ -208,9 +231,9 @@ internal class StdioFileFdResource(
                 sourceProvider = SourceProvider(::ExhaustedRawSource),
                 sinkProvider = stdio.stderrProvider,
             )
-            table.set(0, stdInStdOut)
-            table.set(1, stdInStdOut)
-            table.set(2, stdErr)
+            table[WASI_STDIN_FD] = stdInStdOut
+            table[WASI_STDOUT_FD] = stdInStdOut
+            table[WASI_STDERR_FD] = stdErr
         }
     }
 }

@@ -16,6 +16,7 @@ public data class InvalidArgument(
     CheckAccessError,
     ChmodError,
     ChownError,
+    FdAttributesError,
     GetCurrentWorkingDirectoryError,
     MkdirError,
     OpenError,

@@ -30,6 +30,16 @@ public final class at/released/weh/wasi/preview1/function/FdCloseFunctionHandle 
 	public final fun execute (I)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
+public final class at/released/weh/wasi/preview1/function/FdPrestatDirNameFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;III)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
+public final class at/released/weh/wasi/preview1/function/FdPrestatGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
 public final class at/released/weh/wasi/preview1/function/FdReadFdPreadFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public static final field Companion Lat/released/weh/wasi/preview1/function/FdReadFdPreadFunctionHandle$Companion;
 	public synthetic fun <init> (Lat/released/weh/host/EmbedderHost;Lat/released/weh/wasm/core/HostFunction;Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -60,6 +70,11 @@ public final class at/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctio
 public final class at/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle$Companion {
 	public final fun fdPwrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
 	public final fun fdWrite (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/wasi/preview1/function/FdWriteFdPWriteFunctionHandle;
+}
+
+public final class at/released/weh/wasi/preview1/function/FdstatGetFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/ProcExitFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {

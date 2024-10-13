@@ -18,7 +18,10 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.ArgsSizesGe
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdClose
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPrestatDirName
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPrestatGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSeek
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdStatGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSync
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.SchedYield
@@ -49,19 +52,19 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.ARGS_GET -> ::ArgsGet
             WasiPreview1HostFunction.ARGS_SIZES_GET -> ::ArgsSizesGet
             WasiPreview1HostFunction.RANDOM_GET -> ::RandomGet
+            WasiPreview1HostFunction.FD_FDSTAT_GET -> ::FdStatGet
+            WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME -> ::FdPrestatDirName
+            WasiPreview1HostFunction.FD_PRESTAT_GET -> ::FdPrestatGet
             WasiPreview1HostFunction.CLOCK_RES_GET,
             WasiPreview1HostFunction.CLOCK_TIME_GET,
             WasiPreview1HostFunction.FD_ADVISE,
             WasiPreview1HostFunction.FD_ALLOCATE,
             WasiPreview1HostFunction.FD_DATASYNC,
-            WasiPreview1HostFunction.FD_FDSTAT_GET,
             WasiPreview1HostFunction.FD_FDSTAT_SET_FLAGS,
             WasiPreview1HostFunction.FD_FDSTAT_SET_RIGHTS,
             WasiPreview1HostFunction.FD_FILESTAT_GET,
             WasiPreview1HostFunction.FD_FILESTAT_SET_SIZE,
             WasiPreview1HostFunction.FD_FILESTAT_SET_TIMES,
-            WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME,
-            WasiPreview1HostFunction.FD_PRESTAT_GET,
             WasiPreview1HostFunction.FD_READDIR,
             WasiPreview1HostFunction.FD_RENUMBER,
             WasiPreview1HostFunction.FD_TELL,

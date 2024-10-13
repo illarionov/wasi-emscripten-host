@@ -14,12 +14,15 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.ArgsSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdClose
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdPrestatDirName
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdPrestatGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdReadFdPread.Companion.fdPread
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdReadFdPread.Companion.fdRead
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdSeek
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdSync
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdPwrite
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdstatGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.SchedYield
@@ -30,7 +33,10 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ARGS_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.ENVIRON_SIZES_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_CLOSE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_FDSTAT_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PREAD
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PRESTAT_GET
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_PWRITE
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
@@ -81,7 +87,10 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         ENVIRON_GET -> EnvironGet(host, memory)
         ENVIRON_SIZES_GET -> EnvironSizesGet(host, memory)
         FD_CLOSE -> FdClose(host)
+        FD_FDSTAT_GET -> FdstatGet(host, memory)
         FD_PREAD -> fdPread(host, memory, wasiMemoryReader)
+        FD_PRESTAT_GET -> FdPrestatGet(host, memory)
+        FD_PRESTAT_DIR_NAME -> FdPrestatDirName(host, memory)
         FD_PWRITE -> fdPwrite(host, memory, wasiMemoryWriter)
         FD_READ -> fdRead(host, memory, wasiMemoryReader)
         FD_SEEK -> FdSeek(host, memory)

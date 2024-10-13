@@ -6,6 +6,7 @@
 
 package at.released.weh.wasi.bindings.test
 
+import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.test.utils.TempFolder
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiSuiteTestExecutor
@@ -21,12 +22,17 @@ public abstract class WasiTestSuiteBaseTest(
 
     @BeforeTest
     public fun setup() {
+        TestEnvironment.prepare()
         tempFolder = TempFolder.create()
     }
 
     @AfterTest
     public fun cleanup() {
-        tempFolder?.delete()
+        try {
+            tempFolder?.delete()
+        } finally {
+            TestEnvironment.cleanup()
+        }
     }
 
     protected fun runTest(

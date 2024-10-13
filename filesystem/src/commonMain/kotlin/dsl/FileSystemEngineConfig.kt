@@ -6,5 +6,7 @@
 
 package at.released.weh.filesystem.dsl
 
-@FileSystemDsl
+import at.released.weh.common.api.WasiEmscriptenHostDsl
+
+@WasiEmscriptenHostDsl
 public interface FileSystemEngineConfig
