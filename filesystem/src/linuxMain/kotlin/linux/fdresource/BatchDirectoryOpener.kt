@@ -60,6 +60,7 @@ private fun preopenDirectory(
         baseDirectoryFd = baseDirectoryFd,
         path = path,
         flags = OpenFileFlag.O_PATH,
+        fdFlags = 0,
         mode = 0,
     ).map { nativeFd: Int ->
         LinuxDirectoryFdResource(NativeDirectoryFd(nativeFd), true, virtualPath = path)

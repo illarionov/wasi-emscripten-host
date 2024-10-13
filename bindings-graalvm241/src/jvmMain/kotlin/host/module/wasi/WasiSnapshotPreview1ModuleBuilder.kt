@@ -23,6 +23,7 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPrestatGe
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSeek
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdStatGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSync
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.PathOpen
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.SchedYield
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPread
@@ -55,6 +56,7 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.FD_FDSTAT_GET -> ::FdStatGet
             WasiPreview1HostFunction.FD_PRESTAT_DIR_NAME -> ::FdPrestatDirName
             WasiPreview1HostFunction.FD_PRESTAT_GET -> ::FdPrestatGet
+            WasiPreview1HostFunction.PATH_OPEN -> ::PathOpen
             WasiPreview1HostFunction.CLOCK_RES_GET,
             WasiPreview1HostFunction.CLOCK_TIME_GET,
             WasiPreview1HostFunction.FD_ADVISE,
@@ -72,7 +74,6 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.PATH_FILESTAT_GET,
             WasiPreview1HostFunction.PATH_FILESTAT_SET_TIMES,
             WasiPreview1HostFunction.PATH_LINK,
-            WasiPreview1HostFunction.PATH_OPEN,
             WasiPreview1HostFunction.PATH_READLINK,
             WasiPreview1HostFunction.PATH_REMOVE_DIRECTORY,
             WasiPreview1HostFunction.PATH_RENAME,

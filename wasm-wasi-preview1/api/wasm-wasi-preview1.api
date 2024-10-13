@@ -77,6 +77,11 @@ public final class at/released/weh/wasi/preview1/function/FdstatGetFunctionHandl
 	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
+public final class at/released/weh/wasi/preview1/function/PathOpenFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (Lat/released/weh/wasm/core/memory/ReadOnlyMemory;IIIISJJS)Lat/released/weh/wasi/preview1/type/Errno;
+}
+
 public final class at/released/weh/wasi/preview1/function/ProcExitFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute (I)Ljava/lang/Void;

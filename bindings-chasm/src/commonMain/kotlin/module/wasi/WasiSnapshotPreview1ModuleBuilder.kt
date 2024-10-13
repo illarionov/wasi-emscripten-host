@@ -28,6 +28,7 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READ
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SEEK
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_SYNC
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_WRITE
+import at.released.weh.wasi.preview1.WasiPreview1HostFunction.PATH_OPEN
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.PROC_EXIT
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.RANDOM_GET
 import at.released.weh.wasi.preview1.function.ArgsGetFunctionHandle
@@ -42,6 +43,7 @@ import at.released.weh.wasi.preview1.function.FdSeekFunctionHandle
 import at.released.weh.wasi.preview1.function.FdSyncFunctionHandle
 import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
 import at.released.weh.wasi.preview1.function.FdstatGetFunctionHandle
+import at.released.weh.wasi.preview1.function.PathOpenFunctionHandle
 import at.released.weh.wasi.preview1.function.RandomGetFunctionHandle
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
@@ -99,6 +101,7 @@ private fun createChasmHostFunction(
     FD_SEEK -> functions.fdSeek
     FD_SYNC -> functions.fdSync
     FD_WRITE -> functions.fdwrite
+    PATH_OPEN -> functions.pathOpen
     PROC_EXIT -> functions.procExit
     RANDOM_GET -> functions.randomGet
     else -> NotImplementedWasiFunction(wasiHostFunction)::invoke
@@ -125,6 +128,7 @@ private class ChasmWasiPreview1Functions(
     private val fdPwriteHandle = FdWriteFdPWriteFunctionHandle.fdPwrite(host)
     private val fdSeekHandle = FdSeekFunctionHandle(host)
     private val fdSyncHandle = FdSyncFunctionHandle(host)
+    private val pathOpenHandle = PathOpenFunctionHandle(host)
     private val randomGetHandle = RandomGetFunctionHandle(host)
 
     val argsGet: ChasmHostFunction = { args ->
@@ -225,6 +229,20 @@ private class ChasmWasiPreview1Functions(
     val fdSync: ChasmHostFunction = { args ->
         fdSyncHandle.execute(
             fd = args[0].asInt(),
+        ).toListOfReturnValues()
+    }
+
+    val pathOpen: ChasmHostFunction = { args ->
+        pathOpenHandle.execute(
+            memory = memory,
+            fd = args[0].asInt(),
+            dirFlags = args[1].asInt(),
+            path = args[2].asWasmAddr(),
+            pathSize = args[3].asInt(),
+            oflags = args[4].asInt().toShort(),
+            rights = args[5].asLong(),
+            rightsInheriting = args[6].asLong(),
+            fdflags = args[7].asInt().toShort(),
         ).toListOfReturnValues()
     }
 

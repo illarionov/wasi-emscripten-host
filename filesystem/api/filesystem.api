@@ -589,6 +589,18 @@ public final class at/released/weh/filesystem/model/BaseDirectory$DirectoryFd : 
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/filesystem/model/FdFlag {
+	public static final field FD_APPEND I
+	public static final field FD_DSYNC I
+	public static final field FD_NONBLOCK I
+	public static final field FD_RSYNC I
+	public static final field FD_SYNC I
+	public static final field INSTANCE Lat/released/weh/filesystem/model/FdFlag;
+}
+
+public abstract interface annotation class at/released/weh/filesystem/model/FdflagsType : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class at/released/weh/filesystem/model/FileMode : java/lang/annotation/Annotation {
 }
 
@@ -1013,19 +1025,25 @@ public final class at/released/weh/filesystem/op/mkdir/Mkdir$Companion : at/rele
 
 public final class at/released/weh/filesystem/op/opencreate/Open {
 	public static final field Companion Lat/released/weh/filesystem/op/opencreate/Open$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()I
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;II)Lat/released/weh/filesystem/op/opencreate/Open;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6 ()Lat/released/weh/filesystem/op/opencreate/Open$Rights;
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;Z)Lat/released/weh/filesystem/op/opencreate/Open;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getFlags ()I
-	public final fun getMode ()I
+	public final fun getFdFlags ()I
+	public final fun getFollowSymlinks ()Z
+	public final fun getMode ()Ljava/lang/Integer;
+	public final fun getOpenFlags ()I
 	public final fun getPath ()Ljava/lang/String;
+	public final fun getRights ()Lat/released/weh/filesystem/op/opencreate/Open$Rights;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1034,34 +1052,42 @@ public final class at/released/weh/filesystem/op/opencreate/Open$Companion : at/
 	public fun getTag ()Ljava/lang/String;
 }
 
+public final class at/released/weh/filesystem/op/opencreate/Open$Rights {
+	public fun <init> (JJ)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun copy (JJ)Lat/released/weh/filesystem/op/opencreate/Open$Rights;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open$Rights;JJILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open$Rights;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRights ()J
+	public final fun getRightsInheriting ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class at/released/weh/filesystem/op/opencreate/OpenFileFlag {
 	public static final field INSTANCE Lat/released/weh/filesystem/op/opencreate/OpenFileFlag;
 	public static final field O_ACCMODE I
-	public static final field O_APPEND I
 	public static final field O_ASYNC I
 	public static final field O_CLOEXEC I
 	public static final field O_CREAT I
 	public static final field O_DIRECT I
 	public static final field O_DIRECTORY I
-	public static final field O_DSYNC I
 	public static final field O_EXCL I
 	public static final field O_LARGEFILE I
-	public static final field O_NDELAY I
 	public static final field O_NOATIME I
 	public static final field O_NOCTTY I
 	public static final field O_NOFOLLOW I
-	public static final field O_NONBLOCK I
 	public static final field O_PATH I
 	public static final field O_RDONLY I
 	public static final field O_RDWR I
 	public static final field O_SEARCH I
-	public static final field O_SYNC I
 	public static final field O_TMPFILE I
 	public static final field O_TRUNC I
 	public static final field O_WRONLY I
 }
 
-public abstract interface annotation class at/released/weh/filesystem/op/opencreate/OpenFileFlags : java/lang/annotation/Annotation {
+public abstract interface annotation class at/released/weh/filesystem/op/opencreate/OpenFileFlagsType : java/lang/annotation/Annotation {
 }
 
 public final class at/released/weh/filesystem/op/prestat/PrestatFd {

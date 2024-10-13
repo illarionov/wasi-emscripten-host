@@ -17,12 +17,16 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.FdFlag
+import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import com.sun.nio.file.ExtendedOpenOption
 import java.io.IOException
 import java.nio.channels.FileChannel
@@ -37,11 +41,16 @@ internal class NioOpen(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
-        val path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
+        val path = fsState.pathResolver.resolve(
+            input.path,
+            input.baseDirectory,
+            allowEmptyPath = true,
+            followSymlinks = input.followSymlinks,
+        )
             .mapLeft(ResolvePathError::toCommonError)
             .bind()
 
-        val openOptionsResult = getOpenOptions(input.flags)
+        val openOptionsResult = getOpenOptions(input.openFlags, input.fdFlags)
         if (openOptionsResult.notImplementedFlags != 0U) {
             raise(
                 InvalidArgument(
@@ -49,10 +58,14 @@ internal class NioOpen(
                 ),
             )
         }
-        val fileAttributes = input.mode.fileModeToPosixFilePermissions().asFileAttribute()
+        val fileAttributes = input.mode?.let {
+            arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
+        } ?: emptyArray()
+
         fsState.fsLock.withLock {
+            @Suppress("SpreadOperator")
             val nioChannel = Either.catch {
-                FileChannel.open(path, openOptionsResult.options, fileAttributes)
+                FileChannel.open(path, openOptionsResult.options, *fileAttributes)
             }
                 .mapLeft { error -> error.toOpenError(path) }
                 .bind()
@@ -78,7 +91,8 @@ private fun Throwable.toOpenError(path: Path): OpenError = when (this) {
 
 @Suppress("CyclomaticComplexMethod", "LOCAL_VARIABLE_EARLY_DECLARATION", "LongMethod")
 private fun getOpenOptions(
-    @OpenFileFlags flags: Int,
+    @OpenFileFlagsType flags: OpenFileFlags,
+    @FdflagsType fdFlags: Fdflags,
 ): GetOpenOptionsResult {
     val options: MutableSet<OpenOption> = mutableSetOf()
     var ignoredFlags = 0U
@@ -91,7 +105,7 @@ private fun getOpenOptions(
         options += StandardOpenOption.WRITE
     }
 
-    if (flags and OpenFileFlag.O_APPEND != 0) {
+    if (fdFlags and FdFlag.FD_APPEND != 0) {
         options += StandardOpenOption.APPEND
     }
 
@@ -107,15 +121,15 @@ private fun getOpenOptions(
         options += StandardOpenOption.TRUNCATE_EXISTING
     }
 
-    if (flags and OpenFileFlag.O_NONBLOCK != 0) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_NONBLOCK.toUInt()
+    if (fdFlags and FdFlag.FD_NONBLOCK != 0) {
+        notImplementedFlags = notImplementedFlags and FdFlag.FD_NONBLOCK.toUInt()
     }
 
     if (flags and OpenFileFlag.O_ASYNC != 0) {
         notImplementedFlags = notImplementedFlags and OpenFileFlag.O_ASYNC.toUInt()
     }
 
-    if (flags and (OpenFileFlag.O_DSYNC or OpenFileFlag.O_SYNC) != 0) {
+    if (fdFlags and (FdFlag.FD_DSYNC or FdFlag.FD_SYNC) != 0) {
         options += StandardOpenOption.SYNC
     }
 

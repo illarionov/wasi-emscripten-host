@@ -6,8 +6,9 @@
 
 package at.released.weh.filesystem.op.fdattributes
 
+import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.Filetype
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 
 /**
  * File descriptor attributes.
@@ -20,7 +21,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
  */
 public data class FdAttributesResult(
     val type: Filetype,
-    @OpenFileFlags val flags: Int,
+    @FdflagsType val flags: Fdflags,
     @FdRightsType val rights: FdRights,
     @FdRightsType val inheritingRights: FdRights,
 )

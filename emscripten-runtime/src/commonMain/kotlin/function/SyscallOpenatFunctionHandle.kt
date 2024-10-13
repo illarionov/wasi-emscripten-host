@@ -7,13 +7,14 @@
 package at.released.weh.emcripten.runtime.function
 
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_OPENAT
+import at.released.weh.emcripten.runtime.ext.EmscriptenFdFlagsMapper
+import at.released.weh.emcripten.runtime.ext.EmscriptenOpenFileFlagsMapper
 import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -27,7 +28,7 @@ public class SyscallOpenatFunctionHandle(
         memory: ReadOnlyMemory,
         rawDirFd: Int,
         @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
-        @OpenFileFlags rawFlags: Int,
+        rawFlags: Int,
         @FileMode rawMode: Int,
     ): Int {
         val fs = host.fileSystem
@@ -37,7 +38,8 @@ public class SyscallOpenatFunctionHandle(
         val fsOperation = Open(
             path = path,
             baseDirectory = baseDirectory,
-            flags = rawFlags,
+            openFlags = EmscriptenOpenFileFlagsMapper.getOpenFlags(rawFlags),
+            fdFlags = EmscriptenFdFlagsMapper.getFdFlags(rawFlags),
             mode = rawMode,
         )
         return fs.execute(Open, fsOperation)

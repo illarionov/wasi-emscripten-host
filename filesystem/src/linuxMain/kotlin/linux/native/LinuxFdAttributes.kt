@@ -24,7 +24,8 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.STDIO_FD_RIGHTS
 import at.released.weh.filesystem.linux.ext.linuxFd
-import at.released.weh.filesystem.linux.ext.linuxMaskToOpenFileFlags
+import at.released.weh.filesystem.linux.ext.linuxMaskToFsFdFlags
+import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.model.Filetype.BLOCK_DEVICE
 import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
@@ -40,7 +41,7 @@ import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_RIGHTS
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.PATH_SYMLINK
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_ACCEPT
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_SHUTDOWN
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToFileType
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
@@ -62,7 +63,7 @@ internal fun linuxFdAttributes(
 private fun linuxFdAttributes(
     fd: Int,
 ): Either<FdAttributesError, FdAttributesResult> = either {
-    @OpenFileFlags
+    @OpenFileFlagsType
     val fileStatus = readFileStatus(fd).bind()
     val fileType = readFileType(fd).bind()
 
@@ -90,10 +91,10 @@ private fun linuxFdAttributes(
 
 private fun readFileStatus(
     fd: Int,
-): Either<FdAttributesError, Int> {
+): Either<FdAttributesError, Fdflags> {
     val exitCode = fcntl(fd, F_GETFL)
     return if (exitCode >= 0) {
-        linuxMaskToOpenFileFlags(exitCode).right()
+        linuxMaskToFsFdFlags(exitCode).right()
     } else {
         errno.getflErrnoToFdAttributesError().left()
     }
