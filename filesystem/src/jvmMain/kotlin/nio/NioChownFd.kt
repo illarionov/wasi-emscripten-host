@@ -7,18 +7,14 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.chown.ChownFd
 
 internal class NioChownFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<ChownFd, ChownError, Unit> {
-    override fun invoke(input: ChownFd): Either<ChownError, Unit> {
-        val channel = fsState.get(input.fd) ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
-        return channel.chown(input.owner, input.group)
+    override fun invoke(input: ChownFd): Either<ChownError, Unit> = fsState.executeWithResource(input.fd) {
+        it.chown(input.owner, input.group)
     }
 }

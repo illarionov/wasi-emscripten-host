@@ -11,11 +11,11 @@ import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.ext.asLinkOptions
+import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.nio.NioFileSystemState
-import at.released.weh.filesystem.nio.NioFileSystemState.Companion.getFileResource
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
@@ -55,7 +55,7 @@ internal class JvmPathResolver(
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
             CurrentWorkingDirectory -> javaFs.getPath("").right()
             is DirectoryFd -> {
-                val fdPath = fsState.getFileResource(baseDirectory.fd)?.channel?.path
+                val fdPath = (fsState.get(baseDirectory.fd) as? NioDirectoryFdResource)?.realPath
                 fdPath?.right() ?: FileDescriptorNotOpen("File descriptor ${baseDirectory.fd} is not open").left()
             }
         }.flatMap { basePath ->

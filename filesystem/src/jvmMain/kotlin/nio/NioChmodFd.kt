@@ -7,19 +7,14 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.chmod.ChmodFd
 
 internal class NioChmodFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<ChmodFd, ChmodError, Unit> {
-    override fun invoke(input: ChmodFd): Either<ChmodError, Unit> {
-        val channel = fsState.get(input.fd)
-            ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
-        return channel.chmod(input.mode)
+    override fun invoke(input: ChmodFd): Either<ChmodError, Unit> = fsState.executeWithResource(input.fd) {
+        it.chmod(input.mode)
     }
 }

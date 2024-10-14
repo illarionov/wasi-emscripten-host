@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.filesystem.model.Fdflags
 import java.nio.channels.FileChannel
 import java.nio.file.Path as NioPath
 
@@ -14,4 +15,5 @@ import java.nio.file.Path as NioPath
 public data class NioFileChannel(
     val path: NioPath,
     val channel: FileChannel,
+    val fdFlags: Fdflags,
 )

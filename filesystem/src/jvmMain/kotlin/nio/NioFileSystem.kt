@@ -34,6 +34,9 @@ public object NioFileSystem : FileSystemEngine<NioFileSystemConfig> {
             javaFs = nioConfig.nioFileSystem,
             interceptors = commonConfig.interceptors,
             stdio = stdio,
+            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
+            currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
+            preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
         )
     }
 

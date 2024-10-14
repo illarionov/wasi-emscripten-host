@@ -6,24 +6,28 @@
 
 package at.released.weh.filesystem.linux
 
-import at.released.weh.filesystem.op.stat.FileModeType
-import at.released.weh.filesystem.op.stat.FileTypeFlag
+import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.Filetype
 
-@FileModeType
-internal fun fileModeTypeFromLinuxModeType(
+@FileMode
+internal fun fileModeFromLinuxModeType(
     linuxModeType: UInt,
 ): Int {
-    val typeMask = when (val posixType = linuxModeType.toInt() and platform.posix.S_IFMT) {
-        platform.posix.S_IFDIR -> FileTypeFlag.S_IFDIR
-        platform.posix.S_IFCHR -> FileTypeFlag.S_IFCHR
-        platform.posix.S_IFBLK -> FileTypeFlag.S_IFBLK
-        platform.posix.S_IFREG -> FileTypeFlag.S_IFREG
-        platform.posix.S_IFIFO -> FileTypeFlag.S_IFIFO
-        platform.posix.S_IFLNK -> FileTypeFlag.S_IFLNK
-        platform.posix.S_IFSOCK -> FileTypeFlag.S_IFSOCK
+    return (linuxModeType and 0xfffU).toInt()
+}
+
+internal fun fileTypeFromLinuxModeType(
+    linuxModeType: UInt,
+): Filetype {
+    // XXX: SOCKET_DGRAM?
+    return when (val posixType = linuxModeType.toInt() and platform.posix.S_IFMT) {
+        platform.posix.S_IFDIR -> Filetype.DIRECTORY
+        platform.posix.S_IFCHR -> Filetype.CHARACTER_DEVICE
+        platform.posix.S_IFBLK -> Filetype.BLOCK_DEVICE
+        platform.posix.S_IFREG -> Filetype.REGULAR_FILE
+        platform.posix.S_IFIFO -> Filetype.CHARACTER_DEVICE
+        platform.posix.S_IFLNK -> Filetype.SYMBOLIC_LINK
+        platform.posix.S_IFSOCK -> Filetype.SOCKET_STREAM
         else -> error("Unexpected type 0x${posixType.toString(16)}")
     }
-
-    val modeMask = linuxModeType and 0xfffU
-    return typeMask or modeMask.toInt()
 }

@@ -42,7 +42,7 @@ import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.PATH_SYMLINK
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_ACCEPT
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_SHUTDOWN
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToFileType
+import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EBADF
@@ -64,7 +64,7 @@ private fun linuxFdAttributes(
     fd: Int,
 ): Either<FdAttributesError, FdAttributesResult> = either {
     @OpenFileFlagsType
-    val fileStatus = readFileStatus(fd).bind()
+    val fileStatus: Fdflags = readFileStatus(fd).bind()
     val fileType = readFileType(fd).bind()
 
     // XXX: check
@@ -103,7 +103,7 @@ private fun readFileStatus(
 private fun readFileType(
     fd: Int,
 ): Either<FdAttributesError, Filetype> = linuxStatFd(fd)
-    .map { fileModeTypeToFileType(it.mode) }
+    .map(StructStat::type)
     .mapLeft(StatError::toFdAttributesError)
 
 private fun getFdRightsByFileType(fileType: Filetype) = when (fileType) {

@@ -1265,21 +1265,6 @@ public final class at/released/weh/filesystem/op/settimestamp/SetTimestampFd$Com
 	public fun getTag ()Ljava/lang/String;
 }
 
-public abstract interface annotation class at/released/weh/filesystem/op/stat/FileModeType : java/lang/annotation/Annotation {
-}
-
-public final class at/released/weh/filesystem/op/stat/FileTypeFlag {
-	public static final field INSTANCE Lat/released/weh/filesystem/op/stat/FileTypeFlag;
-	public static final field S_IFBLK I
-	public static final field S_IFCHR I
-	public static final field S_IFDIR I
-	public static final field S_IFIFO I
-	public static final field S_IFLNK I
-	public static final field S_IFMT I
-	public static final field S_IFREG I
-	public static final field S_IFSOCK I
-}
-
 public final class at/released/weh/filesystem/op/stat/Stat {
 	public static final field Companion Lat/released/weh/filesystem/op/stat/Stat$Companion;
 	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
@@ -1318,22 +1303,23 @@ public final class at/released/weh/filesystem/op/stat/StatFd$Companion : at/rele
 }
 
 public final class at/released/weh/filesystem/op/stat/StructStat {
-	public fun <init> (JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)V
+	public fun <init> (JJILat/released/weh/filesystem/model/Filetype;JJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)V
 	public final fun component1 ()J
 	public final fun component10 ()J
-	public final fun component11 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
+	public final fun component11 ()J
 	public final fun component12 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun component13 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
+	public final fun component14 ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun component2 ()J
 	public final fun component3 ()I
-	public final fun component4 ()J
+	public final fun component4 ()Lat/released/weh/filesystem/model/Filetype;
 	public final fun component5 ()J
 	public final fun component6 ()J
 	public final fun component7 ()J
 	public final fun component8 ()J
 	public final fun component9 ()J
-	public final fun copy (JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)Lat/released/weh/filesystem/op/stat/StructStat;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/stat/StructStat;JJIJJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;ILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/StructStat;
+	public final fun copy (JJILat/released/weh/filesystem/model/Filetype;JJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;)Lat/released/weh/filesystem/op/stat/StructStat;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/stat/StructStat;JJILat/released/weh/filesystem/model/Filetype;JJJJJJJLat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;Lat/released/weh/filesystem/op/stat/StructTimespec;ILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/StructStat;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessTime ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun getBlockSize ()J
@@ -1347,6 +1333,7 @@ public final class at/released/weh/filesystem/op/stat/StructStat {
 	public final fun getModificationTime ()Lat/released/weh/filesystem/op/stat/StructTimespec;
 	public final fun getSize ()J
 	public final fun getSpecialFileDeviceId ()J
+	public final fun getType ()Lat/released/weh/filesystem/model/Filetype;
 	public final fun getUsedId ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

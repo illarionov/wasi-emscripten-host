@@ -7,15 +7,16 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import at.released.weh.filesystem.error.AdvisoryLockError
+import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
+import at.released.weh.filesystem.op.fdattributes.FdAttributes
+import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 
-internal class NioRemoveAdvisoryLockFd(
+internal class NioFdAttributes(
     private val fsState: NioFileSystemState,
-) : FileSystemOperationHandler<RemoveAdvisoryLockFd, AdvisoryLockError, Unit> {
-    override fun invoke(input: RemoveAdvisoryLockFd): Either<AdvisoryLockError, Unit> =
+) : FileSystemOperationHandler<FdAttributes, FdAttributesError, FdAttributesResult> {
+    override fun invoke(input: FdAttributes): Either<FdAttributesError, FdAttributesResult> =
         fsState.executeWithResource(input.fd) {
-            it.removeAdvisoryLock(input.flock)
+            it.fdAttributes()
         }
 }

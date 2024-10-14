@@ -18,6 +18,6 @@ internal class LinuxReadLink(
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, String> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, String> =
         fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxReadLink(it, input.path ?: "")
+            linuxReadLink(it, input.path)
         }
 }

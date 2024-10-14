@@ -7,8 +7,6 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
@@ -16,9 +14,8 @@ import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
 internal class NioSetTimestampFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<SetTimestampFd, SetTimestampError, Unit> {
-    override fun invoke(input: SetTimestampFd): Either<SetTimestampError, Unit> {
-        val resource = fsState.get(input.fd)
-            ?: return BadFileDescriptor("File descriptor `${input.fd}` is not open").left()
-        return resource.setTimestamp(input.atimeNanoseconds, input.mtimeNanoseconds)
-    }
+    override fun invoke(input: SetTimestampFd): Either<SetTimestampError, Unit> =
+        fsState.executeWithResource(input.fd) {
+            it.setTimestamp(input.atimeNanoseconds, input.mtimeNanoseconds)
+        }
 }

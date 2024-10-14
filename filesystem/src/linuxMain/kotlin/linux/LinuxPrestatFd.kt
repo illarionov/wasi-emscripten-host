@@ -30,7 +30,7 @@ internal class LinuxPrestatFd(
         return if (path != null) {
             PrestatResult(input.fd, path).right()
         } else {
-            BadFileDescriptor("${input.fd} is not a directory").left()
+            BadFileDescriptor("${input.fd} is not a preopened directory").left()
         }
     }
 }

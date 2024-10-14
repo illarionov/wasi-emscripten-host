@@ -34,8 +34,6 @@ wasiTestsuiteTestGen {
         "clock_gettime-monotonic",
         "clock_gettime-realtime",
         "fdopendir-with-access",
-        "fopen-with-access",
-        "fopen-with-no-access",
         "lseek",
         "pread-with-access",
         "pwrite-with-access",

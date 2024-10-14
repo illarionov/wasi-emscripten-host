@@ -7,8 +7,7 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -20,10 +19,9 @@ import java.nio.file.Path
 internal class NioChmod(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
-    override fun invoke(input: Chmod): Either<ChmodError, Unit> {
-        val path: Path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft(ResolvePathError::toCommonError)
-            .getOrElse { return it.left() }
-        return nioSetPosixFilePermissions(path, input.mode)
-    }
+    override fun invoke(input: Chmod): Either<ChmodError, Unit> =
+        fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
+            resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+                .flatMap { path: Path -> nioSetPosixFilePermissions(path, input.mode) }
+        }
 }

@@ -65,7 +65,7 @@ public class LinuxFileSystemImpl(
         ChmodFd to LinuxChmodFd(fsState),
         Chown to LinuxChown(fsState),
         ChownFd to LinuxChownFd(fsState),
-        FdAttributes to LinuxFdstat(fsState),
+        FdAttributes to LinuxFdAttributes(fsState),
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
         Mkdir to LinuxMkdir(fsState),
         PrestatFd to LinuxPrestatFd(fsState),

@@ -27,7 +27,6 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
-import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDERR_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDIN_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDOUT_FD
@@ -37,6 +36,7 @@ import at.released.weh.filesystem.internal.fdresource.stdio.flushNoThrow
 import at.released.weh.filesystem.internal.fdresource.stdio.transferFrom
 import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
 import at.released.weh.filesystem.model.FdFlag
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
@@ -219,21 +219,20 @@ internal class StdioFileFdResource(
     companion object {
         const val STDIO_FD_RIGHTS: FdRights = FD_DATASYNC or FD_READ or FD_SYNC or FD_WRITE
 
-        internal fun initStdioDescriptors(
-            table: FileDescriptorTable<in FdResource>,
-            stdio: StandardInputOutput,
-        ) {
+        fun StandardInputOutput.toFileDescriptorMap(): Map<FileDescriptor, StdioFileFdResource> {
             val stdInStdOut = StdioFileFdResource(
-                sourceProvider = stdio.stdinProvider,
-                sinkProvider = stdio.stdoutProvider,
+                sourceProvider = this.stdinProvider,
+                sinkProvider = this.stdoutProvider,
             )
             val stdErr = StdioFileFdResource(
                 sourceProvider = SourceProvider(::ExhaustedRawSource),
-                sinkProvider = stdio.stderrProvider,
+                sinkProvider = this.stderrProvider,
             )
-            table[WASI_STDIN_FD] = stdInStdOut
-            table[WASI_STDOUT_FD] = stdInStdOut
-            table[WASI_STDERR_FD] = stdErr
+            return mapOf(
+                WASI_STDIN_FD to stdInStdOut,
+                WASI_STDOUT_FD to stdInStdOut,
+                WASI_STDERR_FD to stdErr,
+            )
         }
     }
 }

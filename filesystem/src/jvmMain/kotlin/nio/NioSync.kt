@@ -7,19 +7,14 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.sync.SyncFd
 
 internal class NioSync(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<SyncFd, SyncError, Unit> {
-    override fun invoke(input: SyncFd): Either<SyncError, Unit> {
-        val channel = fsState.get(input.fd)
-            ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
-        return channel.sync(input.syncMetadata)
+    override fun invoke(input: SyncFd): Either<SyncError, Unit> = fsState.executeWithResource(input.fd) {
+        it.sync(input.syncMetadata)
     }
 }

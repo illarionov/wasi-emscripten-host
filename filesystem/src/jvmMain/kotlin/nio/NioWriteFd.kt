@@ -7,20 +7,14 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.op.readwrite.WriteFd
-import kotlin.concurrent.withLock
 
 internal class NioWriteFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<WriteFd, WriteError, ULong> {
-    override fun invoke(input: WriteFd): Either<WriteError, ULong> = fsState.fsLock.withLock {
-        val channel = fsState.get(input.fd)
-            ?: return BadFileDescriptor(fileDescriptorNotOpenMessage(input.fd)).left()
-        return channel.write(input.cIovecs, input.strategy)
+    override fun invoke(input: WriteFd): Either<WriteError, ULong> = fsState.executeWithResource(input.fd) {
+        it.write(input.cIovecs, input.strategy)
     }
 }

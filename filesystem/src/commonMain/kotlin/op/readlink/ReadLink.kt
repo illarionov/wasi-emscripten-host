@@ -12,7 +12,7 @@ import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 
 public data class ReadLink(
-    public val path: String?,
+    public val path: String,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 ) {
     public companion object : FileSystemOperation<ReadLink, ReadLinkError, String> {

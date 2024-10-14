@@ -11,7 +11,6 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 public data class Mkdir(
     public val path: String,
@@ -21,7 +20,7 @@ public data class Mkdir(
     public val mode: Int,
 ) {
     override fun toString(): String {
-        return "Mkdir(path='$path', baseDirectory=$baseDirectory, mode=${fileModeTypeToString(mode)})"
+        return "Mkdir(path='$path', baseDirectory=$baseDirectory, mode=0${mode.toString(8)})"
     }
 
     public companion object : FileSystemOperation<Mkdir, MkdirError, Unit> {
