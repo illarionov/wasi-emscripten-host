@@ -36,6 +36,7 @@ import at.released.weh.filesystem.internal.fdresource.stdio.StdioReadWriteError.
 import at.released.weh.filesystem.internal.fdresource.stdio.flushNoThrow
 import at.released.weh.filesystem.internal.fdresource.stdio.transferFrom
 import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
+import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
@@ -45,7 +46,6 @@ import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_SYNC
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.lock.Advisorylock
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
@@ -72,7 +72,7 @@ internal class StdioFileFdResource(
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return FdAttributesResult(
             type = CHARACTER_DEVICE,
-            flags = OpenFileFlag.O_RDWR,
+            flags = FdFlag.FD_APPEND,
             rights = STDIO_FD_RIGHTS,
             inheritingRights = 0,
         ).right()

@@ -25,7 +25,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
@@ -37,7 +36,7 @@ import kotlinx.io.IOException
 
 internal class LinuxFileSystemState private constructor(
     stdio: StandardInputOutput,
-    isRootAccessAllowed: Boolean,
+    internal val isRootAccessAllowed: Boolean,
     preopenedDirectories: PreopenedDirectories,
 ) : AutoCloseable {
     private val lock: ReentrantLock = reentrantLock()
@@ -132,11 +131,20 @@ internal class LinuxFileSystemState private constructor(
         fun resolveNativeDirectoryFd(
             directory: BaseDirectory,
         ): Either<BadFileDescriptor, NativeDirectoryFd> = when (directory) {
-            CurrentWorkingDirectory -> CURRENT_WORKING_DIRECTORY.right()
-            is DirectoryFd -> fsLock.withLock {
-                val resource = fileDescriptors[directory.fd] as? LinuxDirectoryFdResource
-                resource?.nativeFd?.right() ?: BadFileDescriptor("FD ${directory.fd} is not a directory").left()
+            CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
+                getDirectoryNativeFd(currentWorkingDirectoryFd)
+            } else {
+                BadFileDescriptor("Current directory not opened").left()
             }
+
+            is DirectoryFd -> getDirectoryNativeFd(directory.fd)
+        }
+
+        private fun getDirectoryNativeFd(
+            fd: FileDescriptor,
+        ): Either<BadFileDescriptor, NativeDirectoryFd> = fsLock.withLock {
+            val resource = fileDescriptors[fd] as? LinuxDirectoryFdResource
+            resource?.nativeFd?.right() ?: BadFileDescriptor("FD $fd is not a directory").left()
         }
 
         fun onFileDescriptorRemovedUnsafe(

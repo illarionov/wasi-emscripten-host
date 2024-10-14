@@ -15,10 +15,17 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.linux.ext.fdFdFlagsToLinuxMask
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.ext.openFileFlagsToLinuxMask
+import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CREAT
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TMPFILE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
 import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
 import at.released.weh.filesystem.platform.linux.RESOLVE_IN_ROOT
@@ -46,15 +53,24 @@ import platform.posix.syscall
 internal fun linuxOpen(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
-    @OpenFileFlags flags: Int,
-    @FileMode mode: Int,
+    @OpenFileFlagsType flags: OpenFileFlags,
+    @FdflagsType fdFlags: Fdflags,
+    @FileMode mode: Int?,
     resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
 ): Either<OpenError, Int> {
+    @Suppress("MagicNumber")
+    val linuxOpenMode = when {
+        flags and (O_CREAT or O_TMPFILE) == 0 -> 0
+        mode != null -> mode
+        flags and O_DIRECTORY == O_DIRECTORY -> 0b111_101_101
+        else -> 0b110_100_000
+    }
+
     val errorOrFd = memScoped {
         val openHow: open_how = alloc<open_how> {
             memset(ptr, 0, sizeOf<open_how>().toULong())
-            this.flags = openFileFlagsToLinuxMask(flags)
-            this.mode = mode.toULong()
+            this.flags = getLinuxOpenFileFlags(flags, fdFlags)
+            this.mode = linuxOpenMode.toULong()
             this.resolve = resolveFlags.toResolveMask()
         }
         syscall(
@@ -70,6 +86,13 @@ internal fun linuxOpen(
     } else {
         errorOrFd.toInt().right()
     }
+}
+
+private fun getLinuxOpenFileFlags(
+    @OpenFileFlagsType flags: OpenFileFlags,
+    @FdflagsType fdFlags: Fdflags,
+): ULong {
+    return openFileFlagsToLinuxMask(flags) or fdFdFlagsToLinuxMask(fdFlags)
 }
 
 private fun Int.errNoToOpenError(): OpenError = when (this) {
@@ -94,22 +117,22 @@ internal enum class ResolveModeFlag {
 private fun Set<ResolveModeFlag>.toResolveMask(): ULong {
     var mask = 0UL
     if (contains(ResolveModeFlag.RESOLVE_BENEATH)) {
-        mask = mask and RESOLVE_BENEATH.toULong()
+        mask = mask or RESOLVE_BENEATH.toULong()
     }
     if (contains(ResolveModeFlag.RESOLVE_IN_ROOT)) {
-        mask = mask and RESOLVE_IN_ROOT.toULong()
+        mask = mask or RESOLVE_IN_ROOT.toULong()
     }
     if (contains(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)) {
-        mask = mask and RESOLVE_NO_MAGICLINKS.toULong()
+        mask = mask or RESOLVE_NO_MAGICLINKS.toULong()
     }
     if (contains(ResolveModeFlag.RESOLVE_NO_SYMLINKS)) {
-        mask = mask and RESOLVE_NO_SYMLINKS.toULong()
+        mask = mask or RESOLVE_NO_SYMLINKS.toULong()
     }
     if (contains(ResolveModeFlag.RESOLVE_NO_XDEV)) {
-        mask = mask and RESOLVE_NO_XDEV.toULong()
+        mask = mask or RESOLVE_NO_XDEV.toULong()
     }
     if (contains(ResolveModeFlag.RESOLVE_CACHED)) {
-        mask = mask and RESOLVE_CACHED.toULong()
+        mask = mask or RESOLVE_CACHED.toULong()
     }
     return mask
 }

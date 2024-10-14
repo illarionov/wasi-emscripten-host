@@ -11,7 +11,7 @@ import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.module.emscripten.BaseEmscriptenWasmNode
 import at.released.weh.emcripten.runtime.function.SyscallOpenatFunctionHandle
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -53,7 +53,7 @@ internal class SyscallOpenat(
         memory: WasmMemory,
         rawDirFd: Int,
         @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
-        @OpenFileFlags flags: Int,
+        @OpenFileFlagsType flags: Int,
         @FileMode rawMode: Int,
     ): Int = handle.execute(memory.toHostMemory(), rawDirFd, pathnamePtr, flags, rawMode)
 }

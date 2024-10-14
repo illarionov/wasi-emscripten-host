@@ -11,6 +11,7 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
+import at.released.weh.filesystem.linux.native.ResolveModeFlag
 import at.released.weh.filesystem.linux.native.linuxOpen
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
@@ -19,10 +20,24 @@ import at.released.weh.filesystem.posix.NativeFileFd
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
-    override fun invoke(input: Open): Either<OpenError, FileDescriptor> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
-            linuxOpen(directoryFd, input.path, input.flags, input.mode)
+    override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
+        val resolveFlags = if (fsState.isRootAccessAllowed) {
+            setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)
+        } else {
+            setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS, ResolveModeFlag.RESOLVE_BENEATH)
+        }
+
+        return fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
+            linuxOpen(
+                baseDirectoryFd = directoryFd,
+                path = input.path,
+                flags = input.openFlags,
+                fdFlags = input.fdFlags,
+                mode = input.mode,
+                resolveFlags = resolveFlags,
+            )
                 .flatMap { nativeFd -> fsState.add(NativeFileFd(nativeFd)) }
                 .map { (fd: FileDescriptor, _) -> fd }
         }
+    }
 }

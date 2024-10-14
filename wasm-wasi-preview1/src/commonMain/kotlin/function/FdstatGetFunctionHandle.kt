@@ -7,6 +7,7 @@
 package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.model.Filetype.BLOCK_DEVICE
@@ -23,8 +24,6 @@ import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.fdattributes.FdRights
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag
 import at.released.weh.filesystem.op.fdattributes.FdRightsType
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag
-import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_FDSTAT_GET
 import at.released.weh.wasi.preview1.ext.FDSTAT_PACKED_SIZE
@@ -43,6 +42,7 @@ import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.sinkWithMaxSize
 import kotlinx.io.buffered
 import kotlin.experimental.or
+import at.released.weh.filesystem.model.FdFlag as FileSystemFdFlag
 import at.released.weh.wasi.preview1.type.Filetype as WasiFiletype
 
 public class FdstatGetFunctionHandle(
@@ -65,11 +65,11 @@ public class FdstatGetFunctionHandle(
     }
 
     private companion object {
-        private val openFileFlagsToFdFlagsMap = listOf(
-            OpenFileFlag.O_APPEND to FdflagsFlag.APPEND,
-            OpenFileFlag.O_DSYNC to FdflagsFlag.DSYNC,
-            OpenFileFlag.O_NONBLOCK to FdflagsFlag.NONBLOCK,
-            OpenFileFlag.O_SYNC to FdflagsFlag.SYNC,
+        private val fsFdFlagsToWasiFdFlagsMap = listOf(
+            FileSystemFdFlag.FD_APPEND to FdflagsFlag.APPEND,
+            FileSystemFdFlag.FD_DSYNC to FdflagsFlag.DSYNC,
+            FileSystemFdFlag.FD_NONBLOCK to FdflagsFlag.NONBLOCK,
+            FileSystemFdFlag.FD_SYNC to FdflagsFlag.SYNC,
         )
         private val filesystemToWasiRights = listOf(
             FdRightsFlag.FD_DATASYNC to RightsFlag.FD_DATASYNC,
@@ -106,7 +106,7 @@ public class FdstatGetFunctionHandle(
 
         private fun FdAttributesResult.toFdStat(): Fdstat = Fdstat(
             fsFiletype = this.type.toWasiType(),
-            fsFlags = this.flags.toWasiOpenFlags(),
+            fsFlags = this.flags.toWasiFdFlags(),
             fsRightsBase = this.rights.toWasiRights(),
             fsRightsInheriting = this.inheritingRights.toWasiRights(),
         )
@@ -122,11 +122,11 @@ public class FdstatGetFunctionHandle(
             SYMBOLIC_LINK -> WasiFiletype.SYMBOLIC_LINK
         }
 
-        @OpenFileFlags
-        private fun Int.toWasiOpenFlags(): Fdflags {
+        @FdflagsType
+        private fun Int.toWasiFdFlags(): Fdflags {
             var mask: Fdflags = 0
-            openFileFlagsToFdFlagsMap.forEach { (openFileFlag, fdFlag) ->
-                if (this and openFileFlag == openFileFlag) {
+            fsFdFlagsToWasiFdFlagsMap.forEach { (fileSystemFileFlag, fdFlag) ->
+                if (this and fileSystemFileFlag == fileSystemFileFlag) {
                     mask = mask or fdFlag
                 }
             }
