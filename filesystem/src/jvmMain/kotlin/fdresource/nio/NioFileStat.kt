@@ -15,11 +15,12 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.ext.asLinkOptions
+import at.released.weh.filesystem.ext.toFiletype
+import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
-import at.released.weh.filesystem.op.stat.FileModeType
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
 import java.io.IOException
@@ -76,8 +77,9 @@ internal object NioFileStat {
         val ino: Long = (unixAttrs[ATTR_UNI_INO] as? Long)
             ?: basicFileAttrs.fileKey().hashCode().toLong()
 
-        @FileModeType
-        val mode: Int = getModeType(basicFileAttrs, unixAttrs)
+        @FileMode
+        val mode: Int = getMode(unixAttrs)
+        val type = basicFileAttrs.toFiletype()
         val nlink: Long = (unixAttrs[ATTR_UNI_NLINK] as? Int)?.toLong() ?: 1L
         val uid: Long = (unixAttrs[ATTR_UNI_UID] as? Int)?.toLong() ?: 0L
         val gid: Long = (unixAttrs[ATTR_UNI_GID] as? Int)?.toLong() ?: 0L
@@ -96,6 +98,7 @@ internal object NioFileStat {
             deviceId = dev,
             inode = ino,
             mode = mode,
+            type = type,
             links = nlink,
             usedId = uid,
             groupId = gid,
@@ -109,18 +112,14 @@ internal object NioFileStat {
         )
     }
 
-    @FileModeType
-    private fun getModeType(
-        @Suppress("UnusedParameter") basicAttrs: BasicFileAttributes,
+    @FileMode
+    private fun getMode(
         unixAttrs: Map<String, Any?>,
     ): Int {
         val unixMode = unixAttrs[ATTR_UNI_MODE] as? Int
         if (unixMode != null) {
             return unixMode
         }
-
-        // TODO: guess from Basic mode?
-        // TODO: Add type
 
         return S_IRWXU or S_IRWXG or S_IRWXO
     }
@@ -132,7 +131,7 @@ internal object NioFileStat {
         )
     }
 
-    private fun Throwable.readAttributesToStatError(): StatError = when (this) {
+    internal fun Throwable.readAttributesToStatError(): StatError = when (this) {
         is UnsupportedOperationException -> AccessDenied("Can not get BasicFileAttributeView")
         is IOException -> IoError("Can not read attributes: $message")
         is SecurityException -> AccessDenied("Can not read attributes: $message")

@@ -40,12 +40,11 @@ internal fun nioSetPosixFilePermissions(
 }
 
 internal fun nioSetPosixUserGroup(
-    javaFs: java.nio.file.FileSystem,
     path: Path,
     owner: Int,
     group: Int,
 ): Either<ChownError, Unit> = Either.catch {
-    val lookupService = javaFs.userPrincipalLookupService
+    val lookupService = path.fileSystem.userPrincipalLookupService
     val ownerPrincipal = lookupService.lookupPrincipalByName(owner.toString())
     val groupPrincipal = lookupService.lookupPrincipalByGroupName(group.toString())
     path.fileAttributesView<PosixFileAttributeView>().run {

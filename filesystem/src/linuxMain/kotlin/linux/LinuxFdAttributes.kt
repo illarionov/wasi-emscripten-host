@@ -13,7 +13,7 @@ import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 
-internal class LinuxFdstat(
+internal class LinuxFdAttributes(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<FdAttributes, FdAttributesError, FdAttributesResult> {
     override fun invoke(input: FdAttributes): Either<FdAttributesError, FdAttributesResult> =

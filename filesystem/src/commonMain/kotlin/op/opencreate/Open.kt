@@ -16,7 +16,6 @@ import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.fdattributes.FdRights
 import at.released.weh.filesystem.op.fdattributes.FdRightsType
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToString
-import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 /**
  * Open or create a	file.
@@ -49,7 +48,7 @@ public data class Open(
                 "path='$path', " +
                 "baseDirectory=$baseDirectory, " +
                 "flags=${openFileFlagsToString(openFlags)}, " +
-                "mode=${mode?.let(::fileModeTypeToString) ?: "null"}, " +
+                "mode=${mode?.toString(8) ?: "null"}, " +
                 "rights=$rights, " +
                 "followSymlinks=$followSymlinks" +
                 ")"

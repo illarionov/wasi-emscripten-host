@@ -7,20 +7,15 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.left
 import at.released.weh.filesystem.error.AdvisoryLockError
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
-import kotlin.concurrent.withLock
 
 internal class NioAddAdvisoryLockFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<AddAdvisoryLockFd, AdvisoryLockError, Unit> {
-    override fun invoke(input: AddAdvisoryLockFd): Either<AdvisoryLockError, Unit> = fsState.fsLock.withLock {
-        val channel: FdResource = fsState.get(input.fd)
-            ?: return BadFileDescriptor("File descriptor ${input.fd} is not open or cannot be locked").left()
-        return channel.addAdvisoryLock(input.flock)
-    }
+    override fun invoke(input: AddAdvisoryLockFd): Either<AdvisoryLockError, Unit> =
+        fsState.executeWithResource(input.fd) {
+            it.addAdvisoryLock(input.flock)
+        }
 }

@@ -7,22 +7,20 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
-import java.nio.file.Path
 
 internal class NioStat(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
-    override fun invoke(input: Stat): Either<StatError, StructStat> {
-        val path: Path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft { NioFileStat.toStatError(it) }
-            .getOrElse { return it.left() }
-        return NioFileStat.getStat(path, input.followSymlinks)
-    }
+    override fun invoke(input: Stat): Either<StatError, StructStat> =
+        fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
+            resolvePathResult
+                .mapLeft { NioFileStat.toStatError(it) }
+                .flatMap { NioFileStat.getStat(it, input.followSymlinks) }
+        }
 }

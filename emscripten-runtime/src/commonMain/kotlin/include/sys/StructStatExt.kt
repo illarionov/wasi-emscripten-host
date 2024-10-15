@@ -8,6 +8,7 @@
 
 package at.released.weh.emcripten.runtime.include.sys
 
+import at.released.weh.emcripten.runtime.include.sys.FileTypeFlag.fileTypeToFileMode
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.timeMillis
 import kotlinx.io.Buffer
@@ -17,7 +18,7 @@ import kotlinx.io.writeLongLe
 
 internal fun StructStat.packTo(sink: Sink): Unit = sink.run {
     writeIntLe(deviceId.toInt()) // 0
-    writeIntLe(mode) // 4
+    writeIntLe(modeType) // 4
     writeIntLe(links.toInt()) // 8
     writeIntLe(usedId.toInt()) // 12
     writeIntLe(groupId.toInt()) // 16
@@ -50,3 +51,5 @@ internal fun StructStat.pack(): Buffer = Buffer().also {
     packTo(it)
     check(it.size == STRUCT_SIZE_PACKED_SIZE.toLong())
 }
+
+internal val StructStat.modeType: Int get() = mode or fileTypeToFileMode(type)

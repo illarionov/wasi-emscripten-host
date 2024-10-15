@@ -10,7 +10,8 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.linux.ext.toStructTimespec
-import at.released.weh.filesystem.linux.fileModeTypeFromLinuxModeType
+import at.released.weh.filesystem.linux.fileModeFromLinuxModeType
+import at.released.weh.filesystem.linux.fileTypeFromLinuxModeType
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.platform.linux.fstatat
 import kotlinx.cinterop.alloc
@@ -52,7 +53,8 @@ internal actual fun platformFstatFd(fd: Int): Either<Int, StructStat> = memScope
 internal fun stat.toStructStat(): StructStat = StructStat(
     deviceId = st_dev.toLong(),
     inode = st_ino.toLong(),
-    mode = fileModeTypeFromLinuxModeType(st_mode),
+    mode = fileModeFromLinuxModeType(st_mode),
+    type = fileTypeFromLinuxModeType(st_mode),
     links = st_nlink.toLong(),
     usedId = st_uid.toLong(),
     groupId = st_gid.toLong(),

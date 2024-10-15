@@ -17,7 +17,7 @@ import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.initStdioDescriptors
+import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
@@ -40,11 +40,10 @@ internal class LinuxFileSystemState private constructor(
     preopenedDirectories: PreopenedDirectories,
 ) : AutoCloseable {
     private val lock: ReentrantLock = reentrantLock()
-    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable()
+    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
     val pathResolver = PathResolver(fileDescriptors, lock)
 
     init {
-        initStdioDescriptors(fileDescriptors, stdio)
         pathResolver.setupPreopenedDirectories(preopenedDirectories)
     }
 

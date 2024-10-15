@@ -14,8 +14,10 @@ import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 
-internal class FileDescriptorTable<V : Any> {
-    private val fds: MutableMap<FileDescriptor, V> = mutableMapOf()
+internal class FileDescriptorTable<V : Any>(
+    initial: Map<FileDescriptor, V> = emptyMap(),
+) {
+    private val fds: MutableMap<FileDescriptor, V> = LinkedHashMap(initial)
 
     operator fun set(
         descriptor: FileDescriptor,

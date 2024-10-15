@@ -10,11 +10,11 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.AdvisoryLockError
+import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FdAttributesError
-import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetTimestampError
@@ -23,90 +23,77 @@ import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.fdresource.nio.NioFdAttributes
-import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.NioFileStat
-import at.released.weh.filesystem.fdresource.nio.nioAddAdvisoryLock
-import at.released.weh.filesystem.fdresource.nio.nioRead
-import at.released.weh.filesystem.fdresource.nio.nioRemoveAdvisoryLock
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
-import at.released.weh.filesystem.fdresource.nio.nioWrite
-import at.released.weh.filesystem.fdresource.nio.setPosition
-import at.released.weh.filesystem.fdresource.nio.sync
-import at.released.weh.filesystem.fdresource.nio.truncate
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
-import at.released.weh.filesystem.nio.NioSeekFd.Companion.toSeekError
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import kotlinx.io.IOException
-import java.nio.channels.FileChannel
-import java.nio.channels.FileLock
+import at.released.weh.filesystem.preopened.VirtualPath
+import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
-import java.nio.file.Path as NioPath
 
-internal class NioFileFdResource(
-    path: NioPath,
-    channel: FileChannel,
-    fdflags: Fdflags,
+internal class NioDirectoryFdResource(
+    val realPath: Path,
+    val virtualPath: VirtualPath,
+    val isPreopened: Boolean,
 ) : FdResource {
     val lock: Lock = ReentrantLock()
-    val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
-    val channel = NioFileChannel(path, channel, fdflags)
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return NioFdAttributes.getFileFdAttributes(channel)
+        return NioFdAttributes.getDirectoryFdAttributes(realPath)
     }
 
     override fun stat(): Either<StatError, StructStat> {
-        return NioFileStat.getStat(channel.path, false)
+        return NioFileStat.getStat(realPath, false)
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        return channel.setPosition(fileDelta, whence)
-            .mapLeft { error -> error.toSeekError() }
+        return BadFileDescriptor("Can not seek on a directory").left()
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        return channel.nioRead(iovecs, strategy)
+        return BadFileDescriptor("Can not read on a directory").left()
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        return channel.nioWrite(cIovecs, strategy)
+        return BadFileDescriptor("Can not write on a directory").left()
     }
 
-    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = channel.sync(syncMetadata)
+    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
+        return BadFileDescriptor("Can not sync on a directory").left()
+    }
 
-    override fun truncate(length: Long): Either<TruncateError, Unit> = channel.truncate(length)
+    override fun truncate(length: Long): Either<TruncateError, Unit> {
+        return BadFileDescriptor("Can not truncate on a directory").left()
+    }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {
-        return nioSetPosixFilePermissions(channel.path, mode)
+        return nioSetPosixFilePermissions(realPath, mode)
     }
 
     override fun chown(owner: Int, group: Int): Either<ChownError, Unit> {
-        return nioSetPosixUserGroup(channel.path, owner, group)
+        return nioSetPosixUserGroup(realPath, owner, group)
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        return nioSetTimestamp(channel.path, false, atimeNanoseconds, mtimeNanoseconds)
+        return nioSetTimestamp(realPath, false, atimeNanoseconds, mtimeNanoseconds)
+    }
+
+    override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
+        return BadFileDescriptor("Can not add advisory lock on a directory").left()
+    }
+
+    override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
+        return BadFileDescriptor("Can not add remove lock on a directory").left()
     }
 
     override fun close(): Either<CloseError, Unit> {
-        return try {
-            channel.channel.close()
-            Unit.right()
-        } catch (ioe: IOException) {
-            IoError("close() error: $ioe").left()
-        }
+        return Unit.right()
     }
-
-    override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> = nioAddAdvisoryLock(flock)
-
-    override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
-        nioRemoveAdvisoryLock(flock)
 }

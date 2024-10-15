@@ -7,23 +7,23 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
-import java.nio.file.Path
 
 internal class NioSetTimestamp(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<SetTimestamp, SetTimestampError, Unit> {
-    override fun invoke(input: SetTimestamp): Either<SetTimestampError, Unit> {
-        val path: Path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft(ResolvePathError::toCommonError)
-            .getOrElse { return it.left() }
-        return nioSetTimestamp(path, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
-    }
+    override fun invoke(input: SetTimestamp): Either<SetTimestampError, Unit> =
+        fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
+            resolvePathResult
+                .mapLeft(ResolvePathError::toCommonError)
+                .flatMap {
+                    nioSetTimestamp(it, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
+                }
+        }
 }

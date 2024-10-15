@@ -14,16 +14,16 @@ import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.NioUnlinkFile.Companion.toUnlinkError
 import at.released.weh.filesystem.nio.cwd.PathResolver
-import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
 
 internal class NioUnlinkDirectory(
     private val pathResolver: PathResolver,
-) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
+) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
     @Suppress("ReturnCount")
-    override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
+    override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> {
         val path: Path = pathResolver.resolve(input.path, input.baseDirectory, false)
             .mapLeft { it.toUnlinkError() }
             .getOrElse { return it.left() }

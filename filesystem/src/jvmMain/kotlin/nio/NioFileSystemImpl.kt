@@ -23,10 +23,12 @@ import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
@@ -39,16 +41,27 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.nio.file.FileSystems
+import java.nio.file.FileSystem as nioFileSystem
 
 internal class NioFileSystemImpl(
-    javaFs: java.nio.file.FileSystem = FileSystems.getDefault(),
+    javaFs: nioFileSystem = FileSystems.getDefault(),
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
+    isRootAccessAllowed: Boolean,
+    currentWorkingDirectory: String?,
+    preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
     private val currentDirectoryProvider: CurrentDirectoryProvider = JvmCurrentDirectoryProvider(javaFs)
-    private val fsState = NioFileSystemState(javaFs, stdio)
+    private val fsState = NioFileSystemState.create(
+        javaFs,
+        stdio,
+        isRootAccessAllowed,
+        currentWorkingDirectory ?: "",
+        preopenedDirectories,
+    )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to NioOpen(fsState),
         CloseFd to NioCloseFd(fsState),
@@ -59,8 +72,10 @@ internal class NioFileSystemImpl(
         ChmodFd to NioChmodFd(fsState),
         Chown to NioChown(fsState),
         ChownFd to NioChownFd(fsState),
+        FdAttributes to NioFdAttributes(fsState),
         GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(currentDirectoryProvider),
         Mkdir to NioMkdir(fsState),
+        PrestatFd to NioPrestatFd(fsState),
         ReadFd to NioReadFd(fsState),
         ReadLink to NioReadLink(fsState),
         SeekFd to NioSeekFd(fsState),

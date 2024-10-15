@@ -11,7 +11,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.filesystem.op.stat.FileTypeFlag.fileModeTypeToString
 
 public data class ChmodFd(
     @IntFileDescriptor
@@ -20,7 +19,7 @@ public data class ChmodFd(
     @FileMode
     public val mode: Int,
 ) {
-    override fun toString(): String = "ChmodFd(fd=$fd, mode=${fileModeTypeToString(mode)}"
+    override fun toString(): String = "ChmodFd(fd=$fd, mode=0${mode.toString(8)}"
 
     public companion object : FileSystemOperation<ChmodFd, ChmodError, Unit> {
         override val tag: String = "chmodfd"

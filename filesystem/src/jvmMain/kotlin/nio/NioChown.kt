@@ -7,8 +7,7 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -20,10 +19,11 @@ import java.nio.file.Path
 internal class NioChown(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
-    override fun invoke(input: Chown): Either<ChownError, Unit> {
-        val path: Path = fsState.pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft(ResolvePathError::toCommonError)
-            .getOrElse { return it.left() }
-        return nioSetPosixUserGroup(fsState.javaFs, path, input.owner, input.group)
+    override fun invoke(input: Chown): Either<ChownError, Unit> = fsState.executeWithPath(
+        input.baseDirectory,
+        input.path,
+    ) { resolvePathResult ->
+        resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+            .flatMap { path: Path -> nioSetPosixUserGroup(path, input.owner, input.group) }
     }
 }
