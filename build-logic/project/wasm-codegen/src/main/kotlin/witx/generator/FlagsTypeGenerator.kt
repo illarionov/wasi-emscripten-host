@@ -6,18 +6,18 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.createAndroidAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createRetentionAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createTargetAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.flagsMarkerAnnotationClassName
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.flagsObjectName
+import at.released.weh.gradle.wasm.codegen.util.className
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.createAndroidAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
+import at.released.weh.gradle.wasm.codegen.util.flagsMarkerAnnotationClassName
+import at.released.weh.gradle.wasm.codegen.util.flagsObjectName
+import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1FlagsTypeKdoc
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.getNativeType
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.FlagsType
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.ClassName

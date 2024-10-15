@@ -13,6 +13,8 @@ import at.released.weh.wasm.core.WasmPtr
 import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.Value.Number
 
+internal fun Value.asByte(): Byte = (this as Number<Int>).value.toByte()
+internal fun Value.asShort(): Short = (this as Number<Int>).value.toShort()
 internal fun Value.asInt(): Int = (this as Number<Int>).value
 internal fun Value.asUInt(): UInt = (this as Number<Int>).value.toUInt()
 internal fun Value.asLong(): Long = (this as Number<Long>).value

@@ -11,13 +11,13 @@ import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.function.PathOpenFunctionHandle
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal class PathOpen(
     host: EmbedderHost,
-    private val memory: ReadOnlyMemory,
+    private val memory: Memory,
 ) : WasiHostFunctionHandle {
     private val handle = PathOpenFunctionHandle(host)
 
@@ -33,6 +33,7 @@ internal class PathOpen(
             rights = args[5].asLong(),
             rightsInheriting = args[6].asLong(),
             fdflags = args[7].asInt().toShort(),
+            expectedFdAddr = args[8].asWasmAddr(),
         )
     }
 }

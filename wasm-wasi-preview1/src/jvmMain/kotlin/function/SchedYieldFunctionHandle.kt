@@ -11,10 +11,10 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction.SCHED_YIELD
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 
-public class SchedYieldFunctionHandle(
+public actual class SchedYieldFunctionHandle actual constructor(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(SCHED_YIELD, host) {
-    public fun execute(): Errno {
+    public actual fun execute(): Errno {
         Thread.yield()
         return SUCCESS
     }

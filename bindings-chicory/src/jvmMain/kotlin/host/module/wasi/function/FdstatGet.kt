@@ -9,7 +9,7 @@ package at.released.weh.bindings.chicory.host.module.wasi.function
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.wasi.WasiHostFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.function.FdstatGetFunctionHandle
+import at.released.weh.wasi.preview1.function.FdFdstatGetFunctionHandle
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
@@ -19,7 +19,7 @@ internal class FdstatGet(
     host: EmbedderHost,
     private val memory: Memory,
 ) : WasiHostFunctionHandle {
-    private val handle = FdstatGetFunctionHandle(host)
+    private val handle = FdFdstatGetFunctionHandle(host)
 
     override fun apply(instance: Instance, vararg args: Value): Errno {
         return handle.execute(memory, args[0].asInt(), args[1].asWasmAddr())

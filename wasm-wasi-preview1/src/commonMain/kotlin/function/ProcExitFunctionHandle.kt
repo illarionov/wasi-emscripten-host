@@ -9,6 +9,7 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1Exception
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.function.ProcExitFunctionHandle.ProcExitException
 import at.released.weh.wasi.preview1.type.Exitcode
 import at.released.weh.wasi.preview1.type.ExitcodeType
 

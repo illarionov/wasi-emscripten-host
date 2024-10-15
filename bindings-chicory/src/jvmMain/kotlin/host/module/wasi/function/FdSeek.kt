@@ -28,7 +28,7 @@ internal class FdSeek(
     override fun apply(instance: Instance, vararg args: Value): Errno {
         val fd = args[0].asInt()
         val offset = args[1].asLong()
-        val whenceInt = args[2].asInt()
+        val whenceInt = args[2].asByte()
 
         @IntWasmPtr(Long::class)
         val pNewOffset: WasmPtr = args[3].asWasmAddr()

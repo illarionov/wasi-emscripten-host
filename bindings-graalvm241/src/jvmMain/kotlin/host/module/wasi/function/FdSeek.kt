@@ -33,7 +33,7 @@ internal class FdSeek(
             memory(frame),
             args.getArgAsInt(0),
             args.getArgAsLong(1),
-            args.getArgAsInt(2),
+            args.getArgAsInt(2).toByte(),
             args.getArgAsWasmPtr(3),
         )
     }
@@ -44,7 +44,7 @@ internal class FdSeek(
         memory: WasmMemory,
         fd: Int,
         offset: Long,
-        whenceInt: Int,
+        whenceByte: Byte,
         @IntWasmPtr(Long::class) pNewOffset: WasmPtr,
-    ): Int = handle.execute(memory.toHostMemory(), fd, offset, whenceInt, pNewOffset).code
+    ): Int = handle.execute(memory.toHostMemory(), fd, offset, whenceByte, pNewOffset).code
 }

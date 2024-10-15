@@ -31,7 +31,7 @@ import at.released.weh.wasi.preview1.type.Rights
 import at.released.weh.wasi.preview1.type.RightsType
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
-import at.released.weh.wasm.core.memory.ReadOnlyMemory
+import at.released.weh.wasm.core.memory.Memory
 
 /**
  * Handler for the [WasiPreview1HostFunction.PATH_OPEN]: open a file or directory.
@@ -40,7 +40,7 @@ public class PathOpenFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.PATH_OPEN, host) {
     public fun execute(
-        memory: ReadOnlyMemory,
+        memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
         @LookupflagsType dirFlags: Lookupflags,
         @IntWasmPtr(Byte::class) path: WasmPtr,
@@ -49,6 +49,7 @@ public class PathOpenFunctionHandle(
         @RightsType rights: Rights,
         @RightsType rightsInheriting: Rights,
         @FdflagsType fdflags: Fdflags,
+        @IntWasmPtr(FileDescriptor::class) expectedFdAddr: WasmPtr,
     ): Errno {
         val pathString = memory.readPathString(path, pathSize).getOrElse {
             return it
@@ -67,7 +68,9 @@ public class PathOpenFunctionHandle(
                 ),
                 followSymlinks = dirFlags and LookupflagsFlag.SYMLINK_FOLLOW != 0,
             ),
-        ).fold(
+        ).onRight {
+            memory.writeI32(expectedFdAddr, it)
+        }.fold(
             ifLeft = OpenError::wasiErrno,
             ifRight = { Errno.SUCCESS },
         )

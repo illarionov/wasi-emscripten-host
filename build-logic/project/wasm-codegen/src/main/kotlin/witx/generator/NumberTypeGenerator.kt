@@ -6,16 +6,16 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt.createAndroidAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createRetentionAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createTargetAnnotation
+import at.released.weh.gradle.wasm.codegen.util.className
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.createAndroidAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
+import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1TypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.getNativeType32BitMultiple
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.markerAnnotationClassName
+import at.released.weh.gradle.wasm.codegen.witx.generator.ext.getNativeType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.PUBLIC
@@ -41,14 +41,14 @@ internal class NumberTypeGenerator(
 
     private fun generateTypealias(): TypeAliasSpec = TypeAliasSpec.builder(
         className.simpleName,
-        typedef.getNativeType32BitMultiple(),
+        typedef.getNativeType(),
     )
         .addModifiers(PUBLIC)
         .addKdoc(formatWasiPrevie1TypeKdoc(identifier, comment, typenameRaw))
         .build()
 
     private fun generateMarkerAnnotation(): TypeSpec {
-        val androidAnnotationType = when (typedef.getNativeType32BitMultiple()) {
+        val androidAnnotationType = when (typedef.getNativeType()) {
             LONG -> LONG_DEF
             else -> INT_DEF
         }

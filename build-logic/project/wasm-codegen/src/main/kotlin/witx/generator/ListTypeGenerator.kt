@@ -6,12 +6,12 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.AndroidAnnotationExt
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createRetentionAnnotation
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.createTargetAnnotation
+import at.released.weh.gradle.wasm.codegen.util.className
+import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
+import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1TypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.markerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.ListType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.PUBLIC

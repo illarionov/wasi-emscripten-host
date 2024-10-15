@@ -23,7 +23,7 @@ import kotlin.test.Test
 class ArgsSizesGetHostFunctionHandleTest {
     private val host = TestEmbedderHost()
     private val memory = TestMemory()
-    private val argsSizesGetHandle = ArgsSizesGetHostFunctionHandle(host)
+    private val argsSizesGetHandle = ArgsSizesGetFunctionHandle(host)
 
     @BeforeTest
     fun setup() {
