@@ -15,6 +15,9 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WhenceMapper
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
+import at.released.weh.wasi.preview1.type.Filedelta
+import at.released.weh.wasi.preview1.type.FiledeltaType
+import at.released.weh.wasi.preview1.type.Filesize
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -25,11 +28,11 @@ public class FdSeekFunctionHandle(
     public fun execute(
         memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
-        offset: Long,
-        whenceInt: Int,
-        @IntWasmPtr(Long::class) pNewOffset: WasmPtr,
+        @FiledeltaType offset: Filedelta,
+        whenceCode: Byte,
+        @IntWasmPtr(Filesize::class) pNewOffset: WasmPtr,
     ): Errno {
-        val whence = WhenceMapper.fromWasiCodeOrNull(whenceInt) ?: return Errno.INVAL
+        val whence = WhenceMapper.fromWasiCodeOrNull(whenceCode.toInt()) ?: return Errno.INVAL
         return host.fileSystem.execute(
             SeekFd,
             SeekFd(fd = fd, fileDelta = offset, whence = whence),

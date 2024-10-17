@@ -14,14 +14,14 @@ import at.released.weh.bindings.chicory.host.module.wasi.function.ArgsSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdClose
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdPread
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdPrestatDirName
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdPrestatGet
-import at.released.weh.bindings.chicory.host.module.wasi.function.FdReadFdPread.Companion.fdPread
-import at.released.weh.bindings.chicory.host.module.wasi.function.FdReadFdPread.Companion.fdRead
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdPwrite
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdRead
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdSeek
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdSync
-import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdPwrite
-import at.released.weh.bindings.chicory.host.module.wasi.function.FdWriteFdPwrite.Companion.fdWrite
+import at.released.weh.bindings.chicory.host.module.wasi.function.FdWrite
 import at.released.weh.bindings.chicory.host.module.wasi.function.FdstatGet
 import at.released.weh.bindings.chicory.host.module.wasi.function.NotImplemented
 import at.released.weh.bindings.chicory.host.module.wasi.function.PathOpen
@@ -90,14 +90,14 @@ internal class WasiSnapshotPreview1ModuleBuilder(
         ENVIRON_SIZES_GET -> EnvironSizesGet(host, memory)
         FD_CLOSE -> FdClose(host)
         FD_FDSTAT_GET -> FdstatGet(host, memory)
-        FD_PREAD -> fdPread(host, memory, wasiMemoryReader)
+        FD_PREAD -> FdRead(host, memory, wasiMemoryReader)
         FD_PRESTAT_GET -> FdPrestatGet(host, memory)
         FD_PRESTAT_DIR_NAME -> FdPrestatDirName(host, memory)
-        FD_PWRITE -> fdPwrite(host, memory, wasiMemoryWriter)
-        FD_READ -> fdRead(host, memory, wasiMemoryReader)
+        FD_PWRITE -> FdPwrite(host, memory, wasiMemoryWriter)
+        FD_READ -> FdPread(host, memory, wasiMemoryReader)
         FD_SEEK -> FdSeek(host, memory)
         FD_SYNC -> FdSync(host)
-        FD_WRITE -> fdWrite(host, memory, wasiMemoryWriter)
+        FD_WRITE -> FdWrite(host, memory, wasiMemoryWriter)
         PATH_OPEN -> PathOpen(host, memory)
         SCHED_YIELD -> SchedYield(host)
         RANDOM_GET -> RandomGet(host, memory)

@@ -6,8 +6,8 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
+import at.released.weh.gradle.wasm.codegen.util.className
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.buildWasiPreviewTypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.UnionType
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec

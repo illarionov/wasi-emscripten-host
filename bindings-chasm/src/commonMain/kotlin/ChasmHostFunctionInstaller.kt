@@ -11,6 +11,7 @@ import at.released.weh.bindings.chasm.exports.ChasmEmscriptenMainExports
 import at.released.weh.bindings.chasm.exports.ChasmEmscriptenStackExports
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
 import at.released.weh.bindings.chasm.module.emscripten.createEmscriptenHostFunctions
+import at.released.weh.bindings.chasm.module.wasi.createCustomWasiPreview1HostFunctions
 import at.released.weh.bindings.chasm.module.wasi.createWasiPreview1HostFunctions
 import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
@@ -66,7 +67,7 @@ public class ChasmHostFunctionInstaller private constructor(
             wasiMemoryWriter = wasiMemoryWriter,
             host = host,
             moduleName = moduleName,
-        )
+        ) + createCustomWasiPreview1HostFunctions(store, moduleName)
     }
 
     public fun setupEmscriptenFunctions(

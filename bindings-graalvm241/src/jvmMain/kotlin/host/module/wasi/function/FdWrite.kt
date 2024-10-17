@@ -11,7 +11,7 @@ import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.memory.GraalOutputStreamWasiMemoryWriter
 import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.function.FdWriteFdPWriteFunctionHandle
+import at.released.weh.wasi.preview1.function.FdWriteFunctionHandle
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.Ciovec
 import at.released.weh.wasm.core.IntWasmPtr
@@ -24,25 +24,11 @@ import org.graalvm.wasm.WasmLanguage
 import org.graalvm.wasm.WasmModule
 import org.graalvm.wasm.memory.WasmMemory
 
-internal fun fdWrite(
+internal class FdWrite(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-): BaseWasiWasmNode<FdWriteFdPWriteFunctionHandle> =
-    FdWrite(language, module, FdWriteFdPWriteFunctionHandle.fdWrite(host))
-
-internal fun fdPwrite(
-    language: WasmLanguage,
-    module: WasmModule,
-    host: EmbedderHost,
-): BaseWasiWasmNode<FdWriteFdPWriteFunctionHandle> =
-    FdWrite(language, module, FdWriteFdPWriteFunctionHandle.fdPwrite(host))
-
-private class FdWrite(
-    language: WasmLanguage,
-    module: WasmModule,
-    handle: FdWriteFdPWriteFunctionHandle,
-) : BaseWasiWasmNode<FdWriteFdPWriteFunctionHandle>(language, module, handle) {
+) : BaseWasiWasmNode<FdWriteFunctionHandle>(language, module, FdWriteFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, instance: WasmInstance): Any {
         val args = frame.arguments
         return fdWrite(

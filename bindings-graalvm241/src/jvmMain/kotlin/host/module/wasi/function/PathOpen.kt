@@ -50,6 +50,7 @@ internal class PathOpen(
             args.getArgAsLong(5),
             args.getArgAsLong(6),
             args.getArgAsInt(7).toShort(),
+            args.getArgAsWasmPtr(8),
         )
     }
 
@@ -65,6 +66,7 @@ internal class PathOpen(
         @RightsType rights: Rights,
         @RightsType rightsInheriting: Rights,
         @FdflagsType fdflags: Fdflags,
+        @IntWasmPtr(Int::class) expectedFdAddr: WasmPtr,
     ): Int = handle.execute(
         memory = memory.toHostMemory(),
         fd = fd,
@@ -75,5 +77,6 @@ internal class PathOpen(
         rights = rights,
         rightsInheriting = rightsInheriting,
         fdflags = fdflags,
+        expectedFdAddr = expectedFdAddr,
     ).code
 }

@@ -6,10 +6,10 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.JVM_STATIC_CLASS_NAME
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
+import at.released.weh.gradle.wasm.codegen.util.className
+import at.released.weh.gradle.wasm.codegen.util.classname.JVM_STATIC_CLASS_NAME
+import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1EnumTypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.EnumType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec

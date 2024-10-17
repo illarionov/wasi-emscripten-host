@@ -6,12 +6,12 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.className
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.flagsMarkerAnnotationClassName
+import at.released.weh.gradle.wasm.codegen.util.className
+import at.released.weh.gradle.wasm.codegen.util.flagsMarkerAnnotationClassName
+import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
+import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
+import at.released.weh.gradle.wasm.codegen.util.toUpperCamelCaseClassName
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1RecordTypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.markerAnnotationClassName
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toCamelCasePropertyName
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toUpperCamelCaseClassName
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.FlagsType

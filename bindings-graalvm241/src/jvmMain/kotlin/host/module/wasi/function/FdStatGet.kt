@@ -10,7 +10,7 @@ import at.released.weh.bindings.graalvm241.ext.getArgAsInt
 import at.released.weh.bindings.graalvm241.ext.getArgAsWasmPtr
 import at.released.weh.bindings.graalvm241.host.module.wasi.BaseWasiWasmNode
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.function.FdstatGetFunctionHandle
+import at.released.weh.wasi.preview1.function.FdFdstatGetFunctionHandle
 import at.released.weh.wasm.core.WasmPtr
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
@@ -24,7 +24,7 @@ internal class FdStatGet(
     language: WasmLanguage,
     module: WasmModule,
     host: EmbedderHost,
-) : BaseWasiWasmNode<FdstatGetFunctionHandle>(language, module, FdstatGetFunctionHandle(host)) {
+) : BaseWasiWasmNode<FdFdstatGetFunctionHandle>(language, module, FdFdstatGetFunctionHandle(host)) {
     override fun executeWithContext(frame: VirtualFrame, context: WasmContext, wasmInstance: WasmInstance): Int {
         return fdStatGet(
             memory(frame),

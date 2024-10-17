@@ -18,18 +18,18 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.ArgsSizesGe
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.EnvironSizesGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdClose
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPread
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPrestatDirName
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPrestatGet
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdPwrite
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdRead
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSeek
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdStatGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdSync
+import at.released.weh.bindings.graalvm241.host.module.wasi.function.FdWrite
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.PathOpen
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.SchedYield
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPread
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdPwrite
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdRead
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.fdWrite
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
@@ -43,12 +43,12 @@ internal object WasiSnapshotPreview1ModuleBuilder {
             WasiPreview1HostFunction.ENVIRON_GET -> ::EnvironGet
             WasiPreview1HostFunction.ENVIRON_SIZES_GET -> ::EnvironSizesGet
             WasiPreview1HostFunction.FD_CLOSE -> ::FdClose
-            WasiPreview1HostFunction.FD_PREAD -> ::fdPread
-            WasiPreview1HostFunction.FD_PWRITE -> ::fdPwrite
-            WasiPreview1HostFunction.FD_READ -> ::fdRead
+            WasiPreview1HostFunction.FD_PREAD -> ::FdPread
+            WasiPreview1HostFunction.FD_PWRITE -> ::FdPwrite
+            WasiPreview1HostFunction.FD_READ -> ::FdRead
             WasiPreview1HostFunction.FD_SEEK -> ::FdSeek
             WasiPreview1HostFunction.FD_SYNC -> ::FdSync
-            WasiPreview1HostFunction.FD_WRITE -> ::fdWrite
+            WasiPreview1HostFunction.FD_WRITE -> ::FdWrite
             WasiPreview1HostFunction.SCHED_YIELD -> ::SchedYield
             WasiPreview1HostFunction.ARGS_GET -> ::ArgsGet
             WasiPreview1HostFunction.ARGS_SIZES_GET -> ::ArgsSizesGet

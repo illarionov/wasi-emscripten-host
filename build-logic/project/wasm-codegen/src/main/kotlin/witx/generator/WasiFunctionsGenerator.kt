@@ -6,34 +6,24 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.generator
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.JVM_STATIC_CLASS_NAME
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.WasiValueTypesMemberName
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.WasiValueTypesMemberName.POINTER
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.WasmCoreClassName
+import at.released.weh.gradle.wasm.codegen.util.classname.JVM_STATIC_CLASS_NAME
+import at.released.weh.gradle.wasm.codegen.util.classname.WasiValueTypesMemberName
+import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
+import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatDefinition
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.toUppercaseWithUnderscores
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.NamedParamType
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.HANDLE
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.S16
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.S8
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc.WasiFuncParam
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc.WasiFuncParam.ParamType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc.WasiFuncResult
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc.WasiFuncResult.ExpectedData
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc.WasiFuncResult.ExpectedData.Tuple
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.SignedNumber.S32
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.SignedNumber.S64
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.UnsignedNumber.U16
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.UnsignedNumber.U32
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.UnsignedNumber.U64
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.UnsignedNumber.U8
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.EnumType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.FlagsType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.Handle
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.ListType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.NumberType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.RecordType
-import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.UnionType
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -58,7 +48,7 @@ internal class WasiFunctionsGenerator(
     functionsPackage: String,
     functionsClassName: String = "WasiPreview1HostFunction",
 ) {
-    private val wasiTypes = WasiTypes(wasiTypes)
+    private val baseTypeResolver = WasiBaseTypeResolver(wasiTypes)
     private val className = ClassName(functionsPackage, functionsClassName)
 
     fun generate() {
@@ -77,11 +67,11 @@ internal class WasiFunctionsGenerator(
                 https://github.com/WebAssembly/WASI/blob/main/legacy/preview1/witx/wasi_snapshot_preview1.witx
                 """.trimIndent(),
             )
-            .addSuperinterface(WasmCoreClassName.HOST_FUNCTION)
+            .addSuperinterface(WehWasmCoreClassName.HOST_FUNCTION)
             .primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addParameter("wasmName", STRING)
-                    .addParameter("type", WasmCoreClassName.HOST_FUNCTION_TYPE)
+                    .addParameter("type", WehWasmCoreClassName.HOST_FUNCTION_TYPE)
                     .build(),
             )
             .addProperty(
@@ -90,7 +80,7 @@ internal class WasiFunctionsGenerator(
                     .build(),
             )
             .addProperty(
-                PropertySpec.builder("type", WasmCoreClassName.HOST_FUNCTION_TYPE, PUBLIC, OVERRIDE)
+                PropertySpec.builder("type", WehWasmCoreClassName.HOST_FUNCTION_TYPE, PUBLIC, OVERRIDE)
                     .initializer("type")
                     .build(),
             )
@@ -128,7 +118,7 @@ internal class WasiFunctionsGenerator(
         |),⇤⇤
         |
         """.trimMargin(),
-        WasmCoreClassName.HOST_FUNCTION_TYPE,
+        WehWasmCoreClassName.HOST_FUNCTION_TYPE,
     )
 
     private fun generateEnumCompanion(): TypeSpec {
@@ -163,28 +153,28 @@ internal class WasiFunctionsGenerator(
         }
         val paramTypes: List<NamedParamType> = buildList {
             addAll(
-                params.flatMap(wasiTypes::getTypeRef),
+                params.flatMap(baseTypeResolver::getFuncParamBaseTypes),
             )
             result?.expectedData?.let { expectedData: ExpectedData ->
                 when (expectedData) {
                     is ExpectedData.WasiType -> {
                         val expectedPointer = NamedParamType(
-                            typeRef = POINTER,
-                            name = "expected ${expectedData.identifier}",
+                            baseType = WasiBaseWasmType.POINTER,
+                            comment = "expected ${expectedData.identifier}",
                         )
                         add(expectedPointer)
                     }
 
                     is Tuple -> {
                         val expectedFirstPointer = NamedParamType(
-                            typeRef = POINTER,
-                            name = "expected ${expectedData.first}",
+                            baseType = WasiBaseWasmType.POINTER,
+                            comment = "expected ${expectedData.first}",
                         )
                         add(expectedFirstPointer)
 
                         val expectedSecondPointer = NamedParamType(
-                            typeRef = POINTER,
-                            name = "expected ${expectedData.second}",
+                            baseType = WasiBaseWasmType.POINTER,
+                            comment = "expected ${expectedData.second}",
                         )
                         add(expectedSecondPointer)
                     }
@@ -197,7 +187,7 @@ internal class WasiFunctionsGenerator(
         return CodeBlock.of(
             format = template,
             args = paramTypes
-                .flatMap { listOf(it.name, it.typeRef) }
+                .flatMap { listOf(it.comment, it.baseType.valueTypeMemberName) }
                 .toTypedArray(),
         )
     }
@@ -208,12 +198,12 @@ internal class WasiFunctionsGenerator(
         if (result == null) {
             return CodeBlock.of("null\n")
         }
-        val errorArgument = wasiTypes.getWasiTypeRef(
+        val errorArgument = baseTypeResolver.getWasiBaseType(
             identifier = result.expectedError,
-            parameterName = result.expectedError,
+            parameterComment = result.expectedError,
         ).toList().single()
 
-        return CodeBlock.of("/* %L */ %M\n", errorArgument.name, errorArgument.typeRef)
+        return CodeBlock.of("/* %L */ %M\n", errorArgument.comment, errorArgument.baseType.valueTypeMemberName)
     }
 
     private fun TypeSpec.Builder.addFunctionKdoc(
@@ -227,126 +217,18 @@ internal class WasiFunctionsGenerator(
         return this.addKdoc(template)
     }
 
-    private class WasiTypes(
-        private val wasiTypes: Map<Identifier, WasiType>,
-    ) {
-        fun getTypeRef(
-            param: WasiFuncParam,
-        ): Iterable<NamedParamType> = when (val paramType = param.type) {
-            is ParamType.NumberType -> {
-                val number = NamedParamType(
-                    typeRef = getNumberTypeRef(paramType.type),
-                    name = param.name,
-                )
-                listOf(number)
+    private companion object {
+        private val WasiBaseWasmType.valueTypeMemberName: MemberName
+            get() = when (this) {
+                WasiBaseWasmType.POINTER -> WasiValueTypesMemberName.POINTER
+                WasiBaseWasmType.U8 -> WasiValueTypesMemberName.U8
+                WasiBaseWasmType.U16 -> WasiValueTypesMemberName.U16
+                WasiBaseWasmType.S32 -> WasiValueTypesMemberName.S32
+                WasiBaseWasmType.U32 -> WasiValueTypesMemberName.U32
+                WasiBaseWasmType.S64 -> WasiValueTypesMemberName.S64
+                WasiBaseWasmType.U64 -> WasiValueTypesMemberName.U64
+                HANDLE -> WasiValueTypesMemberName.HANDLE
+                S8, S16 -> error("Unsupported type $this")
             }
-
-            is ParamType.Pointer -> {
-                val pointer = NamedParamType(
-                    typeRef = POINTER,
-                    name = param.name,
-                )
-                listOf(pointer)
-            }
-
-            ParamType.String -> {
-                val stringPointer = NamedParamType(
-                    typeRef = POINTER,
-                    name = param.name,
-                )
-                val stringSize = NamedParamType(
-                    typeRef = WasiValueTypesMemberName.U32,
-                    name = "${param.name} size",
-                )
-                listOf(stringPointer, stringSize)
-            }
-
-            is ParamType.WasiType -> getWasiTypeRef(paramType.identifier, param.name)
-        }
-
-        fun getWasiTypeRef(
-            identifier: String,
-            parameterName: String,
-        ): Iterable<NamedParamType> {
-            val wasiType: WasiType = wasiTypes[identifier] ?: error("Unknown type $identifier")
-            return when (wasiType) {
-                is NumberType -> {
-                    val number = NamedParamType(
-                        typeRef = getNumberTypeRef(wasiType.type),
-                        name = parameterName,
-                    )
-                    listOf(number)
-                }
-
-                is EnumType -> {
-                    val enumRepresentation = NamedParamType(
-                        typeRef = getNumberTypeRef(wasiType.tag),
-                        name = parameterName,
-                    )
-                    listOf(enumRepresentation)
-                }
-
-                is FlagsType -> {
-                    val flagsRepresentation = NamedParamType(
-                        typeRef = getNumberTypeRef(wasiType.repr),
-                        name = parameterName,
-                    )
-                    listOf(flagsRepresentation)
-                }
-
-                Handle -> {
-                    val handle = NamedParamType(
-                        typeRef = WasiValueTypesMemberName.HANDLE,
-                        name = parameterName,
-                    )
-                    listOf(handle)
-                }
-
-                is ListType -> {
-                    val firstItemPointer = NamedParamType(
-                        typeRef = POINTER,
-                        name = "$parameterName list first item pointer",
-                    )
-                    val listSize = NamedParamType(
-                        typeRef = WasiValueTypesMemberName.U32,
-                        name = "$parameterName list length",
-                    )
-                    listOf(firstItemPointer, listSize)
-                }
-
-                is RecordType -> {
-                    val recordPointer = NamedParamType(
-                        typeRef = POINTER,
-                        name = parameterName,
-                    )
-                    listOf(recordPointer)
-                }
-
-                is UnionType -> {
-                    val unionPointer = NamedParamType(
-                        typeRef = POINTER,
-                        name = parameterName,
-                    )
-                    listOf(unionPointer)
-                }
-            }
-        }
-
-        private fun getNumberTypeRef(
-            numberType: WasiNumberType,
-        ): MemberName = when (numberType) {
-            S32 -> WasiValueTypesMemberName.S32
-            S64 -> WasiValueTypesMemberName.S64
-            U8 -> WasiValueTypesMemberName.U8
-            U16 -> WasiValueTypesMemberName.U16
-            U32 -> WasiValueTypesMemberName.U32
-            U64 -> WasiValueTypesMemberName.U64
-            else -> error("Unsupported type $numberType")
-        }
     }
-
-    private data class NamedParamType(
-        val typeRef: MemberName,
-        val name: String,
-    )
 }

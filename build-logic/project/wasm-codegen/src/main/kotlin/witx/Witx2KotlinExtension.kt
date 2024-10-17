@@ -6,10 +6,10 @@
 
 package at.released.weh.gradle.wasm.codegen.witx
 
+import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
-import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.create
@@ -24,16 +24,10 @@ public open class Witx2KotlinExtension @Inject constructor(
     objects: ObjectFactory,
     projectLayout: ProjectLayout,
 ) {
-    public val specRoot: DirectoryProperty = objects.directoryProperty()
-        .convention(projectLayout.projectDirectory.dir("witx"))
-    public val typenamesSpec: RegularFileProperty = objects.fileProperty()
-        .convention(specRoot.file("typenames.witx"))
-    public val functionsSpec: RegularFileProperty = objects.fileProperty()
-        .convention(specRoot.file("wasi_snapshot_preview1.witx"))
     public val outputDirectory: DirectoryProperty = objects.directoryProperty()
         .convention(projectLayout.buildDirectory.dir("generated/witx"))
     public val typenamesPackage: Property<String> = objects.property<String>()
-        .convention("at.released.weh.wasi.preview1.type")
+        .convention(WehWasiPreview1ClassName.TYPE_PACKAGE)
     public val functionsPackage: Property<String> = objects.property<String>()
-        .convention("at.released.weh.wasi.preview1")
+        .convention(WehWasiPreview1ClassName.PACKAGE)
 }
