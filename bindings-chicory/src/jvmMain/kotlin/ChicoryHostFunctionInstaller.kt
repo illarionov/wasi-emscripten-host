@@ -14,7 +14,7 @@ import at.released.weh.bindings.chicory.host.memory.ChicoryMemoryAdapter
 import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryReader
 import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryWriter
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenEnvFunctionsBuilder
-import at.released.weh.bindings.chicory.host.module.wasi.WasiSnapshotPreview1ModuleBuilder
+import at.released.weh.bindings.chicory.host.module.wasi.createWasiPreview1HostFunctions
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
@@ -89,12 +89,11 @@ public class ChicoryHostFunctionInstaller private constructor(
             host.fileSystem,
         )
 
-        return WasiSnapshotPreview1ModuleBuilder(
+        return createWasiPreview1HostFunctions(
+            host = host,
             memory = memoryAdapter,
             wasiMemoryReader = wasiMemoryReader,
             wasiMemoryWriter = wasiMemoryWriter,
-            host = host,
-        ).asChicoryHostFunctions(
             moduleName = moduleName,
         )
     }

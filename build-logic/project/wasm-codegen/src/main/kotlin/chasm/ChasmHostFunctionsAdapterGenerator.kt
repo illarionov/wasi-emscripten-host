@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.chasm.generator
+package at.released.weh.gradle.wasm.codegen.chasm
 
-import at.released.weh.gradle.wasm.codegen.chasm.generator.ArgsFunctionHandles.WasiFunctionHandle
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmBindingsClassname.CHASM_WASI_BUILDER_FILE_NAME
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmBindingsClassname.PACKAGE
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmShapesClassname
+import at.released.weh.gradle.wasm.codegen.chasm.ChasmArgsFunctionHandles.WasiFunctionHandle
+import at.released.weh.gradle.wasm.codegen.chasm.classname.ChasmBindingsClassname.CHASM_FUNCTIONS_CLASS_NAME
+import at.released.weh.gradle.wasm.codegen.chasm.classname.ChasmShapesClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.SUPPRESS_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.util.classname.WehHostClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
@@ -17,7 +16,6 @@ import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
 import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.PRIVATE
@@ -27,22 +25,20 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
 
-internal class HostFunctionsAdapterGenerator(
+internal class ChasmHostFunctionsAdapterGenerator(
     private val wasiTypenames: Map<String, WasiType>,
     private val wasiFunctions: List<WasiFunc>,
     private val outputDirectory: File,
     functionsClassName: String = "ChasmWasiPreview1Functions",
     private val factoryFunctionName: String = "createWasiPreview1HostFunctions",
 ) {
-    private val functionsClassName = ClassName(PACKAGE, functionsClassName)
-
     fun generate() {
-        val spec = FileSpec.builder(PACKAGE, CHASM_WASI_BUILDER_FILE_NAME)
+        val spec = FileSpec.builder(CHASM_FUNCTIONS_CLASS_NAME)
             .addFunction(
-                FactoryFunctionGenerator(
+                ChasmFactoryFunctionGenerator(
                     wasiTypenames = wasiTypenames,
                     wasiFunctions = wasiFunctions,
-                    functionsClassName = functionsClassName,
+                    functionsClassName = CHASM_FUNCTIONS_CLASS_NAME,
                     factoryFunctionName = factoryFunctionName,
                 ).generate(),
             )
@@ -51,7 +47,7 @@ internal class HostFunctionsAdapterGenerator(
         spec.writeTo(outputDirectory)
     }
 
-    private fun generateFunctionsClass(): TypeSpec = TypeSpec.classBuilder(functionsClassName).apply {
+    private fun generateFunctionsClass(): TypeSpec = TypeSpec.classBuilder(CHASM_FUNCTIONS_CLASS_NAME).apply {
         addModifiers(PRIVATE)
         addAnnotation(AnnotationSpec.builder(SUPPRESS_CLASS_NAME).addMember("%S", "UNUSED_PARAMETER").build())
         primaryConstructor(
@@ -80,10 +76,10 @@ internal class HostFunctionsAdapterGenerator(
                 .build(),
         )
 
-        val functionHandles = ArgsFunctionHandles(wasiTypenames, wasiFunctions).getFunctionHandles()
+        val functionHandles = ChasmArgsFunctionHandles(wasiTypenames, wasiFunctions).getFunctionHandles()
 
         functionHandles.forEach { funcHandleSpec ->
-            addProperty(funcHandleSpec.asPropertySpec())
+            addProperty(funcHandleSpec.handleProperty.asPropertySpec())
         }
         functionHandles.forEach { funcHandleSpec: WasiFunctionHandle ->
             addFunction(funcHandleSpec.chasmHostFunctionDeclaration())
@@ -91,6 +87,7 @@ internal class HostFunctionsAdapterGenerator(
 
         addFunction(
             FunSpec.builder("toListOfReturnValues")
+                .addModifiers(PRIVATE)
                 .receiver(WehWasiPreview1ClassName.ERRNO)
                 .returns(LIST.parameterizedBy(ChasmShapesClassname.VALUE))
                 .addCode("""return listOf(Value.Number.I32(this.code))""")

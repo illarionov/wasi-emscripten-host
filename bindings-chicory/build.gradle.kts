@@ -9,6 +9,7 @@ plugins {
     id("at.released.weh.gradle.lint.android-lint-noagp")
     id("at.released.weh.gradle.multiplatform.kotlin")
     id("at.released.weh.gradle.multiplatform.publish")
+    id("at.released.weh.gradle.wasm.codegen.chicory.chicory-adapter-generator")
 }
 
 group = "at.released.weh"

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.chasm
+package at.released.weh.gradle.wasm.codegen.chicory
 
 import at.released.weh.gradle.wasm.codegen.witx.parser.WitxFunctionsParser
 import at.released.weh.gradle.wasm.codegen.witx.parser.WitxTypenamesParser
@@ -15,7 +15,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
-public abstract class GenerateChasmHostFunctionsBuilderTask : DefaultTask() {
+public abstract class GenerateChicoryHostFunctionsBuilderTask : DefaultTask() {
     @get:OutputDirectory
     public abstract val outputDirectory: DirectoryProperty
 
@@ -24,7 +24,7 @@ public abstract class GenerateChasmHostFunctionsBuilderTask : DefaultTask() {
         val typenames: Map<String, WasiType> = WitxTypenamesParser.parse().associate { it.identifier to it.typedef }
         val functions: List<WasiFunc> = WitxFunctionsParser.parse()
             .filter { it.export !in CUSTOM_FUNCTIONS }
-        ChasmHostFunctionsAdapterGenerator(
+        ChicoryHostFunctionsAdapterGenerator(
             wasiTypenames = typenames,
             wasiFunctions = functions,
             outputDirectory = outputDirectory.get().asFile,
@@ -32,6 +32,6 @@ public abstract class GenerateChasmHostFunctionsBuilderTask : DefaultTask() {
     }
 
     private companion object {
-        val CUSTOM_FUNCTIONS = setOf("proc_exit")
+        val CUSTOM_FUNCTIONS: Set<String> = setOf()
     }
 }
