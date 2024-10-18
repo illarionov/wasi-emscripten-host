@@ -4,14 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.chasm.generator
+package at.released.weh.gradle.wasm.codegen.chicory
 
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmBindingsClassname
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmShapesClassname
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmShapesClassname.HOST_FUNCTION_CONTEXT
-import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
+import at.released.weh.gradle.wasm.codegen.util.WasiFunctionHandlerProperty
+import at.released.weh.gradle.wasm.codegen.util.WasiFunctionHandlersExt.NO_MEMORY_FUNCTIONS
+import at.released.weh.gradle.wasm.codegen.util.WasiFunctionHandlersExt.WASI_MEMORY_READER_FUNCTIONS
+import at.released.weh.gradle.wasm.codegen.util.WasiFunctionHandlersExt.WASI_MEMORY_WRITER_FUNCTIONS
 import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
-import at.released.weh.gradle.wasm.codegen.util.toUpperCamelCaseClassName
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.HANDLE
@@ -27,61 +26,48 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.Wasi
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.LIST
+import com.squareup.kotlinpoet.KModifier.VARARG
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
 
-internal class ArgsFunctionHandles(
+internal class ChicoryArgsFunctionHandles(
     wasiTypes: Map<Identifier, WasiType>,
     private val wasiFunctions: List<WasiFunc>,
 ) {
     private val baseTypeResolver = WasiBaseTypeResolver(wasiTypes)
-
-    fun getFunctionHandles(): List<WasiFunctionHandle> {
+    fun getFunctionHandles(): List<ChicoryWasiFunctionHandle> {
         return wasiFunctions.map { wasiFunc: WasiFunc ->
             val wasiNameCamelCase = wasiFunc.export.toCamelCasePropertyName()
-            val handleClassname = wasiFunc.export.toUpperCamelCaseClassName() + "FunctionHandle"
-
-            WasiFunctionHandle(
+            ChicoryWasiFunctionHandle(
                 func = wasiFunc,
-                handlePropertyName = "${wasiNameCamelCase}Handle",
-                handleTypename = ClassName(WehWasiPreview1ClassName.FUNCTION_PACKAGE, handleClassname),
-                chasmHostFunctionName = wasiNameCamelCase,
+                hostFunctionName = wasiNameCamelCase,
             )
         }.sortedBy { it.func.export }
     }
 
-    inner class WasiFunctionHandle(
+    inner class ChicoryWasiFunctionHandle(
         val func: WasiFunc,
-        val handlePropertyName: String,
-        val handleTypename: ClassName,
-        val handleInitializer: CodeBlock = CodeBlock.of("""%T(%N)""", handleTypename, "host"),
-        val chasmHostFunctionName: String,
+        val hostFunctionName: String,
     ) {
-        fun asPropertySpec(): PropertySpec = PropertySpec.builder(handlePropertyName, handleTypename, PRIVATE)
-            .initializer(handleInitializer)
-            .build()
+        val handlerProperty = WasiFunctionHandlerProperty(func)
 
-        fun chasmHostFunctionDeclaration(): FunSpec = FunSpec.builder(chasmHostFunctionName).apply {
-            addParameter("context", HOST_FUNCTION_CONTEXT)
-            addParameter("args", LIST.parameterizedBy(ChasmShapesClassname.VALUE))
-            returns(LIST.parameterizedBy(ChasmShapesClassname.VALUE))
+        fun hostFunctionDeclaration(): FunSpec = FunSpec.builder(hostFunctionName).apply {
+            addParameter("instance", ChicoryClassname.INSTANCE)
+            addParameter("args", ChicoryClassname.VALUE, VARARG)
+            returns(ARRAY.parameterizedBy(ChicoryClassname.VALUE))
 
             val handleArgs: List<Pair<String, MemberName>> =
                 baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, comment) ->
-                    val converterFunc = when (baseType) {
-                        POINTER -> ChasmBindingsClassname.ChasmExt.VALUE_AS_WASM_ADDR
-                        S8, U8 -> ChasmBindingsClassname.ChasmExt.VALUE_AS_BYTE
-                        S16, U16 -> ChasmBindingsClassname.ChasmExt.VALUE_AS_SHORT
-                        S32, U32, HANDLE -> ChasmBindingsClassname.ChasmExt.VALUE_AS_INT
-                        S64, U64 -> ChasmBindingsClassname.ChasmExt.VALUE_AS_LONG
+                    val (funcSpecifier, converterFunc) = when (baseType) {
+                        POINTER -> "%M" to ChicoryClassname.Bindings.VALUE_AS_WASM_ADDR
+                        S8, U8 -> "%N" to ChicoryClassname.VALUE_AS_BYTE
+                        S16, U16 -> "%N" to ChicoryClassname.VALUE_AS_SHORT
+                        S32, U32, HANDLE -> "%N" to ChicoryClassname.VALUE_AS_INT
+                        S64, U64 -> "%N" to ChicoryClassname.VALUE_AS_LONG
                     }
-                    "\nargs[$index].%M(), /* $comment */" to converterFunc
+                    "\nargs[$index].$funcSpecifier(), /* $comment */" to converterFunc
                 }
 
             val allArgs: List<Pair<String, Any>> = buildList {
@@ -111,19 +97,8 @@ internal class ArgsFunctionHandles(
                     postfix = "\n⇤)$toListOfReturnValues⇤⇤\n",
                     transform = Pair<String, *>::first,
                 ),
-                args = (listOf(handlePropertyName) + allArgs.map(Pair<String, Any>::second)).toTypedArray(),
+                args = (listOf(handlerProperty.propertyName) + allArgs.map(Pair<String, Any>::second)).toTypedArray(),
             )
         }.build()
-    }
-
-    companion object {
-        private val WASI_MEMORY_READER_FUNCTIONS = setOf("fd_read", "fd_pread")
-        private val WASI_MEMORY_WRITER_FUNCTIONS = setOf("fd_write", "fd_pwrite")
-        private val NO_MEMORY_FUNCTIONS = setOf(
-            "fd_close",
-            "fd_sync",
-            "sched_yield",
-            "proc_exit",
-        )
     }
 }

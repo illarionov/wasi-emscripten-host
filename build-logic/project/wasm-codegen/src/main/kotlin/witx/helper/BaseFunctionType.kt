@@ -8,6 +8,8 @@ package at.released.weh.gradle.wasm.codegen.witx.helper
 
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I32
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I64
+import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listOfTypesComparator
+import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.NamedParamType
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.HANDLE
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.POINTER
@@ -21,6 +23,7 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.Wasi
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.U8
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 
+@Suppress("WRONG_ORDER_IN_CLASS_LIKE_STRUCTURES")
 internal data class BaseFunctionType(
     val input: List<BaseWebAssemblyType>,
     val results: List<BaseWebAssemblyType>,
@@ -57,18 +60,40 @@ internal data class BaseFunctionType(
         return 0
     }
 
-    internal enum class BaseWebAssemblyType {
-        I32,
-        I64,
-    }
-
-    internal companion object {
+    internal object ListOfBaseWebAssemblyTypes {
         internal val listOfTypesComparator: Comparator<List<BaseWebAssemblyType>> =
             compareBy(List<BaseWebAssemblyType>::size)
                 .thenComparing { types1: List<BaseWebAssemblyType>, types2: List<BaseWebAssemblyType> ->
                     types1.zip(types2, ::compareValues).firstOrNull { it != 0 } ?: 0
                 }
 
+        internal fun List<BaseWebAssemblyType>.listPropertyName(): String = if (this.isNotEmpty()) {
+            joinToString(prefix = "list_", separator = "") { it.shortname }
+        } else {
+            "list_empty"
+        }
+
+        internal fun getListInstances(
+            func: List<WasiFunc>,
+            typeResolver: WasiBaseTypeResolver,
+        ): Set<List<BaseWebAssemblyType>> {
+            return func.flatMap { wasiFunc ->
+                listOf(
+                    typeResolver.getFuncInputArgs(wasiFunc),
+                    typeResolver.getFuncReturnTypes(wasiFunc),
+                )
+            }
+                .map { args: List<NamedParamType> -> args.map { it.baseType.baseType } }
+                .toSortedSet(listOfTypesComparator)
+        }
+    }
+
+    internal enum class BaseWebAssemblyType {
+        I32,
+        I64,
+    }
+
+    internal companion object {
         internal val BaseWebAssemblyType.shortname: String
             get() = when (this) {
                 I32 -> "i"
@@ -88,11 +113,5 @@ internal data class BaseFunctionType(
             input = typeResolver.getFuncInputArgs(func).map { it.baseType.baseType },
             results = typeResolver.getFuncReturnTypes(func).map { it.baseType.baseType },
         )
-
-        internal fun List<BaseWebAssemblyType>.listPropertyName(): String = if (this.isNotEmpty()) {
-            joinToString(prefix = "list_", separator = "") { it.shortname }
-        } else {
-            "list_empty"
-        }
     }
 }

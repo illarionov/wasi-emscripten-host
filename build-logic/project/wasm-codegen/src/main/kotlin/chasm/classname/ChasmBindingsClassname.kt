@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.chasm.generator.classname
+package at.released.weh.gradle.wasm.codegen.chasm.classname
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
 
 object ChasmBindingsClassname {
     const val PACKAGE = "at.released.weh.bindings.chasm.module.wasi"
-    const val CHASM_WASI_BUILDER_FILE_NAME = "WasiSnapshotPreview1ModuleBuilder"
+    val CHASM_FUNCTIONS_CLASS_NAME = ClassName(PACKAGE, "ChasmWasiPreview1Functions")
     val CHASM_MEMORY_ADAPTER = ClassName("at.released.weh.bindings.chasm.memory", "ChasmMemoryAdapter")
 
     object ChasmExt {

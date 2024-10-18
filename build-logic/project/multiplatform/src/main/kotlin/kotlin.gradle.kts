@@ -49,6 +49,7 @@ tasks.withType<KotlinJvmCompile>().configureEach {
         jvmTarget.set(JvmTarget.JVM_17)
         freeCompilerArgs.addAll(
             "-Xjvm-default=all",
+            "-Xlambdas=indy",
         )
     }
 }

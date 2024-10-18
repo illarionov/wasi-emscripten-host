@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.chasm.generator
+package at.released.weh.gradle.wasm.codegen.chasm
 
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmBindingsClassname
-import at.released.weh.gradle.wasm.codegen.chasm.generator.classname.ChasmShapesClassname
+import at.released.weh.gradle.wasm.codegen.chasm.classname.ChasmBindingsClassname
+import at.released.weh.gradle.wasm.codegen.chasm.classname.ChasmShapesClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.WehHostClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
 import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
@@ -16,8 +16,8 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebA
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I32
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I64
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.baseType
-import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.listOfTypesComparator
-import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.listPropertyName
+import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listOfTypesComparator
+import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listPropertyName
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.NamedParamType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
@@ -32,11 +32,11 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.STRING
 
-internal class FactoryFunctionGenerator(
+internal class ChasmFactoryFunctionGenerator(
     wasiTypenames: Map<Identifier, WasiType>,
     private val wasiFunctions: List<WasiFunc>,
     private val functionsClassName: ClassName,
-    private val factoryFunctionName: String = "createWasiPreview1HostFunctionsNew",
+    private val factoryFunctionName: String = "createWasiPreview1HostFunctions",
 ) {
     private val baseTypeResolver = WasiBaseTypeResolver(wasiTypenames)
 
