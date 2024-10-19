@@ -12,6 +12,7 @@ object WehWasmCoreClassName {
     const val PACKAGE = "at.released.weh.wasm.core"
     val HOST_FUNCTION = ClassName(PACKAGE, "HostFunction")
     val HOST_FUNCTION_TYPE = HOST_FUNCTION.nestedClass("HostFunctionType")
+    val WASM_PTR = ClassName(PACKAGE, "WasmPtr")
 
     object Memory {
         const val PACKAGE = "${WehWasmCoreClassName.PACKAGE}.memory"

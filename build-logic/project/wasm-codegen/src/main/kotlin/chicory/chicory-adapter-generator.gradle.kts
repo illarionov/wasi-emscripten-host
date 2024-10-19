@@ -9,7 +9,7 @@ package at.released.weh.gradle.wasm.codegen.chicory
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /*
- * Gradle plugin that generates an adapter with WASI Preview1 functions for Chasm that proxies function calls
+ * Gradle plugin that generates an adapter with WASI Preview1 functions for Chicory that proxies function calls
  * to common implementations
  */
 plugins.withId("org.jetbrains.kotlin.multiplatform") {

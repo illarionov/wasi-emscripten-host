@@ -6,6 +6,7 @@
 
 package at.released.weh.gradle.wasm.codegen.witx.helper
 
+import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.HANDLE
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.POINTER
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType.U32
@@ -34,6 +35,7 @@ internal class WasiBaseTypeResolver(
         is ParamType.NumberType -> {
             val number = NamedParamType(
                 baseType = getNumberTypeRef(paramType.type),
+                identifier = param.name.toCamelCasePropertyName(),
                 comment = param.name,
             )
             listOf(number)
@@ -42,6 +44,7 @@ internal class WasiBaseTypeResolver(
         is ParamType.Pointer -> {
             val pointer = NamedParamType(
                 baseType = WasiBaseWasmType.POINTER,
+                identifier = param.name.toCamelCasePropertyName(),
                 comment = param.name,
             )
             listOf(pointer)
@@ -50,59 +53,78 @@ internal class WasiBaseTypeResolver(
         ParamType.String -> {
             val stringPointer = NamedParamType(
                 baseType = POINTER,
+                identifier = param.name.toCamelCasePropertyName(),
                 comment = param.name,
             )
             val stringSize = NamedParamType(
                 baseType = U32,
+                identifier = "${param.name}_size".toCamelCasePropertyName(),
                 comment = "${param.name} size",
             )
             listOf(stringPointer, stringSize)
         }
 
-        is ParamType.WasiType -> getWasiBaseType(paramType.identifier, param.name)
+        is ParamType.WasiType -> getWasiBaseType(paramType.identifier, param.name, param.name)
     }
 
     fun getWasiBaseType(
         identifier: Identifier,
+        parameterName: String,
         parameterComment: String,
     ): List<NamedParamType> {
         val wasiType: WasiType = wasiTypes[identifier] ?: error("Unknown type $identifier")
         return when (wasiType) {
             is NumberType -> {
-                val number = NamedParamType(getNumberTypeRef(wasiType.type), parameterComment)
+                val number = NamedParamType(
+                    getNumberTypeRef(wasiType.type),
+                    parameterName.toCamelCasePropertyName(),
+                    parameterComment,
+                )
                 listOf(number)
             }
 
             is EnumType -> {
-                val enumRepresentation = NamedParamType(getNumberTypeRef(wasiType.tag), parameterComment)
+                val enumRepresentation = NamedParamType(
+                    getNumberTypeRef(wasiType.tag),
+                    parameterName.toCamelCasePropertyName(),
+                    parameterComment,
+                )
                 listOf(enumRepresentation)
             }
 
             is FlagsType -> {
-                val flagsRepresentation = NamedParamType(getNumberTypeRef(wasiType.repr), parameterComment)
+                val flagsRepresentation = NamedParamType(
+                    getNumberTypeRef(wasiType.repr),
+                    parameterName.toCamelCasePropertyName(),
+                    parameterComment,
+                )
                 listOf(flagsRepresentation)
             }
 
-            Handle -> {
-                val handle = NamedParamType(HANDLE, parameterComment)
-                listOf(handle)
-            }
+            Handle -> listOf(
+                NamedParamType(HANDLE, parameterName.toCamelCasePropertyName(), parameterComment),
+            )
 
-            is ListType -> {
-                val firstItemPointer = NamedParamType(POINTER, "$parameterComment list first item pointer")
-                val listSize = NamedParamType(U32, "$parameterComment list length")
-                listOf(firstItemPointer, listSize)
-            }
+            is ListType -> listOf(
+                NamedParamType(
+                    POINTER,
+                    parameterName.toCamelCasePropertyName(),
+                    "$parameterComment list first item pointer",
+                ),
+                NamedParamType(
+                    U32,
+                    "${parameterName}_size".toCamelCasePropertyName(),
+                    "$parameterComment list length",
+                ),
+            )
 
-            is RecordType -> {
-                val recordPointer = NamedParamType(POINTER, parameterComment)
-                listOf(recordPointer)
-            }
+            is RecordType -> listOf(
+                NamedParamType(POINTER, parameterName.toCamelCasePropertyName(), parameterComment),
+            )
 
-            is UnionType -> {
-                val unionPointer = NamedParamType(POINTER, parameterComment)
-                listOf(unionPointer)
-            }
+            is UnionType -> listOf(
+                NamedParamType(POINTER, parameterName.toCamelCasePropertyName(), parameterComment),
+            )
         }
     }
 
@@ -128,12 +150,24 @@ internal class WasiBaseTypeResolver(
         val expectedDataParams = if (expectedData != null) {
             when (expectedData) {
                 is ExpectedData.WasiType -> listOf(
-                    NamedParamType(POINTER, "expected ${expectedData.identifier}"),
+                    NamedParamType(
+                        POINTER,
+                        "expected_${expectedData.identifier}".toCamelCasePropertyName(),
+                        "expected ${expectedData.identifier}",
+                    ),
                 )
 
                 is Tuple -> listOf(
-                    NamedParamType(POINTER, "expected ${expectedData.first}"),
-                    NamedParamType(POINTER, "expected ${expectedData.second}"),
+                    NamedParamType(
+                        POINTER,
+                        "expected_${expectedData.first}_first".toCamelCasePropertyName(),
+                        "expected ${expectedData.first}",
+                    ),
+                    NamedParamType(
+                        POINTER,
+                        "expected_${expectedData.second}_second".toCamelCasePropertyName(),
+                        "expected ${expectedData.second}",
+                    ),
                 )
             }
         } else {
@@ -148,11 +182,16 @@ internal class WasiBaseTypeResolver(
         if (func.result == null) {
             return emptyList()
         }
-        return getWasiBaseType(func.result.expectedError, func.result.expectedError)
+        return getWasiBaseType(
+            identifier = func.result.expectedError,
+            parameterName = func.result.expectedError,
+            parameterComment = func.result.expectedError,
+        )
     }
 
     internal data class NamedParamType(
         val baseType: WasiBaseWasmType,
+        val identifier: String,
         val comment: String,
     )
 

@@ -16,6 +16,7 @@ import org.graalvm.wasm.WasmContext
 import org.graalvm.wasm.WasmFunction
 import org.graalvm.wasm.WasmInstance
 import org.graalvm.wasm.WasmModule
+import org.graalvm.wasm.nodes.WasmRootNode
 
 internal fun setupWasmModuleFunctions(
     context: WasmContext,
@@ -29,7 +30,7 @@ internal fun setupWasmModuleFunctions(
     val moduleInstance: WasmInstance = context.readInstance(module)
 
     functions.forEach { (fn, factory) ->
-        val node = factory(context.language(), module, host)
+        val node: WasmRootNode = factory(context.language(), module, host)
         val exportedIndex = exportedFunctions.getValue(fn.wasmName).index()
         moduleInstance.setTarget(exportedIndex, node.callTarget)
     }

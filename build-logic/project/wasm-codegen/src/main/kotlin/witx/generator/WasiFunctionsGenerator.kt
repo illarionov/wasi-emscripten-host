@@ -9,6 +9,7 @@ package at.released.weh.gradle.wasm.codegen.witx.generator
 import at.released.weh.gradle.wasm.codegen.util.classname.JVM_STATIC_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.util.classname.WasiValueTypesMemberName
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
+import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
 import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
 import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatDefinition
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
@@ -160,6 +161,7 @@ internal class WasiFunctionsGenerator(
                     is ExpectedData.WasiType -> {
                         val expectedPointer = NamedParamType(
                             baseType = WasiBaseWasmType.POINTER,
+                            identifier = "expected_${expectedData.identifier}".toCamelCasePropertyName(),
                             comment = "expected ${expectedData.identifier}",
                         )
                         add(expectedPointer)
@@ -168,12 +170,14 @@ internal class WasiFunctionsGenerator(
                     is Tuple -> {
                         val expectedFirstPointer = NamedParamType(
                             baseType = WasiBaseWasmType.POINTER,
+                            identifier = "expected_${expectedData.first}".toCamelCasePropertyName(),
                             comment = "expected ${expectedData.first}",
                         )
                         add(expectedFirstPointer)
 
                         val expectedSecondPointer = NamedParamType(
                             baseType = WasiBaseWasmType.POINTER,
+                            identifier = "expected_${expectedData.second}".toCamelCasePropertyName(),
                             comment = "expected ${expectedData.second}",
                         )
                         add(expectedSecondPointer)
@@ -200,6 +204,7 @@ internal class WasiFunctionsGenerator(
         }
         val errorArgument = baseTypeResolver.getWasiBaseType(
             identifier = result.expectedError,
+            parameterName = result.expectedError,
             parameterComment = result.expectedError,
         ).toList().single()
 

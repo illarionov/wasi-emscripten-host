@@ -6,22 +6,23 @@
 
 package at.released.weh.wasi.preview1.function
 
+import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
+import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasm.core.memory.Memory
 
 public class FdDatasyncFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_DATASYNC, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
-        memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
-    ): Errno {
-        // TODO
-        return Errno.NOTSUP
-    }
+    ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, false))
+        .fold(
+            ifLeft = SyncError::wasiErrno,
+            ifRight = { Errno.SUCCESS },
+        )
 }
