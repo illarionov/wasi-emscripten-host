@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
 import at.released.weh.gradle.wasm.codegen.util.classname.JVM_STATIC_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1EnumTypeKdoc
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext.formatWasiPreview1EnumTypeKdoc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.EnumType
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -36,7 +36,7 @@ internal class EnumTypeGenerator(
 
     private fun generateEnum(): TypeSpec {
         val builder = TypeSpec.enumBuilder(className)
-            .addKdoc(formatWasiPrevie1EnumTypeKdoc(identifier, comment, typedef.tag, typenameRaw))
+            .addKdoc(formatWasiPreview1EnumTypeKdoc(identifier, comment, typedef.tag, typenameRaw))
             .addModifiers(PUBLIC)
 
         typedef.values.forEach { (identifier, comment) ->

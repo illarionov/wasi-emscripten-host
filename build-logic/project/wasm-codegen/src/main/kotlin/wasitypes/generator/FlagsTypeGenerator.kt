@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
 import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
@@ -16,8 +16,8 @@ import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
 import at.released.weh.gradle.wasm.codegen.util.flagsMarkerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.util.flagsObjectName
 import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1FlagsTypeKdoc
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.getNativeType
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext.formatWasiPreview1FlagsTypeKdoc
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext.getNativeType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.FlagsType
 import com.squareup.kotlinpoet.BYTE
 import com.squareup.kotlinpoet.ClassName
@@ -58,7 +58,7 @@ internal class FlagsTypeGenerator(
         typedef.repr.getNativeType(),
     )
         .addModifiers(PUBLIC)
-        .addKdoc(formatWasiPrevie1FlagsTypeKdoc(identifier, comment, typedef.repr, typenameRaw))
+        .addKdoc(formatWasiPreview1FlagsTypeKdoc(identifier, comment, typedef.repr, typenameRaw))
         .build()
 
     private fun generateFlagsObject(): TypeSpec {

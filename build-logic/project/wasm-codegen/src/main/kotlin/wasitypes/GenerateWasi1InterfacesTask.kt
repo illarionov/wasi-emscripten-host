@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx
+package at.released.weh.gradle.wasm.codegen.wasitypes
 
-import at.released.weh.gradle.wasm.codegen.witx.generator.Wasi1TypenamesGenerator
-import at.released.weh.gradle.wasm.codegen.witx.generator.WasiFunctionsGenerator
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.Wasi1TypenamesGenerator
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.WasiFunctionsGenerator
 import at.released.weh.gradle.wasm.codegen.witx.parser.WitxFunctionsParser
 import at.released.weh.gradle.wasm.codegen.witx.parser.WitxTypenamesParser
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx
+package at.released.weh.gradle.wasm.codegen.wasitypes
 
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
 import org.gradle.api.Project

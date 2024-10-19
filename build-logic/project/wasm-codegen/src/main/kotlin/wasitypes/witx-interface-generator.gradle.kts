@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx
+package at.released.weh.gradle.wasm.codegen.wasitypes
 
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /*
