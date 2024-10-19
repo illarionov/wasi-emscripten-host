@@ -4,17 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator.ext
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext
 
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.UnsignedNumber
 
-internal fun formatWasiPrevie1TypeKdoc(
+internal fun formatWasiPreview1TypeKdoc(
     identifier: String,
     comment: String,
     typenameRaw: String,
 ): String = buildWasiPreviewTypeKdoc(identifier, comment, typenameRaw) {}
 
-internal fun formatWasiPrevie1EnumTypeKdoc(
+internal fun formatWasiPreview1EnumTypeKdoc(
     identifier: String,
     comment: String,
     tag: UnsignedNumber,
@@ -23,7 +23,7 @@ internal fun formatWasiPrevie1EnumTypeKdoc(
     add("TAG: `${tag.toString().lowercase()}`")
 }
 
-internal fun formatWasiPrevie1FlagsTypeKdoc(
+internal fun formatWasiPreview1FlagsTypeKdoc(
     identifier: String,
     comment: String,
     repr: UnsignedNumber,
@@ -32,7 +32,7 @@ internal fun formatWasiPrevie1FlagsTypeKdoc(
     add("Representation: `${repr.toString().lowercase()}`")
 }
 
-internal fun formatWasiPrevie1RecordTypeKdoc(
+internal fun formatWasiPreview1RecordTypeKdoc(
     identifier: String,
     comment: String,
     paramDescription: List<Pair<String, String>>,

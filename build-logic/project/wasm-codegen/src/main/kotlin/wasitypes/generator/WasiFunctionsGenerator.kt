@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.classname.JVM_STATIC_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.util.classname.WasiValueTypesMemberName
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
 import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
 import at.released.weh.gradle.wasm.codegen.util.toUppercaseWithUnderscores
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatDefinition
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext.formatDefinition
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.NamedParamType
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.WasiBaseWasmType

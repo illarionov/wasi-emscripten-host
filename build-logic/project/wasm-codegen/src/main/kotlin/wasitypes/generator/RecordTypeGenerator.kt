@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
 import at.released.weh.gradle.wasm.codegen.util.flagsMarkerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
 import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
 import at.released.weh.gradle.wasm.codegen.util.toUpperCamelCaseClassName
-import at.released.weh.gradle.wasm.codegen.witx.generator.ext.formatWasiPrevie1RecordTypeKdoc
+import at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext.formatWasiPreview1RecordTypeKdoc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.FlagsType
@@ -81,7 +81,7 @@ internal class RecordTypeGenerator(
         return TypeSpec.classBuilder(className)
             .addModifiers(PUBLIC, DATA)
             .primaryConstructor(constructor)
-            .addKdoc(formatWasiPrevie1RecordTypeKdoc(identifier, comment, paramsDescription, typenameRaw))
+            .addKdoc(formatWasiPreview1RecordTypeKdoc(identifier, comment, paramsDescription, typenameRaw))
             .addProperties(properties)
             .addSuperinterfaces(superInterfaces)
             .build()

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.gradle.wasm.codegen.witx.generator.ext
+package at.released.weh.gradle.wasm.codegen.wasitypes.generator.ext
 
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiNumberType.SignedNumber.S16
