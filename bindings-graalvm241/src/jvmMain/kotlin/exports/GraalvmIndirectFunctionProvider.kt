@@ -12,7 +12,7 @@ import at.released.weh.wasm.core.WasmFunctionBinding
 import org.graalvm.polyglot.Value
 
 internal class GraalvmIndirectFunctionProvider(
-    @Suppress("UnusedPrivateProperty") mainBindings: () -> Value,
+    @Suppress("UNUSED_PARAMETER") mainBindings: () -> Value,
 ) : IndirectFunctionBindingProvider {
     override fun getFunctionBinding(indirectId: IndirectFunctionTableIndex): WasmFunctionBinding {
         error("Not implemented")

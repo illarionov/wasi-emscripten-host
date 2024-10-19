@@ -59,7 +59,7 @@ internal class ChicoryArgsFunctionHandles(
             returns(ARRAY.parameterizedBy(ChicoryClassname.VALUE))
 
             val handleArgs: List<Pair<String, MemberName>> =
-                baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, comment) ->
+                baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, _, comment) ->
                     val (funcSpecifier, converterFunc) = when (baseType) {
                         POINTER -> "%M" to ChicoryClassname.Bindings.VALUE_AS_WASM_ADDR
                         S8, U8 -> "%N" to ChicoryClassname.VALUE_AS_BYTE

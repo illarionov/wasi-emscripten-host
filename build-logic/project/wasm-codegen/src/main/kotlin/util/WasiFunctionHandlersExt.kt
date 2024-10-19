@@ -11,8 +11,9 @@ internal object WasiFunctionHandlersExt {
     internal val WASI_MEMORY_WRITER_FUNCTIONS = setOf("fd_write", "fd_pwrite")
     internal val NO_MEMORY_FUNCTIONS = setOf(
         "fd_close",
+        "fd_datasync",
         "fd_sync",
-        "sched_yield",
         "proc_exit",
+        "sched_yield",
     )
 }

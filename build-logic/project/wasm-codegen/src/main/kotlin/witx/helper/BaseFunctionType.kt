@@ -83,7 +83,7 @@ internal data class BaseFunctionType(
                     typeResolver.getFuncReturnTypes(wasiFunc),
                 )
             }
-                .map { args: List<NamedParamType> -> args.map { it.baseType.baseType } }
+                .map { args: List<NamedParamType> -> args.map { it.baseType.wasmType } }
                 .toSortedSet(listOfTypesComparator)
         }
     }
@@ -100,7 +100,7 @@ internal data class BaseFunctionType(
                 I64 -> "j"
             }
 
-        internal val WasiBaseWasmType.baseType: BaseWebAssemblyType
+        internal val WasiBaseWasmType.wasmType: BaseWebAssemblyType
             get() = when (this) {
                 POINTER, HANDLE, S8, U8, S16, U16, S32, U32 -> BaseWebAssemblyType.I32
                 S64, U64 -> BaseWebAssemblyType.I64
@@ -110,8 +110,8 @@ internal data class BaseFunctionType(
             func: WasiFunc,
             typeResolver: WasiBaseTypeResolver,
         ): BaseFunctionType = BaseFunctionType(
-            input = typeResolver.getFuncInputArgs(func).map { it.baseType.baseType },
-            results = typeResolver.getFuncReturnTypes(func).map { it.baseType.baseType },
+            input = typeResolver.getFuncInputArgs(func).map { it.baseType.wasmType },
+            results = typeResolver.getFuncReturnTypes(func).map { it.baseType.wasmType },
         )
     }
 }

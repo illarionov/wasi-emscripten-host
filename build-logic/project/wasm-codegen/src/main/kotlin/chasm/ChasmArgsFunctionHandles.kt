@@ -61,7 +61,7 @@ internal class ChasmArgsFunctionHandles(
             returns(LIST.parameterizedBy(ChasmShapesClassname.VALUE))
 
             val handleArgs: List<Pair<String, MemberName>> =
-                baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, comment) ->
+                baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, _, comment) ->
                     val converterFunc = when (baseType) {
                         POINTER -> ChasmBindingsClassname.ChasmExt.VALUE_AS_WASM_ADDR
                         S8, U8 -> ChasmBindingsClassname.ChasmExt.VALUE_AS_BYTE

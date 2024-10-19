@@ -16,6 +16,9 @@ import org.graalvm.wasm.WasmArguments
 @IntWasmPtr
 internal inline fun Value.asWasmAddr(): WasmPtr = asInt()
 
+internal inline fun Array<Any>.getArgAsByte(idx: Int): Byte = WasmArguments.getArgument(this, idx) as Byte
+internal inline fun Array<Any>.getArgAsShort(idx: Int): Short = WasmArguments.getArgument(this, idx) as Short
+
 internal inline fun Array<Any>.getArgAsInt(idx: Int): Int = WasmArguments.getArgument(this, idx) as Int
 internal inline fun Array<Any>.getArgAsUint(idx: Int): UInt = (WasmArguments.getArgument(this, idx) as Int).toUInt()
 internal inline fun Array<Any>.getArgAsLong(idx: Int): Long = WasmArguments.getArgument(this, idx) as Long

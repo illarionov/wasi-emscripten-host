@@ -29,7 +29,6 @@ internal class ChasmHostFunctionsAdapterGenerator(
     private val wasiTypenames: Map<String, WasiType>,
     private val wasiFunctions: List<WasiFunc>,
     private val outputDirectory: File,
-    functionsClassName: String = "ChasmWasiPreview1Functions",
     private val factoryFunctionName: String = "createWasiPreview1HostFunctions",
 ) {
     fun generate() {
