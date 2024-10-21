@@ -8,11 +8,18 @@ package at.released.weh.wasi.preview1.function
 
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.hostClockId
+import at.released.weh.wasi.preview1.type.Clockid
+import at.released.weh.wasi.preview1.type.Clockid.MONOTONIC
+import at.released.weh.wasi.preview1.type.Clockid.PROCESS_CPUTIME_ID
+import at.released.weh.wasi.preview1.type.Clockid.REALTIME
+import at.released.weh.wasi.preview1.type.Clockid.THREAD_CPUTIME_ID
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Timestamp
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasm.core.memory.writeU64
 
 public class ClockTimeGetFunctionHandle(
     host: EmbedderHost,
@@ -24,7 +31,20 @@ public class ClockTimeGetFunctionHandle(
         precision: Long,
         @IntWasmPtr(Timestamp::class) timestampAddr: WasmPtr,
     ): Errno {
-        // TODO
-        return Errno.NOTSUP
+        val clockId = Clockid.fromCode(id) ?: return Errno.INVAL
+
+        val timestampNs = when (clockId) {
+            REALTIME -> host.clock.getCurrentTimeEpochNanoseconds()
+            MONOTONIC -> host.monotonicClock.getTimeMarkNanoseconds()
+            PROCESS_CPUTIME_ID, THREAD_CPUTIME_ID -> host.cputimeSource.getClock(clockId.hostClockId).let {
+                if (!it.isSupported) {
+                    return Errno.NOTSUP
+                }
+                it.getTimeMarkNanoseconds()
+            }
+        }
+        memory.writeU64(timestampAddr, timestampNs.toULong())
+
+        return Errno.SUCCESS
     }
 }

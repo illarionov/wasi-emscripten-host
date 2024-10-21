@@ -41,7 +41,7 @@ public class SyscallUtimensatFunctionHandle(
         val mtimeNs: Long?
         @Suppress("MagicNumber")
         if (ptrIsNull(times)) {
-            atimeNs = host.clock.getCurrentTimeEpochMilliseconds()
+            atimeNs = host.clock.getCurrentTimeEpochNanoseconds()
             mtimeNs = atimeNs
         } else {
             val atimeSeconds = memory.readI64(times)
@@ -50,7 +50,7 @@ public class SyscallUtimensatFunctionHandle(
             val mtimeSeconds = memory.readI64(times + 16)
             val mtimeNanoseconds = memory.readI64(times + 24)
 
-            val now: Long by lazy(NONE) { host.clock.getCurrentTimeEpochMilliseconds() }
+            val now: Long by lazy(NONE) { host.clock.getCurrentTimeEpochNanoseconds() }
             atimeNs = parseTimeNanoseconds(atimeSeconds, atimeNanoseconds) { now }
             mtimeNs = parseTimeNanoseconds(mtimeSeconds, mtimeNanoseconds) { now }
         }

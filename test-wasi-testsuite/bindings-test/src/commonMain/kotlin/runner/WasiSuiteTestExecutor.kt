@@ -62,11 +62,20 @@ public class WasiSuiteTestExecutor(
             cleanup()
         }
         val stdout = testStdout.readContent()
-        val stdErr = testStderr.readContent()
+        val stderr = testStderr.readContent()
+
+        logger.i { "stdout: $stdout" }
+        logger.i { "stderr: $stderr" }
 
         assertThat(exitCode).isEqualTo(arguments.exitCode)
-        assertThat(stdout).isEqualTo(arguments.stdout)
-        assertThat(stdErr).isEqualTo(arguments.stderr)
+
+        arguments.stdout?.let {
+            assertThat(stdout).isEqualTo(it)
+        }
+
+        arguments.stderr?.let {
+            assertThat(stderr).isEqualTo(it)
+        }
     }
 
     private fun readArguments(): WasiTestsuiteArguments {

@@ -10,7 +10,6 @@ import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.common.ext.encodeToNullTerminatedBuffer
 import at.released.weh.filesystem.error.PrestatError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -18,6 +17,7 @@ import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.prestat.PrestatResult
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.encodeToBuffer
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
@@ -37,7 +37,7 @@ public class FdPrestatDirNameFunctionHandle(
         return host.fileSystem.execute(PrestatFd, PrestatFd(fd))
             .mapLeft(PrestatError::wasiErrno)
             .flatMap { prestatResult: PrestatResult ->
-                val bytes = prestatResult.path.encodeToNullTerminatedBuffer()
+                val bytes = prestatResult.path.encodeToBuffer()
                 if (bytes.size > dstPathLen) {
                     return@flatMap Errno.NAMETOOLONG.left()
                 }

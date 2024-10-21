@@ -17,6 +17,6 @@ public data class WasiTestsuiteArguments(
 
     @SerialName("exit_code")
     val exitCode: Int = 0,
-    val stderr: String = "",
-    val stdout: String = "",
+    val stderr: String? = null,
+    val stdout: String? = null,
 )

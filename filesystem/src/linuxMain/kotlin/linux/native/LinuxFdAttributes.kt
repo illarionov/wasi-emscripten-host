@@ -36,8 +36,8 @@ import at.released.weh.filesystem.model.Filetype.SOCKET_STREAM
 import at.released.weh.filesystem.model.Filetype.SYMBOLIC_LINK
 import at.released.weh.filesystem.model.Filetype.UNKNOWN
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_RIGHTS
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_RIGHTS
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_BASE_RIGHTS
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_BASE_RIGHTS
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.PATH_SYMLINK
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_ACCEPT
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_SHUTDOWN
@@ -74,7 +74,7 @@ private fun linuxFdAttributes(
         UNKNOWN -> 0
         BLOCK_DEVICE -> 0
         CHARACTER_DEVICE -> 0
-        DIRECTORY -> rights or FILE_RIGHTS
+        DIRECTORY -> rights or FILE_BASE_RIGHTS
         REGULAR_FILE -> rights
         SOCKET_DGRAM -> rights
         SOCKET_STREAM -> rights
@@ -110,11 +110,11 @@ private fun getFdRightsByFileType(fileType: Filetype) = when (fileType) {
     UNKNOWN -> 0
     BLOCK_DEVICE -> 0
     CHARACTER_DEVICE -> STDIO_FD_RIGHTS
-    DIRECTORY -> DIRECTORY_RIGHTS
-    REGULAR_FILE -> FILE_RIGHTS
-    SYMBOLIC_LINK -> FILE_RIGHTS or PATH_SYMLINK
-    SOCKET_DGRAM -> FILE_RIGHTS or SOCK_SHUTDOWN
-    SOCKET_STREAM -> FILE_RIGHTS or SOCK_SHUTDOWN or SOCK_ACCEPT
+    DIRECTORY -> DIRECTORY_BASE_RIGHTS or FILE_BASE_RIGHTS
+    REGULAR_FILE -> FILE_BASE_RIGHTS
+    SYMBOLIC_LINK -> FILE_BASE_RIGHTS or PATH_SYMLINK
+    SOCKET_DGRAM -> FILE_BASE_RIGHTS or SOCK_SHUTDOWN
+    SOCKET_STREAM -> FILE_BASE_RIGHTS or SOCK_SHUTDOWN or SOCK_ACCEPT
 }
 
 private fun Int.getflErrnoToFdAttributesError(): FdAttributesError = when (this) {

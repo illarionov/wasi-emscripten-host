@@ -14,8 +14,8 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.ext.toFiletype
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_RIGHTS
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_RIGHTS
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_BASE_RIGHTS
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_BASE_RIGHTS
 import java.io.IOException
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
@@ -31,8 +31,8 @@ internal object NioFdAttributes {
         FdAttributesResult(
             type = fileType,
             flags = channel.fdFlags,
-            rights = FILE_RIGHTS,
-            inheritingRights = FILE_RIGHTS,
+            rights = FILE_BASE_RIGHTS,
+            inheritingRights = FILE_BASE_RIGHTS,
         )
     }
 
@@ -45,8 +45,8 @@ internal object NioFdAttributes {
         FdAttributesResult(
             type = fileType,
             flags = 0,
-            rights = DIRECTORY_RIGHTS,
-            inheritingRights = DIRECTORY_RIGHTS or FILE_RIGHTS,
+            rights = DIRECTORY_BASE_RIGHTS or FILE_BASE_RIGHTS,
+            inheritingRights = DIRECTORY_BASE_RIGHTS or FILE_BASE_RIGHTS,
         )
     }
 

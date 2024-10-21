@@ -6,8 +6,14 @@
 
 package at.released.weh.host.jvm
 
-import at.released.weh.host.Clock
+import at.released.weh.host.clock.Clock
+import kotlin.time.Duration.Companion.milliseconds
 
 internal object JvmClock : Clock {
-    override fun getCurrentTimeEpochMilliseconds(): Long = System.currentTimeMillis()
+    @Suppress("MagicNumber")
+    override fun getCurrentTimeEpochNanoseconds(): Long = System.currentTimeMillis() * 1_000_000
+    override fun getResolutionNanoseconds(): Long {
+        // XXX: need precise resolution
+        return 1.milliseconds.inWholeNanoseconds
+    }
 }

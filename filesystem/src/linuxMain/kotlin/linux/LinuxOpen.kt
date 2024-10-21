@@ -8,8 +8,10 @@ package at.released.weh.filesystem.linux
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.left
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.ResolveModeFlag
 import at.released.weh.filesystem.linux.native.linuxOpen
@@ -21,6 +23,8 @@ internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
+        checkOpenFlags(input).onLeft { return it.left() }
+
         val resolveFlags = if (fsState.isRootAccessAllowed) {
             setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)
         } else {

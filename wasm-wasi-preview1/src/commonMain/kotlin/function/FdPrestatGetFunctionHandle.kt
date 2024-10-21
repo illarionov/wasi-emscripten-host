@@ -6,7 +6,6 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.common.ext.encodedNullTerminatedStringLength
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.prestat.PrestatFd
@@ -14,6 +13,7 @@ import at.released.weh.filesystem.op.prestat.PrestatResult
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.PRESTAT_PACKED_SIZE
+import at.released.weh.wasi.preview1.ext.encodedLength
 import at.released.weh.wasi.preview1.ext.packTo
 import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
@@ -37,7 +37,7 @@ public class FdPrestatGetFunctionHandle(
             .onRight { prestatResult: PrestatResult ->
                 memory.sinkWithMaxSize(dstAddr, PRESTAT_PACKED_SIZE).buffered().use {
                     PrestatDir(
-                        prNameLen = prestatResult.path.encodedNullTerminatedStringLength(),
+                        prNameLen = prestatResult.path.encodedLength(),
                     ).packTo(it)
                 }
             }.fold(

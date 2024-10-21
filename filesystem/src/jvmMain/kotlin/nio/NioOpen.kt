@@ -17,6 +17,7 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
@@ -61,6 +62,8 @@ internal class NioOpen(
         val fileAttributes = input.mode?.let {
             arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
         } ?: emptyArray()
+
+        checkOpenFlags(input).bind()
 
         fsState.fsLock.withLock {
             @Suppress("SpreadOperator")

@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host
+package at.released.weh.host.clock
 
-public fun interface Clock {
-    public fun getCurrentTimeEpochMilliseconds(): Long
+public interface Clock {
+    public fun getCurrentTimeEpochNanoseconds(): Long
+
+    public fun getResolutionNanoseconds(): Long
 }
