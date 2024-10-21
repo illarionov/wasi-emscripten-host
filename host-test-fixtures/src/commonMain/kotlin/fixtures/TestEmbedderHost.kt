@@ -35,7 +35,7 @@ public open class TestEmbedderHost(
         override fun getCurrentTimeEpochNanoseconds(): Long = Long.MAX_VALUE
         override fun getResolutionNanoseconds(): Long = 1.milliseconds.inWholeNanoseconds
     },
-    override val cputimeSource: CputimeSource = TestCputimeSource(),
+    override var cputimeSource: CputimeSource = TestCputimeSource(),
     override var localTimeFormatter: LocalTimeFormatter = LocalTimeFormatter {
         StructTm(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
     },

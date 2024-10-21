@@ -8,6 +8,7 @@ public final class at/released/weh/host/test/fixtures/TestCputimeSource : at/rel
 
 public final class at/released/weh/host/test/fixtures/TestCputimeSource$Companion {
 	public final fun getUNSUPPORTED_CLOCK ()Lat/released/weh/host/clock/CputimeSource$CputimeClock;
+	public final fun getUNSUPPORTED_CPUTIME_SOURCE ()Lat/released/weh/host/clock/CputimeSource;
 }
 
 public final class at/released/weh/host/test/fixtures/TestCputimeSource$TestCputimeClock : at/released/weh/host/clock/CputimeSource$CputimeClock {
@@ -34,6 +35,7 @@ public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/w
 	public fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 	public fun setClock (Lat/released/weh/host/clock/Clock;)V
 	public fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
+	public fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)V
 	public fun setEntropySource (Lat/released/weh/host/EntropySource;)V
 	public fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
 	public fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V

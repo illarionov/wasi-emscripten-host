@@ -9,11 +9,15 @@ package at.released.weh.host.test.fixtures
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.CputimeSource.CpuClockId
 import at.released.weh.host.clock.CputimeSource.CpuClockId.PROCESS_CPUTIME
+import at.released.weh.host.clock.CputimeSource.CpuClockId.THREAD_CPUTIME
 import at.released.weh.host.clock.CputimeSource.CputimeClock
 import kotlin.time.Duration.Companion.milliseconds
 
 public class TestCputimeSource(
-    vararg testClocks: Pair<CpuClockId, CputimeClock> = arrayOf(PROCESS_CPUTIME to TestCputimeClock { 0L }),
+    vararg testClocks: Pair<CpuClockId, CputimeClock> = arrayOf(
+        PROCESS_CPUTIME to TestCputimeClock { 2L },
+        THREAD_CPUTIME to TestCputimeClock { 1L },
+    ),
 ) : CputimeSource {
     private val testValues: Map<CpuClockId, CputimeClock> = testClocks.toMap()
 
@@ -34,6 +38,7 @@ public class TestCputimeSource(
     }
 
     public companion object {
+        public val UNSUPPORTED_CPUTIME_SOURCE: CputimeSource = TestCputimeSource(testClocks = emptyArray())
         public val UNSUPPORTED_CLOCK: CputimeClock = TestCputimeClock(false, -1L) { -1L }
     }
 }

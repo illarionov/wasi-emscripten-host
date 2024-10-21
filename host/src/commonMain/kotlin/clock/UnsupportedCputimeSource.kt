@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.internal
+package at.released.weh.host.clock
 
-import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.CputimeSource.CpuClockId
 import at.released.weh.host.clock.CputimeSource.CputimeClock
 
