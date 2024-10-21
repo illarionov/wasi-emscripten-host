@@ -21,10 +21,10 @@ import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.writeU64
 
+@Suppress("ReturnCount")
 public class ClockTimeGetFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.CLOCK_TIME_GET, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
         memory: Memory,
         id: Int,
@@ -34,10 +34,23 @@ public class ClockTimeGetFunctionHandle(
         val clockId = Clockid.fromCode(id) ?: return Errno.INVAL
 
         val timestampNs = when (clockId) {
-            REALTIME -> host.clock.getCurrentTimeEpochNanoseconds()
-            MONOTONIC -> host.monotonicClock.getTimeMarkNanoseconds()
+            REALTIME -> {
+                if (!IGNORE_PRECISION && host.clock.getResolutionNanoseconds() > precision) {
+                    return Errno.NOTSUP
+                }
+                host.clock.getCurrentTimeEpochNanoseconds()
+            }
+            MONOTONIC -> {
+                if (!IGNORE_PRECISION && host.monotonicClock.getResolutionNanoseconds() > precision) {
+                    return Errno.NOTSUP
+                }
+                host.monotonicClock.getTimeMarkNanoseconds()
+            }
             PROCESS_CPUTIME_ID, THREAD_CPUTIME_ID -> host.cputimeSource.getClock(clockId.hostClockId).let {
                 if (!it.isSupported) {
+                    return Errno.NOTSUP
+                }
+                if (!IGNORE_PRECISION && it.getResolutionNanoseconds() > precision) {
                     return Errno.NOTSUP
                 }
                 it.getTimeMarkNanoseconds()
@@ -46,5 +59,9 @@ public class ClockTimeGetFunctionHandle(
         memory.writeU64(timestampAddr, timestampNs.toULong())
 
         return Errno.SUCCESS
+    }
+
+    private companion object {
+        private const val IGNORE_PRECISION: Boolean = true
     }
 }

@@ -15,22 +15,22 @@ import at.released.weh.host.EntropySource
 import at.released.weh.host.LocalTimeFormatter
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.host.TimeZoneInfo
+import at.released.weh.host.apple.clock.AppleClock
+import at.released.weh.host.apple.clock.AppleCputimeSource
+import at.released.weh.host.apple.clock.AppleMonotonicClock
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.MonotonicClock
-import at.released.weh.host.internal.CommonClock
-import at.released.weh.host.internal.CommonMonotonicClock
 import at.released.weh.host.internal.EmptyCommandArgsProvider
-import at.released.weh.host.internal.UnsupportedCputimeSource
 
 public class AppleEmbedderHost(
     override val rootLogger: Logger,
     override val systemEnvProvider: SystemEnvProvider = AppleSystemEnvProvider,
     override val commandArgsProvider: CommandArgsProvider = EmptyCommandArgsProvider,
     override val fileSystem: FileSystem = NotImplementedFileSystem,
-    override val monotonicClock: MonotonicClock = CommonMonotonicClock(),
-    override val clock: Clock = CommonClock(),
-    override val cputimeSource: CputimeSource = UnsupportedCputimeSource,
+    override val monotonicClock: MonotonicClock = AppleMonotonicClock,
+    override val clock: Clock = AppleClock,
+    override val cputimeSource: CputimeSource = AppleCputimeSource,
     override val localTimeFormatter: LocalTimeFormatter = AppleLocalTimeFormatter(),
     override val timeZoneInfo: TimeZoneInfo.Provider = AppleTimeZoneInfoProvider(),
     override val entropySource: EntropySource = AppleEntropySource,

@@ -9,15 +9,15 @@ package at.released.weh.host
 import at.released.weh.filesystem.LinuxFileSystem
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.clock.CputimeSource
-import at.released.weh.host.internal.CommonClock
-import at.released.weh.host.internal.CommonMonotonicClock
 import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.internal.EmptyCommandArgsProvider
-import at.released.weh.host.internal.UnsupportedCputimeSource
 import at.released.weh.host.linux.LinuxEntropySource
 import at.released.weh.host.linux.LinuxLocalTimeFormatter
 import at.released.weh.host.linux.LinuxSystemEnvProvider
 import at.released.weh.host.linux.LinuxTimeZoneInfoProvider
+import at.released.weh.host.linux.clock.LinuxClock
+import at.released.weh.host.linux.clock.LinuxCputimeSource
+import at.released.weh.host.linux.clock.LinuxMonotonicClock
 
 internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = object : EmbedderHost {
     override val rootLogger = builder.rootLogger
@@ -31,9 +31,9 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
         builder.directoriesConfigBlock,
         builder.rootLogger.withTag("FSlnx"),
     )
-    override val monotonicClock = builder.monotonicClock ?: CommonMonotonicClock()
-    override val clock = builder.clock ?: CommonClock()
-    override val cputimeSource: CputimeSource = builder.cputimeSource ?: UnsupportedCputimeSource
+    override val monotonicClock = builder.monotonicClock ?: LinuxMonotonicClock
+    override val clock = builder.clock ?: LinuxClock
+    override val cputimeSource: CputimeSource = builder.cputimeSource ?: LinuxCputimeSource
     override val localTimeFormatter = builder.localTimeFormatter ?: LinuxLocalTimeFormatter
     override val timeZoneInfo = builder.timeZoneInfo ?: LinuxTimeZoneInfoProvider
     override val entropySource = builder.entropySource ?: LinuxEntropySource

@@ -12,8 +12,9 @@ import at.released.weh.host.apple.AppleEmbedderHost.AppleSystemEnvProvider
 import at.released.weh.host.apple.AppleEntropySource
 import at.released.weh.host.apple.AppleLocalTimeFormatter
 import at.released.weh.host.apple.AppleTimeZoneInfoProvider
-import at.released.weh.host.internal.CommonClock
-import at.released.weh.host.internal.CommonMonotonicClock
+import at.released.weh.host.apple.clock.AppleClock
+import at.released.weh.host.apple.clock.AppleCputimeSource
+import at.released.weh.host.apple.clock.AppleMonotonicClock
 import at.released.weh.host.internal.EmptyCommandArgsProvider
 
 internal actual fun createDefaultEmbedderHost(builder: EmbedderHost.Builder): EmbedderHost = AppleEmbedderHost(
@@ -21,8 +22,9 @@ internal actual fun createDefaultEmbedderHost(builder: EmbedderHost.Builder): Em
     systemEnvProvider = builder.systemEnvProvider ?: AppleSystemEnvProvider,
     commandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider,
     fileSystem = builder.fileSystem ?: NotImplementedFileSystem,
-    monotonicClock = builder.monotonicClock ?: CommonMonotonicClock(),
-    clock = builder.clock ?: CommonClock(),
+    monotonicClock = builder.monotonicClock ?: AppleMonotonicClock,
+    clock = builder.clock ?: AppleClock,
+    cputimeSource = builder.cputimeSource ?: AppleCputimeSource,
     localTimeFormatter = builder.localTimeFormatter ?: AppleLocalTimeFormatter(),
     timeZoneInfo = builder.timeZoneInfo ?: AppleTimeZoneInfoProvider(),
     entropySource = builder.entropySource ?: AppleEntropySource,

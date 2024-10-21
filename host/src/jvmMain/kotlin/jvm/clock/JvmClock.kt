@@ -4,20 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.internal
+package at.released.weh.host.jvm.clock
 
 import at.released.weh.host.clock.Clock
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.datetime.Clock as KotlinxClock
 
-internal class CommonClock(
-    private val clock: KotlinxClock = KotlinxClock.System,
-) : Clock {
+internal object JvmClock : Clock {
     @Suppress("MagicNumber")
-    override fun getCurrentTimeEpochNanoseconds(): Long = clock.now().let {
-        it.epochSeconds * 1_000_000_000 + it.nanosecondsOfSecond
-    }
-
+    override fun getCurrentTimeEpochNanoseconds(): Long = System.currentTimeMillis() * 1_000_000
     override fun getResolutionNanoseconds(): Long {
         // XXX: need precise resolution
         return 1.milliseconds.inWholeNanoseconds

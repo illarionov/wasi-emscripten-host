@@ -4,14 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.jvm
+package at.released.weh.host.clock
 
-import at.released.weh.host.clock.Clock
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
-internal object JvmClock : Clock {
-    @Suppress("MagicNumber")
-    override fun getCurrentTimeEpochNanoseconds(): Long = System.currentTimeMillis() * 1_000_000
+internal class CommonMonotonicClock(
+    private val baseMark: TimeMark = TimeSource.Monotonic.markNow(),
+) : MonotonicClock {
+    override fun getTimeMarkNanoseconds(): Long = baseMark.elapsedNow().inWholeNanoseconds
     override fun getResolutionNanoseconds(): Long {
         // XXX: need precise resolution
         return 1.milliseconds.inWholeNanoseconds
