@@ -6,8 +6,13 @@
 
 package at.released.weh.host.jvm
 
-import at.released.weh.host.MonotonicClock
+import at.released.weh.host.clock.MonotonicClock
+import kotlin.time.Duration.Companion.milliseconds
 
 internal object JvmMonotonicClock : MonotonicClock {
     override fun getTimeMarkNanoseconds(): Long = System.nanoTime()
+    override fun getResolutionNanoseconds(): Long {
+        // XXX: need precise resolution
+        return 1.milliseconds.inWholeNanoseconds
+    }
 }

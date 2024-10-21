@@ -29,10 +29,6 @@ wasiTestsuiteTestGen {
 //        WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(
-        "clock_getres-monotonic",
-        "clock_getres-realtime",
-        "clock_gettime-monotonic",
-        "clock_gettime-realtime",
         "fdopendir-with-access",
         "lseek",
         "pread-with-access",
@@ -43,8 +39,6 @@ wasiTestsuiteTestGen {
         "stat-dev-ino",
     )
     rustIgnores = listOf(
-        "big_random_buf",
-        "clock_time_get",
         "close_preopen",
         "dangling_fd",
         "dangling_symlink",
@@ -72,7 +66,6 @@ wasiTestsuiteTestGen {
         "path_open_dirfd_not_dir",
         "path_open_missing",
         "path_open_nonblock",
-        "path_open_preopen",
         "path_open_read_write",
         "path_rename",
         "path_rename_dir_trailing_slashes",
@@ -82,7 +75,6 @@ wasiTestsuiteTestGen {
         "remove_directory_trailing_slashes",
         "remove_nonempty_directory",
         "renumber",
-        "sched_yield",
         "stdio",
         "symlink_create",
         "symlink_filestat",
@@ -94,11 +86,9 @@ wasiTestsuiteTestGen {
 
 kotlin {
     jvm()
-    // TODO: iosSimulatorArm64(), iosArm64(), iosX64()
+    // TODO: iosSimulatorArm64(), iosArm64(), iosX64(), macosArm64(), macosX64(),
     linuxArm64()
     linuxX64()
-    macosArm64()
-    macosX64()
     mingwX64()
 
     testableTargets.withType<KotlinNativeTargetWithHostTests> {

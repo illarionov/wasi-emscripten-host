@@ -7,16 +7,20 @@
 package at.released.weh.wasi.preview1.ext
 
 import arrow.core.Either
+import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.wasi.preview1.type.Errno
+import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import at.released.weh.wasm.core.memory.sourceWithMaxSize
+import kotlinx.io.Buffer
 import kotlinx.io.EOFException
 import kotlinx.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.readByteString
+import kotlinx.io.writeString
 
 internal fun ReadOnlyMemory.readPathString(
     @IntWasmPtr(Byte::class) path: WasmPtr,
@@ -33,4 +37,10 @@ internal fun ReadOnlyMemory.readPathString(
         is EOFException -> Errno.IO
         else -> Errno.FAULT
     }
+}
+
+internal fun VirtualPath.encodedLength(): Size = this.encodeToByteArray().size
+
+internal fun VirtualPath.encodeToBuffer(): Buffer = Buffer().also { buffer ->
+    buffer.writeString(this)
 }

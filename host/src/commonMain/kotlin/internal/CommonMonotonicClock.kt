@@ -6,7 +6,8 @@
 
 package at.released.weh.host.internal
 
-import at.released.weh.host.MonotonicClock
+import at.released.weh.host.clock.MonotonicClock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
@@ -14,4 +15,8 @@ internal class CommonMonotonicClock(
     private val baseMark: TimeMark = TimeSource.Monotonic.markNow(),
 ) : MonotonicClock {
     override fun getTimeMarkNanoseconds(): Long = baseMark.elapsedNow().inWholeNanoseconds
+    override fun getResolutionNanoseconds(): Long {
+        // XXX: need precise resolution
+        return 1.milliseconds.inWholeNanoseconds
+    }
 }

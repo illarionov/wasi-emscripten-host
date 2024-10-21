@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host
+package at.released.weh.host.clock
 
-public fun interface MonotonicClock {
+public interface MonotonicClock {
     public fun getTimeMarkNanoseconds(): Long
+
+    public fun getResolutionNanoseconds(): Long
 }

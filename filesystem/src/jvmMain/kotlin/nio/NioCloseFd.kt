@@ -11,6 +11,7 @@ import arrow.core.getOrElse
 import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.close.CloseFd
 import kotlin.concurrent.withLock
@@ -19,11 +20,17 @@ internal class NioCloseFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<CloseFd, CloseError, Unit> {
     override fun invoke(input: CloseFd): Either<CloseError, Unit> = fsState.fsLock.withLock {
-        val fileResource = fsState.remove(input.fd)
+        val testFdResource = fsState.get(input.fd)
+        if (testFdResource is NioDirectoryFdResource && testFdResource.isPreopened) {
+            // Preopened directory is not closeable while working with the file system
+            return BadFileDescriptor("Preopened directory is not closeable while working with the file system").left()
+        }
+
+        val fdResource = fsState.remove(input.fd)
             .mapLeft { BadFileDescriptor(it.message) }
             .getOrElse { badFileDescriptorError ->
                 return badFileDescriptorError.left()
             }
-        return fileResource.close()
+        return fdResource.close()
     }
 }

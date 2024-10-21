@@ -12,5 +12,6 @@ import at.released.weh.host.EmbedderHost
 public class EmscriptenDateNowFunctionHandle(
     host: EmbedderHost,
 ) : EmscriptenHostFunctionHandle(EMSCRIPTEN_DATE_NOW, host) {
-    public fun execute(): Double = host.clock.getCurrentTimeEpochMilliseconds().toDouble()
+    @Suppress("MagicNumber")
+    public fun execute(): Double = host.clock.getCurrentTimeEpochNanoseconds().toDouble() / 1_000_000f
 }

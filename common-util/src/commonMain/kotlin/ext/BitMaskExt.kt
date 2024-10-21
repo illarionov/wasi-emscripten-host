@@ -26,7 +26,7 @@ public fun maskToString(
     val names = initialFlagsSet.toMutableList()
     maskProperties.forEach { prop: KProperty0<Int> ->
         val propMask: Int = prop.get()
-        if (left.and(propMask) != 0) {
+        if (left.and(propMask) == propMask) {
             names.add(prop.name)
             left = left.and(propMask.inv())
         }

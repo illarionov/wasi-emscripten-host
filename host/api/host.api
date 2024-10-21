@@ -1,18 +1,15 @@
-public abstract interface class at/released/weh/host/Clock {
-	public abstract fun getCurrentTimeEpochMilliseconds ()J
-}
-
 public abstract interface class at/released/weh/host/CommandArgsProvider {
 	public abstract fun getCommandArgs ()Ljava/util/List;
 }
 
 public abstract interface class at/released/weh/host/EmbedderHost {
-	public abstract fun getClock ()Lat/released/weh/host/Clock;
+	public abstract fun getClock ()Lat/released/weh/host/clock/Clock;
 	public abstract fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
+	public abstract fun getCputimeSource ()Lat/released/weh/host/clock/CputimeSource;
 	public abstract fun getEntropySource ()Lat/released/weh/host/EntropySource;
 	public abstract fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
 	public abstract fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
-	public abstract fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
+	public abstract fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public abstract fun getRootLogger ()Lat/released/weh/common/api/Logger;
 	public abstract fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
 	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
@@ -22,24 +19,26 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/host/EmbedderHost;
 	public final fun directories ()Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
-	public final fun getClock ()Lat/released/weh/host/Clock;
+	public final fun getClock ()Lat/released/weh/host/clock/Clock;
 	public final fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
+	public final fun getCputimeSource ()Lat/released/weh/host/clock/CputimeSource;
 	public final fun getEntropySource ()Lat/released/weh/host/EntropySource;
 	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
 	public final fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
-	public final fun getMonotonicClock ()Lat/released/weh/host/MonotonicClock;
+	public final fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
 	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
 	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
 	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
 	public final fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
 	public final fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
-	public final fun setClock (Lat/released/weh/host/Clock;)V
+	public final fun setClock (Lat/released/weh/host/clock/Clock;)V
 	public final fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
+	public final fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)V
 	public final fun setEntropySource (Lat/released/weh/host/EntropySource;)V
 	public final fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
 	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
-	public final fun setMonotonicClock (Lat/released/weh/host/MonotonicClock;)V
+	public final fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)V
 	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
 	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/SourceProvider;)V
@@ -105,10 +104,6 @@ public final class at/released/weh/host/LocalTimeFormatter$StructTm {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class at/released/weh/host/MonotonicClock {
-	public abstract fun getTimeMarkNanoseconds ()J
-}
-
 public abstract interface class at/released/weh/host/SystemEnvProvider {
 	public abstract fun getSystemEnv ()Ljava/util/Map;
 }
@@ -132,5 +127,33 @@ public final class at/released/weh/host/TimeZoneInfo {
 
 public abstract interface class at/released/weh/host/TimeZoneInfo$Provider {
 	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo;
+}
+
+public abstract interface class at/released/weh/host/clock/Clock {
+	public abstract fun getCurrentTimeEpochNanoseconds ()J
+	public abstract fun getResolutionNanoseconds ()J
+}
+
+public abstract interface class at/released/weh/host/clock/CputimeSource {
+	public abstract fun getClock (Lat/released/weh/host/clock/CputimeSource$CpuClockId;)Lat/released/weh/host/clock/CputimeSource$CputimeClock;
+}
+
+public final class at/released/weh/host/clock/CputimeSource$CpuClockId : java/lang/Enum {
+	public static final field PROCESS_CPUTIME Lat/released/weh/host/clock/CputimeSource$CpuClockId;
+	public static final field THREAD_CPUTIME Lat/released/weh/host/clock/CputimeSource$CpuClockId;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/host/clock/CputimeSource$CpuClockId;
+	public static fun values ()[Lat/released/weh/host/clock/CputimeSource$CpuClockId;
+}
+
+public abstract interface class at/released/weh/host/clock/CputimeSource$CputimeClock {
+	public abstract fun getResolutionNanoseconds ()J
+	public abstract fun getTimeMarkNanoseconds ()J
+	public abstract fun isSupported ()Z
+}
+
+public abstract interface class at/released/weh/host/clock/MonotonicClock {
+	public abstract fun getResolutionNanoseconds ()J
+	public abstract fun getTimeMarkNanoseconds ()J
 }
 

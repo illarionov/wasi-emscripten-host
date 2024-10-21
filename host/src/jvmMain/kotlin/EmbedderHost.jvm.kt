@@ -8,7 +8,9 @@ package at.released.weh.host
 
 import at.released.weh.filesystem.nio.NioFileSystem
 import at.released.weh.host.EmbedderHost.Builder
+import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.internal.DefaultFileSystem
+import at.released.weh.host.internal.UnsupportedCputimeSource
 import at.released.weh.host.jvm.JvmClock
 import at.released.weh.host.jvm.JvmCommandArgsProvider
 import at.released.weh.host.jvm.JvmEntropySource
@@ -30,6 +32,7 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
         builder.rootLogger.withTag("FSnio"),
     )
     override val clock = builder.clock ?: JvmClock
+    override val cputimeSource: CputimeSource = builder.cputimeSource ?: UnsupportedCputimeSource
     override val monotonicClock = builder.monotonicClock ?: JvmMonotonicClock
     override val localTimeFormatter = builder.localTimeFormatter ?: JvmLocalTimeFormatter()
     override val timeZoneInfo = builder.timeZoneInfo ?: JvmTimeZoneInfoProvider()

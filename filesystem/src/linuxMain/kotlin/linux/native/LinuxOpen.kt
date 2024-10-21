@@ -60,7 +60,7 @@ internal fun linuxOpen(
 ): Either<OpenError, Int> {
     @Suppress("MagicNumber")
     val linuxOpenMode = when {
-        flags and (O_CREAT or O_TMPFILE) == 0 -> 0
+        (flags and O_CREAT != O_CREAT) && (flags and O_TMPFILE != O_TMPFILE) -> 0
         mode != null -> mode
         flags and O_DIRECTORY == O_DIRECTORY -> 0b111_101_101
         else -> 0b110_100_000

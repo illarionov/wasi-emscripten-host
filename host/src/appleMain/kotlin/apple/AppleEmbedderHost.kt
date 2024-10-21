@@ -9,17 +9,19 @@ package at.released.weh.host.apple
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.NotImplementedFileSystem
-import at.released.weh.host.Clock
 import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
 import at.released.weh.host.EntropySource
 import at.released.weh.host.LocalTimeFormatter
-import at.released.weh.host.MonotonicClock
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.host.TimeZoneInfo
+import at.released.weh.host.clock.Clock
+import at.released.weh.host.clock.CputimeSource
+import at.released.weh.host.clock.MonotonicClock
 import at.released.weh.host.internal.CommonClock
 import at.released.weh.host.internal.CommonMonotonicClock
 import at.released.weh.host.internal.EmptyCommandArgsProvider
+import at.released.weh.host.internal.UnsupportedCputimeSource
 
 public class AppleEmbedderHost(
     override val rootLogger: Logger,
@@ -28,6 +30,7 @@ public class AppleEmbedderHost(
     override val fileSystem: FileSystem = NotImplementedFileSystem,
     override val monotonicClock: MonotonicClock = CommonMonotonicClock(),
     override val clock: Clock = CommonClock(),
+    override val cputimeSource: CputimeSource = UnsupportedCputimeSource,
     override val localTimeFormatter: LocalTimeFormatter = AppleLocalTimeFormatter(),
     override val timeZoneInfo: TimeZoneInfo.Provider = AppleTimeZoneInfoProvider(),
     override val entropySource: EntropySource = AppleEntropySource,

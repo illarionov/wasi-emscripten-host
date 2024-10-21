@@ -15,6 +15,9 @@ import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.host.EmbedderHost.Builder
+import at.released.weh.host.clock.Clock
+import at.released.weh.host.clock.CputimeSource
+import at.released.weh.host.clock.MonotonicClock
 import kotlin.jvm.JvmSynthetic
 
 internal expect fun createDefaultEmbedderHost(builder: Builder): EmbedderHost
@@ -26,6 +29,7 @@ public interface EmbedderHost {
     public val fileSystem: FileSystem
     public val monotonicClock: MonotonicClock
     public val clock: Clock
+    public val cputimeSource: CputimeSource
     public val localTimeFormatter: LocalTimeFormatter
     public val timeZoneInfo: TimeZoneInfo.Provider
     public val entropySource: EntropySource
@@ -41,6 +45,7 @@ public interface EmbedderHost {
         public var fileSystem: FileSystem? = null
         public var clock: Clock? = null
         public var monotonicClock: MonotonicClock? = null
+        public var cputimeSource: CputimeSource? = null
         public var localTimeFormatter: LocalTimeFormatter? = null
         public var timeZoneInfo: TimeZoneInfo.Provider? = null
         public var entropySource: EntropySource? = null

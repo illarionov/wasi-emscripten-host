@@ -216,21 +216,22 @@ public object FdRightsFlag {
      * The right to invoke `sock_accept`.
      */
     public const val SOCK_ACCEPT: Long = 0x20000000L
-    internal const val DIRECTORY_RIGHTS: Long = FD_DATASYNC or
-            FD_FDSTAT_SET_FLAGS or
-            PATH_CREATE_DIRECTORY or
-            PATH_CREATE_FILE or
-            PATH_LINK_SOURCE or
-            PATH_LINK_TARGET or
-            PATH_OPEN or
-            FD_READDIR or
-            PATH_READLINK or
-            PATH_RENAME_SOURCE or
-            PATH_RENAME_TARGET or
-            PATH_SYMLINK or
-            PATH_REMOVE_DIRECTORY or
-            POLL_FD_READWRITE
-    internal const val FILE_RIGHTS: Long = FD_DATASYNC or
+    internal const val DIRECTORY_BASE_RIGHTS: Long =
+        PATH_CREATE_DIRECTORY or
+                PATH_CREATE_FILE or
+                PATH_LINK_SOURCE or
+                PATH_LINK_TARGET or
+                PATH_OPEN or
+                FD_READDIR or
+                PATH_READLINK or
+                PATH_RENAME_SOURCE or
+                PATH_RENAME_TARGET or
+                PATH_SYMLINK or
+                PATH_REMOVE_DIRECTORY or
+                PATH_UNLINK_FILE or
+                PATH_FILESTAT_GET or
+                PATH_FILESTAT_SET_TIMES
+    internal const val FILE_BASE_RIGHTS: Long = FD_DATASYNC or
             FD_READ or
             FD_SEEK or
             FD_FDSTAT_SET_FLAGS or
