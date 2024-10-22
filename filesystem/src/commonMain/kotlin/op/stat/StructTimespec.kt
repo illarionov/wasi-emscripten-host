@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.op.stat
 
+import kotlin.time.Duration.Companion.seconds
+
 public data class StructTimespec(
     val seconds: Long,
     val nanoseconds: Long,
@@ -17,3 +19,6 @@ public data class StructTimespec(
 
 public val StructTimespec.timeMillis: Long
     get(): Long = seconds * 1000 + nanoseconds / 1_000_000
+
+public val StructTimespec.timeNanos: Long
+    get(): Long = (this.seconds).seconds.inWholeNanoseconds + this.nanoseconds

@@ -21,6 +21,7 @@ public data class BadFileDescriptor(
     OpenError,
     MkdirError,
     PrestatError,
+    ReadDirError,
     ReadError,
     ReadLinkError,
     ResolveRelativePathErrors,

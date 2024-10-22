@@ -7,9 +7,11 @@
 package at.released.weh.filesystem.internal
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -29,14 +31,19 @@ internal class FileDescriptorTable<V : Any>(
         fds[descriptor] = handle
     }
 
-    fun <R : V> allocate(
-        resourceFactory: (FileDescriptor) -> R,
-    ): Either<Nfile, Pair<FileDescriptor, R>> = getFreeFd()
-        .map { fd ->
-            val channel = resourceFactory(fd)
-            val old = fds.put(fd, channel)
-            require(old == null) { "File descriptor $fd already been allocated" }
-            fd to channel
+    fun <E : FileSystemOperationError, R : V> allocate(
+        resourceFactory: (FileDescriptor) -> Either<E, R>,
+    ): Either<E, Pair<FileDescriptor, R>> = getFreeFd()
+        .mapLeft {
+            @Suppress("UNCHECKED_CAST")
+            it as E
+        }.flatMap { fd ->
+            resourceFactory(fd)
+                .onRight { channel: R ->
+                    val old = fds.put(fd, channel)
+                    require(old == null) { "File descriptor $fd already been allocated" }
+                }
+                .map { channel -> fd to channel }
         }
 
     operator fun get(@IntFileDescriptor fd: FileDescriptor): V? = fds[fd]

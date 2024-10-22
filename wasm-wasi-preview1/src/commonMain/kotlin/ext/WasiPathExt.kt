@@ -39,6 +39,10 @@ internal fun ReadOnlyMemory.readPathString(
     }
 }
 
+/**
+ * The size of the binary representation of the WASI file system path.
+ * This encoded string is not null-terminated.
+ */
 internal fun VirtualPath.encodedLength(): Size = this.encodeToByteArray().size
 
 internal fun VirtualPath.encodeToBuffer(): Buffer = Buffer().also { buffer ->

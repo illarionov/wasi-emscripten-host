@@ -17,6 +17,7 @@ public data class NoEntry(
     GetCurrentWorkingDirectoryError,
     MkdirError,
     OpenError,
+    ReadDirError,
     ReadLinkError,
     SetTimestampError,
     StatError,
