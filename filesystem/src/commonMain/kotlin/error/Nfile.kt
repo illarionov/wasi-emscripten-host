@@ -12,6 +12,7 @@ public data class Nfile(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,
-    OpenError {
+    OpenError,
+    ReadDirError {
     override val errno: FileSystemErrno = FileSystemErrno.NFILE
 }

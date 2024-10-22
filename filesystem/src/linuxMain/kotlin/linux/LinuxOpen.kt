@@ -17,7 +17,9 @@ import at.released.weh.filesystem.linux.native.ResolveModeFlag
 import at.released.weh.filesystem.linux.native.linuxOpen
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
+import platform.posix.O_DIRECTORY
 
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
@@ -40,7 +42,16 @@ internal class LinuxOpen(
                 mode = input.mode,
                 resolveFlags = resolveFlags,
             )
-                .flatMap { nativeFd -> fsState.add(NativeFileFd(nativeFd)) }
+                .flatMap { nativeFd: Int ->
+                    if (input.openFlags and O_DIRECTORY == O_DIRECTORY) {
+                        fsState.addDirectory(
+                            nativeFd = NativeDirectoryFd(nativeFd),
+                            virtualPath = input.path, // XXX: check
+                        )
+                    } else {
+                        fsState.addFile(NativeFileFd(nativeFd))
+                    }
+                }
                 .map { (fd: FileDescriptor, _) -> fd }
         }
     }

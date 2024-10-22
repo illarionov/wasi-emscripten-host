@@ -28,6 +28,7 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
@@ -53,11 +54,21 @@ internal class LinuxFileSystemState private constructor(
         fileDescriptors[fd]
     }
 
-    fun add(
+    fun addFile(
         nativeFd: NativeFileFd,
     ): Either<Nfile, Pair<FileDescriptor, LinuxFileFdResource>> = lock.withLock {
         fileDescriptors.allocate { _ ->
-            LinuxFileFdResource(nativeFd = nativeFd)
+            LinuxFileFdResource(nativeFd = nativeFd).right()
+        }
+    }
+
+    fun addDirectory(
+        nativeFd: NativeDirectoryFd,
+        virtualPath: VirtualPath,
+        isPreopened: Boolean = false,
+    ): Either<Nfile, Pair<FileDescriptor, LinuxDirectoryFdResource>> = lock.withLock {
+        fileDescriptors.allocate { _ ->
+            LinuxDirectoryFdResource(nativeFd, isPreopened, virtualPath).right()
         }
     }
 

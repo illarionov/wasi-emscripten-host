@@ -18,6 +18,7 @@ public data class AccessDenied(
     OpenError,
     GetCurrentWorkingDirectoryError,
     MkdirError,
+    ReadDirError,
     ReadLinkError,
     SetTimestampError,
     StatError,

@@ -11,7 +11,6 @@ import arrow.core.getOrElse
 import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.fdresource.BatchDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.fdresource.NioFileFdResource
@@ -41,27 +40,44 @@ import kotlin.concurrent.withLock
 import java.nio.file.FileSystem as NioFileSystem
 
 internal class NioFileSystemState private constructor(
-    val javaFs: NioFileSystem = FileSystems.getDefault(),
     val isRootAccessAllowed: Boolean,
     preopenedDescriptors: Map<FileDescriptor, FdResource>,
     val currentDirectoryFd: FileDescriptor,
+    val javaFs: NioFileSystem = FileSystems.getDefault(),
 ) : AutoCloseable {
     val fsLock: Lock = ReentrantLock()
     private val fdsLock: Lock = ReentrantLock()
     private val fds: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
     val pathResolver: PathResolver = JvmPathResolver(javaFs, this)
 
-    fun addFile(
+    fun <E : FileSystemOperationError> addFile(
         path: Path,
-        channel: FileChannel,
         fdflags: Fdflags,
-    ): Either<Nfile, Pair<FileDescriptor, NioFileFdResource>> = fdsLock.withLock {
-        fds.allocate { _ ->
-            NioFileFdResource(
-                path = path,
-                channel = channel,
-                fdflags = fdflags,
-            )
+        channelFactory: (FileDescriptor) -> Either<E, FileChannel>,
+    ): Either<E, Pair<FileDescriptor, NioFileFdResource>> = fdsLock.withLock {
+        fds.allocate { fd: FileDescriptor ->
+            channelFactory(fd).map {
+                NioFileFdResource(
+                    path = path,
+                    channel = it,
+                    fdflags = fdflags,
+                )
+            }
+        }
+    }
+
+    fun <E : FileSystemOperationError> addDirectory(
+        virtualPath: VirtualPath,
+        directoryFactory: (FileDescriptor) -> Either<E, Path>,
+    ): Either<E, Pair<FileDescriptor, NioDirectoryFdResource>> = fdsLock.withLock {
+        fds.allocate { fd: FileDescriptor ->
+            directoryFactory(fd).map { realPath ->
+                NioDirectoryFdResource(
+                    realPath = realPath,
+                    virtualPath = virtualPath,
+                    isPreopened = false,
+                )
+            }
         }
     }
 
@@ -111,11 +127,11 @@ internal class NioFileSystemState private constructor(
     companion object {
         @Throws(IOException::class)
         fun create(
-            javaFs: NioFileSystem = FileSystems.getDefault(),
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
             currentWorkingDirectory: String,
             preopenedDirectories: List<PreopenedDirectory>,
+            javaFs: NioFileSystem = FileSystems.getDefault(),
         ): NioFileSystemState {
             val preopened = BatchDirectoryOpener(javaFs).preopen(currentWorkingDirectory, preopenedDirectories)
                 .getOrElse { openError ->
@@ -135,7 +151,7 @@ internal class NioFileSystemState private constructor(
                 fd
             }
 
-            return NioFileSystemState(javaFs, isRootAccessAllowed, preopenedMap, currentWorkingDirectoryFd)
+            return NioFileSystemState(isRootAccessAllowed, preopenedMap, currentWorkingDirectoryFd, javaFs)
         }
     }
 }

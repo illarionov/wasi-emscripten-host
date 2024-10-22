@@ -27,6 +27,7 @@ import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.prestat.PrestatFd
+import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
@@ -70,6 +71,7 @@ public class LinuxFileSystemImpl(
         Mkdir to LinuxMkdir(fsState),
         PrestatFd to LinuxPrestatFd(fsState),
         ReadFd to LinuxReadFd(fsState),
+        ReadDirFd to LinuxReadDirFd(fsState),
         ReadLink to LinuxReadLink(fsState),
         SeekFd to LinuxSeekFd(fsState),
         SetTimestamp to LinuxSetTimestamp(fsState),

@@ -7,15 +7,17 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
+import arrow.core.left
 import arrow.core.raise.either
-import at.released.weh.filesystem.error.Exists
+import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.Nfile
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.asFileAttribute
+import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
+import at.released.weh.filesystem.fdresource.nio.nioCreateDirectory
+import at.released.weh.filesystem.fdresource.nio.nioOpenFile
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.FdFlag
@@ -28,21 +30,21 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.preopened.VirtualPath
 import com.sun.nio.file.ExtendedOpenOption
-import java.io.IOException
-import java.nio.channels.FileChannel
-import java.nio.file.FileAlreadyExistsException
 import java.nio.file.LinkOption
 import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import kotlin.concurrent.withLock
+import java.nio.file.attribute.FileAttribute
+import kotlin.io.path.isDirectory
 
 internal class NioOpen(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
-        val path = fsState.pathResolver.resolve(
+        val virtualPath = input.path // XXX needs better relative path checking
+        val path: Path = fsState.pathResolver.resolve(
             input.path,
             input.baseDirectory,
             allowEmptyPath = true,
@@ -59,38 +61,57 @@ internal class NioOpen(
                 ),
             )
         }
-        val fileAttributes = input.mode?.let {
+        val fileAttributes: Array<FileAttribute<*>> = input.mode?.let {
             arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
         } ?: emptyArray()
 
         checkOpenFlags(input).bind()
 
-        fsState.fsLock.withLock {
-            @Suppress("SpreadOperator")
-            val nioChannel = Either.catch {
-                FileChannel.open(path, openOptionsResult.options, *fileAttributes)
+        if (input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
+            if (input.openFlags and OpenFileFlag.O_CREAT == OpenFileFlag.O_CREAT) {
+                createDirectory(fsState, path, virtualPath, fileAttributes).bind()
+            } else {
+                openDirectory(fsState, path, virtualPath).bind()
             }
-                .mapLeft { error -> error.toOpenError(path) }
-                .bind()
-            val fdChannelFd = fsState.addFile(path, nioChannel, input.fdFlags)
-                .mapLeft { noFileDescriptorError -> Nfile(noFileDescriptorError.message) }
-                .bind()
-            fdChannelFd.first
+        } else {
+            openCreateFile(fsState, path, openOptionsResult.options, fileAttributes, input.fdFlags).bind()
         }
     }
 }
 
-private fun Throwable.toOpenError(path: Path): OpenError = when (this) {
-    is IllegalArgumentException -> InvalidArgument(
-        "Can not open `$path`: invalid combination of options ($message)",
-    )
+private fun openCreateFile(
+    fsState: NioFileSystemState,
+    path: Path,
+    options: Set<OpenOption>,
+    fileAttributes: Array<FileAttribute<*>>,
+    @FdflagsType originalFdflags: Fdflags,
+): Either<OpenError, FileDescriptor> = fsState.addFile(path, fdflags = originalFdflags) { _ ->
+        nioOpenFile(path, options, fileAttributes)
+    }.map { it.first }
 
-    is UnsupportedOperationException -> InvalidArgument("Can not open `$path`: unsupported operation ($message)")
-    is FileAlreadyExistsException -> Exists("File `$path` already exists ($message)")
-    is IOException -> IoError("Can not open `$path`: I/O error ($message)")
-    is SecurityException -> PermissionDenied("Can not open `$path`: Permission denied ($message)")
-    else -> throw IllegalStateException("Unexpected error", this)
-}
+private fun createDirectory(
+    fsState: NioFileSystemState,
+    path: Path,
+    virtualPath: VirtualPath,
+    fileAttributes: Array<FileAttribute<*>>,
+): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath) { _ ->
+    nioCreateDirectory(path, fileAttributes)
+}.map { it.first }
+
+private fun openDirectory(
+    fsState: NioFileSystemState,
+    path: Path,
+    virtualPath: VirtualPath,
+    followSymlinks: Boolean = true,
+): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath) { _ ->
+    val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
+    @Suppress("SpreadOperator")
+    if (path.isDirectory(*linkOptions)) {
+        path.right()
+    } else {
+        NotDirectory("$virtualPath is not a directory").left()
+    }
+}.map { it.first }
 
 @Suppress("CyclomaticComplexMethod", "LOCAL_VARIABLE_EARLY_DECLARATION", "LongMethod")
 private fun getOpenOptions(
@@ -138,10 +159,6 @@ private fun getOpenOptions(
 
     if (flags and OpenFileFlag.O_DIRECT != 0) {
         options += ExtendedOpenOption.DIRECT
-    }
-
-    if (flags and OpenFileFlag.O_DIRECTORY != 0) {
-        notImplementedFlags = notImplementedFlags and OpenFileFlag.O_DIRECTORY.toUInt()
     }
 
     if (flags and OpenFileFlag.O_NOFOLLOW != 0) {

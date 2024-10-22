@@ -6,12 +6,4 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.FileSystemErrno
-
-public data class Mfile(
-    override val message: String,
-) : FileSystemOperationError,
-    OpenError,
-    ReadDirError {
-    override val errno: FileSystemErrno = FileSystemErrno.MFILE
-}
+public sealed interface ReadDirError : FileSystemOperationError
