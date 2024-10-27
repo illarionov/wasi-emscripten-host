@@ -16,6 +16,7 @@ public data class NotDirectory(
     ChownError,
     MkdirError,
     OpenError,
+    ReadDirError,
     ReadLinkError,
     ResolveRelativePathErrors,
     SetTimestampError,

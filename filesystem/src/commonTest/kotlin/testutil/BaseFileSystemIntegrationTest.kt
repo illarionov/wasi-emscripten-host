@@ -28,5 +28,9 @@ public abstract class BaseFileSystemIntegrationTest {
 
     open fun createTestFileSystem(): FileSystem = DefaultTestFileSystem(
         engine = getDefaultTestEngine(),
-    )
+    ) {
+        this.directories {
+            currentWorkingDirectory = tempFolder.path
+        }
+    }
 }

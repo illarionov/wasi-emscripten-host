@@ -10,6 +10,12 @@ public abstract interface class at/released/weh/filesystem/test/fixtures/TestFil
 	public abstract fun invoke (Ljava/lang/Object;)Larrow/core/Either;
 }
 
+public final class at/released/weh/filesystem/test/fixtures/readdir/TestDirEntry {
+	public static final field INSTANCE Lat/released/weh/filesystem/test/fixtures/readdir/TestDirEntry;
+	public final fun getTEST_CURRENT_DIR_ENTRY ()Lat/released/weh/filesystem/op/readdir/DirEntry;
+	public final fun getTEST_PARENT_DIR_ENTRY ()Lat/released/weh/filesystem/op/readdir/DirEntry;
+}
+
 public final class at/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider : at/released/weh/filesystem/stdio/SinkProvider {
 	public fun <init> ()V
 	public final fun getSink ()Lat/released/weh/filesystem/test/fixtures/stdio/TestSinkProvider$TestSink;

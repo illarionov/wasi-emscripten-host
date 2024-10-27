@@ -29,6 +29,7 @@ import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.prestat.PrestatFd
+import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
@@ -56,11 +57,11 @@ internal class NioFileSystemImpl(
 ) : FileSystem {
     private val currentDirectoryProvider: CurrentDirectoryProvider = JvmCurrentDirectoryProvider(javaFs)
     private val fsState = NioFileSystemState.create(
-        javaFs,
         stdio,
         isRootAccessAllowed,
         currentWorkingDirectory ?: "",
         preopenedDirectories,
+        javaFs,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to NioOpen(fsState),
@@ -77,6 +78,7 @@ internal class NioFileSystemImpl(
         Mkdir to NioMkdir(fsState),
         PrestatFd to NioPrestatFd(fsState),
         ReadFd to NioReadFd(fsState),
+        ReadDirFd to NioReadDirFd(fsState),
         ReadLink to NioReadLink(fsState),
         SeekFd to NioSeekFd(fsState),
         SetTimestamp to NioSetTimestamp(fsState),
