@@ -34,6 +34,7 @@ import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
 import at.released.weh.filesystem.op.seek.SeekFd
+import at.released.weh.filesystem.op.setfdflags.SetFdFlags
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
 import at.released.weh.filesystem.op.stat.Stat
@@ -81,6 +82,7 @@ internal class NioFileSystemImpl(
         ReadDirFd to NioReadDirFd(fsState),
         ReadLink to NioReadLink(fsState),
         SeekFd to NioSeekFd(fsState),
+        SetFdFlags to NioSetFdFlags(fsState),
         SetTimestamp to NioSetTimestamp(fsState),
         SetTimestampFd to NioSetTimestampFd(fsState),
         Stat to NioStat(fsState),

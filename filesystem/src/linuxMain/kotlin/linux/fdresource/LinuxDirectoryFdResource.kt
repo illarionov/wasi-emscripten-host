@@ -16,6 +16,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
@@ -29,6 +30,7 @@ import at.released.weh.filesystem.linux.native.linuxFdAttributes
 import at.released.weh.filesystem.linux.native.linuxSetTimestamp
 import at.released.weh.filesystem.linux.native.linuxStatFd
 import at.released.weh.filesystem.linux.native.posixClose
+import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
@@ -86,6 +88,10 @@ internal class LinuxDirectoryFdResource(
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
         return linuxSetTimestamp(nativeFd, atimeNanoseconds, mtimeNanoseconds)
+    }
+
+    override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
+        return BadFileDescriptor("Can not change flags of the opened directory").left()
     }
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {

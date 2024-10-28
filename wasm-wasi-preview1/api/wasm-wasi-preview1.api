@@ -62,7 +62,7 @@ public final class at/released/weh/wasi/preview1/function/FdFdstatGetFunctionHan
 
 public final class at/released/weh/wasi/preview1/function/FdFdstatSetFlagsFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IS)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (IS)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdFdstatSetRightsFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {

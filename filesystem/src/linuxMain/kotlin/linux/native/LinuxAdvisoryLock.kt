@@ -23,6 +23,7 @@ import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.ext.toPosixWhence
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.EACCES
 import platform.posix.EAGAIN
 import platform.posix.EBADF
@@ -94,5 +95,5 @@ internal fun Int.errnoToAdvisoryLockError(
     EINTR -> Interrupted("Locking interrupted by signal")
     EINVAL -> InvalidArgument("Can not lock `$lock`, invalid argument")
     ENOLCK -> NoLock("Can not lock `$lock`, too many locks open")
-    else -> InvalidArgument("Can not lock `$lock`: $this `${strerror(this)}`")
+    else -> InvalidArgument("Can not lock `$lock`: $this `${strerror(this)?.toKStringFromUtf8()}`")
 }

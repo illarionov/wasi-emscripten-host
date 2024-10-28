@@ -24,6 +24,7 @@ public data class InvalidArgument(
     ReadLinkError,
     ResolveRelativePathErrors,
     SeekError,
+    SetFdFlagsError,
     SetTimestampError,
     SyncError,
     StatError,
