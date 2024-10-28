@@ -1236,12 +1236,25 @@ public final class at/released/weh/filesystem/op/readwrite/ReadFd$Companion : at
 	public fun getTag ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/op/readwrite/ReadWriteStrategy : java/lang/Enum {
-	public static final field CHANGE_POSITION Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;
-	public static final field DO_NOT_CHANGE_POSITION Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;
-	public static fun values ()[Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy;
+public abstract class at/released/weh/filesystem/op/readwrite/ReadWriteStrategy {
+}
+
+public final class at/released/weh/filesystem/op/readwrite/ReadWriteStrategy$CurrentPosition : at/released/weh/filesystem/op/readwrite/ReadWriteStrategy {
+	public static final field INSTANCE Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy$CurrentPosition;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/readwrite/ReadWriteStrategy$Position : at/released/weh/filesystem/op/readwrite/ReadWriteStrategy {
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy$Position;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy$Position;JILjava/lang/Object;)Lat/released/weh/filesystem/op/readwrite/ReadWriteStrategy$Position;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPosition ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/op/readwrite/WriteFd {

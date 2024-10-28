@@ -13,13 +13,12 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
+import at.released.weh.filesystem.linux.native.FileDirectoryFd.Directory
+import at.released.weh.filesystem.linux.native.FileDirectoryFd.File
 import at.released.weh.filesystem.linux.native.ResolveModeFlag
-import at.released.weh.filesystem.linux.native.linuxOpen
+import at.released.weh.filesystem.linux.native.linuxOpenFileOrDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.NativeFileFd
-import platform.posix.O_DIRECTORY
 
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
@@ -34,25 +33,22 @@ internal class LinuxOpen(
         }
 
         return fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
-            linuxOpen(
+            linuxOpenFileOrDirectory(
                 baseDirectoryFd = directoryFd,
                 path = input.path,
                 flags = input.openFlags,
                 fdFlags = input.fdFlags,
                 mode = input.mode,
                 resolveFlags = resolveFlags,
-            )
-                .flatMap { nativeFd: Int ->
-                    if (input.openFlags and O_DIRECTORY == O_DIRECTORY) {
-                        fsState.addDirectory(
-                            nativeFd = NativeDirectoryFd(nativeFd),
-                            virtualPath = input.path, // XXX: check
-                        )
-                    } else {
-                        fsState.addFile(NativeFileFd(nativeFd))
-                    }
+            ).flatMap { nativeChannel ->
+                when (nativeChannel) {
+                    is File -> fsState.addFile(nativeChannel.channel)
+                    is Directory -> fsState.addDirectory(
+                        nativeFd = nativeChannel.fd,
+                        virtualPath = input.path, // XXX: check
+                    )
                 }
-                .map { (fd: FileDescriptor, _) -> fd }
+            }.map { (fd: FileDescriptor, _) -> fd }
         }
     }
 }

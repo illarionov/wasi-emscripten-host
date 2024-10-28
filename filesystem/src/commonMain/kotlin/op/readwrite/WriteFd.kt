@@ -15,7 +15,7 @@ public data class WriteFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val cIovecs: List<FileSystemByteBuffer>,
-    public val strategy: ReadWriteStrategy = ReadWriteStrategy.CHANGE_POSITION,
+    public val strategy: ReadWriteStrategy = ReadWriteStrategy.CurrentPosition,
 ) {
     public companion object : FileSystemOperation<WriteFd, WriteError, ULong> {
         override val tag: String = "writefd"

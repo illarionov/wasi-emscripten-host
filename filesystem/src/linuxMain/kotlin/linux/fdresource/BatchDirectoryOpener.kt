@@ -9,7 +9,7 @@ package at.released.weh.filesystem.linux.fdresource
 import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.linux.native.linuxOpen
+import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
@@ -56,7 +56,7 @@ private fun preopenDirectory(
     path: RealPath,
     baseDirectoryFd: NativeDirectoryFd,
 ): Either<OpenError, LinuxDirectoryFdResource> {
-    return linuxOpen(
+    return linuxOpenRaw(
         baseDirectoryFd = baseDirectoryFd,
         path = path,
         flags = OpenFileFlag.O_PATH,

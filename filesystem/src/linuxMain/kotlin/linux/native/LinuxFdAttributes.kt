@@ -25,6 +25,8 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.STDIO_FD_RIGHTS
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.ext.linuxMaskToFsFdFlags
+import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
+import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.model.Filetype.BLOCK_DEVICE
@@ -44,7 +46,6 @@ import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_SHUTDOWN
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.F_GETFL
@@ -53,18 +54,19 @@ import platform.posix.fcntl
 import platform.posix.strerror
 
 internal fun linuxFdAttributes(
-    fd: NativeFileFd,
-): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(fd.fd)
+    channel: NativeFileChannel,
+): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(channel.fd.fd, channel.isInAppendMode)
 
 internal fun linuxFdAttributes(
     fd: NativeDirectoryFd,
-): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(fd.linuxFd)
+): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(fd.linuxFd, false)
 
 private fun linuxFdAttributes(
     fd: Int,
+    isInAppendMode: Boolean,
 ): Either<FdAttributesError, FdAttributesResult> = either {
     @OpenFileFlagsType
-    val fileStatus: Fdflags = readFileStatus(fd).bind()
+    val fileStatus: Fdflags = readFileStatus(fd, isInAppendMode).bind()
     val fileType = readFileType(fd).bind()
 
     // XXX: check
@@ -90,6 +92,17 @@ private fun linuxFdAttributes(
 }
 
 private fun readFileStatus(
+    fd: Int,
+    isInAppendMode: Boolean,
+): Either<FdAttributesError, Fdflags> = readRawFileStatus(fd).map { fdFlags ->
+    if (isInAppendMode) {
+        fdFlags or FdFlag.FD_APPEND
+    } else {
+        fdFlags
+    }
+}
+
+private fun readRawFileStatus(
     fd: Int,
 ): Either<FdAttributesError, Fdflags> {
     val exitCode = fcntl(fd, F_GETFL)

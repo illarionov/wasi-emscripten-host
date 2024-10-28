@@ -18,6 +18,7 @@ import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
+import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
@@ -25,7 +26,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.preopened.VirtualPath
@@ -55,10 +55,10 @@ internal class LinuxFileSystemState private constructor(
     }
 
     fun addFile(
-        nativeFd: NativeFileFd,
+        channel: NativeFileChannel,
     ): Either<Nfile, Pair<FileDescriptor, LinuxFileFdResource>> = lock.withLock {
         fileDescriptors.allocate { _ ->
-            LinuxFileFdResource(nativeFd = nativeFd).right()
+            LinuxFileFdResource(channel).right()
         }
     }
 

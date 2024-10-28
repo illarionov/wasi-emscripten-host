@@ -11,14 +11,13 @@ import arrow.core.raise.either
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Interrupted
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.ext.asByteBuffer
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
 import java.io.IOException
 import java.nio.channels.AsynchronousCloseException
 import java.nio.channels.ClosedByInterruptException
@@ -29,25 +28,23 @@ internal fun NioFileChannel.nioRead(
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ) = when (strategy) {
-    CHANGE_POSITION -> readChangePosition(iovecs)
-    DO_NOT_CHANGE_POSITION -> readDoNotChangePosition(iovecs)
+    CurrentPosition -> readChangePosition(iovecs)
+    is Position -> readDoNotChangePosition(strategy.position, iovecs)
 }
 
 private fun NioFileChannel.readDoNotChangePosition(
+    position: Long,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> = either {
-    var position = this@readDoNotChangePosition.getPosition()
-        .mapLeft(::toReadError)
-        .bind()
-
+    var offset = position
     var totalBytesRead: ULong = 0U
     for (iovec in iovecs) {
         val byteBuffer = iovec.asByteBuffer()
         val bytesRead = readCatching {
-            channel.read(byteBuffer, position)
+            channel.read(byteBuffer, offset)
         }.bind()
         if (bytesRead > 0) {
-            position += bytesRead
+            offset += bytesRead
             totalBytesRead += bytesRead.toULong()
         }
         if (bytesRead < byteBuffer.limit()) {
@@ -83,10 +80,4 @@ public inline fun <R : Any> readCatching(
         is IOException -> IoError("I/O error: ${it.message}")
         else -> throw IllegalStateException("Unexpected error", it)
     }
-}
-
-private fun toReadError(error: ChannelPositionError): ReadError = when (error) {
-    is ChannelPositionError.ClosedChannel -> IoError(error.message)
-    is ChannelPositionError.InvalidArgument -> InvalidArgument(error.message)
-    is ChannelPositionError.IoError -> IoError(error.message)
 }

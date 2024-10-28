@@ -49,7 +49,7 @@ internal class JvmPathResolver(
         }
 
         if (nioPath.isAbsolute) {
-            return nioPath.right()
+            return nioPath.normalize().right()
         }
 
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
@@ -66,6 +66,6 @@ internal class JvmPathResolver(
             }
         }
 
-        return baseDirectoryPath.map { it.resolve(nioPath) }
+        return baseDirectoryPath.map { it.resolve(nioPath).normalize() }
     }
 }

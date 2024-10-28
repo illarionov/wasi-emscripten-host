@@ -7,22 +7,32 @@
 package at.released.weh.filesystem.linux.native
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
+import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.Again
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.fdFdFlagsToLinuxMask
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.ext.openFileFlagsToLinuxMask
+import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
+import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.Filetype.DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CLOEXEC
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CREAT
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TMPFILE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
@@ -35,6 +45,7 @@ import at.released.weh.filesystem.platform.linux.RESOLVE_NO_XDEV
 import at.released.weh.filesystem.platform.linux.SYS_openat2
 import at.released.weh.filesystem.platform.linux.open_how
 import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
@@ -50,7 +61,55 @@ import platform.posix.errno
 import platform.posix.memset
 import platform.posix.syscall
 
-internal fun linuxOpen(
+internal fun linuxOpenFileOrDirectory(
+    baseDirectoryFd: NativeDirectoryFd,
+    path: String,
+    @OpenFileFlagsType flags: OpenFileFlags,
+    @FdflagsType fdFlags: Fdflags,
+    @FileMode mode: Int?,
+    resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
+): Either<OpenError, FileDirectoryFd> = either<OpenError, FileDirectoryFd> {
+    val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
+    val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
+
+    if (isExistingDirectory(baseDirectoryFd, path, flags).bind()) {
+        val directoryFlags = flags and (O_NOFOLLOW or O_NOATIME or O_CLOEXEC) or O_DIRECTORY
+        return linuxOpenRaw(
+            baseDirectoryFd = baseDirectoryFd,
+            path = path,
+            flags = directoryFlags,
+            fdFlags = fdFlagsNoAppend,
+            mode = null,
+            resolveFlags = resolveFlags,
+        ).map {
+            FileDirectoryFd.Directory(NativeDirectoryFd(it))
+        }
+    }
+
+    if (flags and O_DIRECTORY == O_DIRECTORY) {
+        raise(NotDirectory("Not a directory"))
+    }
+
+    @Suppress("MagicNumber")
+    val linuxFileOpenMode = when {
+        (flags and O_CREAT != O_CREAT) && (flags and O_TMPFILE != O_TMPFILE) -> 0
+        mode != null -> mode
+        else -> 0b110_100_000
+    }
+
+    linuxOpenRaw(
+        baseDirectoryFd = baseDirectoryFd,
+        path = path,
+        flags = flags,
+        fdFlags = fdFlagsNoAppend,
+        mode = linuxFileOpenMode,
+        resolveFlags = resolveFlags,
+    ).map {
+        FileDirectoryFd.File(it, isInAppendMode)
+    }.bind()
+}
+
+internal fun linuxOpenRaw(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlagsType flags: OpenFileFlags,
@@ -58,19 +117,11 @@ internal fun linuxOpen(
     @FileMode mode: Int?,
     resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
 ): Either<OpenError, Int> {
-    @Suppress("MagicNumber")
-    val linuxOpenMode = when {
-        (flags and O_CREAT != O_CREAT) && (flags and O_TMPFILE != O_TMPFILE) -> 0
-        mode != null -> mode
-        flags and O_DIRECTORY == O_DIRECTORY -> 0b111_101_101
-        else -> 0b110_100_000
-    }
-
     val errorOrFd = memScoped {
         val openHow: open_how = alloc<open_how> {
             memset(ptr, 0, sizeOf<open_how>().toULong())
             this.flags = getLinuxOpenFileFlags(flags, fdFlags)
-            this.mode = linuxOpenMode.toULong()
+            this.mode = mode?.toULong() ?: 0UL
             this.resolve = resolveFlags.toResolveMask()
         }
         syscall(
@@ -82,10 +133,28 @@ internal fun linuxOpen(
         )
     }
     return if (errorOrFd < 0) {
-        errno.errNoToOpenError().left()
+        errno.openat2ErrNoToOpenError().left()
     } else {
         errorOrFd.toInt().right()
     }
+}
+
+private fun isExistingDirectory(
+    baseDirectoryFd: NativeDirectoryFd,
+    path: String,
+    @OpenFileFlagsType flags: OpenFileFlags,
+): Either<OpenError, Boolean> {
+    return linuxStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).map {
+        it.type == DIRECTORY
+    }.swap()
+        .flatMap { statError: StatError ->
+            if (statError is NoEntry) {
+                false.left()
+            } else {
+                statError.toOpenError().right()
+            }
+        }
+        .swap()
 }
 
 private fun getLinuxOpenFileFlags(
@@ -95,7 +164,7 @@ private fun getLinuxOpenFileFlags(
     return openFileFlagsToLinuxMask(flags) or fdFdFlagsToLinuxMask(fdFlags)
 }
 
-private fun Int.errNoToOpenError(): OpenError = when (this) {
+private fun Int.openat2ErrNoToOpenError(): OpenError = when (this) {
     E2BIG -> InvalidArgument("E2BIG: extension is not supported")
     EAGAIN -> Again("Operation cannot be performed")
     EINVAL -> InvalidArgument("Invalid argument")
@@ -103,6 +172,16 @@ private fun Int.errNoToOpenError(): OpenError = when (this) {
     EXDEV -> NotCapable("Escape from the root detected")
     ENOENT -> NoEntry("No such file or directory")
     else -> InvalidArgument("Unknown errno $this")
+}
+
+private fun StatError.toOpenError(): OpenError = this as OpenError
+
+internal sealed class FileDirectoryFd {
+    class File(val channel: NativeFileChannel) : FileDirectoryFd() {
+        constructor(fd: Int, isInAppendMode: Boolean) : this(NativeFileChannel(NativeFileFd(fd), isInAppendMode))
+    }
+
+    class Directory(val fd: NativeDirectoryFd) : FileDirectoryFd()
 }
 
 internal enum class ResolveModeFlag {
