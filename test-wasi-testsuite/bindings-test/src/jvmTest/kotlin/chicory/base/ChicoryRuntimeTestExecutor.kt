@@ -7,46 +7,34 @@
 package at.released.weh.wasi.bindings.test.chicory.base
 
 import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller
+import at.released.weh.bindings.chicory.ProcExitException
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.HostGlobal
 import com.dylibso.chicory.runtime.HostImports
-import com.dylibso.chicory.runtime.HostMemory
 import com.dylibso.chicory.runtime.HostTable
-import com.dylibso.chicory.runtime.Memory
 import com.dylibso.chicory.runtime.Module
 import com.dylibso.chicory.runtime.exceptions.WASMMachineException
 import com.dylibso.chicory.wasi.WasiExitException
-import com.dylibso.chicory.wasm.types.MemoryLimits
 import kotlinx.io.files.Path
 
 object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
-    private const val INITIAL_MEMORY_SIZE_PAGES = 258
-
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
         rootDir: Path,
     ): Int {
-        // XXX: remove memory
-        val memory = HostMemory(
-            "env",
-            "memory",
-            Memory(
-                MemoryLimits(INITIAL_MEMORY_SIZE_PAGES),
-            ),
-        )
-        val installer = ChicoryHostFunctionInstaller(memory.memory()) {
+        val installer = ChicoryHostFunctionInstaller {
             this.host = host
         }
         val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
         val hostImports = HostImports(
             wasiFunctions.toTypedArray(),
             arrayOf<HostGlobal>(),
-            memory,
+            emptyArray(),
             arrayOf<HostTable>(),
         )
         val module = Module
@@ -64,10 +52,26 @@ object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
         } catch (exit: WasiExitException) {
             exit.exitCode()
         } catch (machineException: WASMMachineException) {
-            (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
+            machineException.findProcExitExceptionCause()?.exitCode ?: throw machineException
         }
 
         return exitCode
+    }
+
+    private fun Throwable.findProcExitExceptionCause(): ProcExitException? {
+        val causes: MutableSet<Throwable> = mutableSetOf()
+        var ex: Throwable? = this
+        while (ex != null) {
+            if (ex is ProcExitException) {
+                return ex
+            }
+            if (!causes.add(ex)) {
+                break
+            }
+            ex = ex.cause
+        }
+
+        return null
     }
 
     class Factory : RuntimeTestExecutor.Factory {

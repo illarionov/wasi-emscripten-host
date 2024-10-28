@@ -8,31 +8,33 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
+import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallStatLstat64FunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal fun syscallStat64(
     host: EmbedderHost,
-    memory: Memory,
-): EmscriptenHostFunctionHandle = SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallStat64(host))
+    memoryProvider: ChicoryMemoryProvider,
+): EmscriptenHostFunctionHandle =
+    SyscallStat64Lstat64(memoryProvider, SyscallStatLstat64FunctionHandle.syscallStat64(host))
 
 internal fun syscallLstat64(
     host: EmbedderHost,
-    memory: Memory,
-): EmscriptenHostFunctionHandle = SyscallStat64Lstat64(memory, SyscallStatLstat64FunctionHandle.syscallLstat64(host))
+    memoryProvider: ChicoryMemoryProvider,
+): EmscriptenHostFunctionHandle =
+    SyscallStat64Lstat64(memoryProvider, SyscallStatLstat64FunctionHandle.syscallLstat64(host))
 
 internal class SyscallStat64Lstat64(
-    private val memory: Memory,
+    private val memoryProvider: ChicoryMemoryProvider,
     private val handle: SyscallStatLstat64FunctionHandle,
 ) : EmscriptenHostFunctionHandle {
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result = handle.execute(
-            memory,
+            memoryProvider.get(instance),
             args[0].asWasmAddr(),
             args[1].asWasmAddr(),
         )

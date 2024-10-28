@@ -8,6 +8,7 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten
 
+import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.wasmValueTypeToChicoryValueType
 import at.released.weh.bindings.chicory.host.module.emscripten.function.AbortJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.AssertFail
@@ -46,14 +47,13 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
-import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.WasmFunctionHandle
 import com.dylibso.chicory.wasm.types.Value
 import com.dylibso.chicory.runtime.HostFunction as ChicoryHostFunction
 
 internal class EmscriptenEnvFunctionsBuilder(
-    private val memory: Memory,
+    private val memoryProvider: ChicoryMemoryProvider,
     private val host: EmbedderHost,
     private val stackBindingsRef: () -> EmscriptenStack,
 ) {
@@ -62,7 +62,13 @@ internal class EmscriptenEnvFunctionsBuilder(
     ): List<ChicoryHostFunction> {
         return EmscriptenHostFunction.entries.map { emscriptenFunc ->
             ChicoryHostFunction(
-                HostFunctionAdapter(emscriptenFunc.createChicoryEmscriptenFunction(host, memory, stackBindingsRef)),
+                HostFunctionAdapter(
+                    emscriptenFunc.createChicoryEmscriptenFunction(
+                        host,
+                        memoryProvider,
+                        stackBindingsRef,
+                    ),
+                ),
                 moduleName,
                 emscriptenFunc.wasmName,
                 emscriptenFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
@@ -88,43 +94,43 @@ internal class EmscriptenEnvFunctionsBuilder(
 @Suppress("CyclomaticComplexMethod")
 private fun EmscriptenHostFunction.createChicoryEmscriptenFunction(
     host: EmbedderHost,
-    memory: Memory,
+    memoryProvider: ChicoryMemoryProvider,
     stackBindingsRef: () -> EmscriptenStack,
 ): EmscriptenHostFunctionHandle = when (this) {
     EmscriptenHostFunction.ABORT_JS -> AbortJs(host)
-    EmscriptenHostFunction.ASSERT_FAIL -> AssertFail(host, memory)
+    EmscriptenHostFunction.ASSERT_FAIL -> AssertFail(host, memoryProvider)
     EmscriptenHostFunction.EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD -> EmscriptenAsmConstAsyncOnMainThread(host)
     EmscriptenHostFunction.EMSCRIPTEN_ASM_CONST_INT -> EmscriptenAsmConstInt(host)
-    EmscriptenHostFunction.EMSCRIPTEN_CONSOLE_ERROR -> EmscriptenConsoleError(host, memory)
+    EmscriptenHostFunction.EMSCRIPTEN_CONSOLE_ERROR -> EmscriptenConsoleError(host, memoryProvider)
     EmscriptenHostFunction.EMSCRIPTEN_DATE_NOW -> EmscriptenDateNow(host)
     EmscriptenHostFunction.EMSCRIPTEN_GET_NOW -> EmscriptenGetNow(host)
     EmscriptenHostFunction.EMSCRIPTEN_GET_NOW_IS_MONOTONIC -> EmscriptenGetNowIsMonotonic(host)
     EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP -> EmscriptenResizeHeap(host)
-    EmscriptenHostFunction.GETENTROPY -> Getentropy(host, memory)
+    EmscriptenHostFunction.GETENTROPY -> Getentropy(host, memoryProvider)
     EmscriptenHostFunction.HANDLE_STACK_OVERFLOW -> HandleStackOverflow(host, stackBindingsRef)
-    EmscriptenHostFunction.LOCALTIME_JS -> LocaltimeJs(host, memory)
+    EmscriptenHostFunction.LOCALTIME_JS -> LocaltimeJs(host, memoryProvider)
     EmscriptenHostFunction.MMAP_JS -> MmapJs(host)
     EmscriptenHostFunction.MUNMAP_JS -> MunmapJs(host)
-    EmscriptenHostFunction.SYSCALL_CHMOD -> SyscallChmod(host, memory)
-    EmscriptenHostFunction.SYSCALL_FACCESSAT -> SyscallFaccessat(host, memory)
+    EmscriptenHostFunction.SYSCALL_CHMOD -> SyscallChmod(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_FACCESSAT -> SyscallFaccessat(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_FCHMOD -> SyscallFchmod(host)
     EmscriptenHostFunction.SYSCALL_FCHOWN32 -> SyscallFchown32(host)
-    EmscriptenHostFunction.SYSCALL_FCNTL64 -> SyscallFcntl64(host, memory)
+    EmscriptenHostFunction.SYSCALL_FCNTL64 -> SyscallFcntl64(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_FDATASYNC -> SyscallFdatasync(host)
-    EmscriptenHostFunction.SYSCALL_FSTAT64 -> SyscallFstat64(host, memory)
+    EmscriptenHostFunction.SYSCALL_FSTAT64 -> SyscallFstat64(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_FTRUNCATE64 -> SyscallFtruncate64(host)
-    EmscriptenHostFunction.SYSCALL_GETCWD -> SyscallGetcwd(host, memory)
+    EmscriptenHostFunction.SYSCALL_GETCWD -> SyscallGetcwd(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_IOCTL -> NotImplemented
-    EmscriptenHostFunction.SYSCALL_LSTAT64 -> syscallLstat64(host, memory)
-    EmscriptenHostFunction.SYSCALL_MKDIRAT -> SyscallMkdirat(host, memory)
+    EmscriptenHostFunction.SYSCALL_LSTAT64 -> syscallLstat64(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_MKDIRAT -> SyscallMkdirat(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_NEWFSTATAT -> NotImplemented
-    EmscriptenHostFunction.SYSCALL_OPENAT -> SyscallOpenat(host, memory)
-    EmscriptenHostFunction.SYSCALL_READLINKAT -> SyscallReadlinkat(host, memory)
-    EmscriptenHostFunction.SYSCALL_RMDIR -> SyscallRmdir(host, memory)
-    EmscriptenHostFunction.SYSCALL_STAT64 -> syscallStat64(host, memory)
-    EmscriptenHostFunction.SYSCALL_UNLINKAT -> SyscallUnlinkat(host, memory)
-    EmscriptenHostFunction.SYSCALL_UTIMENSAT -> SyscallUtimensat(host, memory)
-    EmscriptenHostFunction.TZSET_JS -> TzsetJs(host, memory)
+    EmscriptenHostFunction.SYSCALL_OPENAT -> SyscallOpenat(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_READLINKAT -> SyscallReadlinkat(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_RMDIR -> SyscallRmdir(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_STAT64 -> syscallStat64(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_UNLINKAT -> SyscallUnlinkat(host, memoryProvider)
+    EmscriptenHostFunction.SYSCALL_UTIMENSAT -> SyscallUtimensat(host, memoryProvider)
+    EmscriptenHostFunction.TZSET_JS -> TzsetJs(host, memoryProvider)
     EmscriptenHostFunction.EMSCRIPTEN_CHECK_BLOCKING_ALLOWED,
     EmscriptenHostFunction.EMSCRIPTEN_EXIT_WITH_LIVE_RUNTIME,
     EmscriptenHostFunction.EMSCRIPTEN_INIT_MAIN_THREAD_JS,

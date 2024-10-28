@@ -8,21 +8,22 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
+import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallOpenatFunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal class SyscallOpenat(
     host: EmbedderHost,
-    private val memory: ReadOnlyMemory,
+    private val memoryProvider: ChicoryMemoryProvider,
 ) : EmscriptenHostFunctionHandle {
     private val handle: SyscallOpenatFunctionHandle = SyscallOpenatFunctionHandle(host)
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
+        val memory = memoryProvider.get(instance)
         val mode = if (args.lastIndex == 3) {
             memory.readI32(args[3].asWasmAddr())
         } else {

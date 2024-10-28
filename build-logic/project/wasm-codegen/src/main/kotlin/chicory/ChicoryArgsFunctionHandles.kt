@@ -72,13 +72,13 @@ internal class ChicoryArgsFunctionHandles(
 
             val allArgs: List<Pair<String, Any>> = buildList {
                 if (func.export !in NO_MEMORY_FUNCTIONS) {
-                    add("\n%N," to "memory")
+                    add("\nmemoryProvider.get(%N)," to "instance")
                 }
                 if (func.export in WASI_MEMORY_READER_FUNCTIONS) {
-                    add("\n%N," to "wasiMemoryReader")
+                    add("\n%N(instance)," to "wasiMemoryReaderProvider")
                 }
                 if (func.export in WASI_MEMORY_WRITER_FUNCTIONS) {
-                    add("\n%N," to "wasiMemoryWriter")
+                    add("\n%N(instance)," to "wasiMemoryWriterProvider")
                 }
 
                 addAll(handleArgs)

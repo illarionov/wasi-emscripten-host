@@ -6,9 +6,9 @@
 
 package at.released.weh.gradle.wasm.codegen.chicory
 
+import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.WASI_MEMORY_READER_PROVIDER
+import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.WASI_MEMORY_WRITER_PROVIDER
 import at.released.weh.gradle.wasm.codegen.util.classname.WehHostClassname
-import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
-import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
 import at.released.weh.gradle.wasm.codegen.util.toCamelCasePropertyName
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType
@@ -40,9 +40,9 @@ internal class ChicoryFactoryFunctionGenerator(
     fun generate(): FunSpec = FunSpec.builder(factoryFunctionName).apply {
         addModifiers(INTERNAL)
         addParameter("host", WehHostClassname.EMBEDDER_HOST)
-        addParameter("memory", WehWasmCoreClassName.Memory.MEMORY_CLASS_NAME)
-        addParameter("wasiMemoryReader", WehWasiPreview1ClassName.WASI_MEMORY_READER)
-        addParameter("wasiMemoryWriter", WehWasiPreview1ClassName.WASI_MEMORY_WRITER)
+        addParameter("memoryProvider", ChicoryClassname.Bindings.CHICORY_MEMORY_PROVIDER_CLASS_NAME)
+        addParameter("wasiMemoryReaderProvider", WASI_MEMORY_READER_PROVIDER)
+        addParameter("wasiMemoryWriterProvider", WASI_MEMORY_WRITER_PROVIDER)
         addParameter(
             ParameterSpec.builder("moduleName", STRING).defaultValue("%S", "wasi_snapshot_preview1").build(),
         )
@@ -63,7 +63,10 @@ internal class ChicoryFactoryFunctionGenerator(
             )
         }
 
-        addCode("val functions = %T(host, memory, wasiMemoryReader, wasiMemoryWriter)\n", functionsClassName)
+        addCode(
+            "val functions = %T(host, memoryProvider, wasiMemoryReaderProvider, wasiMemoryWriterProvider)\n",
+            functionsClassName,
+        )
 
         addCode("return listOf(⇥⇥\n")
         wasiFunctions.forEach { wasiFunc: WasiFunc ->

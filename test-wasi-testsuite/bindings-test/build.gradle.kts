@@ -25,7 +25,7 @@ wasiTestsuiteTestGen {
     wasiTestsuiteTestsRoot = wasiTestSuiteRoot
     runtimes = setOf(
         WasmRuntimeBindings.CHASM,
-//        WasmRuntimeBindings.CHICORY,
+        WasmRuntimeBindings.CHICORY,
 //        WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(

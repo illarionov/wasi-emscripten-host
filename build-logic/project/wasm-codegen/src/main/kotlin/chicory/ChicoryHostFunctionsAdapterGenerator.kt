@@ -7,10 +7,12 @@
 package at.released.weh.gradle.wasm.codegen.chicory
 
 import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.CHICORY_FUNCTIONS_CLASS_NAME
+import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.CHICORY_MEMORY_PROVIDER_CLASS_NAME
+import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.WASI_MEMORY_READER_PROVIDER
+import at.released.weh.gradle.wasm.codegen.chicory.ChicoryClassname.Bindings.WASI_MEMORY_WRITER_PROVIDER
 import at.released.weh.gradle.wasm.codegen.util.classname.SUPPRESS_CLASS_NAME
 import at.released.weh.gradle.wasm.codegen.util.classname.WehHostClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
-import at.released.weh.gradle.wasm.codegen.util.classname.WehWasmCoreClassName
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
 import com.squareup.kotlinpoet.ARRAY
@@ -50,26 +52,26 @@ internal class ChicoryHostFunctionsAdapterGenerator(
         primaryConstructor(
             FunSpec.constructorBuilder()
                 .addParameter("host", WehHostClassname.EMBEDDER_HOST)
-                .addParameter("memory", WehWasmCoreClassName.Memory.MEMORY_CLASS_NAME)
-                .addParameter("wasiMemoryReader", WehWasiPreview1ClassName.WASI_MEMORY_READER)
-                .addParameter("wasiMemoryWriter", WehWasiPreview1ClassName.WASI_MEMORY_WRITER)
+                .addParameter("memoryProvider", CHICORY_MEMORY_PROVIDER_CLASS_NAME)
+                .addParameter("wasiMemoryReaderProvider", WASI_MEMORY_READER_PROVIDER)
+                .addParameter("wasiMemoryWriterProvider", WASI_MEMORY_WRITER_PROVIDER)
                 .build(),
         )
         addProperty(
-            PropertySpec.builder("memory", WehWasmCoreClassName.Memory.MEMORY_CLASS_NAME, PRIVATE)
-                .initializer("memory")
-                .build(),
-        )
-        addProperty(
-            PropertySpec
-                .builder("wasiMemoryReader", WehWasiPreview1ClassName.WASI_MEMORY_READER, PRIVATE)
-                .initializer("wasiMemoryReader")
+            PropertySpec.builder("memoryProvider", CHICORY_MEMORY_PROVIDER_CLASS_NAME, PRIVATE)
+                .initializer("memoryProvider")
                 .build(),
         )
         addProperty(
             PropertySpec
-                .builder("wasiMemoryWriter", WehWasiPreview1ClassName.WASI_MEMORY_WRITER, PRIVATE)
-                .initializer("wasiMemoryWriter")
+                .builder("wasiMemoryReaderProvider", WASI_MEMORY_READER_PROVIDER, PRIVATE)
+                .initializer("wasiMemoryReaderProvider")
+                .build(),
+        )
+        addProperty(
+            PropertySpec
+                .builder("wasiMemoryWriterProvider", WASI_MEMORY_WRITER_PROVIDER, PRIVATE)
+                .initializer("wasiMemoryWriterProvider")
                 .build(),
         )
 
