@@ -10,24 +10,21 @@ import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.Builder
 import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.Companion
 import at.released.weh.bindings.chicory.exports.ChicoryEmscriptenMainExports
 import at.released.weh.bindings.chicory.exports.ChicoryEmscriptenStackExports
-import at.released.weh.bindings.chicory.host.memory.ChicoryMemoryAdapter
-import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryReader
-import at.released.weh.bindings.chicory.host.memory.ChicoryWasiMemoryWriter
+import at.released.weh.bindings.chicory.host.memory.DefaultChicoryMemoryProvider
+import at.released.weh.bindings.chicory.host.memory.chicoryWasiMemoryReaderProvider
+import at.released.weh.bindings.chicory.host.memory.chicoryWasiMemoryWriterProvider
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenEnvFunctionsBuilder
+import at.released.weh.bindings.chicory.host.module.wasi.createCustomChicoryFunctions
 import at.released.weh.bindings.chicory.host.module.wasi.createWasiPreview1HostFunctions
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.memory.WasiMemoryReader
-import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
-import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.runtime.Memory as ChicoryMemory
 
 /**
  * Emscripten / WASI Preview 1 host function installer.
@@ -40,9 +37,7 @@ import com.dylibso.chicory.runtime.Memory as ChicoryMemory
  *
  * ```kotlin
  * // Prepare WASI and Emscripten host imports
- * val installer = ChicoryHostFunctionInstaller(
- *     memory = memory.memory(),
- * )
+ * val installer = ChicoryHostFunctionInstaller()
  * val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
  * val emscriptenInstaller: ChicoryEmscriptenInstaller = installer.setupEmscriptenFunctions()
  * val hostImports = HostImports(
@@ -72,30 +67,24 @@ import com.dylibso.chicory.runtime.Memory as ChicoryMemory
  */
 public class ChicoryHostFunctionInstaller private constructor(
     private val host: EmbedderHost,
-    chicoryMemory: ChicoryMemory,
+    chicoryMemoryProvider: ChicoryMemoryProvider?,
 ) {
-    private val memoryAdapter: ChicoryMemoryAdapter = ChicoryMemoryAdapter(chicoryMemory)
+    private val memoryProvider = chicoryMemoryProvider ?: DefaultChicoryMemoryProvider
 
     @JvmOverloads
     public fun setupWasiPreview1HostFunctions(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
     ): List<HostFunction> {
-        val wasiMemoryReader: WasiMemoryReader = ChicoryWasiMemoryReader.createOrDefault(
-            memoryAdapter,
-            host.fileSystem,
-        )
-        val wasiMemoryWriter: WasiMemoryWriter = ChicoryWasiMemoryWriter.createOrDefault(
-            memoryAdapter,
-            host.fileSystem,
-        )
+        val wasiMemoryReaderProvider = chicoryWasiMemoryReaderProvider(memoryProvider, host.fileSystem)
+        val wasiMemoryWriterProvider = chicoryWasiMemoryWriterProvider(memoryProvider, host.fileSystem)
 
         return createWasiPreview1HostFunctions(
             host = host,
-            memory = memoryAdapter,
-            wasiMemoryReader = wasiMemoryReader,
-            wasiMemoryWriter = wasiMemoryWriter,
+            memoryProvider = memoryProvider,
+            wasiMemoryReaderProvider = wasiMemoryReaderProvider,
+            wasiMemoryWriterProvider = wasiMemoryWriterProvider,
             moduleName = moduleName,
-        )
+        ) + createCustomChicoryFunctions()
     }
 
     @JvmOverloads
@@ -104,7 +93,7 @@ public class ChicoryHostFunctionInstaller private constructor(
     ): ChicoryEmscriptenInstaller {
         return ChicoryEmscriptenInstaller(
             host = host,
-            memoryAdapter = memoryAdapter,
+            memoryProvider = memoryProvider,
         ).apply {
             setupEmscriptenFunctions(moduleName)
         }
@@ -112,7 +101,7 @@ public class ChicoryHostFunctionInstaller private constructor(
 
     public class ChicoryEmscriptenInstaller internal constructor(
         private val host: EmbedderHost,
-        private val memoryAdapter: Memory,
+        private val memoryProvider: ChicoryMemoryProvider,
     ) {
         public var emscriptenFunctions: List<HostFunction> = emptyList()
             private set
@@ -124,7 +113,7 @@ public class ChicoryHostFunctionInstaller private constructor(
             moduleName: String,
         ) {
             emscriptenFunctions = EmscriptenEnvFunctionsBuilder(
-                memory = memoryAdapter,
+                memoryProvider = memoryProvider,
                 host = host,
                 stackBindingsRef = ::emscriptenStack,
             ).asChicoryHostFunctions(
@@ -136,7 +125,7 @@ public class ChicoryHostFunctionInstaller private constructor(
             val emscriptenRuntime = DefaultEmscriptenRuntime.emscriptenSingleThreadedRuntime(
                 mainExports = ChicoryEmscriptenMainExports(instance),
                 stackExports = ChicoryEmscriptenStackExports(instance),
-                memory = memoryAdapter,
+                memory = memoryProvider.get(instance),
                 logger = host.rootLogger,
             )
             _emscriptenStack = emscriptenRuntime.stack
@@ -145,14 +134,18 @@ public class ChicoryHostFunctionInstaller private constructor(
     }
 
     @WasiEmscriptenHostDsl
-    public class Builder(
-        public val memory: ChicoryMemory,
-    ) {
+    public class Builder {
         /**
          * Implementation of a host object that provides access from the WebAssembly to external host resources.
          */
         @set:JvmSynthetic
         public var host: EmbedderHost? = null
+
+        /**
+         * Sets memory provider used for all operations. For multi-memory scenarios.
+         */
+        @set:JvmSynthetic
+        public var memoryProvider: ChicoryMemoryProvider? = null
 
         /**
          * Sets the host object that provides access from the WebAssembly to external host resources.
@@ -161,19 +154,25 @@ public class ChicoryHostFunctionInstaller private constructor(
             this.host = host
         }
 
+        /**
+         * Sets memory provider used for all operations. For multi-memory scenarios.
+         */
+        public fun setMemoryProvider(memoryProvider: ChicoryMemoryProvider): Builder = apply {
+            this.memoryProvider = memoryProvider
+        }
+
         public fun build(): ChicoryHostFunctionInstaller {
             val host = host ?: EmbedderHost.Builder().build()
-            return ChicoryHostFunctionInstaller(host, memory)
+            return ChicoryHostFunctionInstaller(host, memoryProvider)
         }
     }
 
     public companion object {
         @JvmSynthetic
         public operator fun invoke(
-            memory: ChicoryMemory,
             block: Builder.() -> Unit = {},
         ): ChicoryHostFunctionInstaller {
-            return Builder(memory).apply(block).build()
+            return Builder().apply(block).build()
         }
     }
 }

@@ -8,23 +8,23 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
+import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
 import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallFstat64FunctionHandle
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasm.core.memory.Memory
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.types.Value
 
 internal class SyscallFstat64(
     host: EmbedderHost,
-    private val memory: Memory,
+    private val memoryProvider: ChicoryMemoryProvider,
 ) : EmscriptenHostFunctionHandle {
     private val handle = SyscallFstat64FunctionHandle(host)
 
     override fun apply(instance: Instance, vararg args: Value): Value? {
         val result: Int = handle.execute(
-            memory,
+            memoryProvider.get(instance),
             args[0].asInt(),
             args[1].asWasmAddr(),
         )
