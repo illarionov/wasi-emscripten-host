@@ -29,7 +29,6 @@ wasiTestsuiteTestGen {
 //        WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(
-        "lseek",
         "pread-with-access",
         "pwrite-with-access",
         "pwrite-with-append",

@@ -15,17 +15,17 @@ import at.released.weh.wasi.preview1.type.Filesize
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
+import at.released.weh.wasi.preview1.type.Whence as WasiWhence
 
 public class FdTellFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_TELL, host) {
-    @Suppress("UNUSED_PARAMETER")
+    private val fdSeekHandle = FdSeekFunctionHandle(host)
     public fun execute(
         memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
         @IntWasmPtr(Filesize::class) offsetAddr: WasmPtr,
     ): Errno {
-        // TODO
-        return Errno.NOTSUP
+        return fdSeekHandle.execute(memory, fd, 0, WasiWhence.CUR.code.toByte(), offsetAddr)
     }
 }
