@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
@@ -36,6 +37,7 @@ import at.released.weh.filesystem.internal.fdresource.stdio.flushNoThrow
 import at.released.weh.filesystem.internal.fdresource.stdio.transferFrom
 import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
 import at.released.weh.filesystem.model.FdFlag
+import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
@@ -106,6 +108,10 @@ internal class StdioFileFdResource(
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
         return BadFileDescriptor("Can not change timestamp of the stdio descriptor").left()
+    }
+
+    override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
+        return BadFileDescriptor("Can not change flags of the stdio descriptor").left()
     }
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {

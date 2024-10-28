@@ -15,6 +15,7 @@ public data class PermissionDenied(
     ChownError,
     OpenError,
     MkdirError,
+    SetFdFlagsError,
     SetTimestampError,
     TruncateError,
     UnlinkError,

@@ -14,11 +14,14 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
@@ -47,6 +50,8 @@ internal interface FdResource {
     fun chown(owner: Int, group: Int): Either<ChownError, Unit>
 
     fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit>
+
+    fun setFdFlags(@FdflagsType flags: Fdflags): Either<SetFdFlagsError, Unit>
 
     fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit>
 

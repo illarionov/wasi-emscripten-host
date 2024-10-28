@@ -26,6 +26,7 @@ public data class BadFileDescriptor(
     ReadLinkError,
     ResolveRelativePathErrors,
     SeekError,
+    SetFdFlagsError,
     SetTimestampError,
     StatError,
     SyncError,

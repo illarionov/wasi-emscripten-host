@@ -17,6 +17,7 @@ import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
+import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
@@ -94,6 +95,11 @@ internal class NioFileFdResource(
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
         return nioSetTimestamp(channel.path, false, atimeNanoseconds, mtimeNanoseconds)
+    }
+
+    override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
+        // Ignoring all the flags
+        return Unit.right()
     }
 
     override fun close(): Either<CloseError, Unit> {

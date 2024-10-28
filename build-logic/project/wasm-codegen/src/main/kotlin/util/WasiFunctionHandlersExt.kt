@@ -12,6 +12,7 @@ internal object WasiFunctionHandlersExt {
     internal val NO_MEMORY_FUNCTIONS = setOf(
         "fd_close",
         "fd_datasync",
+        "fd_fdstat_set_flags",
         "fd_sync",
         "proc_exit",
         "sched_yield",
