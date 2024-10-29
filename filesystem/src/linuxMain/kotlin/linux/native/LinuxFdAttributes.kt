@@ -39,6 +39,7 @@ import at.released.weh.filesystem.model.Filetype.SYMBOLIC_LINK
 import at.released.weh.filesystem.model.Filetype.UNKNOWN
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_BASE_RIGHTS
+import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_INHERITING_RIGHTS
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_BASE_RIGHTS
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.PATH_SYMLINK
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.SOCK_ACCEPT
@@ -69,14 +70,13 @@ private fun linuxFdAttributes(
     val fileStatus: Fdflags = readFileStatus(fd, isInAppendMode).bind()
     val fileType = readFileType(fd).bind()
 
-    // XXX: check
     val rights = getFdRightsByFileType(fileType)
 
     val inheritingRights = when (fileType) {
         UNKNOWN -> 0
         BLOCK_DEVICE -> 0
         CHARACTER_DEVICE -> 0
-        DIRECTORY -> rights or FILE_BASE_RIGHTS
+        DIRECTORY -> DIRECTORY_INHERITING_RIGHTS
         REGULAR_FILE -> rights
         SOCKET_DGRAM -> rights
         SOCKET_STREAM -> rights
@@ -123,7 +123,7 @@ private fun getFdRightsByFileType(fileType: Filetype) = when (fileType) {
     UNKNOWN -> 0
     BLOCK_DEVICE -> 0
     CHARACTER_DEVICE -> STDIO_FD_RIGHTS
-    DIRECTORY -> DIRECTORY_BASE_RIGHTS or FILE_BASE_RIGHTS
+    DIRECTORY -> DIRECTORY_BASE_RIGHTS
     REGULAR_FILE -> FILE_BASE_RIGHTS
     SYMBOLIC_LINK -> FILE_BASE_RIGHTS or PATH_SYMLINK
     SOCKET_DGRAM -> FILE_BASE_RIGHTS or SOCK_SHUTDOWN
