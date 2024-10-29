@@ -34,6 +34,7 @@ public class SyscallMkdiratFunctionHandle(
                 path = path,
                 baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
                 mode = rawMode,
+                failIfExists = true,
             ),
         ).negativeErrnoCode()
     }
