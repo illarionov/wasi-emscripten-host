@@ -230,7 +230,9 @@ public object FdRightsFlag {
                 PATH_REMOVE_DIRECTORY or
                 PATH_UNLINK_FILE or
                 PATH_FILESTAT_GET or
-                PATH_FILESTAT_SET_TIMES
+                PATH_FILESTAT_SET_TIMES or
+                FD_FILESTAT_GET or
+                FD_FILESTAT_SET_TIMES
     internal const val FILE_BASE_RIGHTS: Long = FD_DATASYNC or
             FD_READ or
             FD_SEEK or
@@ -244,6 +246,7 @@ public object FdRightsFlag {
             FD_FILESTAT_SET_SIZE or
             FD_FILESTAT_SET_TIMES or
             POLL_FD_READWRITE
+    internal const val DIRECTORY_INHERITING_RIGHTS: Long = DIRECTORY_BASE_RIGHTS or FILE_BASE_RIGHTS
 }
 
 /**

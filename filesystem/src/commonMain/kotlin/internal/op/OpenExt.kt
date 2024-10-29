@@ -23,6 +23,7 @@ internal fun checkOpenFlags(open: Open): Either<OpenError, Unit> = either {
         if (open.openFlags and O_DIRECTORY == O_DIRECTORY &&
             open.rights.rights and readWriteMask == readWriteMask
         ) {
+            // See wasi-testsuite/tests/rust/src/bin/path_open_preopen.rs
             raise(
                 PathIsDirectory("opening directory with read/write rights should fail with ISDIR"),
             )

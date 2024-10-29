@@ -33,7 +33,6 @@ wasiTestsuiteTestGen {
         "sock_shutdown-not_sock",
     )
     rustIgnores = listOf(
-        "close_preopen",
         "dangling_fd",
         "dangling_symlink",
         "dir_fd_op_failures",
@@ -59,7 +58,6 @@ wasiTestsuiteTestGen {
         "path_open_create_existing",
         "path_open_dirfd_not_dir",
         "path_open_missing",
-        "path_open_nonblock",
         "path_open_read_write",
         "path_rename",
         "path_rename_dir_trailing_slashes",
