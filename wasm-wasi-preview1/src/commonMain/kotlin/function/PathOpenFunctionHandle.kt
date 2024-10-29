@@ -60,7 +60,7 @@ public class PathOpenFunctionHandle(
             Open(
                 path = pathString,
                 baseDirectory = BaseDirectory.DirectoryFd(fd),
-                openFlags = WasiOpenFlagsMapper.getFsOpenFlags(oflags),
+                openFlags = WasiOpenFlagsMapper.getFsOpenFlags(oflags, rights),
                 fdFlags = WasiFdFlagsMapper.getFsFdlags(fdflags),
                 rights = Open.Rights(
                     rights = WasiRightsMapper.getFsRights(rights),

@@ -6,7 +6,14 @@
 
 package at.released.weh.filesystem.op.readwrite
 
-public enum class ReadWriteStrategy {
-    DO_NOT_CHANGE_POSITION,
-    CHANGE_POSITION,
+public sealed class ReadWriteStrategy {
+    /**
+     * Reads from the file descriptor's current position, updating it accordingly.
+     */
+    public data object CurrentPosition : ReadWriteStrategy()
+
+    /**
+     * Read from the given [position] within the file without using and updating the file descriptor's offset
+     */
+    public data class Position(val position: Long) : ReadWriteStrategy()
 }

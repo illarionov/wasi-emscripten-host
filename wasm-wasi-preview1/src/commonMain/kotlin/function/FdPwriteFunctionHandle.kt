@@ -9,7 +9,7 @@ package at.released.weh.wasi.preview1.function
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.readCiovecs
@@ -28,7 +28,6 @@ import at.released.weh.wasm.core.memory.Memory
 public class FdPwriteFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_PWRITE, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
         memory: Memory,
         bulkWriter: WasiMemoryWriter,
@@ -39,7 +38,7 @@ public class FdPwriteFunctionHandle(
         @IntWasmPtr(Size::class) expectedSize: WasmPtr,
     ): Errno {
         val cioVecs: CiovecArray = readCiovecs(memory, pCiov, cIovCnt)
-        return bulkWriter.write(fd, DO_NOT_CHANGE_POSITION, cioVecs)
+        return bulkWriter.write(fd, ReadWriteStrategy.Position(offset), cioVecs)
             .onRight { writtenBytes ->
                 memory.writeI32(expectedSize, writtenBytes.toInt())
             }.fold(

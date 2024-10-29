@@ -14,13 +14,13 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotSupported
-import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadError
+import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
 import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CArrayPointer
 import kotlinx.cinterop.CPointer
@@ -36,21 +36,25 @@ import platform.posix.EINTR
 import platform.posix.EINVAL
 import platform.posix.EIO
 import platform.posix.EISDIR
-import platform.posix.ENXIO
-import platform.posix.SEEK_CUR
+import platform.posix.NULL
 import platform.posix.errno
 import platform.posix.iovec
-import platform.posix.lseek
 import platform.posix.preadv
 import platform.posix.readv
 
 internal fun posixRead(
+    nativeChannel: NativeFileChannel,
+    iovecs: List<FileSystemByteBuffer>,
+    strategy: ReadWriteStrategy,
+): Either<ReadError, ULong> = posixRead(nativeChannel.fd, iovecs, strategy)
+
+private fun posixRead(
     nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-) = when (strategy) {
-    CHANGE_POSITION -> posixReadChangePosition(nativeFd, iovecs)
-    DO_NOT_CHANGE_POSITION -> posixReadDoNotChangePosition(nativeFd, iovecs)
+): Either<ReadError, ULong> = when (strategy) {
+    CurrentPosition -> posixReadChangePosition(nativeFd, iovecs)
+    is Position -> posixReadDoNotChangePosition(nativeFd, strategy.position, iovecs)
 }
 
 private fun posixReadChangePosition(
@@ -64,16 +68,12 @@ private fun posixReadChangePosition(
 
 private fun posixReadDoNotChangePosition(
     nativeFd: NativeFileFd,
+    offset: Long,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
-    val currentPosition = lseek(nativeFd.fd, 0, SEEK_CUR)
-    return if (currentPosition < 0) {
-        errno.errnoSeekToReadError(nativeFd).left()
-    } else {
-        callReadWrite(nativeFd, iovecs) { fd, iovecsPointer, size ->
-            preadv(fd.fd, iovecsPointer, size, currentPosition)
-        }.mapLeft { errNo -> errNo.errnoToReadError(nativeFd, iovecs) }
-    }
+    return callReadWrite(nativeFd, iovecs) { fd, iovecsPointer, size ->
+        preadv(fd.fd, iovecsPointer, size, offset)
+    }.mapLeft { errNo -> errNo.errnoToReadError(nativeFd, iovecs) }
 }
 
 internal fun callReadWrite(
@@ -84,12 +84,17 @@ internal fun callReadWrite(
     val bytesMoved = memScoped {
         val size = iovecs.size
         val posixIovecs: CArrayPointer<iovec> = allocArray(size)
-        iovecs.withPinnedByteArrays { pinnedByteArrays ->
-            // TODO: check length
+        iovecs.withPinnedByteArrays { pinnedByteArrays: List<Pinned<ByteArray>?> ->
             iovecs.forEachIndexed { index, vec ->
                 posixIovecs[index].apply {
-                    iov_base = pinnedByteArrays[index].addressOf(vec.offset)
-                    iov_len = vec.length.toULong()
+                    val pinnedByteArray = pinnedByteArrays[index]
+                    if (pinnedByteArray != null) {
+                        iov_base = pinnedByteArray.addressOf(vec.offset)
+                        iov_len = vec.length.toULong()
+                    } else {
+                        iov_base = NULL
+                        iov_len = 0U
+                    }
                 }
             }
             block(fd, posixIovecs, size)
@@ -104,15 +109,20 @@ internal fun callReadWrite(
 }
 
 private inline fun <R : Any> List<FileSystemByteBuffer>.withPinnedByteArrays(
-    block: (byteArrays: List<Pinned<ByteArray>>) -> R,
+    block: (byteArrays: List<Pinned<ByteArray>?>) -> R,
 ): R {
-    val pinnedByteArrays: List<Pinned<ByteArray>> = this.map {
-        it.array.pin()
+    val pinnedByteArrays: List<Pinned<ByteArray>?> = this.map {
+        @Suppress("ReplaceSizeCheckWithIsNotEmpty")
+        if (it.array.size != 0) {
+            it.array.pin()
+        } else {
+            null
+        }
     }
     return try {
         block(pinnedByteArrays)
     } finally {
-        pinnedByteArrays.forEach(Pinned<ByteArray>::unpin)
+        pinnedByteArrays.filterNotNull().forEach(Pinned<ByteArray>::unpin)
     }
 }
 
@@ -127,13 +137,4 @@ private fun Int.errnoToReadError(
     EIO -> IoError("I/o error on read from $fd")
     EISDIR -> PathIsDirectory("$fd refers to directory")
     else -> InvalidArgument("Read error. Errno: `$this`")
-}
-
-private fun Int.errnoSeekToReadError(
-    fd: NativeFileFd,
-): ReadError = when (this) {
-    EBADF -> BadFileDescriptor("Can not seek on $fd")
-    EINVAL -> InvalidArgument("seek() failed. Invalid argument. Fd: $fd")
-    ENXIO -> Nxio("trying to seek beyond end of file. Fd: $fd")
-    else -> InvalidArgument("Seel failed: unexpected error. Errno: `$this`")
 }

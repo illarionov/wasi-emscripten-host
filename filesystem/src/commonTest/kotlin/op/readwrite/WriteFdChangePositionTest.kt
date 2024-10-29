@@ -22,7 +22,7 @@ public class WriteFdChangePositionTest : BaseFileSystemIntegrationTest() {
         val request = WriteFd(
             fd = -327542,
             cIovecs = emptyList(),
-            strategy = ReadWriteStrategy.CHANGE_POSITION,
+            strategy = ReadWriteStrategy.CurrentPosition,
         )
 
         val errNo = createTestFileSystem().use { fileSystem ->

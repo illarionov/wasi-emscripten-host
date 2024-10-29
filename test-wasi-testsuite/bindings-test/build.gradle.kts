@@ -29,9 +29,6 @@ wasiTestsuiteTestGen {
 //        WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(
-        "pread-with-access",
-        "pwrite-with-access",
-        "pwrite-with-append",
         "sock_shutdown-invalid_fd",
         "sock_shutdown-not_sock",
         "stat-dev-ino",

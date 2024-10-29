@@ -8,11 +8,13 @@ package at.released.weh.filesystem.internal.op
 
 import arrow.core.Either
 import arrow.core.raise.either
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
 
 internal fun checkOpenFlags(open: Open): Either<OpenError, Unit> = either {
@@ -22,8 +24,13 @@ internal fun checkOpenFlags(open: Open): Either<OpenError, Unit> = either {
             open.rights.rights and readWriteMask == readWriteMask
         ) {
             raise(
-                PathIsDirectory("opening directory read/write should fail with ISDIR"),
+                PathIsDirectory("opening directory with read/write rights should fail with ISDIR"),
             )
         }
+    }
+
+    val createDirectoryMask = OpenFileFlag.O_CREAT or OpenFileFlag.O_DIRECTORY
+    if (open.openFlags and createDirectoryMask == createDirectoryMask) {
+        raise(InvalidArgument("O_CREAT cannot be used to create directories "))
     }
 }

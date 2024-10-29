@@ -15,10 +15,11 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.ext.asByteBuffer
+import at.released.weh.filesystem.model.Whence.END
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.DO_NOT_CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
 import java.io.IOException
 import java.nio.channels.AsynchronousCloseException
 import java.nio.channels.ClosedByInterruptException
@@ -29,16 +30,15 @@ internal fun NioFileChannel.nioWrite(
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ) = when (strategy) {
-    CHANGE_POSITION -> writeChangePosition(cIovecs)
-    DO_NOT_CHANGE_POSITION -> writeDoNotChangePosition(cIovecs)
+    CurrentPosition -> writeChangePosition(cIovecs)
+    is Position -> writeDoNotChangePosition(strategy.position, cIovecs)
 }
 
 private fun NioFileChannel.writeDoNotChangePosition(
+    startPosition: Long,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> = either {
-    var position = getPosition()
-        .mapLeft(::toWriteError)
-        .bind()
+    var position = startPosition
 
     var totalBytesWritten = 0UL
     for (ciovec in cIovecs) {
@@ -59,8 +59,14 @@ private fun NioFileChannel.writeDoNotChangePosition(
 
 private fun NioFileChannel.writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> {
     val byteBuffers = Array(cIovecs.size) { cIovecs[it].asByteBuffer() }
-    return writeCatching {
-        channel.write(byteBuffers).toULong()
+    return either {
+        if (isInAppendMode()) {
+            // XXX change position and write should be atomic
+            setPosition(0, END).mapLeft(::toWriteError).bind()
+        }
+        writeCatching {
+            channel.write(byteBuffers).toULong()
+        }.bind()
     }
 }
 

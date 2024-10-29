@@ -18,7 +18,7 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
-import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CHANGE_POSITION
+import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.Ciovec
@@ -39,7 +39,7 @@ internal class GraalOutputStreamWasiMemoryWriter(
         strategy: ReadWriteStrategy,
         cioVecs: List<Ciovec>,
     ): Either<WriteError, ULong> {
-        return if (strategy == CHANGE_POSITION && fileSystem.isOperationSupported(RunWithChannelFd)) {
+        return if (strategy == CurrentPosition && fileSystem.isOperationSupported(RunWithChannelFd)) {
             val op = RunWithChannelFd(
                 fd = fd,
                 block = { writeChangePosition(it, cioVecs) },

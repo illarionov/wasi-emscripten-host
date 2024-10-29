@@ -47,48 +47,58 @@ import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 
 internal class LinuxFileFdResource(
-    val nativeFd: NativeFileFd,
+    channel: NativeFileChannel,
 ) : PosixFdResource, FdResource {
+    private val channel = channel.copy()
     override val fdResourceType: FdResourceType = FdResourceType.FILE
 
-    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(nativeFd)
+    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = linuxFdAttributes(channel)
 
-    override fun stat(): Either<StatError, StructStat> = linuxStatFd(nativeFd.fd)
+    override fun stat(): Either<StatError, StructStat> = linuxStatFd(channel.fd.fd)
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        return linuxSeek(nativeFd, fileDelta, whence)
+        return linuxSeek(channel.fd, fileDelta, whence)
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        return posixRead(nativeFd, iovecs, strategy)
+        return posixRead(channel, iovecs, strategy)
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        return posixWrite(nativeFd, cIovecs, strategy)
+        return posixWrite(channel, cIovecs, strategy)
     }
 
-    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(nativeFd, syncMetadata)
+    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(channel.fd, syncMetadata)
 
-    override fun truncate(length: Long): Either<TruncateError, Unit> = linuxTruncate(nativeFd, length)
+    override fun truncate(length: Long): Either<TruncateError, Unit> = linuxTruncate(channel.fd, length)
 
-    override fun chmod(mode: Int): Either<ChmodError, Unit> = linuxChmodFd(nativeFd, mode)
+    override fun chmod(mode: Int): Either<ChmodError, Unit> = linuxChmodFd(channel.fd, mode)
 
-    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = linuxChownFd(nativeFd, owner, group)
+    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = linuxChownFd(channel.fd, owner, group)
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        return linuxSetTimestamp(nativeFd, atimeNanoseconds, mtimeNanoseconds)
+        return linuxSetTimestamp(channel.fd, atimeNanoseconds, mtimeNanoseconds)
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
-        return linuxSetFdflags(nativeFd, flags)
+        return linuxSetFdflags(channel, flags)
     }
 
-    override fun close(): Either<CloseError, Unit> = posixClose(nativeFd)
+    override fun close(): Either<CloseError, Unit> = posixClose(channel.fd)
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
-        linuxAddAdvisoryLockFd(nativeFd, flock)
+        linuxAddAdvisoryLockFd(channel.fd, flock)
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
-        return linuxRemoveAdvisoryLock(nativeFd, flock)
+        return linuxRemoveAdvisoryLock(channel.fd, flock)
     }
+
+    /**
+     * We implement append mode without using the system's O_APPEND, as it restricts writing to
+     * arbitrary positions in the file, which is necessary for implementing the `fd_write` WASI function.
+     */
+    internal data class NativeFileChannel(
+        val fd: NativeFileFd,
+        var isInAppendMode: Boolean = false,
+    )
 }

@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import java.nio.channels.FileChannel
 import java.nio.file.Path as NioPath
@@ -17,3 +18,5 @@ public data class NioFileChannel(
     val channel: FileChannel,
     val fdFlags: Fdflags,
 )
+
+internal fun NioFileChannel.isInAppendMode(): Boolean = fdFlags and FD_APPEND == FD_APPEND

@@ -16,7 +16,6 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
-import at.released.weh.filesystem.fdresource.nio.nioCreateDirectory
 import at.released.weh.filesystem.fdresource.nio.nioOpenFile
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
@@ -67,15 +66,15 @@ internal class NioOpen(
 
         checkOpenFlags(input).bind()
 
-        if (input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
-            if (input.openFlags and OpenFileFlag.O_CREAT == OpenFileFlag.O_CREAT) {
-                createDirectory(fsState, path, virtualPath, fileAttributes).bind()
-            } else {
-                openDirectory(fsState, path, virtualPath).bind()
-            }
-        } else {
-            openCreateFile(fsState, path, openOptionsResult.options, fileAttributes, input.fdFlags).bind()
+        if (path.isDirectory()) {
+            return openDirectory(fsState, path, virtualPath)
         }
+
+        if (input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
+            raise(NotDirectory("Path is not a directory"))
+        }
+
+        return openCreateFile(fsState, path, openOptionsResult.options, fileAttributes, input.fdFlags)
     }
 }
 
@@ -86,16 +85,7 @@ private fun openCreateFile(
     fileAttributes: Array<FileAttribute<*>>,
     @FdflagsType originalFdflags: Fdflags,
 ): Either<OpenError, FileDescriptor> = fsState.addFile(path, fdflags = originalFdflags) { _ ->
-        nioOpenFile(path, options, fileAttributes)
-    }.map { it.first }
-
-private fun createDirectory(
-    fsState: NioFileSystemState,
-    path: Path,
-    virtualPath: VirtualPath,
-    fileAttributes: Array<FileAttribute<*>>,
-): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath) { _ ->
-    nioCreateDirectory(path, fileAttributes)
+    nioOpenFile(path, options, fileAttributes)
 }.map { it.first }
 
 private fun openDirectory(
@@ -130,7 +120,9 @@ private fun getOpenOptions(
     }
 
     if (fdFlags and FdFlag.FD_APPEND != 0) {
-        options += StandardOpenOption.APPEND
+        // This flag is ignored. We do not use NIO's APPEND mode because it restricts writing to arbitrary
+        // positions within the file, which is necessary for implementing the fd_write function in WASI.
+        ignoredFlags += FdFlag.FD_APPEND.toUInt()
     }
 
     if (flags and OpenFileFlag.O_CREAT != 0) {
