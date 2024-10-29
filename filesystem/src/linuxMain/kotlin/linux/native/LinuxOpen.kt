@@ -12,6 +12,7 @@ import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.Again
+import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
@@ -53,6 +54,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.sizeOf
 import platform.posix.E2BIG
 import platform.posix.EAGAIN
+import platform.posix.EEXIST
 import platform.posix.EINVAL
 import platform.posix.ELOOP
 import platform.posix.ENOENT
@@ -167,6 +169,7 @@ private fun getLinuxOpenFileFlags(
 private fun Int.openat2ErrNoToOpenError(): OpenError = when (this) {
     E2BIG -> InvalidArgument("E2BIG: extension is not supported")
     EAGAIN -> Again("Operation cannot be performed")
+    EEXIST -> Exists("File exists")
     EINVAL -> InvalidArgument("Invalid argument")
     ELOOP -> TooManySymbolicLinks("Too many symbolic or magic links")
     EXDEV -> NotCapable("Escape from the root detected")
