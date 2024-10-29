@@ -8,6 +8,7 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.right
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
@@ -30,21 +31,30 @@ internal class NioMkdir(
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult.mapLeft(ResolvePathError::toCommonError)
-                .flatMap { mkdir(it, input.mode) }
+                .flatMap { mkdir(it, input.mode, input.failIfExists) }
         }
 
     private fun mkdir(
         path: Path,
         @FileMode mode: Int,
-    ): Either<MkdirError, Unit> = Either.catch {
-        Files.createDirectory(path, mode.fileModeToPosixFilePermissions().asFileAttribute())
-        Unit
-    }.mapLeft {
-        when (it) {
-            is UnsupportedOperationException -> PermissionDenied("Unsupported file mode")
-            is FileAlreadyExistsException -> Exists("`$path` exists")
-            is IOException -> IoError("I/O error: ${it.message}")
-            else -> throw IllegalStateException("Unexpected error", it)
+        failIfExists: Boolean,
+    ): Either<MkdirError, Unit> {
+        val result = Either.catch {
+            Files.createDirectory(path, mode.fileModeToPosixFilePermissions().asFileAttribute())
+            Unit
+        }.mapLeft {
+            when (it) {
+                is UnsupportedOperationException -> PermissionDenied("Unsupported file mode")
+                is FileAlreadyExistsException -> Exists("`$path` exists")
+                is IOException -> IoError("I/O error: ${it.message}")
+                else -> throw IllegalStateException("Unexpected error", it)
+            }
+        }
+
+        return if (!failIfExists && result.leftOrNull() is Exists) {
+            Unit.right()
+        } else {
+            result
         }
     }
 }

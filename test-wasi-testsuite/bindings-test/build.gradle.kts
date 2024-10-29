@@ -33,7 +33,6 @@ wasiTestsuiteTestGen {
         "sock_shutdown-not_sock",
     )
     rustIgnores = listOf(
-        "dangling_fd",
         "dangling_symlink",
         "dir_fd_op_failures",
         "directory_seek",

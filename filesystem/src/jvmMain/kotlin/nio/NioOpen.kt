@@ -112,11 +112,14 @@ private fun getOpenOptions(
     var ignoredFlags = 0U
     var notImplementedFlags = 0U
 
-    if (flags and OpenFileFlag.O_WRONLY != 0) {
-        options += StandardOpenOption.WRITE
-    } else if (flags and OpenFileFlag.O_RDWR != 0) {
-        options += StandardOpenOption.READ
-        options += StandardOpenOption.WRITE
+    when (val mode = flags and OpenFileFlag.O_ACCMODE) {
+        OpenFileFlag.O_RDONLY -> options += StandardOpenOption.READ
+        OpenFileFlag.O_WRONLY -> options += StandardOpenOption.WRITE
+        OpenFileFlag.O_RDWR -> {
+            options += StandardOpenOption.READ
+            options += StandardOpenOption.WRITE
+        }
+        else -> error("Unexpected open mode: 0x${mode.toString(16)}")
     }
 
     if (fdFlags and FdFlag.FD_APPEND != 0) {
@@ -131,6 +134,7 @@ private fun getOpenOptions(
         } else {
             StandardOpenOption.CREATE
         }
+        options += StandardOpenOption.WRITE
     }
 
     if (flags and OpenFileFlag.O_TRUNC != 0) {

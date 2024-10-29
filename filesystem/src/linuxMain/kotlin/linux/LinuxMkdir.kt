@@ -18,6 +18,6 @@ internal class LinuxMkdir(
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
         fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxMkdir(it, input.path, input.mode)
+            linuxMkdir(it, input.path, input.mode, input.failIfExists)
         }
 }

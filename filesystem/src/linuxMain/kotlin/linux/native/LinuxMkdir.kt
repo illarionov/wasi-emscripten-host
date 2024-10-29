@@ -12,6 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.DiskQuota
+import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
@@ -28,6 +29,7 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EDQUOT
+import platform.posix.EEXIST
 import platform.posix.EINVAL
 import platform.posix.ELOOP
 import platform.posix.EMLINK
@@ -44,22 +46,24 @@ internal fun linuxMkdir(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
     mode: Int,
+    failIfExists: Boolean,
 ): Either<MkdirError, Unit> {
     val resultCode = mkdirat(
         baseDirectoryFd.linuxFd,
         path,
         mode.toUInt(),
     )
-    return if (resultCode == 0) {
-        Unit.right()
-    } else {
-        errno.errnoToMkdirError().left()
+    return when {
+        resultCode == 0 -> Unit.right()
+        !failIfExists && errno == EEXIST -> Unit.right()
+        else -> errno.errnoToMkdirError().left()
     }
 }
 
 @Suppress("CyclomaticComplexMethod")
 private fun Int.errnoToMkdirError(): MkdirError = when (this) {
     EACCES -> AccessDenied("Access denied")
+    EEXIST -> Exists("Path with this name exists")
     EBADF -> BadFileDescriptor("Bad file descriptor")
     EDQUOT -> DiskQuota("Disk quota exhausted.")
     EINVAL -> InvalidArgument("Invalid argument")

@@ -18,9 +18,14 @@ public data class Mkdir(
 
     @FileMode
     public val mode: Int,
+    public val failIfExists: Boolean = true,
 ) {
     override fun toString(): String {
-        return "Mkdir(path='$path', baseDirectory=$baseDirectory, mode=0${mode.toString(8)})"
+        return "Mkdir(" +
+                "path='$path', " +
+                "baseDirectory=$baseDirectory, " +
+                "mode=0${mode.toString(8)}, " +
+                "failIfExists=$failIfExists)"
     }
 
     public companion object : FileSystemOperation<Mkdir, MkdirError, Unit> {
