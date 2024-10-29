@@ -31,7 +31,6 @@ wasiTestsuiteTestGen {
     cIgnores = listOf(
         "sock_shutdown-invalid_fd",
         "sock_shutdown-not_sock",
-        "stat-dev-ino",
     )
     rustIgnores = listOf(
         "close_preopen",

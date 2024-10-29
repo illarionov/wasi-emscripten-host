@@ -6,7 +6,10 @@
 
 package at.released.weh.wasi.preview1.ext
 
+import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.op.stat.timeNanos
 import at.released.weh.wasi.preview1.type.Filestat
+import at.released.weh.wasi.preview1.type.Filetype
 import kotlinx.io.Sink
 import kotlinx.io.writeIntLe
 import kotlinx.io.writeLongLe
@@ -25,3 +28,16 @@ internal fun Filestat.packTo(
     sink.writeLongLe(this.mtim)
     sink.writeLongLe(this.ctim)
 }
+
+internal fun StructStat.toFilestat(): Filestat = Filestat(
+    dev = this.deviceId,
+    ino = this.inode,
+    filetype = checkNotNull(Filetype.fromCode(this.type.id)) {
+        "Unexpected type ${this.type.id}"
+    },
+    nlink = this.links,
+    size = this.size,
+    atim = this.accessTime.timeNanos,
+    mtim = this.modificationTime.timeNanos,
+    ctim = this.changeStatusTime.timeNanos,
+)

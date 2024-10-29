@@ -11,18 +11,16 @@ import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.stat.Stat
-import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.op.stat.timeNanos
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.PATH_FILESTAT_GET
 import at.released.weh.wasi.preview1.ext.FILESTAT_PACKED_SIZE
 import at.released.weh.wasi.preview1.ext.packTo
 import at.released.weh.wasi.preview1.ext.readPathString
+import at.released.weh.wasi.preview1.ext.toFilestat
 import at.released.weh.wasi.preview1.ext.toWasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.Filestat
-import at.released.weh.wasi.preview1.type.Filetype
 import at.released.weh.wasi.preview1.type.Lookupflags
 import at.released.weh.wasi.preview1.type.LookupflagsType
 import at.released.weh.wasm.core.IntWasmPtr
@@ -57,20 +55,5 @@ public class PathFilestatGetFunctionHandle(
                 ifLeft = { it.errno.toWasiErrno() },
                 ifRight = { SUCCESS },
             )
-    }
-
-    private companion object {
-        fun StructStat.toFilestat(): Filestat = Filestat(
-            dev = this.deviceId,
-            ino = this.inode,
-            filetype = checkNotNull(Filetype.fromCode(this.type.id)) {
-                "Unexpected type ${this.type.id}"
-            },
-            nlink = this.links,
-            size = this.size,
-            atim = this.accessTime.timeNanos,
-            mtim = this.modificationTime.timeNanos,
-            ctim = this.changeStatusTime.timeNanos,
-        )
     }
 }
