@@ -12,6 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Busy
+import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
@@ -36,6 +37,7 @@ import platform.posix.ENAMETOOLONG
 import platform.posix.ENOENT
 import platform.posix.ENOMEM
 import platform.posix.ENOTDIR
+import platform.posix.ENOTEMPTY
 import platform.posix.EPERM
 import platform.posix.EROFS
 import platform.posix.errno
@@ -65,6 +67,7 @@ private fun Int.errnoToUnlinkDirectoryError(): UnlinkError = when (this) {
     ENOENT -> NoEntry("Component of request path does not exist or empty")
     ENOMEM -> IoError("No memory")
     ENOTDIR -> NotDirectory("Path is not a directory")
+    ENOTEMPTY -> DirectoryNotEmpty("Directory not empty")
     EPERM -> PermissionDenied("Can not delete directory: permission denied")
     EROFS -> InvalidArgument("Can node delete directory: read-only file system")
     else -> InvalidArgument("Other error. Errno: $this")
