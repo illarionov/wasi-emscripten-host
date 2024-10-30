@@ -12,6 +12,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PermissionDenied
+import at.released.weh.filesystem.error.TooManySymbolicLinks
 import java.io.IOException
 import java.nio.channels.FileChannel
 import java.nio.file.FileAlreadyExistsException
@@ -32,7 +33,11 @@ internal fun Throwable.openCreateErrorToOpenError(path: Path): OpenError = when 
     is IllegalArgumentException -> InvalidArgument("Can not open `$path`: invalid combination of options ($message)")
     is UnsupportedOperationException -> InvalidArgument("Can not open `$path`: unsupported operation ($message)")
     is FileAlreadyExistsException -> Exists("`$path` already exists ($message)")
-    is IOException -> IoError("Can not open `$path`: I/O error ($message)")
+    is IOException -> if (message?.contains("NOFOLLOW_LINKS specified") == true) {
+        TooManySymbolicLinks("Can not open `$path`: too many symbolic links ($message)")
+    } else {
+        IoError("Can not open `$path`: I/O error ($message)")
+    }
     is SecurityException -> PermissionDenied("Can not open `$path`: Permission denied ($message)")
     else -> throw IllegalStateException("Unexpected error", this)
 }

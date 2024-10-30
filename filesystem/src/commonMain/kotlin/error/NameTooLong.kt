@@ -20,6 +20,7 @@ public data class NameTooLong(
     ReadLinkError,
     SetTimestampError,
     StatError,
+    SymlinkError,
     TruncateError,
     UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.NAMETOOLONG

@@ -21,6 +21,7 @@ import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
+import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fstatat
 import at.released.weh.filesystem.platform.linux.readlinkat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -59,16 +60,12 @@ internal fun linuxReadLink(
                 baseDirectoryFd.linuxFd,
                 path,
                 it.addressOf(0),
-                (bufSize - 1).toULong(),
+                bufSize.toULong(),
             )
         }
         when {
             bytesWritten < 0 -> return errno.errnoToReadLinkError().left()
-            bytesWritten < bufSize - 1 -> {
-                buf[bytesWritten.toInt()] = 0
-                return buf.decodeToString().right()
-            }
-
+            bytesWritten < bufSize -> return buf.decodeToString(0, bytesWritten.toInt()).right()
             bufSize == MAX_PATH_SIZE -> return ENAMETOOLONG.errnoToReadLinkError().left()
             else -> bufSize = (bufSize + PATH_STEP).coerceAtMost(MAX_PATH_SIZE)
         }
@@ -84,7 +81,7 @@ private fun getInitialBufSize(
         baseDirectoryFd.linuxFd,
         path,
         statBuf.ptr,
-        AT_EMPTY_PATH,
+        AT_EMPTY_PATH or AT_SYMLINK_NOFOLLOW,
     )
     if (exitCode < 0) {
         return errno.errnoToReadLinkError().left()

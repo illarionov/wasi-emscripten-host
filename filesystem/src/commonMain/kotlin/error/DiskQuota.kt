@@ -14,6 +14,7 @@ public data class DiskQuota(
     CloseError,
     MkdirError,
     OpenError,
+    SymlinkError,
     WriteError {
     override val errno: FileSystemErrno = FileSystemErrno.DQUOT
 }

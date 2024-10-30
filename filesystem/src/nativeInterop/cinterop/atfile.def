@@ -53,3 +53,4 @@ extern int utimensat (int fd, const char *path, const struct timespec times[2], 
 extern int fchownat (int fd, const char *file, int owner, int group, int flag);
 extern long readlinkat (int fd, const char *path, char *buf, unsigned long len);
 extern int unlinkat (int fd, const char *path, int flags);
+extern int symlinkat (const char *target, int newfd, const char *linkpath);

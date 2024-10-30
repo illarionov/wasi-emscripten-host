@@ -21,6 +21,7 @@ public data class NoEntry(
     ReadLinkError,
     SetTimestampError,
     StatError,
+    SymlinkError,
     TruncateError,
     UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.NOENT

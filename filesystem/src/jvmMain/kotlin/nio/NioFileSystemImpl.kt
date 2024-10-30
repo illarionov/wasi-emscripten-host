@@ -39,6 +39,7 @@ import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StatFd
+import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
@@ -87,6 +88,7 @@ internal class NioFileSystemImpl(
         SetTimestampFd to NioSetTimestampFd(fsState),
         Stat to NioStat(fsState),
         StatFd to NioStatFd(fsState),
+        Symlink to NioSymlink(fsState),
         SyncFd to NioSync(fsState),
         TruncateFd to NioTruncateFd(fsState),
         UnlinkFile to NioUnlinkFile(fsState.pathResolver),

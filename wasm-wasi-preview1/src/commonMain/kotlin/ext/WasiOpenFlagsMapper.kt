@@ -7,6 +7,9 @@
 package at.released.weh.wasi.preview1.ext
 
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.wasi.preview1.type.Lookupflags
+import at.released.weh.wasi.preview1.type.LookupflagsFlag
+import at.released.weh.wasi.preview1.type.LookupflagsType
 import at.released.weh.wasi.preview1.type.OflagsFlag
 import at.released.weh.wasi.preview1.type.OflagsType
 import at.released.weh.wasi.preview1.type.RightsType
@@ -28,6 +31,7 @@ internal object WasiOpenFlagsMapper {
     fun getFsOpenFlags(
         @OflagsType wasiOpenFlags: WasiOflags,
         @RightsType wasiFdRights: WasiRights,
+        @LookupflagsType dirFlags: Lookupflags,
     ): Int {
         val wasiFlags = getFsOpenFlagsBase(wasiOpenFlags)
         val isDirectory = (wasiFlags and FsOpenFileFlag.O_DIRECTORY == FsOpenFileFlag.O_DIRECTORY)
@@ -44,7 +48,13 @@ internal object WasiOpenFlagsMapper {
             0
         }
 
-        return wasiFlags or openMode
+        val followSymlinks = if (dirFlags and LookupflagsFlag.SYMLINK_FOLLOW == LookupflagsFlag.SYMLINK_FOLLOW) {
+            0
+        } else {
+            FsOpenFileFlag.O_NOFOLLOW
+        }
+
+        return wasiFlags or openMode or followSymlinks
     }
 
     @OpenFileFlagsType

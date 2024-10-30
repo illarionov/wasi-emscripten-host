@@ -23,7 +23,6 @@ import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Fdflags
 import at.released.weh.wasi.preview1.type.FdflagsType
 import at.released.weh.wasi.preview1.type.Lookupflags
-import at.released.weh.wasi.preview1.type.LookupflagsFlag
 import at.released.weh.wasi.preview1.type.LookupflagsType
 import at.released.weh.wasi.preview1.type.Oflags
 import at.released.weh.wasi.preview1.type.OflagsType
@@ -60,13 +59,12 @@ public class PathOpenFunctionHandle(
             Open(
                 path = pathString,
                 baseDirectory = BaseDirectory.DirectoryFd(fd),
-                openFlags = WasiOpenFlagsMapper.getFsOpenFlags(oflags, rights),
+                openFlags = WasiOpenFlagsMapper.getFsOpenFlags(oflags, rights, dirFlags),
                 fdFlags = WasiFdFlagsMapper.getFsFdlags(fdflags),
                 rights = Open.Rights(
                     rights = WasiRightsMapper.getFsRights(rights),
                     rightsInheriting = WasiRightsMapper.getFsRights(rightsInheriting),
                 ),
-                followSymlinks = dirFlags and LookupflagsFlag.SYMLINK_FOLLOW != 0,
             ),
         ).onRight {
             memory.writeI32(expectedFdAddr, it)

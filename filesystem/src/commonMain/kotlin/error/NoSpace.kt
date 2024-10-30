@@ -14,6 +14,7 @@ public data class NoSpace(
     CloseError,
     OpenError,
     MkdirError,
+    SymlinkError,
     SyncError,
     TruncateError,
     UnlinkError,

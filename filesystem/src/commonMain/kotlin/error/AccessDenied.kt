@@ -22,6 +22,7 @@ public data class AccessDenied(
     ReadLinkError,
     SetTimestampError,
     StatError,
+    SymlinkError,
     TruncateError,
     UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.ACCES

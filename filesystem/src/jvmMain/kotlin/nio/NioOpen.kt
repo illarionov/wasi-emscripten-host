@@ -43,11 +43,12 @@ internal class NioOpen(
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
         val virtualPath = input.path // XXX needs better relative path checking
+        val followSymlinks = input.openFlags and OpenFileFlag.O_NOFOLLOW != OpenFileFlag.O_NOFOLLOW
         val path: Path = fsState.pathResolver.resolve(
             input.path,
             input.baseDirectory,
             allowEmptyPath = true,
-            followSymlinks = input.followSymlinks,
+            followSymlinks = followSymlinks,
         )
             .mapLeft(ResolvePathError::toCommonError)
             .bind()
