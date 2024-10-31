@@ -37,6 +37,7 @@ import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StatFd
+import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
@@ -69,6 +70,7 @@ public class LinuxFileSystemImpl(
         ChownFd to LinuxChownFd(fsState),
         FdAttributes to LinuxFdAttributes(fsState),
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
+        Symlink to LinuxSymlink(fsState),
         Mkdir to LinuxMkdir(fsState),
         PrestatFd to LinuxPrestatFd(fsState),
         ReadFd to LinuxReadFd(fsState),

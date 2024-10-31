@@ -4,13 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.error
+package at.released.weh.filesystem.testutil
 
-public sealed interface ResolveRelativePathErrors :
-    ChmodError,
-    ChownError,
-    MkdirError,
-    OpenError,
-    ReadLinkError,
-    SetTimestampError,
-    SymlinkError
+import kotlinx.io.files.Path
+
+internal actual fun createSymlink(oldPath: String, newPath: Path) {
+    error("Not implemented")
+}

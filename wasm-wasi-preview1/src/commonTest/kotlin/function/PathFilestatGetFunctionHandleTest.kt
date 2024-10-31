@@ -20,10 +20,9 @@ import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.wasi.preview1.ext.FILESTAT_PACKED_SIZE
-import at.released.weh.wasi.preview1.ext.encodeToBuffer
+import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.LookupflagsFlag.SYMLINK_FOLLOW
-import at.released.weh.wasm.core.memory.sinkWithMaxSize
 import at.released.weh.wasm.core.memory.sourceWithMaxSize
 import at.released.weh.wasm.core.test.fixtures.TestMemory
 import kotlinx.io.buffered
@@ -72,10 +71,8 @@ class PathFilestatGetFunctionHandleTest {
         fileSystem.onOperation(Stat) { _ -> testStructStat.right() }
 
         val testPathAddr = 0x80
-        val testPath = "testPath".encodeToBuffer()
-        memory.sinkWithMaxSize(testPathAddr, testPath.size.toInt()).use {
-            it.write(testPath, testPath.size)
-        }
+        val testPath = "testPath"
+        val testPathBinarySize = memory.writeFilesystemPath(testPathAddr, testPath)
 
         val testAddr = 0x200
         val errNo = filestatGetFunctionHandle.execute(
@@ -83,7 +80,7 @@ class PathFilestatGetFunctionHandleTest {
             fd = 4,
             flags = SYMLINK_FOLLOW,
             path = testPathAddr,
-            pathSize = testPath.size.toInt(),
+            pathSize = testPathBinarySize,
             filestatAddr = testAddr,
         )
 
@@ -92,6 +89,7 @@ class PathFilestatGetFunctionHandleTest {
             assertThat(source.readLongLe()).isEqualTo(testStructStat.deviceId)
             assertThat(source.readLongLe()).isEqualTo(testStructStat.inode)
             assertThat(source.readIntLe()).isEqualTo(testStructStat.type.id)
+            source.readIntLe() // Alignment
             assertThat(source.readLongLe()).isEqualTo(testStructStat.links)
             assertThat(source.readLongLe()).isEqualTo(testStructStat.size)
             assertThat(source.readLongLe()).isEqualTo(testStructStat.accessTime.timeNanos)

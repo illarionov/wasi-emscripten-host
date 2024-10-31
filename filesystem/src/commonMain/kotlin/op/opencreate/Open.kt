@@ -40,8 +40,6 @@ public data class Open(
     public val mode: Int? = null,
 
     public val rights: Rights? = null,
-
-    public val followSymlinks: Boolean = true,
 ) {
     override fun toString(): String {
         return "Open(" +
@@ -50,7 +48,6 @@ public data class Open(
                 "flags=${openFileFlagsToString(openFlags)}, " +
                 "mode=${mode?.toString(8) ?: "null"}, " +
                 "rights=$rights, " +
-                "followSymlinks=$followSymlinks" +
                 ")"
     }
 

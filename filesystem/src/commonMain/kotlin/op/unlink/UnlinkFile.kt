@@ -10,6 +10,9 @@ import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 
+/**
+ * Remove a file or symbolic link at [path] relative to the base directory [baseDirectory].
+ */
 public data class UnlinkFile(
     public val path: String,
     public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,

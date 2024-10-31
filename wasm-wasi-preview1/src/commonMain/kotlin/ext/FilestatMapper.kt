@@ -14,7 +14,7 @@ import kotlinx.io.Sink
 import kotlinx.io.writeIntLe
 import kotlinx.io.writeLongLe
 
-internal const val FILESTAT_PACKED_SIZE = 60
+internal const val FILESTAT_PACKED_SIZE = 64
 
 internal fun Filestat.packTo(
     sink: Sink,
@@ -22,6 +22,7 @@ internal fun Filestat.packTo(
     sink.writeLongLe(this.dev)
     sink.writeLongLe(this.ino)
     sink.writeIntLe(this.filetype.code)
+    sink.writeIntLe(0) // Alignment
     sink.writeLongLe(this.nlink)
     sink.writeLongLe(this.size)
     sink.writeLongLe(this.atim)

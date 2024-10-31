@@ -33,7 +33,6 @@ wasiTestsuiteTestGen {
         "sock_shutdown-not_sock",
     )
     rustIgnores = listOf(
-        "dangling_symlink",
         "dir_fd_op_failures",
         "fd_advise",
         "fd_fdstat_set_rights",
@@ -46,7 +45,6 @@ wasiTestsuiteTestGen {
         "interesting_paths",
         "nofollow_errors",
         "overwrite_preopen",
-        "path_exists",
         "path_filestat",
         "path_link",
         "path_open_dirfd_not_dir",
@@ -54,15 +52,10 @@ wasiTestsuiteTestGen {
         "path_open_read_write",
         "path_rename",
         "path_rename_dir_trailing_slashes",
-        "path_symlink_trailing_slashes",
         "poll_oneoff_stdio",
-        "readlink",
         "renumber",
         "stdio",
-        "symlink_create",
         "symlink_filestat",
-        "symlink_loop",
-        "truncation_rights",
         "unlink_file_trailing_slashes",
     )
 }

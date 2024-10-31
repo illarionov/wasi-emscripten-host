@@ -22,6 +22,7 @@ import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.Filestat
 import at.released.weh.wasi.preview1.type.Lookupflags
+import at.released.weh.wasi.preview1.type.LookupflagsFlag.SYMLINK_FOLLOW
 import at.released.weh.wasi.preview1.type.LookupflagsType
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -32,7 +33,6 @@ import kotlinx.io.buffered
 public class PathFilestatGetFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(PATH_FILESTAT_GET, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
         memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
@@ -45,7 +45,13 @@ public class PathFilestatGetFunctionHandle(
             return it
         }
 
-        return host.fileSystem.execute(Stat, Stat(pathString, DirectoryFd(fd)))
+        val statRequest = Stat(
+            path = pathString,
+            baseDirectory = DirectoryFd(fd),
+            followSymlinks = flags and SYMLINK_FOLLOW == SYMLINK_FOLLOW,
+        )
+
+        return host.fileSystem.execute(Stat, statRequest)
             .onRight { stat ->
                 memory.sinkWithMaxSize(filestatAddr, FILESTAT_PACKED_SIZE).buffered().use {
                     stat.toFilestat().packTo(it)

@@ -22,6 +22,7 @@ import at.released.weh.filesystem.op.unlink.UnlinkFile
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
+import java.nio.file.LinkOption.NOFOLLOW_LINKS
 import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -32,11 +33,16 @@ internal class NioUnlinkFile(
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
     @Suppress("ReturnCount")
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
-        val path: Path = pathResolver.resolve(input.path, input.baseDirectory, false)
+        val path: Path = pathResolver.resolve(
+            input.path,
+            input.baseDirectory,
+            allowEmptyPath = false,
+            followSymlinks = false,
+        )
             .mapLeft { it.toUnlinkError() }
             .getOrElse { return it.left() }
 
-        if (path.isDirectory()) {
+        if (path.isDirectory(NOFOLLOW_LINKS)) {
             return PathIsDirectory("`$path` is a directory").left()
         }
 

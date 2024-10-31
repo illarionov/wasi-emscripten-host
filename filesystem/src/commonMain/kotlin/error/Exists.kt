@@ -12,6 +12,7 @@ public data class Exists(
     override val message: String,
 ) : FileSystemOperationError,
     MkdirError,
-    OpenError {
+    OpenError,
+    SymlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.EXIST
 }

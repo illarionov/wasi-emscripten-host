@@ -20,6 +20,7 @@ public data class TooManySymbolicLinks(
     ReadLinkError,
     SetTimestampError,
     StatError,
+    SymlinkError,
     TruncateError,
     UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.LOOP

@@ -15,9 +15,7 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
-import at.released.weh.wasi.bindings.test.ext.walkBottomUp
 import co.touchlab.kermit.Severity.Verbose
-import kotlinx.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
@@ -51,16 +49,12 @@ public class WasiSuiteTestExecutor(
         prepareTempRoot(arguments.dirs)
         val host = setupHost(arguments)
 
-        val exitCode = try {
-            runtimeTestExecutor.runTest(
-                wasmFile = wasmFilename,
-                host = host,
-                arguments = arguments,
-                rootDir = tempRoot,
-            )
-        } finally {
-            cleanup()
-        }
+        val exitCode = runtimeTestExecutor.runTest(
+            wasmFile = wasmFilename,
+            host = host,
+            arguments = arguments,
+            rootDir = tempRoot,
+        )
         val stdout = testStdout.readContent()
         val stderr = testStderr.readContent()
 
@@ -118,19 +112,5 @@ public class WasiSuiteTestExecutor(
                     }
                 }
         }.build()
-    }
-
-    private fun cleanup() {
-        fileSystem.walkBottomUp(tempRoot)
-            .filter { it != tempRoot }
-            .forEach {
-                try {
-                    fileSystem.delete(it, mustExist = false)
-                } catch (deletionFailed: IOException) {
-                    // XXX: usually symlink, IGNORE for now
-                    @Suppress("DEBUG_PRINT")
-                    println("Can not delete `$it`: $deletionFailed")
-                }
-            }
     }
 }

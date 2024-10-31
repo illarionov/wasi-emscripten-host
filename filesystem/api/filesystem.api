@@ -53,7 +53,7 @@ public final class at/released/weh/filesystem/dsl/StandardInputOutputConfigBlock
 	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 }
 
-public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/AccessDenied;
@@ -128,7 +128,7 @@ public final class at/released/weh/filesystem/error/DirectoryNotEmpty : at/relea
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/DiskQuota : at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/DiskQuota : at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/DiskQuota;
@@ -140,7 +140,7 @@ public final class at/released/weh/filesystem/error/DiskQuota : at/released/weh/
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/Exists : at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError {
+public final class at/released/weh/filesystem/error/Exists : at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SymlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Exists;
@@ -199,7 +199,7 @@ public final class at/released/weh/filesystem/error/InvalidArgument : at/release
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/IoError;
@@ -238,7 +238,7 @@ public final class at/released/weh/filesystem/error/Mlink : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NameTooLong : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/NameTooLong : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NameTooLong;
@@ -274,7 +274,7 @@ public final class at/released/weh/filesystem/error/NoBufferSpace : at/released/
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NoEntry : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/NoEntry : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoEntry;
@@ -298,7 +298,7 @@ public final class at/released/weh/filesystem/error/NoLock : at/released/weh/fil
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NoSpace : at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/NoSpace : at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NoSpace;
@@ -406,7 +406,7 @@ public final class at/released/weh/filesystem/error/PathIsDirectory : at/release
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/PermissionDenied : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/PermissionDenied : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/PermissionDenied;
@@ -442,7 +442,7 @@ public abstract interface class at/released/weh/filesystem/error/ReadError : at/
 public abstract interface class at/released/weh/filesystem/error/ReadLinkError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
-public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/ReadOnlyFileSystem;
@@ -454,7 +454,7 @@ public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/rele
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError {
+public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError {
 }
 
 public abstract interface class at/released/weh/filesystem/error/SeekError : at/released/weh/filesystem/error/FileSystemOperationError {
@@ -467,6 +467,9 @@ public abstract interface class at/released/weh/filesystem/error/SetTimestampErr
 }
 
 public abstract interface class at/released/weh/filesystem/error/StatError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
+public abstract interface class at/released/weh/filesystem/error/SymlinkError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
 public abstract interface class at/released/weh/filesystem/error/SyncError : at/released/weh/filesystem/error/FileSystemOperationError {
@@ -484,7 +487,7 @@ public final class at/released/weh/filesystem/error/TextFileBusy : at/released/w
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/TooManySymbolicLinks;
@@ -1033,21 +1036,19 @@ public final class at/released/weh/filesystem/op/mkdir/Mkdir$Companion : at/rele
 
 public final class at/released/weh/filesystem/op/opencreate/Open {
 	public static final field Companion Lat/released/weh/filesystem/op/opencreate/Open$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()I
 	public final fun component5 ()Ljava/lang/Integer;
 	public final fun component6 ()Lat/released/weh/filesystem/op/opencreate/Open$Rights;
-	public final fun component7 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;Z)Lat/released/weh/filesystem/op/opencreate/Open;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/op/opencreate/Open$Rights;ILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFdFlags ()I
-	public final fun getFollowSymlinks ()Z
 	public final fun getMode ()Ljava/lang/Integer;
 	public final fun getOpenFlags ()I
 	public final fun getPath ()Ljava/lang/String;
@@ -1455,6 +1456,29 @@ public final class at/released/weh/filesystem/op/stat/StructTimespec {
 public final class at/released/weh/filesystem/op/stat/StructTimespecKt {
 	public static final fun getTimeMillis (Lat/released/weh/filesystem/op/stat/StructTimespec;)J
 	public static final fun getTimeNanos (Lat/released/weh/filesystem/op/stat/StructTimespec;)J
+}
+
+public final class at/released/weh/filesystem/op/symlink/Symlink {
+	public static final field Companion Lat/released/weh/filesystem/op/symlink/Symlink$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lat/released/weh/filesystem/model/BaseDirectory;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)Lat/released/weh/filesystem/op/symlink/Symlink;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/symlink/Symlink;Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/symlink/Symlink;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowAbsoluteOldPath ()Z
+	public final fun getNewPath ()Ljava/lang/String;
+	public final fun getNewPathBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
+	public final fun getOldPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/symlink/Symlink$Companion : at/released/weh/filesystem/op/FileSystemOperation {
+	public fun getTag ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/op/sync/SyncFd {

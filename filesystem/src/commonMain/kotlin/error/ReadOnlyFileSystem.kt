@@ -17,6 +17,7 @@ public data class ReadOnlyFileSystem(
     MkdirError,
     OpenError,
     SetTimestampError,
+    SymlinkError,
     TruncateError,
     UnlinkError,
     WriteError {

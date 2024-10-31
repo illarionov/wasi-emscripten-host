@@ -24,6 +24,7 @@ public data class IoError(
     ReadLinkError,
     SetTimestampError,
     StatError,
+    SymlinkError,
     SyncError,
     TruncateError,
     UnlinkError,
