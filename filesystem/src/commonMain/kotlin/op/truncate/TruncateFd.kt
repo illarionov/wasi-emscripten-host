@@ -11,6 +11,13 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
+/**
+ * Truncate or extend a file [fd] to a specified [length].
+ * If the file was larger than this size, the extra data will be discarded.
+ * If the file was smaller than this size, it will be extended as if by writing bytes with the value zero.
+ *
+ * The file offset is not changed.
+ */
 public data class TruncateFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,

@@ -1346,17 +1346,15 @@ public final class at/released/weh/filesystem/op/settimestamp/SetTimestamp$Compa
 
 public final class at/released/weh/filesystem/op/settimestamp/SetTimestampFd {
 	public static final field Companion Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd$Companion;
-	public fun <init> (ILjava/lang/Long;Ljava/lang/Long;Z)V
+	public fun <init> (ILjava/lang/Long;Ljava/lang/Long;)V
 	public final fun component1 ()I
 	public final fun component2 ()Ljava/lang/Long;
 	public final fun component3 ()Ljava/lang/Long;
-	public final fun component4 ()Z
-	public final fun copy (ILjava/lang/Long;Ljava/lang/Long;Z)Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;ILjava/lang/Long;Ljava/lang/Long;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;
+	public final fun copy (ILjava/lang/Long;Ljava/lang/Long;)Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;ILjava/lang/Long;Ljava/lang/Long;ILjava/lang/Object;)Lat/released/weh/filesystem/op/settimestamp/SetTimestampFd;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAtimeNanoseconds ()Ljava/lang/Long;
 	public final fun getFd ()I
-	public final fun getFollowSymlinks ()Z
 	public final fun getMtimeNanoseconds ()Ljava/lang/Long;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

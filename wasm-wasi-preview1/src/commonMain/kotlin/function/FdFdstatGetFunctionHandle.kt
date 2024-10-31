@@ -6,7 +6,6 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.Filetype
@@ -27,10 +26,9 @@ import at.released.weh.filesystem.op.fdattributes.FdRightsType
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_FDSTAT_GET
 import at.released.weh.wasi.preview1.ext.FDSTAT_PACKED_SIZE
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.packTo
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.Fdflags
 import at.released.weh.wasi.preview1.type.FdflagsFlag
 import at.released.weh.wasi.preview1.type.Fdstat
@@ -58,10 +56,7 @@ public class FdFdstatGetFunctionHandle(
                 memory.sinkWithMaxSize(dstAddr, FDSTAT_PACKED_SIZE).buffered().use {
                     prestatResult.toFdStat().packTo(it)
                 }
-            }.fold(
-                ifLeft = FdAttributesError::wasiErrno,
-                ifRight = { _ -> SUCCESS },
-            )
+            }.foldToErrno()
     }
 
     private companion object {

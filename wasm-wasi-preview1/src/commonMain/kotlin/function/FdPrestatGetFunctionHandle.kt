@@ -14,8 +14,8 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.PRESTAT_PACKED_SIZE
 import at.released.weh.wasi.preview1.ext.encodedLength
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.packTo
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Prestat
 import at.released.weh.wasi.preview1.type.PrestatDir
@@ -40,9 +40,6 @@ public class FdPrestatGetFunctionHandle(
                         prNameLen = prestatResult.path.encodedLength(),
                     ).packTo(it)
                 }
-            }.fold(
-                ifLeft = { it.wasiErrno() },
-                ifRight = { _ -> Errno.SUCCESS },
-            )
+            }.foldToErrno()
     }
 }

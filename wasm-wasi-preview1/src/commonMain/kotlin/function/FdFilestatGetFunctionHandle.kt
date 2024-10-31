@@ -13,9 +13,9 @@ import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.FILESTAT_PACKED_SIZE
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.packTo
 import at.released.weh.wasi.preview1.ext.toFilestat
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Filestat
 import at.released.weh.wasm.core.IntWasmPtr
@@ -37,9 +37,6 @@ public class FdFilestatGetFunctionHandle(
                 memory.sinkWithMaxSize(filestatAddr, FILESTAT_PACKED_SIZE).buffered().use {
                     stat.toFilestat().packTo(it)
                 }
-            }.fold(
-                ifLeft = { it.wasiErrno() },
-                ifRight = { _ -> Errno.SUCCESS },
-            )
+            }.foldToErrno()
     }
 }

@@ -13,10 +13,9 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readPathString
-import at.released.weh.wasi.preview1.ext.toWasiErrno
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -37,9 +36,6 @@ public class PathCreateDirectoryFunctionHandle(
         return host.fileSystem.execute(
             Mkdir,
             Mkdir(pathString, BaseDirectory.DirectoryFd(fd), 0b111_111_111, false),
-        ).fold(
-            ifLeft = { it.errno.toWasiErrno() },
-            ifRight = { SUCCESS },
-        )
+        ).foldToErrno()
     }
 }

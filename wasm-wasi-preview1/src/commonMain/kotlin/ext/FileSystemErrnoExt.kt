@@ -6,6 +6,7 @@
 
 package at.released.weh.wasi.preview1.ext
 
+import arrow.core.Either
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
@@ -14,3 +15,8 @@ import at.released.weh.wasi.preview1.type.Errno
 internal fun FileSystemErrno.toWasiErrno(): Errno = Errno.fromCode(this.wasiPreview1Code)!!
 
 internal fun FileSystemOperationError.wasiErrno(): Errno = this.errno.toWasiErrno()
+
+internal fun <E : FileSystemOperationError, R : Any> Either<E, R>.foldToErrno(): Errno = this.fold(
+    ifLeft = FileSystemOperationError::wasiErrno,
+    ifRight = { _ -> Errno.SUCCESS },
+)
