@@ -205,6 +205,11 @@
             <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
          </artifact>
       </component>
+      <component group="dev.equo.ide" name="solstice" version="1.8.0">
+         <artifact name="solstice-1.8.0.jar">
+            <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
+         </artifact>
+      </component>
       <component group="io.github.davidburstrom.contester" name="contester-breakpoint" version="0.2.0">
          <artifact name="contester-breakpoint-0.2.0.jar">
             <pgp value="C0612048F3393B80B22639B4F067A2FD751AE3E4"/>
@@ -310,6 +315,11 @@
             <pgp value="34441E504A937F43EB0DAEF96A65176A0FB1CD0B"/>
          </artifact>
       </component>
+      <component group="org.codehaus.groovy" name="groovy" version="3.0.21">
+         <artifact name="groovy-3.0.21.jar">
+            <pgp value="34441E504A937F43EB0DAEF96A65176A0FB1CD0B"/>
+         </artifact>
+      </component>
       <component group="org.codehaus.mojo" name="animal-sniffer-annotations" version="1.23">
          <artifact name="animal-sniffer-annotations-1.23.jar">
             <pgp value="84789D24DF77A32433CE1F079EB80E92EB2135B1"/>
@@ -347,6 +357,11 @@
       </component>
       <component group="org.gradle.kotlin" name="gradle-kotlin-dsl-plugins" version="4.5.0">
          <artifact name="gradle-kotlin-dsl-plugins-4.5.0.jar">
+            <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
+         </artifact>
+      </component>
+      <component group="org.gradle.kotlin" name="gradle-kotlin-dsl-plugins" version="5.1.1">
+         <artifact name="gradle-kotlin-dsl-plugins-5.1.1.jar">
             <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
          </artifact>
       </component>
