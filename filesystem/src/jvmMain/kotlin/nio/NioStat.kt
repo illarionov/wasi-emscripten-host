@@ -18,7 +18,7 @@ internal class NioStat(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
     override fun invoke(input: Stat): Either<StatError, StructStat> =
-        fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
+        fsState.executeWithPath(input.baseDirectory, input.path, input.followSymlinks) { resolvePathResult ->
             resolvePathResult
                 .mapLeft { NioFileStat.toStatError(it) }
                 .flatMap { NioFileStat.getStat(it, input.followSymlinks) }

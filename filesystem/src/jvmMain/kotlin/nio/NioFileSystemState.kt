@@ -105,9 +105,10 @@ internal class NioFileSystemState private constructor(
     inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
         baseDirectory: BaseDirectory,
         relativePath: VirtualPath,
+        followSymlinks: Boolean = false,
         crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
     ): Either<E, R> {
-        val path = pathResolver.resolve(relativePath, baseDirectory, true)
+        val path = pathResolver.resolve(relativePath, baseDirectory, true, followSymlinks)
         return block(path)
     }
 

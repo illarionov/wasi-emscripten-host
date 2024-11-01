@@ -8,21 +8,19 @@ package at.released.weh.wasi.preview1.function
 
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
+import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasm.core.memory.Memory
 
 public class FdFilestatSetSizeFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_FILESTAT_SET_SIZE, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
-        memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
         size: Long,
     ): Errno {
-        // TODO
-        return Errno.NOTSUP
+        return host.fileSystem.execute(TruncateFd, TruncateFd(fd, size)).foldToErrno()
     }
 }

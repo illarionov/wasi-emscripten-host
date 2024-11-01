@@ -14,12 +14,11 @@ import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.PATH_FILESTAT_GET
 import at.released.weh.wasi.preview1.ext.FILESTAT_PACKED_SIZE
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.packTo
 import at.released.weh.wasi.preview1.ext.readPathString
 import at.released.weh.wasi.preview1.ext.toFilestat
-import at.released.weh.wasi.preview1.ext.toWasiErrno
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.Filestat
 import at.released.weh.wasi.preview1.type.Lookupflags
 import at.released.weh.wasi.preview1.type.LookupflagsFlag.SYMLINK_FOLLOW
@@ -56,10 +55,6 @@ public class PathFilestatGetFunctionHandle(
                 memory.sinkWithMaxSize(filestatAddr, FILESTAT_PACKED_SIZE).buffered().use {
                     stat.toFilestat().packTo(it)
                 }
-            }
-            .fold(
-                ifLeft = { it.errno.toWasiErrno() },
-                ifRight = { SUCCESS },
-            )
+            }.foldToErrno()
     }
 }

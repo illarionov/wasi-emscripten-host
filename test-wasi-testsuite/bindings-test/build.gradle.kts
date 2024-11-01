@@ -36,7 +36,6 @@ wasiTestsuiteTestGen {
         "dir_fd_op_failures",
         "fd_advise",
         "fd_fdstat_set_rights",
-        "fd_filestat_set",
         "fd_flags_set",
         "fd_readdir",
         "file_allocate",
@@ -45,7 +44,6 @@ wasiTestsuiteTestGen {
         "interesting_paths",
         "nofollow_errors",
         "overwrite_preopen",
-        "path_filestat",
         "path_link",
         "path_open_dirfd_not_dir",
         "path_open_missing",
@@ -54,8 +52,8 @@ wasiTestsuiteTestGen {
         "path_rename_dir_trailing_slashes",
         "poll_oneoff_stdio",
         "renumber",
+        "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
         "stdio",
-        "symlink_filestat",
         "unlink_file_trailing_slashes",
     )
 }

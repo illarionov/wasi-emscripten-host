@@ -8,16 +8,19 @@ package at.released.weh.wasi.preview1.ext
 
 import at.released.weh.wasi.preview1.type.Fdstat
 import kotlinx.io.Sink
-import kotlinx.io.writeIntLe
 import kotlinx.io.writeLongLe
+import kotlinx.io.writeShortLe
 
 internal const val FDSTAT_PACKED_SIZE = 24
 
 internal fun Fdstat.packTo(
     sink: Sink,
 ) {
-    sink.writeIntLe(this.fsFiletype.code)
-    sink.writeIntLe(this.fsFlags.toInt())
+    sink.writeByte(this.fsFiletype.code.toByte())
+    sink.writeByte(0) // Alignment
+    sink.writeShortLe(this.fsFlags)
+    sink.writeShortLe(0) // Alignment
+    sink.writeShortLe(0) // Alignment
     sink.writeLongLe(this.fsRightsBase)
     sink.writeLongLe(this.fsRightsInheriting)
 }

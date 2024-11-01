@@ -6,13 +6,12 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
-import at.released.weh.wasi.preview1.ext.wasiErrno
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.type.Errno
 
 public class FdDatasyncFunctionHandle(
@@ -20,9 +19,5 @@ public class FdDatasyncFunctionHandle(
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_DATASYNC, host) {
     public fun execute(
         @IntFileDescriptor fd: FileDescriptor,
-    ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, false))
-        .fold(
-            ifLeft = SyncError::wasiErrno,
-            ifRight = { Errno.SUCCESS },
-        )
+    ): Errno = host.fileSystem.execute(SyncFd, SyncFd(fd, false)).foldToErrno()
 }

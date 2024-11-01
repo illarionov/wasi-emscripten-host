@@ -7,7 +7,6 @@
 package at.released.weh.wasi.preview1.function
 
 import arrow.core.getOrElse
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -17,8 +16,8 @@ import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WasiFdFlagsMapper
 import at.released.weh.wasi.preview1.ext.WasiOpenFlagsMapper
 import at.released.weh.wasi.preview1.ext.WasiRightsMapper
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readPathString
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Fdflags
 import at.released.weh.wasi.preview1.type.FdflagsType
@@ -68,9 +67,6 @@ public class PathOpenFunctionHandle(
             ),
         ).onRight {
             memory.writeI32(expectedFdAddr, it)
-        }.fold(
-            ifLeft = OpenError::wasiErrno,
-            ifRight = { Errno.SUCCESS },
-        )
+        }.foldToErrno()
     }
 }

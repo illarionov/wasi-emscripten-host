@@ -7,7 +7,6 @@
 package at.released.weh.wasi.preview1.function
 
 import arrow.core.getOrElse
-import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -15,8 +14,8 @@ import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.encodeToBuffer
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readPathString
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -49,9 +48,6 @@ public class PathReadlinkFunctionHandle(
                 it.write(targetEncoded, size.toLong())
             }
             memory.writeI32(sizeAddr, size)
-        }.fold(
-            ifLeft = FileSystemOperationError::wasiErrno,
-            ifRight = { Errno.SUCCESS },
-        )
+        }.foldToErrno()
     }
 }

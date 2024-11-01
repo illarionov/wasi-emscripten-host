@@ -24,13 +24,10 @@ internal fun nioSetTimestamp(
     mtimeNanoseconds: Long?,
 ): Either<SetTimestampError, Unit> {
     val options = asLinkOptions(followSymlinks = followSymlinks)
+    val newAtime = atimeNanoseconds?.let { FileTime.from(it, NANOSECONDS) }
+    val newMtime = mtimeNanoseconds?.let { FileTime.from(it, NANOSECONDS) }
     return Either.catch {
-        path.fileAttributesView<BasicFileAttributeView>(options = options)
-            .setTimes(
-                atimeNanoseconds?.let { FileTime.from(it, NANOSECONDS) },
-                mtimeNanoseconds?.let { FileTime.from(it, NANOSECONDS) },
-                null,
-            )
+        path.fileAttributesView<BasicFileAttributeView>(options = options).setTimes(newMtime, newAtime, null)
     }.mapLeft {
         when (it) {
             is IOException -> IoError("I/O error: ${it.message}")

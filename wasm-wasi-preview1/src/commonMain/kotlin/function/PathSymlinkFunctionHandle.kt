@@ -8,15 +8,14 @@ package at.released.weh.wasi.preview1.function
 
 import arrow.core.getOrElse
 import arrow.core.raise.either
-import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readPathString
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -45,9 +44,6 @@ public class PathSymlinkFunctionHandle(
         host.fileSystem.execute(
             Symlink,
             Symlink(oldPathString, newPathString, BaseDirectory.DirectoryFd(fd)),
-        ).fold(
-            ifLeft = FileSystemOperationError::wasiErrno,
-            ifRight = { Errno.SUCCESS },
-        )
+        ).foldToErrno()
     }.getOrElse { it }
 }

@@ -16,7 +16,6 @@ public data class SetTimestampFd(
     public val fd: FileDescriptor,
     public val atimeNanoseconds: Long?,
     public val mtimeNanoseconds: Long?,
-    public val followSymlinks: Boolean,
 ) {
    public companion object : FileSystemOperation<SetTimestampFd, SetTimestampError, Unit> {
        override val tag: String = "settsfd"

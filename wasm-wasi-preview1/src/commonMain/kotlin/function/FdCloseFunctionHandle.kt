@@ -11,7 +11,7 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
-import at.released.weh.wasi.preview1.ext.toWasiErrno
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.type.Errno
 
 public class FdCloseFunctionHandle(
@@ -19,9 +19,5 @@ public class FdCloseFunctionHandle(
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_CLOSE, host) {
     public fun execute(
         @IntFileDescriptor fd: FileDescriptor,
-    ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd))
-        .fold(
-            ifLeft = { it.errno.toWasiErrno() },
-            ifRight = { Errno.SUCCESS },
-        )
+    ): Errno = host.fileSystem.execute(CloseFd, CloseFd(fd)).foldToErrno()
 }

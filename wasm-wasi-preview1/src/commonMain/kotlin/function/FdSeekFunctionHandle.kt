@@ -6,14 +6,13 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WhenceMapper
-import at.released.weh.wasi.preview1.ext.wasiErrno
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Filedelta
 import at.released.weh.wasi.preview1.type.FiledeltaType
@@ -38,9 +37,6 @@ public class FdSeekFunctionHandle(
             SeekFd(fd = fd, fileDelta = offset, whence = whence),
         ).onRight { newPosition ->
             memory.writeI64(pNewOffset, newPosition)
-        }.fold(
-            ifLeft = SeekError::wasiErrno,
-            ifRight = { _ -> Errno.SUCCESS },
-        )
+        }.foldToErrno()
     }
 }

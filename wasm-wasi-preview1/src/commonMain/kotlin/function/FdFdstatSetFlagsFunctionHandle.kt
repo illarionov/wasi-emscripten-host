@@ -6,14 +6,13 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.setfdflags.SetFdFlags
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.WasiFdFlagsMapper
-import at.released.weh.wasi.preview1.ext.wasiErrno
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Fdflags
 
@@ -25,10 +24,6 @@ public class FdFdstatSetFlagsFunctionHandle(
         fdflags: Fdflags,
     ): Errno {
         val fsFlags = WasiFdFlagsMapper.getFsFdlags(fdflags)
-        return host.fileSystem.execute(SetFdFlags, SetFdFlags(fd, fsFlags))
-            .fold(
-                ifLeft = SetFdFlagsError::wasiErrno,
-                ifRight = { Errno.SUCCESS },
-            )
+        return host.fileSystem.execute(SetFdFlags, SetFdFlags(fd, fsFlags)).foldToErrno()
     }
 }

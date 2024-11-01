@@ -6,14 +6,13 @@
 
 package at.released.weh.wasi.preview1.function
 
-import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readCiovecs
-import at.released.weh.wasi.preview1.ext.wasiErrno
 import at.released.weh.wasi.preview1.memory.WasiMemoryWriter
 import at.released.weh.wasi.preview1.type.Ciovec
 import at.released.weh.wasi.preview1.type.CiovecArray
@@ -41,9 +40,6 @@ public class FdPwriteFunctionHandle(
         return bulkWriter.write(fd, ReadWriteStrategy.Position(offset), cioVecs)
             .onRight { writtenBytes ->
                 memory.writeI32(expectedSize, writtenBytes.toInt())
-            }.fold(
-                ifLeft = FileSystemOperationError::wasiErrno,
-                ifRight = { Errno.SUCCESS },
-            )
+            }.foldToErrno()
     }
 }

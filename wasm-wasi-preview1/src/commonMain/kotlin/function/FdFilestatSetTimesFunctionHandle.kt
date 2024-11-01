@@ -6,29 +6,33 @@
 
 package at.released.weh.wasi.preview1.function
 
+import arrow.core.getOrElse
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
+import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
+import at.released.weh.wasi.preview1.ext.foldToErrno
+import at.released.weh.wasi.preview1.ext.getRequestedAtimeMtime
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Fstflags
 import at.released.weh.wasi.preview1.type.FstflagsType
 import at.released.weh.wasi.preview1.type.Timestamp
 import at.released.weh.wasi.preview1.type.TimestampType
-import at.released.weh.wasm.core.memory.Memory
 
 public class FdFilestatSetTimesFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_FILESTAT_SET_TIMES, host) {
-    @Suppress("UNUSED_PARAMETER")
     public fun execute(
-        memory: Memory,
         @IntFileDescriptor fd: FileDescriptor,
         @TimestampType atime: Timestamp,
         @TimestampType mtime: Timestamp,
         @FstflagsType fstflags: Fstflags,
     ): Errno {
-        // TODO
-        return Errno.NOTSUP
+        val reqTimestamps = getRequestedAtimeMtime(host.clock, atime, mtime, fstflags).getOrElse { return it }
+        return host.fileSystem.execute(
+            SetTimestampFd,
+            SetTimestampFd(fd, reqTimestamps.atimeNanoseconds, reqTimestamps.mtimeNanoseconds),
+        ).foldToErrno()
     }
 }

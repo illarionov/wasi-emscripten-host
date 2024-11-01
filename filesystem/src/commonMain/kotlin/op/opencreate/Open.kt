@@ -45,9 +45,10 @@ public data class Open(
         return "Open(" +
                 "path='$path', " +
                 "baseDirectory=$baseDirectory, " +
-                "flags=${openFileFlagsToString(openFlags)}, " +
+                "openFlags=${openFileFlagsToString(openFlags)}, " +
+                "fdFlags=0x${fdFlags.toString(16)}, " +
                 "mode=${mode?.toString(8) ?: "null"}, " +
-                "rights=$rights, " +
+                "rights=$rights" +
                 ")"
     }
 

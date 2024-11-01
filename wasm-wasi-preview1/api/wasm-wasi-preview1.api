@@ -77,12 +77,12 @@ public final class at/released/weh/wasi/preview1/function/FdFilestatGetFunctionH
 
 public final class at/released/weh/wasi/preview1/function/FdFilestatSetSizeFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IJ)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (IJ)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdFilestatSetTimesFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IJJS)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (IJJS)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdPreadFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {

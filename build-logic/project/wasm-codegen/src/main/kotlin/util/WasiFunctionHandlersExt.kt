@@ -13,6 +13,8 @@ internal object WasiFunctionHandlersExt {
         "fd_close",
         "fd_datasync",
         "fd_fdstat_set_flags",
+        "fd_filestat_set_size",
+        "fd_filestat_set_times",
         "fd_sync",
         "proc_exit",
         "sched_yield",
