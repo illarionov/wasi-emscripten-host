@@ -24,7 +24,7 @@ kotlinx-serialization-json = "1.7.3"
 kotlinx-io ="0.5.4"
 kermit = "2.0.4"
 node-plugin = "7.0.2"
-spotless = "7.0.0.BETA2"
+spotless = "7.0.0.BETA4"
 
 [libraries]
 android-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "android-annotation" }
