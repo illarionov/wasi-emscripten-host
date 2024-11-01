@@ -16,5 +16,4 @@ plugins {
 atomicfu {
     transformJvm = true
     jvmVariant = "FU"
-    transformJs = true
 }

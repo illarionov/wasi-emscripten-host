@@ -19,7 +19,7 @@ import kotlin.test.Test
 class SpecialDirectoryEntriesDecoratorTest {
     @Test
     fun special_directory_success_case() {
-        val dirEntryReader: (name: String, realPath: Path, cookie: Long) -> DirEntry = { name, realPath, cookie ->
+        val dirEntryReader: (name: String, realPath: Path, cookie: Long) -> DirEntry = { name, _, _ ->
             when (name) {
                 "." -> TEST_CURRENT_DIR_ENTRY
                 ".." -> TEST_PARENT_DIR_ENTRY
