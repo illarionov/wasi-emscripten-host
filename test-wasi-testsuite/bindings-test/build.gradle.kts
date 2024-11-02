@@ -34,7 +34,6 @@ wasiTestsuiteTestGen {
     )
     rustIgnores = listOf(
         "fd_fdstat_set_rights", // outdated, not used anywhere
-        "interesting_paths",
         "nofollow_errors",
         "overwrite_preopen",
         "path_link",

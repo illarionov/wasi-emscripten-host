@@ -12,6 +12,7 @@ import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver
@@ -52,6 +53,7 @@ internal class NioCheckAccess(
         is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
         is ResolvePathError.NotDirectory -> BaseNotDirectory(message)
         is ResolvePathError.InvalidPath -> NoEntry(message)
-        is ResolvePathError.RelativePath -> NoEntry(message)
+        is ResolvePathError.AbsolutePath -> NoEntry(message)
+        is ResolvePathError.PathOutsideOfRootPath -> NotCapable(message)
     }
 }

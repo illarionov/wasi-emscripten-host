@@ -17,10 +17,12 @@ import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.nio.NioFileSystemState
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.AbsolutePath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -48,10 +50,6 @@ internal class JvmPathResolver(
             return EmptyPath("Empty path is not allowed").left()
         }
 
-        if (nioPath.isAbsolute) {
-            return nioPath.normalize().right()
-        }
-
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
             CurrentWorkingDirectory -> javaFs.getPath("").right()
             is DirectoryFd -> {
@@ -66,6 +64,31 @@ internal class JvmPathResolver(
             }
         }
 
-        return baseDirectoryPath.map { it.resolve(nioPath).normalize() }
+        return baseDirectoryPath.flatMap {
+            if (fsState.isRootAccessAllowed) {
+                it.resolve(nioPath).normalize().right()
+            } else {
+                it.resolveBeneath(nioPath)
+            }
+        }
+    }
+
+    private companion object {
+        private fun Path.resolveBeneath(other: Path): Either<ResolvePathError, Path> {
+            if (other.isAbsolute) {
+                return AbsolutePath("Opening file relative to directory with absolute path").left()
+            }
+            var path = this
+            other.forEach { subpath ->
+                path = path.resolve(subpath).normalize()
+                if (!path.startsWith(this)) {
+                    return PathOutsideOfRootPath(
+                        "Path contains .. component leading to directory outside of base path",
+                    ).left()
+                }
+            }
+            require(path == path.normalize()) { "`$path` != `${path.normalize()}`" }
+            return path.right()
+        }
     }
 }

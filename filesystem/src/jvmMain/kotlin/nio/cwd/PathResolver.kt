@@ -13,7 +13,9 @@ import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import at.released.weh.filesystem.model.FileSystemErrno.INVAL
 import at.released.weh.filesystem.model.FileSystemErrno.NOENT
+import at.released.weh.filesystem.model.FileSystemErrno.NOTCAPABLE
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
+import at.released.weh.filesystem.model.FileSystemErrno.PERM
 import java.nio.file.Path
 
 internal interface PathResolver {
@@ -25,9 +27,9 @@ internal interface PathResolver {
     ): Either<ResolvePathError, Path>
 
     sealed interface ResolvePathError : FileSystemOperationError {
-        class RelativePath(
+        class AbsolutePath(
             override val message: String,
-            override val errno: FileSystemErrno = INVAL,
+            override val errno: FileSystemErrno = PERM,
         ) : ResolvePathError
 
         class InvalidPath(
@@ -48,6 +50,11 @@ internal interface PathResolver {
         class EmptyPath(
             override val message: String,
             override val errno: FileSystemErrno = NOENT,
+        ) : ResolvePathError
+
+        class PathOutsideOfRootPath(
+            override val message: String,
+            override val errno: FileSystemErrno = NOTCAPABLE,
         ) : ResolvePathError
     }
 }

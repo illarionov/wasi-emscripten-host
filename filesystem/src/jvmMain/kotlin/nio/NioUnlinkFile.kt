@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -31,7 +32,6 @@ import at.released.weh.filesystem.error.NotDirectory as BaseNotDirectory
 internal class NioUnlinkFile(
     private val pathResolver: PathResolver,
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
-    @Suppress("ReturnCount")
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
         val path: Path = pathResolver.resolve(
             input.path,
@@ -59,7 +59,8 @@ internal class NioUnlinkFile(
             is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
             is ResolvePathError.InvalidPath -> BadFileDescriptor(message)
             is ResolvePathError.NotDirectory -> BaseNotDirectory(message)
-            is ResolvePathError.RelativePath -> BadFileDescriptor(message)
+            is ResolvePathError.AbsolutePath -> BadFileDescriptor(message)
+            is ResolvePathError.PathOutsideOfRootPath -> NotCapable(message)
         }
 
         internal fun Throwable.toUnlinkError(path: Path): UnlinkError = when (this) {

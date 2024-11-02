@@ -24,7 +24,8 @@ internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
-        checkOpenFlags(input).onLeft { return it.left() }
+        val isDirectoryRequest = input.path.endsWith("/")
+        checkOpenFlags(input.openFlags, input.rights, isDirectoryRequest).onLeft { return it.left() }
 
         val resolveFlags = if (fsState.isRootAccessAllowed) {
             setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)

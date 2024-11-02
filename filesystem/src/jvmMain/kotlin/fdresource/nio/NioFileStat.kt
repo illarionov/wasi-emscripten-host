@@ -12,6 +12,7 @@ import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.ext.asLinkOptions
@@ -21,6 +22,11 @@ import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.AbsolutePath
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPath
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
+import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
 import java.io.IOException
@@ -139,10 +145,11 @@ internal object NioFileStat {
     }
 
     internal fun toStatError(pathError: ResolvePathError): StatError = when (pathError) {
-        is ResolvePathError.EmptyPath -> NoEntry(pathError.message)
-        is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(pathError.message)
-        is ResolvePathError.InvalidPath -> BadFileDescriptor(pathError.message)
+        is EmptyPath -> NoEntry(pathError.message)
+        is FileDescriptorNotOpen -> BadFileDescriptor(pathError.message)
+        is InvalidPath -> BadFileDescriptor(pathError.message)
         is ResolvePathError.NotDirectory -> NotDirectory(pathError.message)
-        is ResolvePathError.RelativePath -> BadFileDescriptor(pathError.message)
+        is AbsolutePath -> BadFileDescriptor(pathError.message)
+        is PathOutsideOfRootPath -> NotCapable(pathError.message)
     }
 }

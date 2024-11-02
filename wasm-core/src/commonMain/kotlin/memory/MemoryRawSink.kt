@@ -55,7 +55,7 @@ public abstract class MemoryRawSink(
 
     private fun checkSinkNotClosed(): Unit = check(!isClosed) { "Sink is closed" }
 
-    protected fun getEndAddressOrThrow(
+    private fun getEndAddressOrThrow(
         byteCount: Long,
     ): Long {
         val endAddrExclusive = baseAddr + byteCount

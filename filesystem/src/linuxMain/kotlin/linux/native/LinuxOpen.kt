@@ -23,6 +23,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.fdFdFlagsToLinuxMask
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.ext.openFileFlagsToLinuxMask
+import at.released.weh.filesystem.linux.ext.validatePath
 import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
@@ -73,6 +74,8 @@ internal fun linuxOpenFileOrDirectory(
 ): Either<OpenError, FileDirectoryFd> = either<OpenError, FileDirectoryFd> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
     val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
+
+    validatePath(path).bind()
 
     if (isExistingDirectory(baseDirectoryFd, path, flags).bind()) {
         val directoryFlags = flags and (O_NOFOLLOW or O_NOATIME or O_CLOEXEC) or O_DIRECTORY
