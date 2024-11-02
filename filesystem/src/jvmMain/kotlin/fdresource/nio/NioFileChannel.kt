@@ -10,13 +10,17 @@ import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import java.nio.channels.FileChannel
+import java.util.concurrent.locks.ReentrantLock
 import java.nio.file.Path as NioPath
 
 @InternalWasiEmscriptenHostApi
-public data class NioFileChannel(
-    val path: NioPath,
-    val channel: FileChannel,
-    val fdFlags: Fdflags,
-)
+public class NioFileChannel(
+    public val path: NioPath,
+    public val channel: FileChannel,
+    @Volatile
+    public var fdFlags: Fdflags,
+) {
+    internal val flagsLock: ReentrantLock = ReentrantLock()
+}
 
 internal fun NioFileChannel.isInAppendMode(): Boolean = fdFlags and FD_APPEND == FD_APPEND

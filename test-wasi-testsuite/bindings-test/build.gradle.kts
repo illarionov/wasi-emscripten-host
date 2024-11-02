@@ -34,7 +34,6 @@ wasiTestsuiteTestGen {
     )
     rustIgnores = listOf(
         "fd_fdstat_set_rights",
-        "fd_flags_set",
         "fd_readdir",
         "file_seek_tell",
         "interesting_paths",
