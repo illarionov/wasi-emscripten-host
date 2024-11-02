@@ -14,7 +14,9 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetFdFlagsError
@@ -69,6 +71,10 @@ internal class NioDirectoryFdResource(
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
         return BadFileDescriptor("Can not sync on a directory").left()
+    }
+
+    override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
+        return PathIsDirectory("Can not allocate on a directory").left()
     }
 
     override fun truncate(length: Long): Either<TruncateError, Unit> {

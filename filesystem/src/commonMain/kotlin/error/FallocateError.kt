@@ -6,15 +6,4 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.FileSystemErrno
-
-public data class PathIsDirectory(
-    override val message: String,
-) : FileSystemOperationError,
-    FallocateError,
-    OpenError,
-    ReadError,
-    TruncateError,
-    UnlinkError {
-    override val errno: FileSystemErrno = FileSystemErrno.ISDIR
-}
+public sealed interface FallocateError : FileSystemOperationError

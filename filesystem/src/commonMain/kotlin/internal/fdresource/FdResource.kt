@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
@@ -42,6 +43,8 @@ internal interface FdResource {
     fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong>
 
     fun sync(syncMetadata: Boolean): Either<SyncError, Unit>
+
+    fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit>
 
     fun truncate(length: Long): Either<TruncateError, Unit>
 

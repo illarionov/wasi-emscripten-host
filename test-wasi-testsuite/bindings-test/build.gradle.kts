@@ -33,12 +33,10 @@ wasiTestsuiteTestGen {
         "sock_shutdown-not_sock",
     )
     rustIgnores = listOf(
-        "dir_fd_op_failures",
         "fd_advise",
         "fd_fdstat_set_rights",
         "fd_flags_set",
         "fd_readdir",
-        "file_allocate",
         "file_seek_tell",
         "fstflags_validate",
         "interesting_paths",

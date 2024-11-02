@@ -12,6 +12,7 @@ public data class NotSupported(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,
+    FallocateError,
     ChmodError,
     ChownError,
     OpenError,

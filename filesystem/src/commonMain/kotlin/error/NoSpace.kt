@@ -12,6 +12,7 @@ public data class NoSpace(
     override val message: String,
 ) : FileSystemOperationError,
     CloseError,
+    FallocateError,
     OpenError,
     MkdirError,
     SymlinkError,

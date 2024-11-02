@@ -16,6 +16,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
@@ -92,6 +93,10 @@ internal class StdioFileFdResource(
                     is StdioReadWriteError.IoError -> IoError(err.message)
                 }
             }
+    }
+
+    override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
+        return BadFileDescriptor("Can not fallocate on stdio descriptor").left()
     }
 
     override fun truncate(length: Long): Either<TruncateError, Unit> {

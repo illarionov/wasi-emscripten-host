@@ -14,6 +14,7 @@ public data class Interrupted(
 ) : FileSystemOperationError,
     AdvisoryLockError,
     CloseError,
+    FallocateError,
     FdAttributesError,
     OpenError,
     ReadError,
