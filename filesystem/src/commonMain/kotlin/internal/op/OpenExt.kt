@@ -13,15 +13,21 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
 import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
-import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.opencreate.Open.Rights
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 
-internal fun checkOpenFlags(open: Open): Either<OpenError, Unit> = either {
-    if (open.rights != null) {
+internal fun checkOpenFlags(
+    @OpenFileFlagsType openFlags: OpenFileFlags,
+    rights: Rights?,
+    isDirectoryRequested: Boolean,
+): Either<OpenError, Unit> = either {
+    if (rights != null) {
         val readWriteMask = FD_READ or FD_WRITE
-        if (open.openFlags and O_DIRECTORY == O_DIRECTORY &&
-            open.rights.rights and readWriteMask == readWriteMask
+        if ((isDirectoryRequested || openFlags and O_DIRECTORY == O_DIRECTORY) &&
+            rights.rights and readWriteMask == readWriteMask
         ) {
             // See wasi-testsuite/tests/rust/src/bin/path_open_preopen.rs
             raise(
@@ -31,7 +37,7 @@ internal fun checkOpenFlags(open: Open): Either<OpenError, Unit> = either {
     }
 
     val createDirectoryMask = OpenFileFlag.O_CREAT or OpenFileFlag.O_DIRECTORY
-    if (open.openFlags and createDirectoryMask == createDirectoryMask) {
+    if (openFlags and createDirectoryMask == createDirectoryMask) {
         raise(InvalidArgument("O_CREAT cannot be used to create directories "))
     }
 }

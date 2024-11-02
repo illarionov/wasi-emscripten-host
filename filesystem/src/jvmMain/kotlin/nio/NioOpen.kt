@@ -53,6 +53,8 @@ internal class NioOpen(
             .mapLeft(ResolvePathError::toCommonError)
             .bind()
 
+        val isDirectoryRequested = virtualPath.endsWith("/")
+
         val openOptionsResult = getOpenOptions(input.openFlags, input.fdFlags)
         if (openOptionsResult.notImplementedFlags != 0U) {
             raise(
@@ -65,13 +67,13 @@ internal class NioOpen(
             arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
         } ?: emptyArray()
 
-        checkOpenFlags(input).bind()
+        checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()
 
         if (path.isDirectory()) {
             return openDirectory(fsState, path, virtualPath)
         }
 
-        if (input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
+        if (isDirectoryRequested || input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
             raise(NotDirectory("Path is not a directory"))
         }
 

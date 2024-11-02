@@ -8,6 +8,7 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.fdresource.nio.ChannelPositionError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -23,7 +24,7 @@ internal class NioSeekFd(
     companion object {
         fun ChannelPositionError.toSeekError(): SeekError = when (this) {
             is ChannelPositionError.ClosedChannel -> BadFileDescriptor(message)
-            is ChannelPositionError.InvalidArgument -> BadFileDescriptor(message)
+            is ChannelPositionError.InvalidArgument -> InvalidArgument(message)
             is ChannelPositionError.IoError -> BadFileDescriptor(message)
         }
     }

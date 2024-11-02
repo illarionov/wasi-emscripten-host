@@ -86,7 +86,6 @@ public abstract class at/released/weh/wasm/core/memory/MemoryRawSink : kotlinx/i
 	public fun close ()V
 	public fun flush ()V
 	protected final fun getBaseAddr ()I
-	protected final fun getEndAddressOrThrow (J)J
 	protected final fun getToAddrExclusive ()I
 	protected final fun setBaseAddr (I)V
 	public fun write (Lkotlinx/io/Buffer;J)V

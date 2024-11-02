@@ -8,6 +8,7 @@ package at.released.weh.filesystem.nio.cwd
 
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
@@ -15,7 +16,8 @@ import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 internal fun ResolvePathError.toCommonError(): ResolveRelativePathErrors = when (this) {
     is ResolvePathError.EmptyPath -> InvalidArgument(message)
     is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
-    is ResolvePathError.InvalidPath -> BadFileDescriptor(message)
+    is ResolvePathError.InvalidPath -> InvalidArgument(message)
     is ResolvePathError.NotDirectory -> NotDirectory(message)
-    is ResolvePathError.RelativePath -> InvalidArgument(message)
+    is ResolvePathError.AbsolutePath -> NotCapable(message)
+    is ResolvePathError.PathOutsideOfRootPath -> NotCapable(message)
 }
