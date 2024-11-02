@@ -80,7 +80,7 @@ public final class at/released/weh/filesystem/error/Again : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/PrestatError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FadviseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/PrestatError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/BadFileDescriptor;
@@ -152,6 +152,9 @@ public final class at/released/weh/filesystem/error/Exists : at/released/weh/fil
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class at/released/weh/filesystem/error/FadviseError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
 public abstract interface class at/released/weh/filesystem/error/FallocateError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
@@ -190,7 +193,7 @@ public final class at/released/weh/filesystem/error/Interrupted : at/released/we
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/InvalidArgument : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/InvalidArgument : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FadviseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/InvalidArgument;
@@ -881,6 +884,40 @@ public final class at/released/weh/filesystem/op/cwd/GetCurrentWorkingDirectory 
 	public fun getTag ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fadvise/Advice : java/lang/Enum {
+	public static final field DONTNEED Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static final field NOREUSE Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static final field NORMAL Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static final field RANDOM Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static final field SEQUENTIAL Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static final field WILLNEED Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/op/fadvise/Advice;
+	public static fun values ()[Lat/released/weh/filesystem/op/fadvise/Advice;
+}
+
+public final class at/released/weh/filesystem/op/fadvise/FadviseFd {
+	public static final field Companion Lat/released/weh/filesystem/op/fadvise/FadviseFd$Companion;
+	public fun <init> (IJJLat/released/weh/filesystem/op/fadvise/Advice;)V
+	public final fun component1 ()I
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun component4 ()Lat/released/weh/filesystem/op/fadvise/Advice;
+	public final fun copy (IJJLat/released/weh/filesystem/op/fadvise/Advice;)Lat/released/weh/filesystem/op/fadvise/FadviseFd;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/fadvise/FadviseFd;IJJLat/released/weh/filesystem/op/fadvise/Advice;ILjava/lang/Object;)Lat/released/weh/filesystem/op/fadvise/FadviseFd;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAdvice ()Lat/released/weh/filesystem/op/fadvise/Advice;
+	public final fun getFd ()I
+	public final fun getLength ()J
+	public final fun getOffset ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fadvise/FadviseFd$Companion : at/released/weh/filesystem/op/FileSystemOperation {
+	public fun getTag ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/op/fallocate/FallocateFd {
