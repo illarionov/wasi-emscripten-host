@@ -73,39 +73,7 @@ public class FdReaddirFunctionHandle(
             )
     }
 
-    private fun packDirEntriesToBuf(
-        sequence: Sequence<DirEntry>,
-        sink: Sink,
-        maxSize: Int,
-    ): Either<Errno, Int> = Either.catch {
-        var bytesLeft = maxSize
-
-        if (bytesLeft < DIRENT_PACKED_SIZE) {
-            return@catch 0
-        }
-
-        for (dirEntry: DirEntry in sequence) {
-            val (dirent, encodedName) = dirEntry.toDirEntWithName()
-            dirent.packTo(sink)
-            bytesLeft -= DIRENT_PACKED_SIZE
-
-            val maxNameLength = dirent.dNamlen.coerceAtMost(bytesLeft)
-            sink.write(encodedName, maxNameLength.toLong())
-            bytesLeft -= maxNameLength
-
-            if (bytesLeft == 0) {
-                break
-            }
-        }
-        maxSize - bytesLeft
-    }.mapLeft { throwable ->
-        when (throwable) {
-            is IOException -> IO
-            else -> INVAL
-        }
-    }
-
-    private companion object {
+    internal companion object {
         fun DirEntry.toDirEntWithName(): Pair<Dirent, Buffer> {
             val encodedName = this.name.encodeToBuffer()
             return Dirent(
@@ -116,6 +84,43 @@ public class FdReaddirFunctionHandle(
                     "Unexpected type ${this.type.id}"
                 },
             ) to encodedName
+        }
+
+        internal fun packDirEntriesToBuf(
+            sequence: Sequence<DirEntry>,
+            sink: Sink,
+            maxSize: Int,
+        ): Either<Errno, Int> = Either.catch {
+            var bytesLeft = maxSize
+
+            @Suppress("LoopWithTooManyJumpStatements")
+            for (dirEntry: DirEntry in sequence) {
+                val (dirent, encodedName) = dirEntry.toDirEntWithName()
+
+                when {
+                    bytesLeft >= DIRENT_PACKED_SIZE -> {
+                        dirent.packTo(sink)
+                        bytesLeft -= DIRENT_PACKED_SIZE
+                    }
+                    bytesLeft != 0 -> {
+                        val packedDirent = Buffer().also { dirent.packTo(it) }
+                        sink.write(packedDirent, bytesLeft.toLong())
+                        bytesLeft = 0
+                        break
+                    }
+                    else -> break
+                }
+
+                val maxNameLength = dirent.dNamlen.coerceAtMost(bytesLeft)
+                sink.write(encodedName, maxNameLength.toLong())
+                bytesLeft -= maxNameLength
+            }
+            maxSize - bytesLeft
+        }.mapLeft { throwable ->
+            when (throwable) {
+                is IOException -> IO
+                else -> INVAL
+            }
         }
     }
 }

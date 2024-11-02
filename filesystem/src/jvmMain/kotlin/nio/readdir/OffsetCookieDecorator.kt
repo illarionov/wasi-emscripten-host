@@ -33,8 +33,9 @@ internal class OffsetCookieDecorator(
             throw NoSuchElementException()
         }
 
-        val next = delegate.next().copy(cookie = currentOffset)
         currentOffset += 1
+        val next = delegate.next().copy(cookie = currentOffset)
+
         return next
     }
 

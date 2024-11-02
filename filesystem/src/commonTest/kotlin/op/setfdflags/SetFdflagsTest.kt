@@ -64,7 +64,7 @@ class SetFdflagsTest : BaseFileSystemIntegrationTest() {
             }
             assertThat(newFlags)
                 .isIn(
-                    FdFlag.FD_APPEND or FdFlag.FD_SYNC, // JVM
+                    FdFlag.FD_SYNC, // JVM
                     FdFlag.FD_DSYNC or FdFlag.FD_RSYNC or FdFlag.FD_SYNC, // Linux, sync flag is not changeable
                 )
         }
