@@ -32,9 +32,9 @@ class OffsetCookieDecoratorTest {
         val files: List<DirEntry> = iterator.asSequence().toList()
 
         assertThat(files).containsExactlyInAnyOrder(
-            TEST_CURRENT_DIR_ENTRY.copy(cookie = 0),
-            TEST_PARENT_DIR_ENTRY.copy(cookie = 1),
-            testDirEntry.copy(cookie = 2),
+            TEST_CURRENT_DIR_ENTRY.copy(cookie = 1),
+            TEST_PARENT_DIR_ENTRY.copy(cookie = 2),
+            testDirEntry.copy(cookie = 3),
         )
     }
 
@@ -49,30 +49,35 @@ class OffsetCookieDecoratorTest {
 
     @Test
     fun start_offset_should_work() {
-        val dir0 = TEST_CURRENT_DIR_ENTRY
-        val dir1 = TEST_PARENT_DIR_ENTRY
-        val dir2 = DirEntry("testdir", DIRECTORY, 0, 0)
+        val dir1 = TEST_CURRENT_DIR_ENTRY
+        val dir2 = TEST_PARENT_DIR_ENTRY
+        val dir3 = DirEntry("testdir", DIRECTORY, 0, 0)
 
         tableOf("list", "startOffset", "expectedResult")
             .row(
-                listOf(dir0, dir1, dir2),
+                listOf(dir1, dir2, dir3),
                 1L,
-                listOf(dir1.copy(cookie = 1), dir2.copy(cookie = 2)),
+                listOf(dir2.copy(cookie = 2), dir3.copy(cookie = 3)),
             )
             .row(
-                listOf(dir0, dir1, dir2),
+                listOf(dir1, dir2, dir3),
                 2L,
-                listOf(dir2.copy(cookie = 2)),
+                listOf(dir3.copy(cookie = 3)),
             )
             .row(
-                listOf(dir0, dir1, dir2),
+                listOf(dir1, dir2, dir3),
                 3L,
                 listOf(),
             )
             .row(
-                listOf(dir0, dir1, dir2),
+                listOf(dir1, dir2, dir3),
                 4L,
                 listOf(),
+            )
+            .row(
+                listOf(dir1),
+                1L,
+                emptyList(),
             )
             .row(listOf(), 0L, listOf())
             .row(listOf(), 1L, listOf())

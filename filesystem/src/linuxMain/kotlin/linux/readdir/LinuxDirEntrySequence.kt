@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.linux.readdir
 
+import at.released.weh.filesystem.linux.readdir.ReadDirResult.Entry
 import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd.DirSequenceStartPosition
@@ -18,6 +19,7 @@ import kotlinx.io.IOException
 import platform.posix.DIR
 import platform.posix.closedir
 import platform.posix.errno
+import platform.posix.rewinddir
 import platform.posix.seekdir
 import platform.posix.strerror
 
@@ -27,16 +29,32 @@ internal class LinuxDirEntrySequence(
     private val startPosition: DirSequenceStartPosition,
 ) : DirEntrySequence {
     private val isClosed: AtomicBoolean = atomic(false)
+    private var instance: Iterator<DirEntry>? = null
 
     override fun iterator(): Iterator<DirEntry> {
-        if (startPosition is Cookie) {
-            // XXX: location returned by the telldir is valid only within the same opened descriptor DIR.
-            seekdir(dir, startPosition.cookie)
+        check(instance == null) { "Iterator should be used only once" }
+        val firstEntry = when (startPosition) {
+            is Cookie -> {
+                // XXX: location returned by the telldir is valid only within the same opened descriptor DIR.
+                seekdir(dir, startPosition.cookie)
+                val cookiedEntry: ReadDirResult = linuxReadDir(dir)
+                if (cookiedEntry is Entry && cookiedEntry.entry.cookie == startPosition.cookie) {
+                    linuxReadDir(dir)
+                } else {
+                    cookiedEntry
+                }
+            }
+
+            else -> {
+                rewinddir(dir)
+                linuxReadDir(dir)
+            }
         }
-        val firstEntry = linuxReadDir(dir)
-        return LinuxDirectoryIterator(firstEntry, isClosed::value) {
+        val iterator = LinuxDirectoryIterator(firstEntry, isClosed::value) {
             linuxReadDir(dir)
         }
+        instance = iterator
+        return iterator
     }
 
     override fun close() {
