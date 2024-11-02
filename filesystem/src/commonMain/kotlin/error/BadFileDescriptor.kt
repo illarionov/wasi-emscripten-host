@@ -16,6 +16,7 @@ public data class BadFileDescriptor(
     CheckAccessError,
     ChmodError,
     ChownError,
+    FadviseError,
     FallocateError,
     CloseError,
     FdAttributesError,

@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.IoError
@@ -42,6 +43,7 @@ import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioSeekFd.Companion.toSeekError
+import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
@@ -84,6 +86,11 @@ internal class NioFileFdResource(
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = channel.sync(syncMetadata)
+
+    override fun fadvise(offset: Long, length: Long, advice: Advice): Either<FadviseError, Unit> {
+        // Not applicable on JVM
+        return Unit.right()
+    }
 
     override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
         return channel.nioFallocate(offset, length)

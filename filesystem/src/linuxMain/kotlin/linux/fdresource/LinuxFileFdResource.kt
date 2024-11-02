@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
@@ -25,6 +26,7 @@ import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.linux.native.linuxAddAdvisoryLockFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
 import at.released.weh.filesystem.linux.native.linuxChownFd
+import at.released.weh.filesystem.linux.native.linuxFadvise
 import at.released.weh.filesystem.linux.native.linuxFdAttributes
 import at.released.weh.filesystem.linux.native.linuxRemoveAdvisoryLock
 import at.released.weh.filesystem.linux.native.linuxSeek
@@ -39,6 +41,7 @@ import at.released.weh.filesystem.linux.native.posixRead
 import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
+import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
@@ -71,6 +74,10 @@ internal class LinuxFileFdResource(
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(channel.fd, syncMetadata)
+
+    override fun fadvise(offset: Long, length: Long, advice: Advice): Either<FadviseError, Unit> {
+        return linuxFadvise(channel.fd, offset, length, advice)
+    }
 
     override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
         return posixFallocate(channel.fd, offset, length)

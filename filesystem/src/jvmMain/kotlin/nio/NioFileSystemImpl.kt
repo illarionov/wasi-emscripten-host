@@ -23,6 +23,7 @@ import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.op.fadvise.FadviseFd
 import at.released.weh.filesystem.op.fallocate.FallocateFd
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
@@ -76,6 +77,7 @@ internal class NioFileSystemImpl(
         ChmodFd to NioChmodFd(fsState),
         Chown to NioChown(fsState),
         ChownFd to NioChownFd(fsState),
+        FadviseFd to NioFadviseFd(fsState),
         FallocateFd to NioFallocate(fsState),
         FdAttributes to NioFdAttributes(fsState),
         GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(currentDirectoryProvider),
