@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadError
@@ -27,6 +28,7 @@ import at.released.weh.filesystem.fdresource.nio.NioFdAttributes
 import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.fdresource.nio.nioAddAdvisoryLock
+import at.released.weh.filesystem.fdresource.nio.nioFallocate
 import at.released.weh.filesystem.fdresource.nio.nioRead
 import at.released.weh.filesystem.fdresource.nio.nioRemoveAdvisoryLock
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
@@ -82,6 +84,10 @@ internal class NioFileFdResource(
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = channel.sync(syncMetadata)
+
+    override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
+        return channel.nioFallocate(offset, length)
+    }
 
     override fun truncate(length: Long): Either<TruncateError, Unit> = channel.truncate(length)
 

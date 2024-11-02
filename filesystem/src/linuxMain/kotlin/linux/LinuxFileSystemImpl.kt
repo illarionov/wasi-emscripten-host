@@ -21,6 +21,7 @@ import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.op.fallocate.FallocateFd
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
@@ -68,6 +69,7 @@ public class LinuxFileSystemImpl(
         ChmodFd to LinuxChmodFd(fsState),
         Chown to LinuxChown(fsState),
         ChownFd to LinuxChownFd(fsState),
+        FallocateFd to LinuxFallocate(fsState),
         FdAttributes to LinuxFdAttributes(fsState),
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
         Symlink to LinuxSymlink(fsState),

@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
@@ -33,6 +34,7 @@ import at.released.weh.filesystem.linux.native.linuxStatFd
 import at.released.weh.filesystem.linux.native.linuxSync
 import at.released.weh.filesystem.linux.native.linuxTruncate
 import at.released.weh.filesystem.linux.native.posixClose
+import at.released.weh.filesystem.linux.native.posixFallocate
 import at.released.weh.filesystem.linux.native.posixRead
 import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Fdflags
@@ -69,6 +71,10 @@ internal class LinuxFileFdResource(
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(channel.fd, syncMetadata)
+
+    override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
+        return posixFallocate(channel.fd, offset, length)
+    }
 
     override fun truncate(length: Long): Either<TruncateError, Unit> = linuxTruncate(channel.fd, length)
 

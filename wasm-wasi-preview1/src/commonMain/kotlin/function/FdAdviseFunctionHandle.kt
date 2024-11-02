@@ -11,14 +11,12 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.type.Advice
 import at.released.weh.wasi.preview1.type.Errno
-import at.released.weh.wasm.core.memory.Memory
 
 public class FdAdviseFunctionHandle(
     host: EmbedderHost,
 ) : WasiPreview1HostFunctionHandle(WasiPreview1HostFunction.FD_ADVISE, host) {
     @Suppress("UNUSED_PARAMETER")
     public fun execute(
-        memory: Memory,
         fd: FileDescriptor,
         offset: Long,
         length: Long,

@@ -11,6 +11,7 @@ import at.released.weh.filesystem.model.FileSystemErrno
 public data class FileTooBig(
     override val message: String,
 ) : FileSystemOperationError,
+    FallocateError,
     TruncateError,
     WriteError {
     override val errno: FileSystemErrno = FileSystemErrno.FBIG

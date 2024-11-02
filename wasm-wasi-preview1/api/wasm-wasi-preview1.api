@@ -37,12 +37,12 @@ public final class at/released/weh/wasi/preview1/function/EnvironSizesGetFunctio
 
 public final class at/released/weh/wasi/preview1/function/FdAdviseFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IJJB)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (IJJB)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdAllocateFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;IJJ)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (IJJ)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdCloseFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
