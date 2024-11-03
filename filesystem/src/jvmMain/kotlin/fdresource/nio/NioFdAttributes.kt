@@ -9,11 +9,9 @@ package at.released.weh.filesystem.fdresource.nio
 import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_BASE_RIGHTS
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.DIRECTORY_INHERITING_RIGHTS
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FILE_BASE_RIGHTS
 import java.nio.file.Path
 
 internal object NioFdAttributes {
@@ -26,13 +24,14 @@ internal object NioFdAttributes {
         FdAttributesResult(
             type = fileType,
             flags = channel.fdFlags,
-            rights = FILE_BASE_RIGHTS,
-            inheritingRights = FILE_BASE_RIGHTS,
+            rights = channel.rights.rights,
+            inheritingRights = channel.rights.rightsInheriting,
         )
     }
 
     fun getDirectoryFdAttributes(
         path: Path,
+        rights: FdRightsBlock,
     ): Either<FdAttributesError, FdAttributesResult> = either {
         val fileType = path.readFileType().bind()
         check(fileType == Filetype.DIRECTORY)
@@ -40,8 +39,8 @@ internal object NioFdAttributes {
         FdAttributesResult(
             type = fileType,
             flags = 0,
-            rights = DIRECTORY_BASE_RIGHTS,
-            inheritingRights = DIRECTORY_INHERITING_RIGHTS,
+            rights = rights.rights,
+            inheritingRights = rights.rightsInheriting,
         )
     }
 }

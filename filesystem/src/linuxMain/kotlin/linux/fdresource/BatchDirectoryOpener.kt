@@ -9,6 +9,7 @@ package at.released.weh.filesystem.linux.fdresource
 import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -63,7 +64,12 @@ private fun preopenDirectory(
         fdFlags = 0,
         mode = 0,
     ).map { nativeFd: Int ->
-        LinuxDirectoryFdResource(NativeDirectoryFd(nativeFd), true, virtualPath = path)
+        LinuxDirectoryFdResource(
+            nativeFd = NativeDirectoryFd(nativeFd),
+            isPreopened = true,
+            virtualPath = path,
+            rights = FdRightsBlock.DIRECTORY_BASE_RIGHTS_BLOCK,
+        )
     }
 }
 

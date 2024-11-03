@@ -11,9 +11,9 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PathIsDirectory
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
-import at.released.weh.filesystem.op.opencreate.Open.Rights
+import at.released.weh.filesystem.fdrights.FdRightsBlock
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_READ
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
@@ -21,7 +21,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 
 internal fun checkOpenFlags(
     @OpenFileFlagsType openFlags: OpenFileFlags,
-    rights: Rights?,
+    rights: FdRightsBlock?,
     isDirectoryRequested: Boolean,
 ): Either<OpenError, Unit> = either {
     if (rights != null) {

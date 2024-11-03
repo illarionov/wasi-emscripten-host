@@ -24,7 +24,6 @@ import at.released.weh.filesystem.linux.ext.fdFdFlagsToLinuxMask
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.ext.openFileFlagsToLinuxMask
 import at.released.weh.filesystem.linux.ext.validatePath
-import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
@@ -183,11 +182,16 @@ private fun Int.openat2ErrNoToOpenError(): OpenError = when (this) {
 private fun StatError.toOpenError(): OpenError = this as OpenError
 
 internal sealed class FileDirectoryFd {
-    class File(val channel: NativeFileChannel) : FileDirectoryFd() {
-        constructor(fd: Int, isInAppendMode: Boolean) : this(NativeFileChannel(NativeFileFd(fd), isInAppendMode))
+    class File(
+        val fd: NativeFileFd,
+        val isInAppendMode: Boolean,
+    ) : FileDirectoryFd() {
+        constructor(fd: Int, isInAppendMode: Boolean) : this(NativeFileFd(fd), isInAppendMode)
     }
 
-    class Directory(val fd: NativeDirectoryFd) : FileDirectoryFd()
+    class Directory(
+        val fd: NativeDirectoryFd,
+    ) : FileDirectoryFd()
 }
 
 internal enum class ResolveModeFlag {

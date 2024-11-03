@@ -7,14 +7,13 @@
 package at.released.weh.filesystem.op.opencreate
 
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
-import at.released.weh.filesystem.op.fdattributes.FdRights
-import at.released.weh.filesystem.op.fdattributes.FdRightsType
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToString
 
 /**
@@ -39,7 +38,7 @@ public data class Open(
     @FileMode
     public val mode: Int? = null,
 
-    public val rights: Rights? = null,
+    public val rights: FdRightsBlock? = null,
 ) {
     override fun toString(): String {
         return "Open(" +
@@ -50,18 +49,6 @@ public data class Open(
                 "mode=${mode?.toString(8) ?: "null"}, " +
                 "rights=$rights" +
                 ")"
-    }
-
-    public data class Rights(
-        @FdRightsType
-        public val rights: FdRights,
-
-        @FdRightsType
-        public val rightsInheriting: FdRights,
-    ) {
-        override fun toString(): String {
-            return "Rights(rights=0x${rights.toString(16)}, rightsInheriting=0x${rightsInheriting.toString(16)})"
-        }
     }
 
     public companion object : FileSystemOperation<Open, OpenError, FileDescriptor> {

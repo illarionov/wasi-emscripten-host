@@ -13,6 +13,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
@@ -66,9 +67,10 @@ internal class LinuxFileSystemState private constructor(
         nativeFd: NativeDirectoryFd,
         virtualPath: VirtualPath,
         isPreopened: Boolean = false,
+        rights: FdRightsBlock,
     ): Either<Nfile, Pair<FileDescriptor, LinuxDirectoryFdResource>> = lock.withLock {
         fileDescriptors.allocate { _ ->
-            LinuxDirectoryFdResource(nativeFd, isPreopened, virtualPath).right()
+            LinuxDirectoryFdResource(nativeFd, isPreopened, virtualPath, rights).right()
         }
     }
 

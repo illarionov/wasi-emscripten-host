@@ -36,8 +36,6 @@ wasiTestsuiteTestGen {
         "fd_fdstat_set_rights", // legacy, not used anywhere
         "overwrite_preopen",
         "path_link",
-        "path_open_dirfd_not_dir",
-        "path_open_read_write",
         "path_rename",
         "path_rename_dir_trailing_slashes",
         "poll_oneoff_stdio",

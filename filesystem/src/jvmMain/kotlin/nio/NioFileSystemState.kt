@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.fdresource.BatchDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.fdresource.NioFileFdResource
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
@@ -53,6 +54,7 @@ internal class NioFileSystemState private constructor(
     fun <E : FileSystemOperationError> addFile(
         path: Path,
         fdflags: Fdflags,
+        rights: FdRightsBlock,
         channelFactory: (FileDescriptor) -> Either<E, FileChannel>,
     ): Either<E, Pair<FileDescriptor, NioFileFdResource>> = fdsLock.withLock {
         fds.allocate { fd: FileDescriptor ->
@@ -61,6 +63,7 @@ internal class NioFileSystemState private constructor(
                     path = path,
                     channel = it,
                     fdflags = fdflags,
+                    rights = rights,
                 )
             }
         }
@@ -68,6 +71,7 @@ internal class NioFileSystemState private constructor(
 
     fun <E : FileSystemOperationError> addDirectory(
         virtualPath: VirtualPath,
+        rights: FdRightsBlock,
         directoryFactory: (FileDescriptor) -> Either<E, Path>,
     ): Either<E, Pair<FileDescriptor, NioDirectoryFdResource>> = fdsLock.withLock {
         fds.allocate { fd: FileDescriptor ->
@@ -76,6 +80,7 @@ internal class NioFileSystemState private constructor(
                     realPath = realPath,
                     virtualPath = virtualPath,
                     isPreopened = false,
+                    rights = rights,
                 )
             }
         }

@@ -30,6 +30,11 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.fdrights.FdRights
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_DATASYNC
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_READ
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_SYNC
+import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDERR_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDIN_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_STDOUT_FD
@@ -45,11 +50,6 @@ import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import at.released.weh.filesystem.op.fdattributes.FdRights
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_DATASYNC
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_READ
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_SYNC
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy

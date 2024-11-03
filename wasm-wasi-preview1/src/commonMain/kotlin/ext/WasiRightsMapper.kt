@@ -8,8 +8,8 @@ package at.released.weh.wasi.preview1.ext
 
 import at.released.weh.wasi.preview1.type.Rights
 import at.released.weh.wasi.preview1.type.RightsType
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag as FsRightsFlag
-import at.released.weh.filesystem.op.fdattributes.FdRightsType as FsRightsType
+import at.released.weh.filesystem.fdrights.FdRightsFlag as FsRightsFlag
+import at.released.weh.filesystem.fdrights.FdRightsType as FsRightsType
 import at.released.weh.wasi.preview1.type.RightsFlag as WasiRightsFlag
 
 internal object WasiRightsMapper {
