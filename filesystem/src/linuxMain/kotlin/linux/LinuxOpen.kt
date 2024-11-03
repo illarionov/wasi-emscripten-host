@@ -10,13 +10,19 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
+import at.released.weh.filesystem.fdrights.getChildDirectoryRights
+import at.released.weh.filesystem.fdrights.getChildFileRights
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
+import at.released.weh.filesystem.linux.fdresource.LinuxDirectoryFdResource
+import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.FileDirectoryFd.Directory
 import at.released.weh.filesystem.linux.native.FileDirectoryFd.File
 import at.released.weh.filesystem.linux.native.ResolveModeFlag
 import at.released.weh.filesystem.linux.native.linuxOpenFileOrDirectory
+import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
 
@@ -34,6 +40,10 @@ internal class LinuxOpen(
         }
 
         return fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
+            val baseDirectoryRights = (input.baseDirectory as? DirectoryFd)?.let { baseDirectoryFd ->
+                (fsState.get(baseDirectoryFd.fd) as? LinuxDirectoryFdResource)?.rights
+            } ?: DIRECTORY_BASE_RIGHTS_BLOCK
+
             linuxOpenFileOrDirectory(
                 baseDirectoryFd = directoryFd,
                 path = input.path,
@@ -43,10 +53,18 @@ internal class LinuxOpen(
                 resolveFlags = resolveFlags,
             ).flatMap { nativeChannel ->
                 when (nativeChannel) {
-                    is File -> fsState.addFile(nativeChannel.channel)
+                    is File -> fsState.addFile(
+                        NativeFileChannel(
+                            fd = nativeChannel.fd,
+                            isInAppendMode = nativeChannel.isInAppendMode,
+                            rights = baseDirectoryRights.getChildFileRights(input.rights),
+                        ),
+                    )
+
                     is Directory -> fsState.addDirectory(
                         nativeFd = nativeChannel.fd,
                         virtualPath = input.path, // XXX: check
+                        rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
                     )
                 }
             }.map { (fd: FileDescriptor, _) -> fd }

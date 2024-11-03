@@ -39,6 +39,7 @@ import at.released.weh.filesystem.fdresource.nio.nioWrite
 import at.released.weh.filesystem.fdresource.nio.setPosition
 import at.released.weh.filesystem.fdresource.nio.sync
 import at.released.weh.filesystem.fdresource.nio.truncate
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
@@ -62,10 +63,11 @@ internal class NioFileFdResource(
     path: NioPath,
     channel: FileChannel,
     fdflags: Fdflags,
+    rights: FdRightsBlock,
 ) : FdResource {
     val lock: Lock = ReentrantLock()
     val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
-    val channel = NioFileChannel(path, channel, fdflags)
+    val channel = NioFileChannel(path, channel, fdflags, rights)
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return NioFdAttributes.getFileFdAttributes(channel)
     }

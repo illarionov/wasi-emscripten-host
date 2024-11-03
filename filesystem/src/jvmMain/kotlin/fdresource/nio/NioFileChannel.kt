@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import java.nio.channels.FileChannel
@@ -19,6 +20,7 @@ public class NioFileChannel(
     public val channel: FileChannel,
     @Volatile
     public var fdFlags: Fdflags,
+    public val rights: FdRightsBlock,
 ) {
     internal val flagsLock: ReentrantLock = ReentrantLock()
 }

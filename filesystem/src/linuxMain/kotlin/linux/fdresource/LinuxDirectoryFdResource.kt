@@ -25,6 +25,7 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
@@ -51,6 +52,7 @@ internal class LinuxDirectoryFdResource(
     val nativeFd: NativeDirectoryFd,
     val isPreopened: Boolean = false,
     val virtualPath: VirtualPath,
+    val rights: FdRightsBlock,
 ) : PosixFdResource, FdResource {
     override val fdResourceType: FdResourceType = DIRECTORY
 
@@ -59,7 +61,7 @@ internal class LinuxDirectoryFdResource(
     }
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return linuxFdAttributes(nativeFd)
+        return linuxFdAttributes(nativeFd, rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {

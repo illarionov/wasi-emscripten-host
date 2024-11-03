@@ -6,6 +6,9 @@
 
 package at.released.weh.wasi.preview1.function
 
+import at.released.weh.filesystem.fdrights.FdRights
+import at.released.weh.filesystem.fdrights.FdRightsFlag
+import at.released.weh.filesystem.fdrights.FdRightsType
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.Filetype
@@ -20,9 +23,6 @@ import at.released.weh.filesystem.model.Filetype.UNKNOWN
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import at.released.weh.filesystem.op.fdattributes.FdRights
-import at.released.weh.filesystem.op.fdattributes.FdRightsFlag
-import at.released.weh.filesystem.op.fdattributes.FdRightsType
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_FDSTAT_GET
 import at.released.weh.wasi.preview1.ext.FDSTAT_PACKED_SIZE

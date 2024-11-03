@@ -7,6 +7,7 @@
 package at.released.weh.wasi.preview1.function
 
 import arrow.core.getOrElse
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -60,7 +61,7 @@ public class PathOpenFunctionHandle(
                 baseDirectory = BaseDirectory.DirectoryFd(fd),
                 openFlags = WasiOpenFlagsMapper.getFsOpenFlags(oflags, rights, dirFlags),
                 fdFlags = WasiFdFlagsMapper.getFsFdlags(fdflags),
-                rights = Open.Rights(
+                rights = FdRightsBlock(
                     rights = WasiRightsMapper.getFsRights(rights),
                     rightsInheriting = WasiRightsMapper.getFsRights(rightsInheriting),
                 ),

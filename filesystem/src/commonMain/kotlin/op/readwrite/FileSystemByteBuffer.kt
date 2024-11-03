@@ -52,4 +52,8 @@ public class FileSystemByteBuffer(
         result = 31 * result + length
         return result
     }
+
+    override fun toString(): String {
+        return "FileSystemByteBuffer(array.size=${array.size}, offset=$offset, length=$length)"
+    }
 }

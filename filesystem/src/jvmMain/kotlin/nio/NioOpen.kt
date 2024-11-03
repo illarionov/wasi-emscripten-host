@@ -16,9 +16,15 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
+import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.fdresource.nio.nioOpenFile
+import at.released.weh.filesystem.fdrights.FdRightsBlock
+import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
+import at.released.weh.filesystem.fdrights.getChildDirectoryRights
+import at.released.weh.filesystem.fdrights.getChildFileRights
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
+import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
@@ -63,21 +69,39 @@ internal class NioOpen(
                 ),
             )
         }
-        val fileAttributes: Array<FileAttribute<*>> = input.mode?.let {
+        val fileModeAttributes: Array<FileAttribute<*>> = input.mode?.let {
             arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
         } ?: emptyArray()
 
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()
 
+        val baseDirectoryRights = if (input.baseDirectory is DirectoryFd) {
+            (fsState.get(input.baseDirectory.fd) as? NioDirectoryFdResource)?.rights
+        } else {
+            null
+        } ?: DIRECTORY_BASE_RIGHTS_BLOCK
+
         if (path.isDirectory(options = asLinkOptions(followSymlinks))) {
-            return openDirectory(fsState, path, virtualPath)
+            return openDirectory(
+                fsState = fsState,
+                path = path,
+                virtualPath = virtualPath,
+                rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
+            )
         }
 
         if (isDirectoryRequested || input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
             raise(NotDirectory("Path is not a directory"))
         }
 
-        return openCreateFile(fsState, path, openOptionsResult.options, fileAttributes, input.fdFlags)
+        return openCreateFile(
+            fsState,
+            path,
+            openOptionsResult.options,
+            fileModeAttributes,
+            input.fdFlags,
+            rights = baseDirectoryRights.getChildFileRights(input.rights),
+        )
     }
 }
 
@@ -87,7 +111,12 @@ private fun openCreateFile(
     options: Set<OpenOption>,
     fileAttributes: Array<FileAttribute<*>>,
     @FdflagsType originalFdflags: Fdflags,
-): Either<OpenError, FileDescriptor> = fsState.addFile(path, fdflags = originalFdflags) { _ ->
+    rights: FdRightsBlock,
+): Either<OpenError, FileDescriptor> = fsState.addFile(
+    path,
+    fdflags = originalFdflags,
+    rights = rights,
+) { _ ->
     nioOpenFile(path, options, fileAttributes)
 }.map { it.first }
 
@@ -95,8 +124,9 @@ private fun openDirectory(
     fsState: NioFileSystemState,
     path: Path,
     virtualPath: VirtualPath,
+    rights: FdRightsBlock,
     followSymlinks: Boolean = true,
-): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath) { _ ->
+): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath, rights) { _ ->
     val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     @Suppress("SpreadOperator")
     if (path.isDirectory(*linkOptions)) {
@@ -122,6 +152,7 @@ private fun getOpenOptions(
             options += StandardOpenOption.READ
             options += StandardOpenOption.WRITE
         }
+
         else -> error("Unexpected open mode: 0x${mode.toString(16)}")
     }
 

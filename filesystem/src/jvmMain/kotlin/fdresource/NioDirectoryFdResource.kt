@@ -31,6 +31,7 @@ import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
@@ -49,10 +50,11 @@ internal class NioDirectoryFdResource(
     val realPath: Path,
     val virtualPath: VirtualPath,
     val isPreopened: Boolean,
+    val rights: FdRightsBlock,
 ) : FdResource {
     val lock: Lock = ReentrantLock()
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return NioFdAttributes.getDirectoryFdAttributes(realPath)
+        return NioFdAttributes.getDirectoryFdAttributes(realPath, rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {

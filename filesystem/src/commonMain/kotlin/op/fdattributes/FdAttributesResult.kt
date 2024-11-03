@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.op.fdattributes
 
+import at.released.weh.filesystem.fdrights.FdRights
+import at.released.weh.filesystem.fdrights.FdRightsType
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.Filetype

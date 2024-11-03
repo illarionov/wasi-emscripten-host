@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
+import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.linux.native.linuxAddAdvisoryLockFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
@@ -113,5 +114,6 @@ internal class LinuxFileFdResource(
     internal data class NativeFileChannel(
         val fd: NativeFileFd,
         var isInAppendMode: Boolean = false,
+        val rights: FdRightsBlock,
     )
 }

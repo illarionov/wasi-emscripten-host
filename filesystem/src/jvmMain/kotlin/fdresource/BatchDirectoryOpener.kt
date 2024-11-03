@@ -15,6 +15,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import java.io.IOError
@@ -80,6 +81,7 @@ internal class BatchDirectoryOpener(
                 path,
                 virtualPath = preopenedDirectory,
                 isPreopened = true,
+                rights = DIRECTORY_BASE_RIGHTS_BLOCK,
             ).right()
         }
     }
