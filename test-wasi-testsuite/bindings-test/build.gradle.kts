@@ -33,8 +33,7 @@ wasiTestsuiteTestGen {
         "sock_shutdown-not_sock",
     )
     rustIgnores = listOf(
-        "fd_fdstat_set_rights", // outdated, not used anywhere
-        "nofollow_errors",
+        "fd_fdstat_set_rights", // legacy, not used anywhere
         "overwrite_preopen",
         "path_link",
         "path_open_dirfd_not_dir",
