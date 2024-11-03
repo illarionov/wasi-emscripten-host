@@ -52,9 +52,10 @@ internal class JvmPathResolver(
 
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
             CurrentWorkingDirectory -> javaFs.getPath("").right()
-            is DirectoryFd -> {
-                val fdPath = (fsState.get(baseDirectory.fd) as? NioDirectoryFdResource)?.realPath
-                fdPath?.right() ?: FileDescriptorNotOpen("File descriptor ${baseDirectory.fd} is not open").left()
+            is DirectoryFd -> when (val fdResource = fsState.get(baseDirectory.fd)) {
+                null -> FileDescriptorNotOpen("Directory File descriptor ${baseDirectory.fd} is not open").left()
+                !is NioDirectoryFdResource -> NotDirectory("Base path `$path` is not a directory").left()
+                else -> fdResource.realPath.right()
             }
         }.flatMap { basePath ->
             if (basePath.isDirectory(options = asLinkOptions(followSymlinks))) {

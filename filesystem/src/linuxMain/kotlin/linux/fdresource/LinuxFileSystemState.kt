@@ -13,6 +13,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
@@ -142,7 +143,7 @@ internal class LinuxFileSystemState private constructor(
 
         fun resolveNativeDirectoryFd(
             directory: BaseDirectory,
-        ): Either<BadFileDescriptor, NativeDirectoryFd> = when (directory) {
+        ): Either<FileSystemOperationError, NativeDirectoryFd> = when (directory) {
             CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
                 getDirectoryNativeFd(currentWorkingDirectoryFd)
             } else {
@@ -154,9 +155,12 @@ internal class LinuxFileSystemState private constructor(
 
         private fun getDirectoryNativeFd(
             fd: FileDescriptor,
-        ): Either<BadFileDescriptor, NativeDirectoryFd> = fsLock.withLock {
-            val resource = fileDescriptors[fd] as? LinuxDirectoryFdResource
-            resource?.nativeFd?.right() ?: BadFileDescriptor("FD $fd is not a directory").left()
+        ): Either<FileSystemOperationError, NativeDirectoryFd> = fsLock.withLock {
+            when (val fdResource = fileDescriptors[fd]) {
+                null -> BadFileDescriptor("Directory File descriptor $fd is not open").left()
+                !is LinuxDirectoryFdResource -> NotDirectory("FD $fd is not a directory").left()
+                else -> fdResource.nativeFd.right()
+            }
         }
 
         fun onFileDescriptorRemovedUnsafe(
