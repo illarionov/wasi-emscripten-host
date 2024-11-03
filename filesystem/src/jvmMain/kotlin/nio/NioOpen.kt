@@ -69,7 +69,7 @@ internal class NioOpen(
 
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()
 
-        if (path.isDirectory()) {
+        if (path.isDirectory(options = asLinkOptions(followSymlinks))) {
             return openDirectory(fsState, path, virtualPath)
         }
 
