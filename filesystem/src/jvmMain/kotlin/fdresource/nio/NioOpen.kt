@@ -10,12 +10,14 @@ import arrow.core.Either
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import java.io.IOException
 import java.nio.channels.FileChannel
 import java.nio.file.FileAlreadyExistsException
+import java.nio.file.NoSuchFileException
 import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.nio.file.attribute.FileAttribute
@@ -33,6 +35,7 @@ internal fun Throwable.openCreateErrorToOpenError(path: Path): OpenError = when 
     is IllegalArgumentException -> InvalidArgument("Can not open `$path`: invalid combination of options ($message)")
     is UnsupportedOperationException -> InvalidArgument("Can not open `$path`: unsupported operation ($message)")
     is FileAlreadyExistsException -> Exists("`$path` already exists ($message)")
+    is NoSuchFileException -> NoEntry("File `$path` not found")
     is IOException -> if (message?.contains("NOFOLLOW_LINKS specified") == true) {
         TooManySymbolicLinks("Can not open `$path`: too many symbolic links ($message)")
     } else {

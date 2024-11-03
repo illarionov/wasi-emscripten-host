@@ -37,7 +37,6 @@ wasiTestsuiteTestGen {
         "overwrite_preopen",
         "path_link",
         "path_open_dirfd_not_dir",
-        "path_open_missing",
         "path_open_read_write",
         "path_rename",
         "path_rename_dir_trailing_slashes",
