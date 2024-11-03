@@ -17,6 +17,7 @@ public data class AccessDenied(
     FdAttributesError,
     OpenError,
     GetCurrentWorkingDirectoryError,
+    HardlinkError,
     MkdirError,
     ReadDirError,
     ReadLinkError,

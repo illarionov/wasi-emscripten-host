@@ -26,6 +26,7 @@ struct open_how {
 // sys/stat.h
 extern int fstatat (int fd, const char *file, struct stat *buf, int flag);
 extern int fchmodat (int fd, const char *file, mode_t mode, int flag);
+extern int linkat (int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags);
 extern int mkdirat (int fd, const char *path, mode_t mode);
 extern int utimensat (int fd, const char *path, const struct timespec times[2], int flags);
 

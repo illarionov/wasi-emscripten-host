@@ -11,6 +11,7 @@ import at.released.weh.filesystem.model.FileSystemErrno
 public data class Exists(
     override val message: String,
 ) : FileSystemOperationError,
+    HardlinkError,
     MkdirError,
     OpenError,
     SymlinkError {

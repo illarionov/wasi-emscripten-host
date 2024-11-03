@@ -14,6 +14,7 @@ public data class ReadOnlyFileSystem(
     CheckAccessError,
     ChmodError,
     ChownError,
+    HardlinkError,
     MkdirError,
     OpenError,
     SetTimestampError,
