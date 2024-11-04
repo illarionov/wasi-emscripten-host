@@ -18,6 +18,7 @@ public data class NoEntry(
     MkdirError,
     OpenError,
     ReadDirError,
+    HardlinkError,
     ReadLinkError,
     SetTimestampError,
     StatError,

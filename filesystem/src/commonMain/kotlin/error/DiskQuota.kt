@@ -12,6 +12,7 @@ public data class DiskQuota(
     override val message: String,
 ) : FileSystemOperationError,
     CloseError,
+    HardlinkError,
     MkdirError,
     OpenError,
     SymlinkError,

@@ -19,6 +19,7 @@ public data class IoError(
     FallocateError,
     FdAttributesError,
     OpenError,
+    HardlinkError,
     MkdirError,
     ReadDirError,
     ReadError,

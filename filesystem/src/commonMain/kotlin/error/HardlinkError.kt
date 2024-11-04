@@ -6,12 +6,4 @@
 
 package at.released.weh.filesystem.error
 
-public sealed interface ResolveRelativePathErrors :
-    ChmodError,
-    ChownError,
-    HardlinkError,
-    MkdirError,
-    OpenError,
-    ReadLinkError,
-    SetTimestampError,
-    SymlinkError
+public sealed interface HardlinkError : FileSystemOperationError
