@@ -17,6 +17,7 @@ public data class NameTooLong(
     GetCurrentWorkingDirectoryError,
     HardlinkError,
     MkdirError,
+    RenameError,
     OpenError,
     ReadLinkError,
     SetTimestampError,

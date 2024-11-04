@@ -14,6 +14,7 @@ public data class PathIsDirectory(
     FallocateError,
     OpenError,
     ReadError,
+    RenameError,
     TruncateError,
     UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.ISDIR

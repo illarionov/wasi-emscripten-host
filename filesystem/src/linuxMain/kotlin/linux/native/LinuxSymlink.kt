@@ -59,7 +59,7 @@ internal fun linuxSymlink(
 private fun Int.errnoToSymlinkError(): SymlinkError = when (this) {
     EACCES -> AccessDenied("Access to linkpath denied")
     EBADF -> BadFileDescriptor("Bad file descriptor")
-    EDQUOT -> DiskQuota("User quota on filesystem resources has been exsausted")
+    EDQUOT -> DiskQuota("User quota on filesystem resources has been exhausted")
     EEXIST -> Exists("Linkpath exists")
     EIO -> IoError("I/O error")
     ELOOP -> TooManySymbolicLinks("Too many symbolic links")

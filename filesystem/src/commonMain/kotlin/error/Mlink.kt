@@ -12,6 +12,7 @@ public data class Mlink(
     override val message: String,
 ) : FileSystemOperationError,
     MkdirError,
+    RenameError,
     OpenError {
     override val errno: FileSystemErrno = FileSystemErrno.MLINK
 }

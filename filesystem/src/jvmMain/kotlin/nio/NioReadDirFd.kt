@@ -33,7 +33,7 @@ internal class NioReadDirFd(
             if (resource !is NioDirectoryFdResource) {
                 return@executeWithResource BadFileDescriptor("${input.fd} is not a directory").left()
             }
-            val rootPath = resource.realPath
+            val rootPath = resource.path
             val stream = Either.catch { Files.newDirectoryStream(rootPath) }
                 .mapLeft { it.toReadDirError() }
                 .getOrElse {

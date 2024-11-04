@@ -32,7 +32,6 @@ import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.fdrights.FdRightsBlock
-import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
@@ -45,20 +44,31 @@ import at.released.weh.filesystem.preopened.VirtualPath
 import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 internal class NioDirectoryFdResource(
-    val realPath: Path,
-    val virtualPath: VirtualPath,
+    realPath: Path,
+    virtualPath: VirtualPath,
     val isPreopened: Boolean,
     val rights: FdRightsBlock,
-) : FdResource {
-    val lock: Lock = ReentrantLock()
+) : NioFdResource {
+    override val lock: Lock = ReentrantLock()
+    private var _realpath: Path = realPath
+    private var _virtualPath: VirtualPath = virtualPath
+    public override val path: Path get() = lock.withLock { _realpath }
+    public val virtualPath: VirtualPath get() = lock.withLock { _virtualPath }
+
+    override fun updatePath(realpath: Path, virtualPath: VirtualPath) = lock.withLock {
+        _realpath = realpath
+        _virtualPath = virtualPath
+    }
+
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return NioFdAttributes.getDirectoryFdAttributes(realPath, rights)
+        return NioFdAttributes.getDirectoryFdAttributes(path, rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {
-        return NioFileStat.getStat(realPath, false)
+        return NioFileStat.getStat(path, false)
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
@@ -90,15 +100,15 @@ internal class NioDirectoryFdResource(
     }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {
-        return nioSetPosixFilePermissions(realPath, mode)
+        return nioSetPosixFilePermissions(path, mode)
     }
 
     override fun chown(owner: Int, group: Int): Either<ChownError, Unit> {
-        return nioSetPosixUserGroup(realPath, owner, group)
+        return nioSetPosixUserGroup(path, owner, group)
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        return nioSetTimestamp(realPath, false, atimeNanoseconds, mtimeNanoseconds)
+        return nioSetTimestamp(path, false, atimeNanoseconds, mtimeNanoseconds)
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {

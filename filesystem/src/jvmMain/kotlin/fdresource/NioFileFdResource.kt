@@ -40,7 +40,6 @@ import at.released.weh.filesystem.fdresource.nio.setPosition
 import at.released.weh.filesystem.fdresource.nio.sync
 import at.released.weh.filesystem.fdresource.nio.truncate
 import at.released.weh.filesystem.fdrights.FdRightsBlock
-import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
@@ -51,10 +50,11 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import kotlinx.atomicfu.locks.withLock
+import at.released.weh.filesystem.preopened.VirtualPath
 import kotlinx.io.IOException
 import java.nio.channels.FileChannel
 import java.nio.channels.FileLock
+import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import java.nio.file.Path as NioPath
@@ -64,10 +64,16 @@ internal class NioFileFdResource(
     channel: FileChannel,
     fdflags: Fdflags,
     rights: FdRightsBlock,
-) : FdResource {
-    val lock: Lock = ReentrantLock()
+) : NioFdResource {
+    override val lock: Lock = ReentrantLock()
     val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
-    val channel = NioFileChannel(path, channel, fdflags, rights)
+    val channel = NioFileChannel(path, channel, fdflags, rights, lock)
+    override val path: Path get() = channel.path
+
+    override fun updatePath(realpath: NioPath, virtualPath: VirtualPath) {
+        channel.updatePath { realpath }
+    }
+
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return NioFdAttributes.getFileFdAttributes(channel)
     }
@@ -116,8 +122,8 @@ internal class NioFileFdResource(
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
         // Only APPEND flag is changeable
-        channel.flagsLock.withLock {
-            channel.fdFlags = (channel.fdFlags and FD_APPEND.inv()) or (flags and FD_APPEND)
+        channel.updateFdFlags { oldFlags ->
+            (oldFlags and FD_APPEND.inv()) or (flags and FD_APPEND)
         }
         return Unit.right()
     }

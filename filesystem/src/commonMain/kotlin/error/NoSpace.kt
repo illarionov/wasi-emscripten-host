@@ -16,6 +16,7 @@ public data class NoSpace(
     HardlinkError,
     MkdirError,
     OpenError,
+    RenameError,
     SymlinkError,
     SyncError,
     TruncateError,

@@ -17,7 +17,7 @@ import kotlin.concurrent.withLock
 internal class NioCloseFd(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<CloseFd, CloseError, Unit> {
-    override fun invoke(input: CloseFd): Either<CloseError, Unit> = fsState.fsLock.withLock {
+    override fun invoke(input: CloseFd): Either<CloseError, Unit> = fsState.fdsLock.withLock {
         return fsState.remove(input.fd).flatMap(FdResource::close)
     }
 }

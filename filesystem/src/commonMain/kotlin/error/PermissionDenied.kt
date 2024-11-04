@@ -16,6 +16,7 @@ public data class PermissionDenied(
     HardlinkError,
     MkdirError,
     OpenError,
+    RenameError,
     SetFdFlagsError,
     SetTimestampError,
     SymlinkError,

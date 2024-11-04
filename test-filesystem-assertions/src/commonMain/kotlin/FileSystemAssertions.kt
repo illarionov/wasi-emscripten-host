@@ -7,6 +7,7 @@
 package at.released.weh.test.filesystem.assertions
 
 import assertk.Assert
+import assertk.assertions.isFalse
 import assertk.assertions.isNotNull
 import assertk.assertions.isNotZero
 import assertk.assertions.isTrue
@@ -31,9 +32,12 @@ public fun Assert<FileMetadata>.isDirectory(): Unit = prop(FileMetadata::isDirec
 @JvmName("metaFileSize")
 public fun Assert<FileMetadata>.fileSize(): Assert<Long> = prop(FileMetadata::size)
 
-public fun Assert<Path>.exists(): Unit = transform(appendName("Path", separator = ".")) { path ->
+internal fun Assert<Path>.exists(): Assert<Boolean> = transform(appendName("Path", separator = ".")) { path ->
     SystemFileSystem.exists(path)
-}.isTrue()
+}
+
+public fun Assert<Path>.isExists(): Unit = exists().isTrue()
+public fun Assert<Path>.isNotExists(): Unit = exists().isFalse()
 
 public fun Assert<Path>.isRegularFile(): Unit = metadata().isRegularFile()
 public fun Assert<Path>.isDirectory(): Unit = metadata().isDirectory()

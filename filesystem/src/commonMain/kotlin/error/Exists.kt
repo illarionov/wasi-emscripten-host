@@ -14,6 +14,7 @@ public data class Exists(
     HardlinkError,
     MkdirError,
     OpenError,
+    RenameError,
     SymlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.EXIST
 }

@@ -4,15 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.error
+@file:Suppress("FILE_CONTAINS_ONLY_COMMENTS", "FILE_NO_BLANK_LINE_BETWEEN_BLOCKS")
 
-public sealed interface ResolveRelativePathErrors :
-    ChmodError,
-    ChownError,
-    HardlinkError,
-    MkdirError,
-    OpenError,
-    ReadLinkError,
-    RenameError,
-    SetTimestampError,
-    SymlinkError
+// Workaround for https://youtrack.jetbrains.com/issue/KTIJ-15797
+package at.released.weh.filesystem
