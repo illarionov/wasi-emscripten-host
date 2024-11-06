@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -32,6 +33,7 @@ import at.released.weh.filesystem.error.NotDirectory as BaseNotDirectory
 internal class NioUnlinkFile(
     private val pathResolver: PathResolver,
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
+    @Suppress("ReturnCount")
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
         val path: Path = pathResolver.resolve(
             input.path,
@@ -44,6 +46,12 @@ internal class NioUnlinkFile(
 
         if (path.isDirectory(NOFOLLOW_LINKS)) {
             return PathIsDirectory("`$path` is a directory").left()
+        }
+
+        input.path.trim().let {
+            if (it.endsWith("/") || it.endsWith("\\")) {
+                return NotDirectory("This command can not be used to remove directory").left()
+            }
         }
 
         return Either.catch {

@@ -28,7 +28,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.preopened.VirtualPath
