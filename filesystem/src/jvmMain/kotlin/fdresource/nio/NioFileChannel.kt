@@ -40,4 +40,5 @@ public class NioFileChannel(
     }
 }
 
-internal fun NioFileChannel.isInAppendMode(): Boolean = fdFlags and FD_APPEND == FD_APPEND
+@InternalWasiEmscriptenHostApi
+public fun NioFileChannel.isInAppendMode(): Boolean = fdFlags and FD_APPEND == FD_APPEND

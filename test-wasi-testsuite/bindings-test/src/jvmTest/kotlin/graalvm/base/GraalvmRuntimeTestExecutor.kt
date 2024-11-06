@@ -7,7 +7,6 @@
 package at.released.weh.wasi.bindings.test.graalvm.base
 
 import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
-import at.released.weh.bindings.graalvm241.MemorySource
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
@@ -38,10 +37,7 @@ class GraalvmRuntimeTestExecutor(
             val installer = GraalvmHostFunctionInstaller(context) {
                 this.host = host
             }
-            installer.setupWasiPreview1Module(
-                // XXX remove
-                memory = MemorySource.ExportedMemory(),
-            )
+            installer.setupWasiPreview1Module()
 
             context.eval(source)
 

@@ -32,6 +32,6 @@ public abstract class GenerateGraalvmHostFunctionsTask : DefaultTask() {
     }
 
     private companion object {
-        val CUSTOM_FUNCTIONS: Set<String> = setOf()
+        val CUSTOM_FUNCTIONS: Set<String> = setOf("proc_exit")
     }
 }

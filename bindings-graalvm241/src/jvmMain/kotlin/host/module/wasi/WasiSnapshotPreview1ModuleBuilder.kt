@@ -50,7 +50,6 @@ import at.released.weh.bindings.graalvm241.host.module.wasi.function.PathRename
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.PathSymlink
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.PathUnlinkFile
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.PollOneoff
-import at.released.weh.bindings.graalvm241.host.module.wasi.function.ProcExit
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.ProcRaise
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.RandomGet
 import at.released.weh.bindings.graalvm241.host.module.wasi.function.SchedYield

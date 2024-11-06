@@ -26,7 +26,7 @@ wasiTestsuiteTestGen {
     runtimes = setOf(
         WasmRuntimeBindings.CHASM,
         WasmRuntimeBindings.CHICORY,
-//        WasmRuntimeBindings.GRAALVM,
+        WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(
         "sock_shutdown-invalid_fd",

@@ -31,7 +31,7 @@ public class GraalvmEmscriptenWorkerThreadInstaller internal constructor(
     @JvmOverloads
     public fun setupWasiPreview1Module(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
-        memory: MemorySource? = ImportedMemory(),
+        memory: MemorySource? = ImportedMemory(moduleName = ENV_MODULE_NAME),
     ) {
         WasiSnapshotPreview1ModuleBuilder.setupModule(
             graalContext = workerThreadContext,
