@@ -115,10 +115,10 @@ internal class LinuxFileSystemState private constructor(
             val fromResource = fileDescriptors[fromFd]
             toResource = fileDescriptors[toFd]
 
-            if (fromResource == null || fromResource !is PosixFdResource) {
+            if (fromResource == null) {
                 return BadFileDescriptor("Incorrect fromFd").left()
             }
-            if (toResource == null || toResource !is PosixFdResource) {
+            if (toResource == null) {
                 return BadFileDescriptor("Incorrect toFd").left()
             }
 
