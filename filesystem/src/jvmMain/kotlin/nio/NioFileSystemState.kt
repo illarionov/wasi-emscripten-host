@@ -9,6 +9,7 @@ package at.released.weh.filesystem.nio
 import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
+import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.fdresource.BatchDirectoryOpener
@@ -48,7 +49,7 @@ internal class NioFileSystemState private constructor(
     val javaFs: NioFileSystem = FileSystems.getDefault(),
 ) : AutoCloseable {
     val fdsLock: Lock = ReentrantLock()
-    private val fds: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
+    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
     val pathResolver: PathResolver = JvmPathResolver(javaFs, this)
 
     fun <E : FileSystemOperationError> addFile(
@@ -57,7 +58,7 @@ internal class NioFileSystemState private constructor(
         rights: FdRightsBlock,
         channelFactory: (FileDescriptor) -> Either<E, FileChannel>,
     ): Either<E, Pair<FileDescriptor, NioFileFdResource>> = fdsLock.withLock {
-        fds.allocate { fd: FileDescriptor ->
+        fileDescriptors.allocate { fd: FileDescriptor ->
             channelFactory(fd).map {
                 NioFileFdResource(
                     path = path,
@@ -74,7 +75,7 @@ internal class NioFileSystemState private constructor(
         rights: FdRightsBlock,
         directoryFactory: (FileDescriptor) -> Either<E, Path>,
     ): Either<E, Pair<FileDescriptor, NioDirectoryFdResource>> = fdsLock.withLock {
-        fds.allocate { fd: FileDescriptor ->
+        fileDescriptors.allocate { fd: FileDescriptor ->
             directoryFactory(fd).map { realPath ->
                 NioDirectoryFdResource(
                     realPath = realPath,
@@ -89,18 +90,45 @@ internal class NioFileSystemState private constructor(
     fun remove(
         @IntFileDescriptor fd: FileDescriptor,
     ): Either<BadFileDescriptor, FdResource> = fdsLock.withLock {
-        return fds.release(fd)
+        return fileDescriptors.release(fd)
     }
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
     ): FdResource? = fdsLock.withLock {
-        fds[fd]
+        fileDescriptors[fd]
     }
 
     fun findUnsafe(
         path: Path,
-    ): NioFdResource? = fds.firstOrNull { it is NioFdResource && it.path == path }?.let { it as NioFdResource }
+    ): NioFdResource? {
+        val resource = fileDescriptors.firstOrNull { it is NioFdResource && it.path == path }
+        return resource?.let { it as NioFdResource }
+    }
+
+    fun renumber(
+        @IntFileDescriptor fromFd: FileDescriptor,
+        @IntFileDescriptor toFd: FileDescriptor,
+    ): Either<BadFileDescriptor, Unit> {
+        val toResource: FdResource?
+        fdsLock.withLock {
+            val fromResource = fileDescriptors[fromFd]
+            toResource = fileDescriptors[toFd]
+
+            if (fromResource == null || fromResource !is NioFdResource) {
+                return BadFileDescriptor("Incorrect fromFd").left()
+            }
+            if (toResource == null || toResource !is NioFdResource) {
+                return BadFileDescriptor("Incorrect toFd").left()
+            }
+
+            fileDescriptors.release(fromFd).onLeft { error("Unexpected error `$it`") }
+            fileDescriptors.release(toFd).onLeft { error("Unexpected error `$it`") }
+            fileDescriptors[toFd] = fromResource
+        }
+        toResource?.close()?.onLeft { /* ignore */ }
+        return Unit.right()
+    }
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithResource(
         fd: FileDescriptor,
@@ -123,7 +151,7 @@ internal class NioFileSystemState private constructor(
 
     override fun close() {
         val resources = fdsLock.withLock {
-            fds.drain()
+            fileDescriptors.drain()
         }
         for (resource in resources) {
             try {

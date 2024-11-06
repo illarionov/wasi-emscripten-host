@@ -20,6 +20,7 @@ public data class BadFileDescriptor(
     CloseError,
     FallocateError,
     FdAttributesError,
+    FdrenumberError,
     HardlinkError,
     MkdirError,
     OpenError,

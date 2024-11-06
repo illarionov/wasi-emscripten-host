@@ -117,7 +117,7 @@ public final class at/released/weh/wasi/preview1/function/FdReaddirFunctionHandl
 
 public final class at/released/weh/wasi/preview1/function/FdRenumberFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
-	public final fun execute (Lat/released/weh/wasm/core/memory/Memory;II)Lat/released/weh/wasi/preview1/type/Errno;
+	public final fun execute (II)Lat/released/weh/wasi/preview1/type/Errno;
 }
 
 public final class at/released/weh/wasi/preview1/function/FdSeekFunctionHandle : at/released/weh/wasi/preview1/function/WasiPreview1HostFunctionHandle {

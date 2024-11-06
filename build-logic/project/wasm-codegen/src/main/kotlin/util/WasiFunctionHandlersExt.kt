@@ -17,6 +17,7 @@ internal object WasiFunctionHandlersExt {
         "fd_fdstat_set_flags",
         "fd_filestat_set_size",
         "fd_filestat_set_times",
+        "fd_renumber",
         "fd_sync",
         "proc_exit",
         "sched_yield",
