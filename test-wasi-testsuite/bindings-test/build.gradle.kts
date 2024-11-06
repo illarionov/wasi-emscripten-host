@@ -36,8 +36,6 @@ wasiTestsuiteTestGen {
         "fd_fdstat_set_rights", // legacy, not used anywhere
         "poll_oneoff_stdio",
         "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
-        "stdio",
-        "unlink_file_trailing_slashes",
     )
 }
 

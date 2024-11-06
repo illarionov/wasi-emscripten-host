@@ -32,6 +32,7 @@ public class PathUnlinkFileFunctionHandle(
         val pathString = memory.readPathString(path, pathSize).getOrElse {
             return it
         }
+
         return host.fileSystem.execute(
             UnlinkFile,
             UnlinkFile(pathString, BaseDirectory.DirectoryFd(fd)),
