@@ -39,7 +39,7 @@ internal class BatchDirectoryOpener(
 
         val baseCwdPath: Path = currentWorkingDirectory.fold(
             ifLeft = { realCwd },
-            ifRight = NioDirectoryFdResource::realPath,
+            ifRight = NioDirectoryFdResource::path,
         )
 
         val opened: MutableMap<RealPath, NioDirectoryFdResource> = mutableMapOf()

@@ -18,7 +18,7 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 
 internal class FileDescriptorTable<V : Any>(
     initial: Map<FileDescriptor, V> = emptyMap(),
-) {
+) : Iterable<V> {
     private val fds: MutableMap<FileDescriptor, V> = LinkedHashMap(initial)
 
     operator fun set(
@@ -51,6 +51,8 @@ internal class FileDescriptorTable<V : Any>(
     fun release(@IntFileDescriptor fd: FileDescriptor): Either<BadFileDescriptor, V> {
         return fds.remove(fd)?.right() ?: BadFileDescriptor("Trying to remove already disposed file descriptor").left()
     }
+
+    override fun iterator(): Iterator<V> = fds.values.iterator()
 
     fun drain(): List<V> {
         val values = fds.values.toList()

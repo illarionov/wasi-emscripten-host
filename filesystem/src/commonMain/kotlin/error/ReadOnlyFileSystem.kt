@@ -17,6 +17,7 @@ public data class ReadOnlyFileSystem(
     HardlinkError,
     MkdirError,
     OpenError,
+    RenameError,
     SetTimestampError,
     SymlinkError,
     TruncateError,

@@ -10,6 +10,6 @@ import at.released.weh.filesystem.model.FileSystemErrno
 
 public data class DirectoryNotEmpty(
     override val message: String,
-) : FileSystemOperationError, UnlinkError {
+) : FileSystemOperationError, RenameError, UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.NOTEMPTY
 }

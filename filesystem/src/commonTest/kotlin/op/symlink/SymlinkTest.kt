@@ -8,17 +8,14 @@ package at.released.weh.filesystem.op.symlink
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
-import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
+import at.released.weh.filesystem.testutil.TEST_CONTENT
+import at.released.weh.filesystem.testutil.TEST_FILE
+import at.released.weh.filesystem.testutil.createTestFile
+import at.released.weh.filesystem.testutil.readFileContentToString
+import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
 import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
-import at.released.weh.test.utils.absolutePath
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.readString
-import kotlinx.io.writeString
 import kotlin.test.Test
 
 @IgnoreApple
@@ -26,26 +23,17 @@ import kotlin.test.Test
 class SymlinkTest : BaseFileSystemIntegrationTest() {
     @Test
     public fun symlink_success_case() {
-        val root: Path = tempFolder.absolutePath()
-        val tempfolderFd = WASI_FIRST_PREOPEN_FD
-
-        SystemFileSystem.run {
-            sink(Path(root, "testfile.txt")).buffered().use {
-                it.writeString("Test content")
-            }
-        }
+        tempFolder.createTestFile(TEST_FILE, TEST_CONTENT)
 
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Symlink,
-                Symlink("testfile.txt", "newfile.txt", newPathBaseDirectory = DirectoryFd(tempfolderFd)),
+                Symlink(TEST_FILE, "newfile.txt", newPathBaseDirectory = tempFolderDirectoryFd),
             ).onLeft { error("Can not create symlink: $it") }
         }
 
-        val newFileContent = SystemFileSystem.source(Path(root, "newfile.txt")).buffered().use {
-            it.readString()
-        }
+        val newFileContent = tempFolder.readFileContentToString("newfile.txt")
 
-        assertThat(newFileContent).isEqualTo("Test content")
+        assertThat(newFileContent).isEqualTo(TEST_CONTENT)
     }
 }

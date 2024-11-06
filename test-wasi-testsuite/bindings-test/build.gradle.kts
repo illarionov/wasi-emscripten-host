@@ -35,8 +35,6 @@ wasiTestsuiteTestGen {
     rustIgnores = listOf(
         "fd_fdstat_set_rights", // legacy, not used anywhere
         "overwrite_preopen",
-        "path_rename",
-        "path_rename_dir_trailing_slashes",
         "poll_oneoff_stdio",
         "renumber",
         "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)

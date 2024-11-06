@@ -7,7 +7,6 @@
 package at.released.weh.filesystem.linux.native
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
@@ -28,6 +27,7 @@ import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CLOEXEC
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CREAT
@@ -76,7 +76,9 @@ internal fun linuxOpenFileOrDirectory(
 
     validatePath(path).bind()
 
-    if (isExistingDirectory(baseDirectoryFd, path, flags).bind()) {
+    val existingFileType: Filetype? = getFileType(baseDirectoryFd, path, flags).bind()
+
+    if (existingFileType == DIRECTORY) {
         val directoryFlags = flags and (O_NOFOLLOW or O_NOATIME or O_CLOEXEC) or O_DIRECTORY
         return linuxOpenRaw(
             baseDirectoryFd = baseDirectoryFd,
@@ -91,7 +93,11 @@ internal fun linuxOpenFileOrDirectory(
     }
 
     if (flags and O_DIRECTORY == O_DIRECTORY) {
-        raise(NotDirectory("Not a directory"))
+        if (existingFileType != null) {
+            raise(NotDirectory("Not a directory"))
+        } else {
+            raise(NoEntry("Path not exists"))
+        }
     }
 
     @Suppress("MagicNumber")
@@ -143,22 +149,23 @@ internal fun linuxOpenRaw(
     }
 }
 
-private fun isExistingDirectory(
+private fun getFileType(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlagsType flags: OpenFileFlags,
-): Either<OpenError, Boolean> {
-    return linuxStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).map {
-        it.type == DIRECTORY
-    }.swap()
-        .flatMap { statError: StatError ->
-            if (statError is NoEntry) {
-                false.left()
+): Either<OpenError, Filetype?> {
+    return linuxStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(
+        ifRight = {
+            it.type.right()
+        },
+        ifLeft = {
+            if (it is NoEntry) {
+                null.right()
             } else {
-                statError.toOpenError().right()
+                it.toOpenError().left()
             }
-        }
-        .swap()
+        },
+    )
 }
 
 private fun getLinuxOpenFileFlags(

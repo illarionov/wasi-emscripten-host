@@ -21,6 +21,7 @@ public data class AccessDenied(
     MkdirError,
     ReadDirError,
     ReadLinkError,
+    RenameError,
     SetTimestampError,
     StatError,
     SymlinkError,

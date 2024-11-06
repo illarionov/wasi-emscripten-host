@@ -14,7 +14,7 @@ import kotlin.test.BeforeTest
 
 public abstract class BaseFileSystemIntegrationTest {
     protected val logger = TestLogger()
-    protected lateinit var tempFolder: TempFolder
+    internal lateinit var tempFolder: TempFolder
 
     @BeforeTest
     fun setup() {

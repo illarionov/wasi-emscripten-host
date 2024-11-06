@@ -34,6 +34,7 @@ import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.WriteFd
+import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.filesystem.op.setfdflags.SetFdFlags
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
@@ -82,6 +83,7 @@ public class LinuxFileSystemImpl(
         ReadFd to LinuxReadFd(fsState),
         ReadDirFd to LinuxReadDirFd(fsState),
         ReadLink to LinuxReadLink(fsState),
+        Rename to LinuxRename(fsState),
         SeekFd to LinuxSeekFd(fsState),
         SetFdFlags to LinuxSetFdFlags(fsState),
         SetTimestamp to LinuxSetTimestamp(fsState),

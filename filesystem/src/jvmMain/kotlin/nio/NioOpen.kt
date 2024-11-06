@@ -11,6 +11,7 @@ import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.ext.asFileAttribute
@@ -42,6 +43,7 @@ import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
+import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 
 internal class NioOpen(
@@ -91,7 +93,11 @@ internal class NioOpen(
         }
 
         if (isDirectoryRequested || input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
-            raise(NotDirectory("Path is not a directory"))
+            if (path.exists(options = asLinkOptions(followSymlinks))) {
+                raise(NotDirectory("Path is not a directory"))
+            } else {
+                raise(NoEntry("Path not exists"))
+            }
         }
 
         return openCreateFile(

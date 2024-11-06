@@ -19,6 +19,7 @@ public data class TooManySymbolicLinks(
     MkdirError,
     OpenError,
     ReadLinkError,
+    RenameError,
     SetTimestampError,
     StatError,
     SymlinkError,

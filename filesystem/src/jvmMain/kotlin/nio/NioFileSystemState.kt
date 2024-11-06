@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.fdresource.BatchDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
+import at.released.weh.filesystem.fdresource.NioFdResource
 import at.released.weh.filesystem.fdresource.NioFileFdResource
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.FileDescriptorTable
@@ -46,8 +47,7 @@ internal class NioFileSystemState private constructor(
     val currentDirectoryFd: FileDescriptor,
     val javaFs: NioFileSystem = FileSystems.getDefault(),
 ) : AutoCloseable {
-    val fsLock: Lock = ReentrantLock()
-    private val fdsLock: Lock = ReentrantLock()
+    val fdsLock: Lock = ReentrantLock()
     private val fds: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
     val pathResolver: PathResolver = JvmPathResolver(javaFs, this)
 
@@ -97,6 +97,10 @@ internal class NioFileSystemState private constructor(
     ): FdResource? = fdsLock.withLock {
         fds[fd]
     }
+
+    fun findUnsafe(
+        path: Path,
+    ): NioFdResource? = fds.firstOrNull { it is NioFdResource && it.path == path }?.let { it as NioFdResource }
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithResource(
         fd: FileDescriptor,

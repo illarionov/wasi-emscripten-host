@@ -12,6 +12,7 @@ import at.released.weh.filesystem.fdresource.nio.MAX_BUF_SIZE
 import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.truncate
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.FILE_BASE_RIGHTS_BLOCK
+import kotlinx.atomicfu.locks.ReentrantLock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -96,6 +97,7 @@ class NioTruncateTest {
             channel = channel,
             fdFlags = 0,
             rights = FILE_BASE_RIGHTS_BLOCK,
+            fdresourceLock = ReentrantLock(),
         )
     }
 
