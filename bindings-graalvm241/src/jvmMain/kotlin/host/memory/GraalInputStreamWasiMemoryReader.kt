@@ -12,6 +12,7 @@ import arrow.core.left
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadError
+import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.readCatching
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -22,7 +23,6 @@ import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
 import at.released.weh.wasi.preview1.memory.WasiMemoryReader
 import at.released.weh.wasi.preview1.type.Iovec
 import java.nio.channels.Channels
-import java.nio.channels.FileChannel
 
 internal class GraalInputStreamWasiMemoryReader(
     private val memory: GraalvmWasmHostMemoryAdapter,
@@ -40,6 +40,7 @@ internal class GraalInputStreamWasiMemoryReader(
             val op = RunWithChannelFd(
                 fd = fd,
                 block = { readChangePosition(it, iovecs) },
+                nonNioResourceFallback = { defaultMemoryReader.read(fd, strategy, iovecs) },
             )
             fileSystem.execute(RunWithChannelFd.key(), op)
                 .mapLeft { it as ReadError }
@@ -49,7 +50,7 @@ internal class GraalInputStreamWasiMemoryReader(
     }
 
     private fun readChangePosition(
-        channelResult: Either<BadFileDescriptor, FileChannel>,
+        channelResult: Either<BadFileDescriptor, NioFileChannel>,
         iovecs: List<Iovec>,
     ): Either<ReadError, ULong> {
         val channel = channelResult.mapLeft {
@@ -59,7 +60,7 @@ internal class GraalInputStreamWasiMemoryReader(
         }
         return readCatching {
             var totalBytesRead: ULong = 0U
-            val inputStream = Channels.newInputStream(channel).buffered()
+            val inputStream = Channels.newInputStream(channel.channel).buffered()
             for (vec in iovecs) {
                 val limit = vec.bufLen
                 val bytesRead = wasmMemory.copyFromStream(memory.node, inputStream, vec.buf, limit)

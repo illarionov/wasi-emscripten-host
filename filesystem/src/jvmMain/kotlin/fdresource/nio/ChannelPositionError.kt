@@ -18,7 +18,12 @@ public sealed class ChannelPositionError(
     override val errno: FileSystemErrno,
     override val message: String,
 ) : FileSystemOperationError {
-    internal data class ClosedChannel(override val message: String) : ChannelPositionError(BADF, message)
-    internal data class IoError(override val message: String) : ChannelPositionError(IO, message)
-    internal data class InvalidArgument(override val message: String) : ChannelPositionError(INVAL, message)
+    @InternalWasiEmscriptenHostApi
+    public data class ClosedChannel(override val message: String) : ChannelPositionError(BADF, message)
+
+    @InternalWasiEmscriptenHostApi
+    public data class IoError(override val message: String) : ChannelPositionError(IO, message)
+
+    @InternalWasiEmscriptenHostApi
+    public data class InvalidArgument(override val message: String) : ChannelPositionError(INVAL, message)
 }

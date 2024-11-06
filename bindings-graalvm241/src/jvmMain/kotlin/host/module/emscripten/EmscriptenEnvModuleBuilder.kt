@@ -165,7 +165,10 @@ internal class EmscriptenEnvModuleBuilder(
     fun setupModule(
         graalContext: Context,
         moduleName: String = ENV_MODULE_NAME,
-        memorySource: MemorySource = MemorySource.ImportedMemory(spec = DEFAULT_MEMORY_SPEC),
+        memorySource: MemorySource = MemorySource.ImportedMemory(
+            moduleName = ENV_MODULE_NAME,
+            spec = DEFAULT_MEMORY_SPEC,
+        ),
     ): WasmInstance = graalContext.withWasmContext { wasmContext ->
         val envModule = WasmModule.create(moduleName, null)
         WasmModuleMemoryHelper(envModule).setupMemory(

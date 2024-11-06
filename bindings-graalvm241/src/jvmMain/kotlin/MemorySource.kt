@@ -6,7 +6,7 @@
 
 package at.released.weh.bindings.graalvm241
 
-import at.released.weh.wasm.core.WasmModules
+import at.released.weh.wasm.core.memory.WASM_MEMORY_32_MAX_PAGES
 import org.graalvm.polyglot.Context
 
 public sealed class MemorySource {
@@ -21,11 +21,17 @@ public sealed class MemorySource {
     /**
      * The memory is imported from the module [moduleName], where it is exported as [memoryName].
      * The imported memory's limits are defined by the [spec].
+     *
+     * To import memory from the main module, set [moduleName] to "main" (this can be used to instantiate the
+     * WASI Snapshot Preview 1 module). In WebAssembly files compiled with Emscripten, memory is typically provided
+     * by a module named "env".
      */
     public class ImportedMemory(
-        public val moduleName: String = WasmModules.ENV_MODULE_NAME,
+        public val moduleName: String = "main",
         public val memoryName: String = "memory",
-        public val spec: MemorySpec = MemorySpec.Builder().build(),
+        public val spec: MemorySpec = MemorySpec.Builder()
+            .setMaxSize(WASM_MEMORY_32_MAX_PAGES)
+            .build(),
     ) : MemorySource()
 
     /**

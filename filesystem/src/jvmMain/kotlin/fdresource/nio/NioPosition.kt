@@ -26,7 +26,8 @@ internal fun NioFileChannel.getPosition(): Either<ChannelPositionError, Long> = 
     }
 }
 
-internal fun NioFileChannel.setPosition(
+@InternalWasiEmscriptenHostApi
+public fun NioFileChannel.setPosition(
     fileDelta: Long,
     whence: Whence = Whence.SET,
 ): Either<ChannelPositionError, Long> = resolveWhencePosition(fileDelta, whence)

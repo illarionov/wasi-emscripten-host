@@ -785,9 +785,10 @@ public final class at/released/weh/filesystem/nio/NioFileSystemConfig : at/relea
 
 public final class at/released/weh/filesystem/nio/op/RunWithChannelFd {
 	public static final field Companion Lat/released/weh/filesystem/nio/op/RunWithChannelFd$Companion;
-	public fun <init> (ILkotlin/jvm/functions/Function1;)V
+	public fun <init> (ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
 	public final fun getBlock ()Lkotlin/jvm/functions/Function1;
 	public final fun getFd ()I
+	public final fun getNonNioResourceFallback ()Lkotlin/jvm/functions/Function0;
 }
 
 public final class at/released/weh/filesystem/nio/op/RunWithChannelFd$Companion : at/released/weh/filesystem/op/FileSystemOperation {
