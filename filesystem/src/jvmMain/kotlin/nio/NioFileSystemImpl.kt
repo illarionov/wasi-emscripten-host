@@ -26,6 +26,7 @@ import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.filesystem.op.fadvise.FadviseFd
 import at.released.weh.filesystem.op.fallocate.FallocateFd
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
+import at.released.weh.filesystem.op.fdrenumber.Fdrenumber
 import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
@@ -82,6 +83,7 @@ internal class NioFileSystemImpl(
         FadviseFd to NioFadviseFd(fsState),
         FallocateFd to NioFallocate(fsState),
         FdAttributes to NioFdAttributes(fsState),
+        Fdrenumber to NioFdrenumber(fsState),
         GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(currentDirectoryProvider),
         Hardlink to NioHardlink(fsState),
         Mkdir to NioMkdir(fsState),

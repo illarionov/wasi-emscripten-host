@@ -28,6 +28,7 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.preopened.VirtualPath
@@ -42,9 +43,9 @@ internal class LinuxFileSystemState private constructor(
     internal val isRootAccessAllowed: Boolean,
     preopenedDirectories: PreopenedDirectories,
 ) : AutoCloseable {
-    private val lock: ReentrantLock = reentrantLock()
+    private val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
-    val pathResolver = PathResolver(fileDescriptors, lock)
+    val pathResolver = PathResolver(fileDescriptors, fdsLock)
 
     init {
         pathResolver.setupPreopenedDirectories(preopenedDirectories)
@@ -52,13 +53,13 @@ internal class LinuxFileSystemState private constructor(
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
-    ): FdResource? = lock.withLock {
+    ): FdResource? = fdsLock.withLock {
         fileDescriptors[fd]
     }
 
     fun addFile(
         channel: NativeFileChannel,
-    ): Either<Nfile, Pair<FileDescriptor, LinuxFileFdResource>> = lock.withLock {
+    ): Either<Nfile, Pair<FileDescriptor, LinuxFileFdResource>> = fdsLock.withLock {
         fileDescriptors.allocate { _ ->
             LinuxFileFdResource(channel).right()
         }
@@ -69,7 +70,7 @@ internal class LinuxFileSystemState private constructor(
         virtualPath: VirtualPath,
         isPreopened: Boolean = false,
         rights: FdRightsBlock,
-    ): Either<Nfile, Pair<FileDescriptor, LinuxDirectoryFdResource>> = lock.withLock {
+    ): Either<Nfile, Pair<FileDescriptor, LinuxDirectoryFdResource>> = fdsLock.withLock {
         fileDescriptors.allocate { _ ->
             LinuxDirectoryFdResource(nativeFd, isPreopened, virtualPath, rights).right()
         }
@@ -77,7 +78,7 @@ internal class LinuxFileSystemState private constructor(
 
     fun remove(
         @IntFileDescriptor fd: FileDescriptor,
-    ): Either<BadFileDescriptor, FdResource> = lock.withLock {
+    ): Either<BadFileDescriptor, FdResource> = fdsLock.withLock {
         return fileDescriptors.release(fd)
             .onRight { resource ->
                 pathResolver.onFileDescriptorRemovedUnsafe(resource)
@@ -105,8 +106,32 @@ internal class LinuxFileSystemState private constructor(
         return block(nativeFd)
     }
 
+    fun renumber(
+        @IntFileDescriptor fromFd: FileDescriptor,
+        @IntFileDescriptor toFd: FileDescriptor,
+    ): Either<BadFileDescriptor, Unit> {
+        var toResource: FdResource? = null
+        fdsLock.withLock {
+            val fromResource = fileDescriptors[fromFd]
+            toResource = fileDescriptors[toFd]
+
+            if (fromResource == null || fromResource !is PosixFdResource) {
+                return BadFileDescriptor("Incorrect fromFd").left()
+            }
+            if (toResource == null || toResource !is PosixFdResource) {
+                return BadFileDescriptor("Incorrect toFd").left()
+            }
+
+            fileDescriptors.release(fromFd).onLeft { error("Unexpected error `$it`") }
+            fileDescriptors.release(toFd).onLeft { error("Unexpected error `$it`") }
+            fileDescriptors[toFd] = fromResource
+        }
+        toResource?.close()?.onLeft { /* ignore */ }
+        return Unit.right()
+    }
+
     override fun close() {
-        val fdResources: List<FdResource> = lock.withLock {
+        val fdResources: List<FdResource> = fdsLock.withLock {
             fileDescriptors.drain()
         }
         for (fd in fdResources) {

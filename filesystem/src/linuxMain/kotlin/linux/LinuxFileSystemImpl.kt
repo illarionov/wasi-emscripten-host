@@ -24,6 +24,7 @@ import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.filesystem.op.fadvise.FadviseFd
 import at.released.weh.filesystem.op.fallocate.FallocateFd
 import at.released.weh.filesystem.op.fdattributes.FdAttributes
+import at.released.weh.filesystem.op.fdrenumber.Fdrenumber
 import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
@@ -75,6 +76,7 @@ public class LinuxFileSystemImpl(
         FadviseFd to LinuxFadviseFd(fsState),
         FallocateFd to LinuxFallocate(fsState),
         FdAttributes to LinuxFdAttributes(fsState),
+        Fdrenumber to LinuxFdrenumber(fsState),
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
         Hardlink to LinuxHardlink(fsState),
         Mkdir to LinuxMkdir(fsState),

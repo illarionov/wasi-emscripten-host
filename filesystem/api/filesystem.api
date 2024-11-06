@@ -80,7 +80,7 @@ public final class at/released/weh/filesystem/error/Again : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FadviseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/PrestatError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/BadFileDescriptor : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FadviseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FdrenumberError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/PrestatError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SeekError, at/released/weh/filesystem/error/SetFdFlagsError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/BadFileDescriptor;
@@ -159,6 +159,9 @@ public abstract interface class at/released/weh/filesystem/error/FallocateError 
 }
 
 public abstract interface class at/released/weh/filesystem/error/FdAttributesError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
+public abstract interface class at/released/weh/filesystem/error/FdrenumberError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
 public abstract interface class at/released/weh/filesystem/error/FileSystemOperationError {
@@ -1027,6 +1030,24 @@ public final class at/released/weh/filesystem/op/fdattributes/FdAttributesResult
 	public final fun getType ()Lat/released/weh/filesystem/model/Filetype;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fdrenumber/Fdrenumber {
+	public static final field Companion Lat/released/weh/filesystem/op/fdrenumber/Fdrenumber$Companion;
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lat/released/weh/filesystem/op/fdrenumber/Fdrenumber;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/fdrenumber/Fdrenumber;IIILjava/lang/Object;)Lat/released/weh/filesystem/op/fdrenumber/Fdrenumber;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFromFd ()I
+	public final fun getToFd ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/op/fdrenumber/Fdrenumber$Companion : at/released/weh/filesystem/op/FileSystemOperation {
+	public fun getTag ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/op/hardlink/Hardlink {
