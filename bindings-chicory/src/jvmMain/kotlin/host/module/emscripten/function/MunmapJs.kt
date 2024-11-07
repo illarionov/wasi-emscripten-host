@@ -7,25 +7,24 @@
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.MunapJsFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
-internal class MunmapJs(host: EmbedderHost) : EmscriptenHostFunctionHandle {
+internal class MunmapJs(host: EmbedderHost) : WasmFunctionHandle {
     private val handle = MunapJsFunctionHandle(host)
 
     @Suppress("MagicNumber")
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val result: Int = handle.execute(
             args[0].asWasmAddr(),
-            args[1].asInt(),
-            args[2].asInt(),
-            args[3].asInt(),
-            args[4].asInt(),
-            args[5].asLong(),
+            args[1].toInt(),
+            args[2].toInt(),
+            args[3].toInt(),
+            args[4].toInt(),
+            args[5],
         )
-        return Value.i32(result.toLong())
+        return LongArray(1) { result.toLong() }
     }
 }

@@ -8,16 +8,18 @@ package at.released.weh.wasi.bindings.test.chicory.base
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.weh.bindings.chicory.ProcExitException
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import com.dylibso.chicory.log.SystemLogger
-import com.dylibso.chicory.runtime.HostImports
-import com.dylibso.chicory.runtime.Module
-import com.dylibso.chicory.runtime.exceptions.WASMMachineException
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.runtime.Store
+import com.dylibso.chicory.runtime.WasmRuntimeException
 import com.dylibso.chicory.wasi.WasiExitException
 import com.dylibso.chicory.wasi.WasiOptions
 import com.dylibso.chicory.wasi.WasiPreview1
+import com.dylibso.chicory.wasm.Parser
 import java.io.ByteArrayOutputStream
 import java.nio.file.Path
 import kotlin.text.Charsets.UTF_8
@@ -49,25 +51,28 @@ object ChicoryNativeRuntimeTestExecutor : RuntimeTestExecutor {
             .build()
 
         WasiPreview1(logger, options).use { wasi ->
-            val hostFunctions = wasi.toHostFunctions()
-            val hostImports = HostImports(hostFunctions)
+            val store = Store().apply {
+                wasi.toHostFunctions().forEach { hostFunction -> addFunction(hostFunction) }
+            }
 
-            val module = Module
-                .builder(wasmFile)
-                .withHostImports(hostImports)
-                .withInitialize(true)
-                .withStart(false)
-                .build()
+            val wasmModule = Parser.parse(wasmFile)
 
             // Instantiate the WebAssembly module
-            val instance = module.instantiate()
+            val instance = Instance.builder(wasmModule)
+                .withInitialize(true)
+                .withStart(false)
+                .withImportValues(store.toImportValues())
+                .build()
+
             val exitCode = try {
                 instance.export("_start").apply()
                 0
             } catch (exit: WasiExitException) {
                 exit.exitCode()
-            } catch (machineException: WASMMachineException) {
+            } catch (machineException: WasmRuntimeException) {
                 (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
+            } catch (prce: ProcExitException) {
+                prce.exitCode
             }
 
             assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)

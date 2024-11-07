@@ -19,11 +19,6 @@ internal object ChicoryClassname {
     const val WASM_TYPES_PACKAGE = "$PACKAGE.wasm.types"
     val HOST_FUNCTION = ClassName(RUNTIME_PACKAGE, "HostFunction")
     val INSTANCE = ClassName(RUNTIME_PACKAGE, "Instance")
-    val VALUE = ClassName(WASM_TYPES_PACKAGE, "Value")
-    val VALUE_AS_BYTE = VALUE.member("asByte")
-    val VALUE_AS_INT = VALUE.member("asInt")
-    val VALUE_AS_LONG = VALUE.member("asLong")
-    val VALUE_AS_SHORT = VALUE.member("asShort")
     val VALUE_TYPE = ClassName(WASM_TYPES_PACKAGE, "ValueType")
     val VALUE_TYPE_I32 = VALUE_TYPE.member("I32")
     val VALUE_TYPE_I64 = VALUE_TYPE.member("I64")

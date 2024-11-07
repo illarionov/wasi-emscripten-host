@@ -6,12 +6,11 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
-internal object NotImplemented : EmscriptenHostFunctionHandle {
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+internal object NotImplemented : WasmFunctionHandle {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         error("Function not implemented")
     }
 }

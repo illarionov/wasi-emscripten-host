@@ -8,20 +8,19 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.LocaltimeJsFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal class LocaltimeJs(
     host: EmbedderHost,
     private val memoryProvider: ChicoryMemoryProvider,
-) : EmscriptenHostFunctionHandle {
+) : WasmFunctionHandle {
     private val handle = LocaltimeJsFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value? {
-        handle.execute(memoryProvider.get(instance), args[0].asLong(), args[1].asWasmAddr())
-        return null
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
+        handle.execute(memoryProvider.get(instance), args[0], args[1].asWasmAddr())
+        return LongArray(0)
     }
 }

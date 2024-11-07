@@ -6,21 +6,20 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.function.EmscriptenResizeHeapFunctionHandle.Companion.calculateNewSizePages
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.memory.Pages
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
-internal class EmscriptenResizeHeap(host: EmbedderHost) : EmscriptenHostFunctionHandle {
+internal class EmscriptenResizeHeap(host: EmbedderHost) : WasmFunctionHandle {
     private val logger: Logger = host.rootLogger.withTag("wasm-func:emscripten_resize_heap")
 
-    override fun apply(instance: Instance, vararg args: Value): Value {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val memory = instance.memory()
-        val requestedSize = args[0].asInt().toLong()
+        val requestedSize = args[0]
 
         val newSizePages = calculateNewSizePages(
             requestedSize,
@@ -39,8 +38,8 @@ internal class EmscriptenResizeHeap(host: EmbedderHost) : EmscriptenHostFunction
                 "Cannot enlarge memory, requested $newSizePages pages, but the limit is " +
                         "${memory.maximumPages()} pages!"
             }
-            return Value.i32(-Errno.NOMEM.code.toLong())
+            return LongArray(1) { -Errno.NOMEM.code.toLong() }
         }
-        return Value.i32(1)
+        return LongArray(1) { 1 }
     }
 }

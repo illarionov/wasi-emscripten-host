@@ -8,26 +8,25 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallReadlinkatFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal class SyscallReadlinkat(
     host: EmbedderHost,
     private val memoryProvider: ChicoryMemoryProvider,
-) : EmscriptenHostFunctionHandle {
+) : WasmFunctionHandle {
     private val handle = SyscallReadlinkatFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val sizeOrErrno = handle.execute(
             memoryProvider.get(instance),
-            rawDirFd = args[0].asInt(),
+            rawDirFd = args[0].toInt(),
             pathnamePtr = args[1].asWasmAddr(),
             buf = args[2].asWasmAddr(),
-            bufSize = args[3].asInt(),
+            bufSize = args[3].toInt(),
         )
-        return Value.i32(sizeOrErrno.toLong())
+        return LongArray(1) { sizeOrErrno.toLong() }
     }
 }

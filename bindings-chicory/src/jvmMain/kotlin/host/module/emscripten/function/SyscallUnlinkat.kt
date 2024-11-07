@@ -8,25 +8,24 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallUnlinkatFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal class SyscallUnlinkat(
     host: EmbedderHost,
     private val memoryProvider: ChicoryMemoryProvider,
-) : EmscriptenHostFunctionHandle {
+) : WasmFunctionHandle {
     private val handle = SyscallUnlinkatFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val result = handle.execute(
             memoryProvider.get(instance),
-            args[0].asInt(),
+            args[0].toInt(),
             args[1].asWasmAddr(),
-            args[2].asInt(),
+            args[2].toInt(),
         )
-        return Value.i32(result.toLong())
+        return LongArray(1) { result.toLong() }
     }
 }

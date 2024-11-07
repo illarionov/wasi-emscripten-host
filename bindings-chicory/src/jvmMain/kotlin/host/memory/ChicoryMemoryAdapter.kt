@@ -22,11 +22,11 @@ public class ChicoryMemoryAdapter(
     }
 
     override fun readI32(@IntWasmPtr addr: WasmPtr): Int {
-        return wasmMemory.readI32(addr).asInt()
+        return wasmMemory.readI32(addr).toInt()
     }
 
     override fun readI64(@IntWasmPtr addr: WasmPtr): Long {
-        return wasmMemory.readI64(addr).asLong()
+        return wasmMemory.readI64(addr)
     }
 
     override fun source(@IntWasmPtr fromAddr: WasmPtr, @IntWasmPtr toAddrExclusive: WasmPtr): RawSource {

@@ -8,20 +8,19 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.GetentropyFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal class Getentropy(
     host: EmbedderHost,
     private val memoryProvider: ChicoryMemoryProvider,
-) : EmscriptenHostFunctionHandle {
+) : WasmFunctionHandle {
     private val handle = GetentropyFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value? {
-        val code = handle.execute(memoryProvider.get(instance), args[0].asWasmAddr(), args[1].asInt())
-        return Value.i32(code.toLong())
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
+        val code = handle.execute(memoryProvider.get(instance), args[0].asWasmAddr(), args[1].toInt())
+        return LongArray(1) { code.toLong() }
     }
 }

@@ -10,34 +10,33 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallStatLstat64FunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal fun syscallStat64(
     host: EmbedderHost,
     memoryProvider: ChicoryMemoryProvider,
-): EmscriptenHostFunctionHandle =
+): WasmFunctionHandle =
     SyscallStat64Lstat64(memoryProvider, SyscallStatLstat64FunctionHandle.syscallStat64(host))
 
 internal fun syscallLstat64(
     host: EmbedderHost,
     memoryProvider: ChicoryMemoryProvider,
-): EmscriptenHostFunctionHandle =
+): WasmFunctionHandle =
     SyscallStat64Lstat64(memoryProvider, SyscallStatLstat64FunctionHandle.syscallLstat64(host))
 
 internal class SyscallStat64Lstat64(
     private val memoryProvider: ChicoryMemoryProvider,
     private val handle: SyscallStatLstat64FunctionHandle,
-) : EmscriptenHostFunctionHandle {
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+) : WasmFunctionHandle {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val result = handle.execute(
             memoryProvider.get(instance),
             args[0].asWasmAddr(),
             args[1].asWasmAddr(),
         )
-        return Value.i32(result.toLong())
+        return LongArray(1) { result.toLong() }
     }
 }
