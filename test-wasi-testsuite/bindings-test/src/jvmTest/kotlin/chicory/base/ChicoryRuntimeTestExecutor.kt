@@ -12,12 +12,11 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import com.dylibso.chicory.runtime.HostFunction
-import com.dylibso.chicory.runtime.HostGlobal
-import com.dylibso.chicory.runtime.HostImports
-import com.dylibso.chicory.runtime.HostTable
-import com.dylibso.chicory.runtime.Module
-import com.dylibso.chicory.runtime.exceptions.WASMMachineException
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.runtime.Store
+import com.dylibso.chicory.runtime.WasmRuntimeException
 import com.dylibso.chicory.wasi.WasiExitException
+import com.dylibso.chicory.wasm.Parser
 import kotlinx.io.files.Path
 
 object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
@@ -31,28 +30,27 @@ object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
             this.host = host
         }
         val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
-        val hostImports = HostImports(
-            wasiFunctions.toTypedArray(),
-            arrayOf<HostGlobal>(),
-            emptyArray(),
-            arrayOf<HostTable>(),
-        )
-        val module = Module
-            .builder(wasmFile)
-            .withHostImports(hostImports)
-            .withInitialize(true)
-            .withStart(false)
-            .build()
+        val store = Store().apply {
+            wasiFunctions.forEach { hostFunction -> addFunction(hostFunction) }
+        }
+
+        val wasmModule = Parser.parse(wasmFile)
 
         // Instantiate the WebAssembly module
-        val instance = module.instantiate()
+        val instance = Instance.builder(wasmModule)
+            .withInitialize(true)
+            .withStart(false)
+            .withImportValues(store.toImportValues())
+            .build()
         val exitCode = try {
             instance.export("_start").apply()
             0
         } catch (exit: WasiExitException) {
             exit.exitCode()
-        } catch (machineException: WASMMachineException) {
+        } catch (machineException: WasmRuntimeException) {
             machineException.findProcExitExceptionCause()?.exitCode ?: throw machineException
+        } catch (prce: ProcExitException) {
+            prce.exitCode
         }
 
         return exitCode

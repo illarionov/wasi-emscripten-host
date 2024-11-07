@@ -14,10 +14,10 @@ import com.dylibso.chicory.wasm.types.ValueType.I32
 internal fun createCustomChicoryFunctions(
     moduleName: String = "wasi_snapshot_preview1",
 ): List<HostFunction> = listOf(
-    HostFunction(procExit, moduleName, "proc_exit", listOf(I32), emptyList()),
+    HostFunction(moduleName, "proc_exit", listOf(I32), emptyList(), procExit),
 )
 
 private val procExit: WasmFunctionHandle = WasmFunctionHandle { _, args ->
-    val exitCode = args[0].asInt()
+    val exitCode = args[0].toInt()
     throw ProcExitException(exitCode)
 }

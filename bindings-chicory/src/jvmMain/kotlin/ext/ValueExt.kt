@@ -8,7 +8,7 @@ package at.released.weh.bindings.chicory.ext
 
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
-import com.dylibso.chicory.wasm.types.Value
 
+@Suppress("NOTHING_TO_INLINE")
 @IntWasmPtr
-internal fun Value.asWasmAddr(): WasmPtr = asInt()
+internal inline fun Long.asWasmAddr(): WasmPtr = this.toInt()

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LOCAL_VARIABLE_EARLY_DECLARATION")
+
 package at.released.weh.gradle.wasm.codegen.chicory
 
 import at.released.weh.gradle.wasm.codegen.util.WasiFunctionHandlerProperty
@@ -26,11 +28,10 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver.Wasi
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.Identifier
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
-import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.VARARG
-import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.LONG_ARRAY
 
 internal class ChicoryArgsFunctionHandles(
     wasiTypes: Map<Identifier, WasiType>,
@@ -55,33 +56,35 @@ internal class ChicoryArgsFunctionHandles(
 
         fun hostFunctionDeclaration(): FunSpec = FunSpec.builder(hostFunctionName).apply {
             addParameter("instance", ChicoryClassname.INSTANCE)
-            addParameter("args", ChicoryClassname.VALUE, VARARG)
-            returns(ARRAY.parameterizedBy(ChicoryClassname.VALUE))
+            addParameter("args", LONG, VARARG)
+            returns(LONG_ARRAY)
 
-            val handleArgs: List<Pair<String, MemberName>> =
-                baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, _, comment) ->
-                    val (funcSpecifier, converterFunc) = when (baseType) {
-                        POINTER -> "%M" to ChicoryClassname.Bindings.VALUE_AS_WASM_ADDR
-                        S8, U8 -> "%N" to ChicoryClassname.VALUE_AS_BYTE
-                        S16, U16 -> "%N" to ChicoryClassname.VALUE_AS_SHORT
-                        S32, U32, HANDLE -> "%N" to ChicoryClassname.VALUE_AS_INT
-                        S64, U64 -> "%N" to ChicoryClassname.VALUE_AS_LONG
+            val argsFormatSpecs: MutableList<String> = mutableListOf()
+            val argSpecs: MutableList<Any> = mutableListOf()
+
+            argSpecs.add(handlerProperty.propertyName)
+
+            if (func.export !in NO_MEMORY_FUNCTIONS) {
+                argsFormatSpecs.add("\nmemoryProvider.get(instance),")
+            }
+            if (func.export in WASI_MEMORY_READER_FUNCTIONS) {
+                argsFormatSpecs.add("\nwasiMemoryReaderProvider(instance),")
+            }
+            if (func.export in WASI_MEMORY_WRITER_FUNCTIONS) {
+                argsFormatSpecs.add("\nwasiMemoryWriterProvider(instance),")
+            }
+            baseTypeResolver.getFuncInputArgs(func).forEachIndexed { index, (baseType: WasiBaseWasmType, _, comment) ->
+                when (baseType) {
+                    POINTER -> {
+                        argsFormatSpecs.add("\nargs[$index].%M(), /* $comment */")
+                        argSpecs.add(ChicoryClassname.Bindings.VALUE_AS_WASM_ADDR)
                     }
-                    "\nargs[$index].$funcSpecifier(), /* $comment */" to converterFunc
-                }
 
-            val allArgs: List<Pair<String, Any>> = buildList {
-                if (func.export !in NO_MEMORY_FUNCTIONS) {
-                    add("\nmemoryProvider.get(%N)," to "instance")
+                    S8, U8 -> argsFormatSpecs.add("\nargs[$index].toByte(), /* $comment */")
+                    S16, U16 -> argsFormatSpecs.add("\nargs[$index].toShort(), /* $comment */")
+                    S32, U32, HANDLE -> argsFormatSpecs.add("\nargs[$index].toInt(), /* $comment */")
+                    S64, U64 -> argsFormatSpecs.add("\nargs[$index], /* $comment */")
                 }
-                if (func.export in WASI_MEMORY_READER_FUNCTIONS) {
-                    add("\n%N(instance)," to "wasiMemoryReaderProvider")
-                }
-                if (func.export in WASI_MEMORY_WRITER_FUNCTIONS) {
-                    add("\n%N(instance)," to "wasiMemoryWriterProvider")
-                }
-
-                addAll(handleArgs)
             }
 
             val toListOfReturnValues = if (func.result != null) {
@@ -91,13 +94,12 @@ internal class ChicoryArgsFunctionHandles(
             }
 
             addCode(
-                format = allArgs.joinToString(
+                format = argsFormatSpecs.joinToString(
                     separator = "",
                     prefix = "return %N.execute(⇥⇥⇥",
                     postfix = "\n⇤)$toListOfReturnValues⇤⇤\n",
-                    transform = Pair<String, *>::first,
                 ),
-                args = (listOf(handlerProperty.propertyName) + allArgs.map(Pair<String, Any>::second)).toTypedArray(),
+                args = argSpecs.toTypedArray(),
             )
         }.build()
     }

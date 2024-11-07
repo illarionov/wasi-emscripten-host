@@ -15,12 +15,11 @@ import at.released.weh.gradle.wasm.codegen.util.classname.WehHostClassname
 import at.released.weh.gradle.wasm.codegen.util.classname.WehWasiPreview1ClassName
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiFunc
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType
-import com.squareup.kotlinpoet.ARRAY
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.LONG_ARRAY
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
@@ -88,8 +87,8 @@ internal class ChicoryHostFunctionsAdapterGenerator(
             FunSpec.builder("toListOfReturnValues")
                 .addModifiers(PRIVATE)
                 .receiver(WehWasiPreview1ClassName.ERRNO)
-                .returns(ARRAY.parameterizedBy(ChicoryClassname.VALUE))
-                .addCode("""return arrayOf(Value.i32(this.code.toLong()))""")
+                .returns(LONG_ARRAY)
+                .addCode("""return LongArray(1) { this.code.toLong() }""")
                 .build(),
         )
     }.build()

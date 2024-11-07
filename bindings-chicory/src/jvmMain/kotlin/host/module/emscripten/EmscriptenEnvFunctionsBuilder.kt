@@ -47,9 +47,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
-import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.WasmFunctionHandle
-import com.dylibso.chicory.wasm.types.Value
 import com.dylibso.chicory.runtime.HostFunction as ChicoryHostFunction
 
 internal class EmscriptenEnvFunctionsBuilder(
@@ -62,31 +60,12 @@ internal class EmscriptenEnvFunctionsBuilder(
     ): List<ChicoryHostFunction> {
         return EmscriptenHostFunction.entries.map { emscriptenFunc ->
             ChicoryHostFunction(
-                HostFunctionAdapter(
-                    emscriptenFunc.createChicoryEmscriptenFunction(
-                        host,
-                        memoryProvider,
-                        stackBindingsRef,
-                    ),
-                ),
                 moduleName,
                 emscriptenFunc.wasmName,
                 emscriptenFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
                 emscriptenFunc.type.returnTypes.map(::wasmValueTypeToChicoryValueType),
+                emscriptenFunc.createChicoryEmscriptenFunction(host, memoryProvider, stackBindingsRef),
             )
-        }
-    }
-
-    private class HostFunctionAdapter(
-        private val delegate: EmscriptenHostFunctionHandle,
-    ) : WasmFunctionHandle {
-        override fun apply(instance: Instance, vararg args: Value): Array<Value> {
-            val result: Value? = delegate.apply(instance, args = args)
-            return if (result != null) {
-                arrayOf(result)
-            } else {
-                arrayOf()
-            }
         }
     }
 }
@@ -96,7 +75,7 @@ private fun EmscriptenHostFunction.createChicoryEmscriptenFunction(
     host: EmbedderHost,
     memoryProvider: ChicoryMemoryProvider,
     stackBindingsRef: () -> EmscriptenStack,
-): EmscriptenHostFunctionHandle = when (this) {
+): WasmFunctionHandle = when (this) {
     EmscriptenHostFunction.ABORT_JS -> AbortJs(host)
     EmscriptenHostFunction.ASSERT_FAIL -> AssertFail(host, memoryProvider)
     EmscriptenHostFunction.EMSCRIPTEN_ASM_CONST_ASYNC_ON_MAIN_THREAD -> EmscriptenAsmConstAsyncOnMainThread(host)

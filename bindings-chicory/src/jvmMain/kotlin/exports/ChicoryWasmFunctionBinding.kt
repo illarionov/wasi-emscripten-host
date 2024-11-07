@@ -12,7 +12,9 @@ import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmFunctionBinding
 import at.released.weh.wasm.core.WasmPtr
 import com.dylibso.chicory.runtime.ExportFunction
-import com.dylibso.chicory.wasm.types.Value
+import java.lang.Double.longBitsToDouble
+import java.lang.Float.floatToRawIntBits
+import java.lang.Float.intBitsToFloat
 
 internal class ChicoryWasmFunctionBinding(
     private val func: ExportFunction,
@@ -21,26 +23,26 @@ internal class ChicoryWasmFunctionBinding(
         func.apply(*args.argsToValues())
     }
 
-    override fun executeForInt(vararg args: Any?): Int = func.apply(*args.argsToValues())[0].asInt()
-    override fun executeForLong(vararg args: Any?): Long = func.apply(*args.argsToValues())[0].asLong()
-    override fun executeForFloat(vararg args: Any?): Float = func.apply(*args.argsToValues())[0].asFloat()
-    override fun executeForDouble(vararg args: Any?): Double = func.apply(*args.argsToValues())[0].asDouble()
+    override fun executeForInt(vararg args: Any?): Int = func.apply(*args.argsToValues())[0].toInt()
+    override fun executeForLong(vararg args: Any?): Long = func.apply(*args.argsToValues())[0]
+    override fun executeForFloat(vararg args: Any?): Float = intBitsToFloat(func.apply(*args.argsToValues())[0].toInt())
+    override fun executeForDouble(vararg args: Any?): Double = longBitsToDouble(func.apply(*args.argsToValues())[0])
 
     @IntWasmPtr
-    override fun executeForPtr(vararg args: Any?): WasmPtr = func.apply(*args.argsToValues())[0].asInt()
+    override fun executeForPtr(vararg args: Any?): WasmPtr = func.apply(*args.argsToValues())[0].toInt()
 
-    private fun Array<out Any?>.argsToValues(): Array<Value> {
+    private fun Array<out Any?>.argsToValues(): LongArray {
         return if (this.isEmpty()) {
-            emptyArray()
+            LongArray(0)
         } else {
-            Array(this.size) { idx ->
+            LongArray(this.size) { idx ->
                 when (val arg = this[idx]) {
-                    is Int -> Value.i32(arg.toLong())
-                    is UInt -> Value.i32(arg.toLong())
-                    is Long -> Value.i64(arg.toLong())
-                    is ULong -> Value.i64(arg.toLong())
-                    is Float -> Value.fromFloat(arg)
-                    is Double -> Value.fromDouble(arg)
+                    is Int -> arg.toLong()
+                    is UInt -> arg.toLong()
+                    is Long -> arg.toLong()
+                    is ULong -> arg.toLong()
+                    is Float -> floatToRawIntBits(arg).toLong()
+                    is Double -> java.lang.Double.doubleToRawLongBits(arg)
                     else -> error("Unsupported argument type $arg")
                 }
             }

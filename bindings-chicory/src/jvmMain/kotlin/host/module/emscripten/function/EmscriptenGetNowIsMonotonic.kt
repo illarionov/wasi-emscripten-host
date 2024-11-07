@@ -6,16 +6,15 @@
 
 package at.released.weh.bindings.chicory.host.module.emscripten.function
 
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.EmscriptenGetNowIsMonotonicFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
-internal class EmscriptenGetNowIsMonotonic(host: EmbedderHost) : EmscriptenHostFunctionHandle {
+internal class EmscriptenGetNowIsMonotonic(host: EmbedderHost) : WasmFunctionHandle {
     private val handle = EmscriptenGetNowIsMonotonicFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value {
-        return Value.i32(handle.execute().toLong())
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
+        return LongArray(1) { handle.execute().toLong() }
     }
 }

@@ -74,12 +74,12 @@ internal class ChicoryFactoryFunctionGenerator(
             val wasiNameCamelCase = wasiFunc.export.toCamelCasePropertyName()
 
             addCode(
-                "%T(functions::%N, moduleName, %S, %N, %N),\n",
+                "%T(moduleName, %S, %N, %N, functions::%N),\n",
                 ChicoryClassname.HOST_FUNCTION,
-                wasiNameCamelCase,
                 wasiFunc.export,
                 baseType.input.listPropertyName(),
                 baseType.results.listPropertyName(),
+                wasiNameCamelCase,
             )
         }
         addCode("⇤⇤)")

@@ -10,7 +10,7 @@ import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.MemoryRawSource
 import com.dylibso.chicory.runtime.Memory
-import com.dylibso.chicory.runtime.exceptions.WASMRuntimeException
+import com.dylibso.chicory.runtime.WasmRuntimeException
 import kotlinx.io.Buffer
 
 internal class ChicoryMemoryRawSource(
@@ -22,7 +22,7 @@ internal class ChicoryMemoryRawSource(
         try {
             val bytes = wasmMemory.readBytes(srcAddr, readBytes)
             sink.write(bytes)
-        } catch (oob: WASMRuntimeException) {
+        } catch (oob: WasmRuntimeException) {
             throw IllegalStateException("Out of bounds memory access", oob)
         } finally {
             sink.emit()

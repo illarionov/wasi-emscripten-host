@@ -10,19 +10,18 @@ package at.released.weh.bindings.chicory.host.module.emscripten.function
 
 import at.released.weh.bindings.chicory.ChicoryMemoryProvider
 import at.released.weh.bindings.chicory.ext.asWasmAddr
-import at.released.weh.bindings.chicory.host.module.emscripten.EmscriptenHostFunctionHandle
 import at.released.weh.emcripten.runtime.function.SyscallOpenatFunctionHandle
 import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.Instance
-import com.dylibso.chicory.wasm.types.Value
+import com.dylibso.chicory.runtime.WasmFunctionHandle
 
 internal class SyscallOpenat(
     host: EmbedderHost,
     private val memoryProvider: ChicoryMemoryProvider,
-) : EmscriptenHostFunctionHandle {
+) : WasmFunctionHandle {
     private val handle: SyscallOpenatFunctionHandle = SyscallOpenatFunctionHandle(host)
 
-    override fun apply(instance: Instance, vararg args: Value): Value? {
+    override fun apply(instance: Instance, vararg args: Long): LongArray {
         val memory = memoryProvider.get(instance)
         val mode = if (args.lastIndex == 3) {
             memory.readI32(args[3].asWasmAddr())
@@ -31,11 +30,11 @@ internal class SyscallOpenat(
         }
         val fdOrErrno = handle.execute(
             memory,
-            rawDirFd = args[0].asInt(),
+            rawDirFd = args[0].toInt(),
             pathnamePtr = args[1].asWasmAddr(),
-            rawFlags = args[2].asInt(),
+            rawFlags = args[2].toInt(),
             rawMode = mode,
         )
-        return Value.i32(fdOrErrno.toLong())
+        return LongArray(1) { fdOrErrno.toLong() }
     }
 }
