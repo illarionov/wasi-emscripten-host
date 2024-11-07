@@ -10,19 +10,14 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import platform.posix.clock_getres
-import platform.posix.clock_gettime
+import platform.posix.clock_gettime_nsec_np
 import platform.posix.clockid_t
 import platform.posix.timespec
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
 internal fun getTime(clockId: clockid_t): Long = memScoped {
-    val timespec: timespec = alloc()
-    if (clock_gettime(clockId, timespec.ptr) != -1) {
-        (timespec.tv_sec.seconds + timespec.tv_nsec.nanoseconds).inWholeNanoseconds
-    } else {
-        -1L
-    }
+    return clock_gettime_nsec_np(clockId).toLong()
 }
 
 internal fun getTimerResolution(clockId: clockid_t): Long = memScoped {

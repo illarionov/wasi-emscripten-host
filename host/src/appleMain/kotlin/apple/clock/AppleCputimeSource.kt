@@ -13,7 +13,6 @@ import at.released.weh.host.clock.CputimeSource.CpuClockId.THREAD_CPUTIME
 import at.released.weh.host.clock.CputimeSource.CputimeClock
 import platform.posix.CLOCK_PROCESS_CPUTIME_ID
 import platform.posix.CLOCK_THREAD_CPUTIME_ID
-import platform.posix.clock_getres
 import platform.posix.clockid_t
 
 internal object AppleCputimeSource : CputimeSource {
@@ -29,7 +28,7 @@ internal object AppleCputimeSource : CputimeSource {
         private val clockId: clockid_t,
     ) : CputimeClock {
         private val _resolution = getTimerResolution(clockId)
-        override val isSupported: Boolean = clock_getres(clockId, null) == 0
+        override val isSupported: Boolean = getTimerResolution(clockId) != -1L
         override fun getTimeMarkNanoseconds(): Long = getTime(clockId)
         override fun getResolutionNanoseconds(): Long = _resolution
     }

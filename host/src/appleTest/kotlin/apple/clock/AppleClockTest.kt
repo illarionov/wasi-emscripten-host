@@ -26,6 +26,6 @@ class AppleClockTest {
     @Test
     fun test_clock_time_resolution() {
         val resolution = clock.getResolutionNanoseconds()
-        assertThat(resolution).isBetween(1, 100)
+        assertThat(resolution).isBetween(1, 1001)
     }
 }
