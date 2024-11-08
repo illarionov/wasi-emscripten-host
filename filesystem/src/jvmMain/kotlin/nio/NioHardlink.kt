@@ -12,6 +12,10 @@ import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.PermissionDenied
+import at.released.weh.filesystem.error.ReadLinkError
+import at.released.weh.filesystem.error.SymlinkError
+import at.released.weh.filesystem.fdresource.nio.createSymlink
+import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
@@ -21,11 +25,19 @@ import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isSymbolicLink
 
 internal class NioHardlink(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
+    private val createLinkFollowSymlinks: Boolean by lazy(PUBLICATION) {
+        val osName = System.getProperty("os.name") ?: "generic"
+        val isLinux = osName.findAnyOf(listOf("nix", "nux", "aix"), ignoreCase = true) != null
+        !isLinux
+    }
+
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> = either {
         val oldPath = fsState.pathResolver.resolve(
             path = input.oldPath,
@@ -41,7 +53,11 @@ internal class NioHardlink(
             followSymlinks = false,
         ).mapLeft(ResolvePathError::toCommonError).bind()
 
-        createHardlink(oldPath, newPath).bind()
+        if (!input.followSymlinks && createLinkFollowSymlinks && oldPath.isSymbolicLink()) {
+            copySymlink(oldPath, newPath).bind()
+        } else {
+            createHardlink(oldPath, newPath).bind()
+        }
     }
 
     private fun createHardlink(
@@ -69,4 +85,19 @@ internal class NioHardlink(
             }
         }
     }
+
+    private fun copySymlink(
+        oldSymlink: Path,
+        newPath: Path,
+    ): Either<HardlinkError, Unit> = either {
+        val target: String = readSymbolicLink(oldSymlink)
+            .mapLeft { it.toHardlinkError() }
+            .bind()
+        createSymlink(newPath, target, true)
+            .mapLeft { it.toHardlinkError() }
+    }
+
+    private fun ReadLinkError.toHardlinkError(): HardlinkError = this as HardlinkError
+
+    private fun SymlinkError.toHardlinkError(): HardlinkError = this as HardlinkError
 }
