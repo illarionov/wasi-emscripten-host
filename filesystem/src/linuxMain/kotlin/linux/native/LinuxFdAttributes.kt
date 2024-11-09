@@ -24,7 +24,6 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.linux.ext.linuxFd
-import at.released.weh.filesystem.linux.ext.linuxMaskToFsFdFlags
 import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
@@ -33,6 +32,7 @@ import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.op.open.posixMaskToFsFdFlags
 import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.F_GETFL
@@ -82,7 +82,7 @@ private fun readRawFileStatus(
 ): Either<FdAttributesError, Fdflags> {
     val exitCode = fcntl(fd, F_GETFL)
     return if (exitCode >= 0) {
-        linuxMaskToFsFdFlags(exitCode).right()
+        posixMaskToFsFdFlags(exitCode).right()
     } else {
         errno.getflErrnoToFdAttributesError().left()
     }

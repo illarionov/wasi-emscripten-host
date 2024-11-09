@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.ext
+package at.released.weh.filesystem.posix.ext
 
 import arrow.core.Either
 import arrow.core.left

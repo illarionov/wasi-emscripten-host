@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.ext
+package at.released.weh.filesystem.op.open
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
+import at.released.weh.filesystem.posix.op.open.openFileFlagsToPosixMask
+import at.released.weh.filesystem.posix.op.open.posixMaskToOpenFileFlags
 import kotlin.test.Test
 import platform.posix.O_CREAT as POSIX_O_CREAT
 import platform.posix.O_RDONLY as POSIX_O_RDONLY
@@ -17,7 +19,7 @@ import platform.posix.O_RDWR as POSIX_O_RDWR
 import platform.posix.O_TRUNC as POSIX_O_TRUNC
 
 class OpenFileFlagsMapperTest {
-    private val testMasks = tableOf("fsMask", "linuxMask")
+    private val testMasks = tableOf("fsMask", "posixMask")
         .row(
             OpenFileFlag.O_RDWR or OpenFileFlag.O_CREAT,
             POSIX_O_RDWR or POSIX_O_CREAT,
@@ -34,7 +36,7 @@ class OpenFileFlagsMapperTest {
     @Test
     fun openFileFlagsToLinuxMask_should_generate_correct_mask() {
         testMasks.forAll { openFileFlags, expectedLinuxMask ->
-            val linuxMask: ULong = openFileFlagsToLinuxMask((openFileFlags))
+            val linuxMask: ULong = openFileFlagsToPosixMask((openFileFlags))
             assertThat(linuxMask).isEqualTo(expectedLinuxMask.toULong())
         }
     }
@@ -42,7 +44,7 @@ class OpenFileFlagsMapperTest {
     @Test
     fun linuxMaskToOpenFileFlags_should_generate_correct_mask() {
         testMasks.forAll { expectedOpenFileFlags, linuxMask ->
-            val openFileFlags: Int = linuxMaskToOpenFileFlags(linuxMask)
+            val openFileFlags: Int = posixMaskToOpenFileFlags(linuxMask)
             assertThat(openFileFlags).isEqualTo(expectedOpenFileFlags)
         }
     }

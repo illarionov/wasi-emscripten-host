@@ -5,6 +5,7 @@
  */
 
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     id("at.released.weh.gradle.multiplatform.atomicfu")
@@ -35,6 +36,15 @@ kotlin {
     macosX64()
     mingwX64()
 
+    targets.withType<KotlinNativeTarget>().matching {
+        when (it.konanTarget.family) {
+            Family.OSX, Family.IOS, Family.TVOS, Family.WATCHOS -> true
+            else -> false
+        }
+    }.configureEach {
+        setupAppleInterops()
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.commonApi)
@@ -59,6 +69,14 @@ fun KotlinNativeTarget.setupLinuxInterops() = compilations.named("main") {
     cinterops {
         create("atfile") {
             packageName("at.released.weh.filesystem.platform.linux")
+        }
+    }
+}
+
+fun KotlinNativeTarget.setupAppleInterops() = compilations.named("main") {
+    cinterops {
+        create("apple") {
+            packageName("at.released.weh.filesystem.platform.apple")
         }
     }
 }

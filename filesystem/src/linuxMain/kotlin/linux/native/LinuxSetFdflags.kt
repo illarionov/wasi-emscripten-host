@@ -13,12 +13,12 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.SetFdFlagsError
-import at.released.weh.filesystem.linux.ext.fdFdFlagsToLinuxMask
 import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.posix.NativeFileFd
+import at.released.weh.filesystem.posix.op.open.fdFdFlagsToPosixMask
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.EBADF
 import platform.posix.EPERM
@@ -43,7 +43,7 @@ internal fun linuxSetFdflags(
     fd: NativeFileFd,
     @FdflagsType fdFlags: Fdflags,
 ): Either<SetFdFlagsError, Unit> {
-    val linuxFlags = fdFdFlagsToLinuxMask(fdFlags) and (FdFlag.FD_APPEND.toULong().inv())
+    val linuxFlags = fdFdFlagsToPosixMask(fdFlags) and (FdFlag.FD_APPEND.toULong().inv())
     val exitCode = fcntl(fd.fd, F_SETFL, linuxFlags)
     return if (exitCode == 0) {
         Unit.right()
