@@ -65,6 +65,10 @@ kotlin {
     }
 }
 
+tasks.matching { it.name.endsWith("linuxArm64MetadataElements") }.configureEach {
+    mustRunAfter(tasks.named("commonizeCInterop"))
+}
+
 fun KotlinNativeTarget.setupLinuxInterops() = compilations.named("main") {
     cinterops {
         create("atfile") {
