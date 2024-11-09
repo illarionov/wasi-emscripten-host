@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.Family
 
@@ -65,10 +66,6 @@ kotlin {
     }
 }
 
-tasks.matching { it.name.endsWith("linuxArm64MetadataElements") }.configureEach {
-    mustRunAfter(tasks.named("commonizeCInterop"))
-}
-
 fun KotlinNativeTarget.setupLinuxInterops() = compilations.named("main") {
     cinterops {
         create("atfile") {
@@ -77,10 +74,14 @@ fun KotlinNativeTarget.setupLinuxInterops() = compilations.named("main") {
     }
 }
 
-fun KotlinNativeTarget.setupAppleInterops() = compilations.named("main") {
-    cinterops {
-        create("apple") {
-            packageName("at.released.weh.filesystem.platform.apple")
+fun KotlinNativeTarget.setupAppleInterops() {
+    if (Os.isFamily("mac")) {
+        compilations.named("main") {
+            cinterops {
+                create("apple") {
+                    packageName("at.released.weh.filesystem.platform.apple")
+                }
+            }
         }
     }
 }
