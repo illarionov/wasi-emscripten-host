@@ -50,7 +50,7 @@ import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 
-public class LinuxFileSystemImpl(
+internal class LinuxFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
     isRootAccessAllowed: Boolean,

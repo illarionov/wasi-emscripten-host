@@ -4,14 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.linux
+package at.released.weh.host
 
 import at.released.weh.host.native.NativeEnvironBasedEnvProvider
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CPointerVarOf
-import platform.posix.__environ
+import kotlinx.cinterop.get
+import platform.osx._NSGetEnviron
 
-internal object LinuxSystemEnvProvider : NativeEnvironBasedEnvProvider() {
-    override fun getEnviron(): CPointer<CPointerVarOf<CPointer<ByteVarOf<Byte>>>>? = __environ
+internal actual val appleSystemEnvProvider: SystemEnvProvider = MacosSystemEnvProvider
+
+private object MacosSystemEnvProvider : NativeEnvironBasedEnvProvider() {
+    override fun getEnviron(): CPointer<CPointerVarOf<CPointer<ByteVarOf<Byte>>>>? {
+        return _NSGetEnviron()?.get(0)
+    }
 }

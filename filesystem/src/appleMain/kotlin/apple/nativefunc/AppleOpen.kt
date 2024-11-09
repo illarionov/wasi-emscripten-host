@@ -4,22 +4,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.native
+package at.released.weh.filesystem.apple.nativefunc
 
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
+import at.released.weh.filesystem.apple.ext.posixFd
+import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.Again
+import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.DiskQuota
 import at.released.weh.filesystem.error.Exists
+import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.Mfile
+import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
+import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.PathIsDirectory
+import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.StatError
+import at.released.weh.filesystem.error.TextFileBusy
 import at.released.weh.filesystem.error.TooManySymbolicLinks
-import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
@@ -27,51 +40,52 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CLOEXEC
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_CREAT
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
-import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
-import at.released.weh.filesystem.platform.linux.RESOLVE_IN_ROOT
-import at.released.weh.filesystem.platform.linux.RESOLVE_NO_MAGICLINKS
-import at.released.weh.filesystem.platform.linux.RESOLVE_NO_SYMLINKS
-import at.released.weh.filesystem.platform.linux.RESOLVE_NO_XDEV
-import at.released.weh.filesystem.platform.linux.SYS_openat2
-import at.released.weh.filesystem.platform.linux.open_how
+import at.released.weh.filesystem.platform.apple.openat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.posix.op.open.fdFdFlagsToPosixMask
 import at.released.weh.filesystem.posix.op.open.getFileOpenModeConsideringOpenFlags
 import at.released.weh.filesystem.posix.op.open.openFileFlagsToPosixMask
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.cstr
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.sizeOf
-import platform.posix.E2BIG
+import platform.posix.EACCES
 import platform.posix.EAGAIN
+import platform.posix.EBADF
+import platform.posix.EDEADLK
+import platform.posix.EDQUOT
 import platform.posix.EEXIST
+import platform.posix.EILSEQ
+import platform.posix.EINTR
 import platform.posix.EINVAL
+import platform.posix.EIO
+import platform.posix.EISDIR
 import platform.posix.ELOOP
+import platform.posix.EMFILE
+import platform.posix.ENAMETOOLONG
+import platform.posix.ENFILE
 import platform.posix.ENOENT
-import platform.posix.EXDEV
+import platform.posix.ENOSPC
+import platform.posix.ENOTDIR
+import platform.posix.ENXIO
+import platform.posix.EOPNOTSUPP
+import platform.posix.EOVERFLOW
+import platform.posix.EROFS
+import platform.posix.ETXTBSY
 import platform.posix.errno
-import platform.posix.memset
-import platform.posix.syscall
 
-internal fun linuxOpenFileOrDirectory(
+internal fun appleOpenFileOrDirectory(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
-    resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
 ): Either<OpenError, FileDirectoryFd> = either<OpenError, FileDirectoryFd> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
-    val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
 
     validatePath(path).bind()
 
@@ -79,13 +93,12 @@ internal fun linuxOpenFileOrDirectory(
 
     if (existingFileType == DIRECTORY) {
         val directoryFlags = flags and (O_NOFOLLOW or O_NOATIME or O_CLOEXEC) or O_DIRECTORY
-        return linuxOpenRaw(
+        return appleOpenRaw(
             baseDirectoryFd = baseDirectoryFd,
             path = path,
             flags = directoryFlags,
-            fdFlags = fdFlagsNoAppend,
+            fdFlags = fdFlags,
             mode = null,
-            resolveFlags = resolveFlags,
         ).map {
             FileDirectoryFd.Directory(NativeDirectoryFd(it))
         }
@@ -99,45 +112,35 @@ internal fun linuxOpenFileOrDirectory(
         }
     }
 
-    linuxOpenRaw(
+    appleOpenRaw(
         baseDirectoryFd = baseDirectoryFd,
         path = path,
         flags = flags,
-        fdFlags = fdFlagsNoAppend,
+        fdFlags = fdFlags,
         mode = getFileOpenModeConsideringOpenFlags(flags, mode),
-        resolveFlags = resolveFlags,
     ).map {
         FileDirectoryFd.File(it, isInAppendMode)
     }.bind()
 }
 
-internal fun linuxOpenRaw(
+internal fun appleOpenRaw(
     baseDirectoryFd: NativeDirectoryFd,
     path: String,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
-    resolveFlags: Set<ResolveModeFlag> = setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS),
 ): Either<OpenError, Int> {
-    val errorOrFd = memScoped {
-        val openHow: open_how = alloc<open_how> {
-            memset(ptr, 0, sizeOf<open_how>().toULong())
-            this.flags = getLinuxOpenFileFlags(flags, fdFlags)
-            this.mode = mode?.toULong() ?: 0UL
-            this.resolve = resolveFlags.toResolveMask()
-        }
-        syscall(
-            __sysno = SYS_openat2.toLong(),
-            baseDirectoryFd.linuxFd,
-            path.cstr,
-            openHow.ptr,
-            sizeOf<open_how>().toULong(),
-        )
+    val openFlags = getAppleOpenFileFlags(flags, fdFlags).toInt()
+    val errorOrFd = if (flags and O_CREAT == O_CREAT) {
+        val realMode = mode?.toULong() ?: 0UL
+        openat(baseDirectoryFd.posixFd, path, openFlags, realMode)
+    } else {
+        openat(baseDirectoryFd.posixFd, path, openFlags)
     }
     return if (errorOrFd < 0) {
-        errno.openat2ErrNoToOpenError().left()
+        errno.openat2ErrNoToOpenErrorApple().left()
     } else {
-        errorOrFd.toInt().right()
+        errorOrFd.right()
     }
 }
 
@@ -146,7 +149,7 @@ private fun getFileType(
     path: String,
     @OpenFileFlagsType flags: OpenFileFlags,
 ): Either<OpenError, Filetype?> {
-    return linuxStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(
+    return appleStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(
         ifRight = {
             it.type.right()
         },
@@ -160,21 +163,39 @@ private fun getFileType(
     )
 }
 
-private fun getLinuxOpenFileFlags(
+private fun getAppleOpenFileFlags(
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
 ): ULong {
     return openFileFlagsToPosixMask(flags) or fdFdFlagsToPosixMask(fdFlags)
 }
 
-private fun Int.openat2ErrNoToOpenError(): OpenError = when (this) {
-    E2BIG -> InvalidArgument("E2BIG: extension is not supported")
+@Suppress("CyclomaticComplexMethod")
+private fun Int.openat2ErrNoToOpenErrorApple(): OpenError = when (this) {
+    EACCES -> AccessDenied("No permission")
     EAGAIN -> Again("Operation cannot be performed")
+    EBADF -> BadFileDescriptor("Bad file descriptor")
+    EDEADLK -> AccessDenied("dataless directory materialization is not allowed")
+    EDQUOT -> DiskQuota("User's quota of disk block's has been exhausted")
     EEXIST -> Exists("File exists")
+    EILSEQ -> NotCapable("Filename does not match encoding rules")
+    EINTR -> Interrupted("Operation interrupted by signal")
     EINVAL -> InvalidArgument("Invalid argument")
-    ELOOP -> TooManySymbolicLinks("Too many symbolic or magic links")
-    EXDEV -> NotCapable("Escape from the root detected")
+    EIO -> IoError("I/o error")
+    EISDIR -> PathIsDirectory("Directory can not be opened for writing or executing")
+    ELOOP -> TooManySymbolicLinks("Too many symbolic links")
+    EMFILE -> Mfile("Limit on open file descriptors has been exhausted")
+    ENAMETOOLONG -> NameTooLong("Name too long")
+    ENFILE -> Nfile("System file table is full")
     ENOENT -> NoEntry("No such file or directory")
+    ENOSPC -> NoSpace("No space left on device")
+    ENOTDIR -> NotDirectory("Target is not a directory")
+    ENXIO -> Nxio("Devie of the special file is not available")
+    EOPNOTSUPP -> InvalidArgument("Filesystem does not support locking")
+    EOVERFLOW -> IoError("Size of the file does not fit in off_t")
+    EROFS -> ReadOnlyFileSystem("Read-only file system")
+    ETXTBSY -> TextFileBusy("Can not write to the executed file")
+    // EWOULDBLOCK -> IoError("File can not be locked without blocking")
     else -> InvalidArgument("Unknown errno $this")
 }
 
@@ -191,36 +212,4 @@ internal sealed class FileDirectoryFd {
     class Directory(
         val fd: NativeDirectoryFd,
     ) : FileDirectoryFd()
-}
-
-internal enum class ResolveModeFlag {
-    RESOLVE_BENEATH,
-    RESOLVE_IN_ROOT,
-    RESOLVE_NO_MAGICLINKS,
-    RESOLVE_NO_SYMLINKS,
-    RESOLVE_NO_XDEV,
-    RESOLVE_CACHED,
-}
-
-private fun Set<ResolveModeFlag>.toResolveMask(): ULong {
-    var mask = 0UL
-    if (contains(ResolveModeFlag.RESOLVE_BENEATH)) {
-        mask = mask or RESOLVE_BENEATH.toULong()
-    }
-    if (contains(ResolveModeFlag.RESOLVE_IN_ROOT)) {
-        mask = mask or RESOLVE_IN_ROOT.toULong()
-    }
-    if (contains(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)) {
-        mask = mask or RESOLVE_NO_MAGICLINKS.toULong()
-    }
-    if (contains(ResolveModeFlag.RESOLVE_NO_SYMLINKS)) {
-        mask = mask or RESOLVE_NO_SYMLINKS.toULong()
-    }
-    if (contains(ResolveModeFlag.RESOLVE_NO_XDEV)) {
-        mask = mask or RESOLVE_NO_XDEV.toULong()
-    }
-    if (contains(ResolveModeFlag.RESOLVE_CACHED)) {
-        mask = mask or RESOLVE_CACHED.toULong()
-    }
-    return mask
 }

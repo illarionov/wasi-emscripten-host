@@ -1,0 +1,7 @@
+headerFilter = fcntl.h
+compilerOpts = -D_ANSI_SOURCE -D_POSIX_C_SOURCE=199309 -D_BSD_SOURCE -D_XOPEN_SOURCE=700
+
+---
+#include <fcntl.h>
+
+extern int openat(int fd, const char *path, int oflag, ...);
