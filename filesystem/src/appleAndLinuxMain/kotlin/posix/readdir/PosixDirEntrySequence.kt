@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.readdir
+package at.released.weh.filesystem.posix.readdir
 
-import at.released.weh.filesystem.linux.readdir.ReadDirResult.Entry
 import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd.DirSequenceStartPosition
@@ -23,7 +22,7 @@ import platform.posix.rewinddir
 import platform.posix.seekdir
 import platform.posix.strerror
 
-internal class LinuxDirEntrySequence(
+internal class PosixDirEntrySequence(
     private val virtualPath: VirtualPath,
     private val dir: CPointer<DIR>,
     private val startPosition: DirSequenceStartPosition,
@@ -37,9 +36,9 @@ internal class LinuxDirEntrySequence(
             is Cookie -> {
                 // XXX: location returned by the telldir is valid only within the same opened descriptor DIR.
                 seekdir(dir, startPosition.cookie)
-                val cookiedEntry: ReadDirResult = linuxReadDir(dir)
-                if (cookiedEntry is Entry && cookiedEntry.entry.cookie == startPosition.cookie) {
-                    linuxReadDir(dir)
+                val cookiedEntry: PosixReadDirResult = posixReadDir(dir)
+                if (cookiedEntry is PosixReadDirResult.Entry && cookiedEntry.entry.cookie == startPosition.cookie) {
+                    posixReadDir(dir)
                 } else {
                     cookiedEntry
                 }
@@ -47,11 +46,11 @@ internal class LinuxDirEntrySequence(
 
             else -> {
                 rewinddir(dir)
-                linuxReadDir(dir)
+                posixReadDir(dir)
             }
         }
-        val iterator = LinuxDirectoryIterator(firstEntry, isClosed::value) {
-            linuxReadDir(dir)
+        val iterator = PosixDirectoryIterator(firstEntry, isClosed::value) {
+            posixReadDir(dir)
         }
         instance = iterator
         return iterator

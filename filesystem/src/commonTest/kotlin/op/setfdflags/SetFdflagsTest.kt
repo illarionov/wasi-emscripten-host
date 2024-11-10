@@ -16,7 +16,6 @@ import at.released.weh.filesystem.op.fdattributes.FdAttributes
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.Buffer
@@ -25,7 +24,6 @@ import kotlinx.io.files.SystemFileSystem
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreApple
 @IgnoreMingw
 class SetFdflagsTest : BaseFileSystemIntegrationTest() {
     @Test

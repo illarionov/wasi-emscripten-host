@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.native
+package at.released.weh.filesystem.posix.nativefunc
 
 import arrow.core.Either
 import arrow.core.left
@@ -30,6 +30,7 @@ import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.EINVAL
 import platform.posix.ENOLCK
+import platform.posix.EOVERFLOW
 import platform.posix.F_RDLCK
 import platform.posix.F_SETLK
 import platform.posix.F_UNLCK
@@ -39,7 +40,7 @@ import platform.posix.fcntl
 import platform.posix.flock
 import platform.posix.strerror
 
-internal fun linuxAddAdvisoryLockFd(
+internal fun posixAddAdvisoryLockFd(
     fd: NativeFileFd,
     flock: Advisorylock,
 ): Either<AdvisoryLockError, Unit> = memScoped {
@@ -54,7 +55,7 @@ internal fun linuxAddAdvisoryLockFd(
     }
 }
 
-internal fun linuxRemoveAdvisoryLock(
+internal fun posixRemoveAdvisoryLock(
     fd: NativeFileFd,
     flock: Advisorylock,
 ): Either<AdvisoryLockError, Unit> = memScoped {
@@ -95,5 +96,6 @@ internal fun Int.errnoToAdvisoryLockError(
     EINTR -> Interrupted("Locking interrupted by signal")
     EINVAL -> InvalidArgument("Can not lock `$lock`, invalid argument")
     ENOLCK -> NoLock("Can not lock `$lock`, too many locks open")
+    EOVERFLOW -> InvalidArgument("Return value would overflow its representation")
     else -> InvalidArgument("Can not lock `$lock`: $this `${strerror(this)?.toKStringFromUtf8()}`")
 }

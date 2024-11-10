@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.readdir
+package at.released.weh.filesystem.posix.readdir
 
 import assertk.assertFailure
 import assertk.assertThat
@@ -12,28 +12,30 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.linux.readdir.ReadDirResult.Entry
 import at.released.weh.filesystem.model.Filetype.REGULAR_FILE
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.EndOfStream
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Entry
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Error
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_CURRENT_DIR_ENTRY
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_PARENT_DIR_ENTRY
 import kotlinx.io.IOException
 import kotlin.test.Test
 
-class LinuxDirectoryIteratorTest {
+class PosixDirectoryIteratorTest {
     @Test
     fun linuxDirectoryIterator_success_case() {
         @Suppress("MagicNumber")
         val testDirEntry = DirEntry("testFile", REGULAR_FILE, 42, 44)
         var nextDirCounter = 0
-        val iterator = LinuxDirectoryIterator(
+        val iterator = PosixDirectoryIterator(
             next = Entry(TEST_CURRENT_DIR_ENTRY),
             streamIsClosed = { false },
             nextDirProvider = {
                 when (nextDirCounter++) {
                     0 -> Entry(TEST_PARENT_DIR_ENTRY)
                     1 -> Entry(testDirEntry)
-                    2 -> ReadDirResult.EndOfStream
+                    2 -> EndOfStream
                     else -> error("Should not be called")
                 }
             },
@@ -45,9 +47,9 @@ class LinuxDirectoryIteratorTest {
     }
 
     @Test
-    fun linuxDirectoryIterator_empty_list() {
-        val iterator = LinuxDirectoryIterator(
-            next = ReadDirResult.EndOfStream,
+    fun posixDirectoryIterator_empty_list() {
+        val iterator = PosixDirectoryIterator(
+            next = EndOfStream,
             streamIsClosed = { false },
             nextDirProvider = { error("Should not be called") },
         )
@@ -58,9 +60,9 @@ class LinuxDirectoryIteratorTest {
     }
 
     @Test
-    fun linuxDirectoryIterator_test_error() {
-        val iterator = LinuxDirectoryIterator(
-            next = ReadDirResult.Error(BadFileDescriptor("test error")),
+    fun posixDirectoryIterator_test_error() {
+        val iterator = PosixDirectoryIterator(
+            next = Error(BadFileDescriptor("test error")),
             streamIsClosed = { false },
             nextDirProvider = { error("Should not be called") },
         )

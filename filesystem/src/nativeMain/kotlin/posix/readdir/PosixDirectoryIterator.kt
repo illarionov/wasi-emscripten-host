@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.readdir
+package at.released.weh.filesystem.posix.readdir
 
-import at.released.weh.filesystem.linux.readdir.ReadDirResult.EndOfStream
-import at.released.weh.filesystem.linux.readdir.ReadDirResult.Entry
-import at.released.weh.filesystem.linux.readdir.ReadDirResult.Error
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.EndOfStream
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Entry
+import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Error
 import kotlinx.io.IOException
 
-internal class LinuxDirectoryIterator(
-    private var next: ReadDirResult,
+internal class PosixDirectoryIterator(
+    private var next: PosixReadDirResult,
     private val streamIsClosed: () -> Boolean,
-    private val nextDirProvider: () -> ReadDirResult,
+    private val nextDirProvider: () -> PosixReadDirResult,
 ) : Iterator<DirEntry> {
     override fun hasNext(): Boolean {
         return next != EndOfStream
@@ -24,7 +24,7 @@ internal class LinuxDirectoryIterator(
     override fun next(): DirEntry {
         check(!streamIsClosed()) { "Stream is closed" }
 
-        when (val current: ReadDirResult = next) {
+        when (val current: PosixReadDirResult = next) {
             EndOfStream -> throw NoSuchElementException()
 
             is Entry -> {

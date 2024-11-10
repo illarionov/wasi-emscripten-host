@@ -46,12 +46,12 @@ internal fun linuxTruncate(
     return if (resultCode == 0) {
         Unit.right()
     } else {
-        errno.errNoToTruncateError().left()
+        errno.linuxErrnoToTruncateError().left()
     }
 }
 
 @Suppress("CyclomaticComplexMethod")
-private fun Int.errNoToTruncateError(): TruncateError = when (this) {
+private fun Int.linuxErrnoToTruncateError(): TruncateError = when (this) {
     EACCES -> AccessDenied("No access")
     EBADF -> BadFileDescriptor("Bad file descriptor")
     EDQUOT -> NoSpace("Can not truncate file: no space")

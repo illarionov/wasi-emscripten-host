@@ -33,7 +33,6 @@ import at.released.weh.filesystem.linux.native.linuxChownFd
 import at.released.weh.filesystem.linux.native.linuxFdAttributes
 import at.released.weh.filesystem.linux.native.linuxSetTimestamp
 import at.released.weh.filesystem.linux.native.linuxStatFd
-import at.released.weh.filesystem.linux.native.posixClose
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
@@ -46,6 +45,7 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
+import at.released.weh.filesystem.posix.nativefunc.posixClose
 import at.released.weh.filesystem.preopened.VirtualPath
 
 internal class LinuxDirectoryFdResource(

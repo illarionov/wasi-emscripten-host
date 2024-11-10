@@ -19,7 +19,7 @@ internal class LinuxHardlink(
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> {
         return fsState.executeWithBaseDirectoryResource(input.newBaseDirectory) { newDirectoryFd ->
             fsState.executeWithBaseDirectoryResource(input.oldBaseDirectory) { oldDirectoryFd ->
-                linuxHardlink(oldDirectoryFd, input.oldPath, newDirectoryFd, input.newPath)
+                linuxHardlink(oldDirectoryFd, input.oldPath, newDirectoryFd, input.newPath, input.followSymlinks)
             }
         }
     }

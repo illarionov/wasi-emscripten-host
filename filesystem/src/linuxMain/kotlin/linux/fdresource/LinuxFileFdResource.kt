@@ -24,22 +24,18 @@ import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.linux.native.linuxAddAdvisoryLockFd
 import at.released.weh.filesystem.linux.native.linuxChmodFd
 import at.released.weh.filesystem.linux.native.linuxChownFd
 import at.released.weh.filesystem.linux.native.linuxFadvise
 import at.released.weh.filesystem.linux.native.linuxFdAttributes
-import at.released.weh.filesystem.linux.native.linuxRemoveAdvisoryLock
-import at.released.weh.filesystem.linux.native.linuxSeek
+import at.released.weh.filesystem.linux.native.linuxRead
 import at.released.weh.filesystem.linux.native.linuxSetFdflags
 import at.released.weh.filesystem.linux.native.linuxSetTimestamp
 import at.released.weh.filesystem.linux.native.linuxStatFd
 import at.released.weh.filesystem.linux.native.linuxSync
 import at.released.weh.filesystem.linux.native.linuxTruncate
-import at.released.weh.filesystem.linux.native.posixClose
+import at.released.weh.filesystem.linux.native.linuxWrite
 import at.released.weh.filesystem.linux.native.posixFallocate
-import at.released.weh.filesystem.linux.native.posixRead
-import at.released.weh.filesystem.linux.native.posixWrite
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
@@ -51,6 +47,10 @@ import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.posix.nativefunc.posixAddAdvisoryLockFd
+import at.released.weh.filesystem.posix.nativefunc.posixClose
+import at.released.weh.filesystem.posix.nativefunc.posixRemoveAdvisoryLock
+import at.released.weh.filesystem.posix.nativefunc.posixSeek
 
 internal class LinuxFileFdResource(
     channel: NativeFileChannel,
@@ -63,15 +63,15 @@ internal class LinuxFileFdResource(
     override fun stat(): Either<StatError, StructStat> = linuxStatFd(channel.fd.fd)
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        return linuxSeek(channel.fd, fileDelta, whence)
+        return posixSeek(channel.fd, fileDelta, whence)
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        return posixRead(channel, iovecs, strategy)
+        return linuxRead(channel, iovecs, strategy)
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        return posixWrite(channel, cIovecs, strategy)
+        return linuxWrite(channel, cIovecs, strategy)
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = linuxSync(channel.fd, syncMetadata)
@@ -101,10 +101,10 @@ internal class LinuxFileFdResource(
     override fun close(): Either<CloseError, Unit> = posixClose(channel.fd)
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
-        linuxAddAdvisoryLockFd(channel.fd, flock)
+        posixAddAdvisoryLockFd(channel.fd, flock)
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
-        return linuxRemoveAdvisoryLock(channel.fd, flock)
+        return posixRemoveAdvisoryLock(channel.fd, flock)
     }
 
     /**

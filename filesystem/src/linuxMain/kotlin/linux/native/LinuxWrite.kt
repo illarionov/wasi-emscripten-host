@@ -29,6 +29,8 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
 import at.released.weh.filesystem.posix.NativeFileFd
+import at.released.weh.filesystem.posix.nativefunc.callReadWrite
+import at.released.weh.filesystem.posix.nativefunc.posixSeek
 import kotlinx.cinterop.CArrayPointer
 import platform.posix.EAGAIN
 import platform.posix.EBADF
@@ -44,30 +46,30 @@ import platform.posix.iovec
 import platform.posix.pwritev
 import platform.posix.writev
 
-internal fun posixWrite(
+internal fun linuxWrite(
     nativeChannel: NativeFileChannel,
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-) = posixWrite(nativeChannel.fd, nativeChannel.isInAppendMode, cIovecs, strategy)
+) = linuxWrite(nativeChannel.fd, nativeChannel.isInAppendMode, cIovecs, strategy)
 
-private fun posixWrite(
+private fun linuxWrite(
     nativeFd: NativeFileFd,
     isInAppendMode: Boolean,
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ) = when (strategy) {
-    CurrentPosition -> posixWriteChangePosition(nativeFd, isInAppendMode, cIovecs)
-    is Position -> posixWriteDoNotChangePosition(nativeFd, strategy.position, cIovecs)
+    CurrentPosition -> linuxWriteChangePosition(nativeFd, isInAppendMode, cIovecs)
+    is Position -> linuxWriteDoNotChangePosition(nativeFd, strategy.position, cIovecs)
 }
 
-private fun posixWriteChangePosition(
+private fun linuxWriteChangePosition(
     nativeFd: NativeFileFd,
     isInAppendMode: Boolean,
     cIovecs: List<FileSystemByteBuffer>,
 ): Either<WriteError, ULong> {
     // XXX seek and write should be atomic
     if (isInAppendMode) {
-        linuxSeek(nativeFd, 0, Whence.END)
+        posixSeek(nativeFd, 0, Whence.END)
             .mapLeft(SeekError::toWriteError)
             .onLeft { return it.left() }
     }
@@ -77,7 +79,7 @@ private fun posixWriteChangePosition(
     }.mapLeft { errNo -> errNo.writevErrnoToWriteError(nativeFd, cIovecs) }
 }
 
-private fun posixWriteDoNotChangePosition(
+private fun linuxWriteDoNotChangePosition(
     nativeFd: NativeFileFd,
     position: Long,
     cIovecs: List<FileSystemByteBuffer>,

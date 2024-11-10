@@ -7,8 +7,6 @@
 package at.released.weh.filesystem.linux.native
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
@@ -22,111 +20,53 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
 import at.released.weh.filesystem.posix.NativeFileFd
-import kotlinx.cinterop.CArrayPointer
+import at.released.weh.filesystem.posix.nativefunc.callReadWrite
 import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.Pinned
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.allocArray
-import kotlinx.cinterop.get
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.pin
 import platform.posix.EAGAIN
 import platform.posix.EBADF
 import platform.posix.EINTR
 import platform.posix.EINVAL
 import platform.posix.EIO
 import platform.posix.EISDIR
-import platform.posix.NULL
-import platform.posix.errno
 import platform.posix.iovec
 import platform.posix.preadv
 import platform.posix.readv
 
-internal fun posixRead(
+internal fun linuxRead(
     nativeChannel: NativeFileChannel,
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-): Either<ReadError, ULong> = posixRead(nativeChannel.fd, iovecs, strategy)
+): Either<ReadError, ULong> = linuxRead(nativeChannel.fd, iovecs, strategy)
 
-private fun posixRead(
+private fun linuxRead(
     nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ): Either<ReadError, ULong> = when (strategy) {
-    CurrentPosition -> posixReadChangePosition(nativeFd, iovecs)
-    is Position -> posixReadDoNotChangePosition(nativeFd, strategy.position, iovecs)
+    CurrentPosition -> linuxReadChangePosition(nativeFd, iovecs)
+    is Position -> linuxReadDoNotChangePosition(nativeFd, strategy.position, iovecs)
 }
 
-private fun posixReadChangePosition(
+private fun linuxReadChangePosition(
     nativeFd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
     return callReadWrite(nativeFd, iovecs) { fd, iovecsPointer: CPointer<iovec>, size ->
         readv(fd.fd, iovecsPointer, size)
-    }.mapLeft { errNo -> errNo.errnoToReadError(nativeFd, iovecs) }
+    }.mapLeft { errNo -> errNo.linuxPreadErrnoToReadError(nativeFd, iovecs) }
 }
 
-private fun posixReadDoNotChangePosition(
+private fun linuxReadDoNotChangePosition(
     nativeFd: NativeFileFd,
     offset: Long,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> {
     return callReadWrite(nativeFd, iovecs) { fd, iovecsPointer, size ->
         preadv(fd.fd, iovecsPointer, size, offset)
-    }.mapLeft { errNo -> errNo.errnoToReadError(nativeFd, iovecs) }
+    }.mapLeft { errNo -> errNo.linuxPreadErrnoToReadError(nativeFd, iovecs) }
 }
 
-internal fun callReadWrite(
-    fd: NativeFileFd,
-    iovecs: List<FileSystemByteBuffer>,
-    block: (fd: NativeFileFd, iovecs: CArrayPointer<iovec>, size: Int) -> Long,
-): Either<Int, ULong> {
-    val bytesMoved = memScoped {
-        val size = iovecs.size
-        val posixIovecs: CArrayPointer<iovec> = allocArray(size)
-        iovecs.withPinnedByteArrays { pinnedByteArrays: List<Pinned<ByteArray>?> ->
-            iovecs.forEachIndexed { index, vec ->
-                posixIovecs[index].apply {
-                    val pinnedByteArray = pinnedByteArrays[index]
-                    if (pinnedByteArray != null) {
-                        iov_base = pinnedByteArray.addressOf(vec.offset)
-                        iov_len = vec.length.toULong()
-                    } else {
-                        iov_base = NULL
-                        iov_len = 0U
-                    }
-                }
-            }
-            block(fd, posixIovecs, size)
-        }
-    }
-
-    return if (bytesMoved >= 0) {
-        bytesMoved.toULong().right()
-    } else {
-        errno.left()
-    }
-}
-
-private inline fun <R : Any> List<FileSystemByteBuffer>.withPinnedByteArrays(
-    block: (byteArrays: List<Pinned<ByteArray>?>) -> R,
-): R {
-    val pinnedByteArrays: List<Pinned<ByteArray>?> = this.map {
-        @Suppress("ReplaceSizeCheckWithIsNotEmpty")
-        if (it.array.size != 0) {
-            it.array.pin()
-        } else {
-            null
-        }
-    }
-    return try {
-        block(pinnedByteArrays)
-    } finally {
-        pinnedByteArrays.filterNotNull().forEach(Pinned<ByteArray>::unpin)
-    }
-}
-
-private fun Int.errnoToReadError(
+private fun Int.linuxPreadErrnoToReadError(
     fd: NativeFileFd,
     iovecs: List<FileSystemByteBuffer>,
 ): ReadError = when (this) {

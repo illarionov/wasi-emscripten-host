@@ -13,13 +13,11 @@ import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FI
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createSymlink
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.files.Path
 import kotlin.test.Test
 
-@IgnoreApple
 @IgnoreMingw
 class ReadLinkTest : BaseFileSystemIntegrationTest() {
     @Test

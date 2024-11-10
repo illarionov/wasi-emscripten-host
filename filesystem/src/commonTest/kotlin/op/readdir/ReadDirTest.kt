@@ -12,14 +12,12 @@ import assertk.assertions.containsExactlyInAnyOrder
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.test.Test
 
-@IgnoreApple
 @IgnoreMingw
 class ReadDirTest : BaseFileSystemIntegrationTest() {
     @Test

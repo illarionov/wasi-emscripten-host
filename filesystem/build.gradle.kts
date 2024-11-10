@@ -37,6 +37,8 @@ kotlin {
     macosX64()
     mingwX64()
 
+    applyDefaultHierarchyTemplate()
+
     targets.withType<KotlinNativeTarget>().matching {
         when (it.konanTarget.family) {
             Family.OSX, Family.IOS, Family.TVOS, Family.WATCHOS -> true
@@ -47,6 +49,12 @@ kotlin {
     }
 
     sourceSets {
+        val appleAndLinuxMain by creating {
+            dependsOn(nativeMain.get())
+        }
+        appleMain.get().dependsOn(appleAndLinuxMain)
+        linuxMain.get().dependsOn(appleAndLinuxMain)
+
         commonMain.dependencies {
             api(projects.commonApi)
             api(libs.android.annotation)

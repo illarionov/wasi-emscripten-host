@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("Filename")
+package at.released.weh.filesystem.posix.readdir
 
-package at.released.weh.filesystem.linux.readdir
-
+import arrow.core.Either
+import arrow.core.getOrElse
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadDirError
@@ -32,22 +32,25 @@ import platform.posix.readdir
 import platform.posix.set_posix_errno
 import platform.posix.strerror
 
-internal fun linuxReadDir(
+internal expect val dirent.inode: Long
+internal expect fun getCookie(dir: CPointer<DIR>, dirent: dirent): Either<BadFileDescriptor, Long>
+
+internal fun posixReadDir(
     dir: CPointer<DIR>,
-): ReadDirResult {
+): PosixReadDirResult {
     set_posix_errno(0)
     val dirent: CPointer<dirent>? = readdir(dir)
     if (dirent == null) {
         val error = errno
         return if (error != 0) {
-            ReadDirResult.Error(error.errnoToReadDirError())
+            PosixReadDirResult.Error(error.errnoToReadDirError())
         } else {
-            ReadDirResult.EndOfStream
+            PosixReadDirResult.EndOfStream
         }
     }
 
     val srcType = dirent[0].d_type.toInt()
-    val srcIno = dirent[0].d_ino.toLong()
+    val srcIno = dirent[0].inode
 
     val (fileType, inode) = if (srcType == DT_UNKNOWN || srcIno == 0L) {
         // XXX read using lstat?
@@ -56,21 +59,14 @@ internal fun linuxReadDir(
         dTypeToFiletype(srcType) to srcIno
     }
 
-    return ReadDirResult.Entry(
+    return PosixReadDirResult.Entry(
         DirEntry(
             name = dirent[0].d_name.toKStringFromUtf8(),
             type = fileType,
             inode = inode,
-            cookie = dirent[0].d_off,
+            cookie = getCookie(dir, dirent[0]).getOrElse { -1 },
         ),
     )
-}
-
-internal sealed class ReadDirResult {
-    @Suppress("ConvertObjectToDataObject")
-    object EndOfStream : ReadDirResult()
-    data class Entry(val entry: DirEntry) : ReadDirResult()
-    data class Error(val error: ReadDirError) : ReadDirResult()
 }
 
 private fun Int.errnoToReadDirError(): ReadDirError {

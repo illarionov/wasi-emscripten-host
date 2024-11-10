@@ -11,7 +11,6 @@ import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.buffered
@@ -21,7 +20,6 @@ import kotlinx.io.readString
 import kotlinx.io.writeString
 import kotlin.test.Test
 
-@IgnoreApple
 @IgnoreMingw
 class HardlinkTest : BaseFileSystemIntegrationTest() {
     @Test

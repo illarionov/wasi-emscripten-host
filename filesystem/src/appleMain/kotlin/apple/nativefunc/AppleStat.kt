@@ -9,6 +9,7 @@ package at.released.weh.filesystem.apple.nativefunc
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.apple.ext.followSymlinksAsAtSymlinkFlags
 import at.released.weh.filesystem.apple.ext.posixFd
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
@@ -25,7 +26,6 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
-import platform.posix.AT_SYMLINK_NOFOLLOW
 import platform.posix.EACCES
 import platform.posix.EBADF
 import platform.posix.EINVAL
@@ -53,7 +53,7 @@ internal fun appleStat(
         baseDirectoryFd.posixFd,
         path,
         statBuf.ptr,
-        getStatFlags(followSymlinks),
+        followSymlinksAsAtSymlinkFlags(followSymlinks),
     )
     return if (exitCode == 0) {
         statBuf.toStructStat().right()
@@ -72,12 +72,6 @@ internal fun appleStatFd(
     } else {
         errno.errnoToStatFdError().left()
     }
-}
-
-private fun getStatFlags(followSymlinks: Boolean): Int = if (followSymlinks) {
-    0
-} else {
-    AT_SYMLINK_NOFOLLOW
 }
 
 private fun Int.errnoToStatError(): StatError = when (this) {

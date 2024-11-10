@@ -14,11 +14,9 @@ import at.released.weh.filesystem.testutil.TEST_FILE
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.readFileContentToString
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlin.test.Test
 
-@IgnoreApple
 @IgnoreMingw
 class SymlinkTest : BaseFileSystemIntegrationTest() {
     @Test

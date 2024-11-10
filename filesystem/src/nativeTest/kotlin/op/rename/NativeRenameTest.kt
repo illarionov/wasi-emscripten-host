@@ -20,12 +20,10 @@ import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
 import at.released.weh.test.filesystem.assertions.isNotExists
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreApple
 @IgnoreMingw
 public class NativeRenameTest : BaseFileSystemIntegrationTest() {
     @Test

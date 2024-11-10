@@ -1,7 +1,13 @@
-headerFilter = fcntl.h
-compilerOpts = -D_ANSI_SOURCE -D_POSIX_C_SOURCE=199309 -D_BSD_SOURCE -D_XOPEN_SOURCE=700
+headerFilter = fcntl.h sys/types.h sys/uio.h unistd.h
 
 ---
+#include <sys/types.h>
+#include <sys/uio.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 extern int openat(int fd, const char *path, int oflag, ...);
+extern ssize_t readv(int d, const struct iovec *iov, int iovcnt);
+extern ssize_t preadv(int d, const struct iovec *iov, int iovcnt, off_t offset);
+extern ssize_t writev(int fildes, const struct iovec *iov, int iovcnt);
+extern ssize_t pwritev(int fildes, const struct iovec *iov, int iovcnt, off_t offset);

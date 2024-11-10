@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.native
+package at.released.weh.filesystem.posix.readdir
 
 import arrow.core.Either
 import arrow.core.left
@@ -31,7 +31,7 @@ import platform.posix.errno
 import platform.posix.fdopendir
 import platform.posix.strerror
 
-internal fun linuxOpenDir(
+internal fun posixOpenDir(
     fd: NativeDirectoryFd,
 ): Either<ReadDirError, CPointer<DIR>> {
     val dir: CPointer<DIR>? = fdopendir(fd.raw)

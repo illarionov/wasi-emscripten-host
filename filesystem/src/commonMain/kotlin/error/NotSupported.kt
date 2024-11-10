@@ -15,6 +15,7 @@ public data class NotSupported(
     FallocateError,
     ChmodError,
     ChownError,
+    HardlinkError,
     OpenError,
     ReadError {
     override val errno: FileSystemErrno = FileSystemErrno.NOTSUP

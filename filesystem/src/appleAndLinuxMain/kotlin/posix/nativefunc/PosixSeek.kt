@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.linux.native
+package at.released.weh.filesystem.posix.nativefunc
 
 import arrow.core.Either
 import arrow.core.left
@@ -18,7 +18,7 @@ import at.released.weh.filesystem.posix.ext.toPosixWhence
 import platform.posix.errno
 import platform.posix.lseek
 
-internal fun linuxSeek(
+internal fun posixSeek(
     fd: NativeFileFd,
     fileDelta: Long,
     whence: Whence,
