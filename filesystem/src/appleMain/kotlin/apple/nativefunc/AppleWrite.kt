@@ -44,13 +44,13 @@ internal fun appleWrite(
     nativeChannel: NativeFileChannel,
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-) = appleWrite(nativeChannel.fd, cIovecs, strategy)
+): Either<WriteError, ULong> = appleWrite(nativeChannel.fd, cIovecs, strategy)
 
-private fun appleWrite(
+internal fun appleWrite(
     nativeFd: NativeFileFd,
     cIovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-) = when (strategy) {
+): Either<WriteError, ULong> = when (strategy) {
     CurrentPosition -> appleWriteChangePosition(nativeFd, cIovecs)
     is Position -> appleWriteDoNotChangePosition(nativeFd, strategy.position, cIovecs)
 }
