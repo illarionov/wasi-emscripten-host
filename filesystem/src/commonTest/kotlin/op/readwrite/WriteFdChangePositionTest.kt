@@ -10,11 +10,9 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlin.test.Test
 
-@IgnoreApple
 @IgnoreMingw
 public class WriteFdChangePositionTest : BaseFileSystemIntegrationTest() {
     @Test

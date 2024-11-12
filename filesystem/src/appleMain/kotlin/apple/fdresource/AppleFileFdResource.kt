@@ -7,7 +7,18 @@
 package at.released.weh.filesystem.apple.fdresource
 
 import arrow.core.Either
+import arrow.core.right
+import at.released.weh.filesystem.apple.nativefunc.appleChmodFd
+import at.released.weh.filesystem.apple.nativefunc.appleChownFd
+import at.released.weh.filesystem.apple.nativefunc.appleFallocate
+import at.released.weh.filesystem.apple.nativefunc.appleFdAttributes
+import at.released.weh.filesystem.apple.nativefunc.appleRead
+import at.released.weh.filesystem.apple.nativefunc.appleSetFdflags
+import at.released.weh.filesystem.apple.nativefunc.appleSetTimestamp
 import at.released.weh.filesystem.apple.nativefunc.appleStatFd
+import at.released.weh.filesystem.apple.nativefunc.appleSync
+import at.released.weh.filesystem.apple.nativefunc.appleTruncate
+import at.released.weh.filesystem.apple.nativefunc.appleWrite
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
@@ -36,62 +47,63 @@ import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.posix.nativefunc.posixAddAdvisoryLockFd
+import at.released.weh.filesystem.posix.nativefunc.posixClose
+import at.released.weh.filesystem.posix.nativefunc.posixRemoveAdvisoryLock
+import at.released.weh.filesystem.posix.nativefunc.posixSeek
 
-// TODO: merge with Linux
 internal class AppleFileFdResource(
     channel: NativeFileChannel,
 ) : PosixFdResource, FdResource {
     private val channel = channel.copy()
     override val fdResourceType: FdResourceType = FdResourceType.FILE
 
-    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = TODO()
+    override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = appleFdAttributes(channel)
 
     override fun stat(): Either<StatError, StructStat> = appleStatFd(channel.fd.fd)
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        TODO()
+        return posixSeek(channel.fd, fileDelta, whence)
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        TODO()
+        return appleRead(channel, iovecs, strategy)
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        TODO()
+        return appleWrite(channel, cIovecs, strategy)
     }
 
-    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = TODO()
+    override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> = appleSync(channel.fd, syncMetadata)
 
     override fun fadvise(offset: Long, length: Long, advice: Advice): Either<FadviseError, Unit> {
-        TODO()
+        // Not available on macOS
+        return Unit.right()
     }
 
     override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
-        TODO()
+        return appleFallocate(channel.fd, offset, length)
     }
 
-    override fun truncate(length: Long): Either<TruncateError, Unit> = TODO()
+    override fun truncate(length: Long): Either<TruncateError, Unit> = appleTruncate(channel.fd, length)
 
-    override fun chmod(mode: Int): Either<ChmodError, Unit> = TODO()
+    override fun chmod(mode: Int): Either<ChmodError, Unit> = appleChmodFd(channel.fd, mode)
 
-    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = TODO()
+    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = appleChownFd(channel.fd, owner, group)
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        TODO()
+        return appleSetTimestamp(channel.fd, atimeNanoseconds, mtimeNanoseconds)
     }
 
-    override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
-        TODO()
-    }
+    override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> = appleSetFdflags(channel, flags)
 
-    override fun close(): Either<CloseError, Unit> = TODO()
+    override fun close(): Either<CloseError, Unit> = posixClose(channel.fd)
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
-        TODO()
+        posixAddAdvisoryLockFd(channel.fd, flock)
 
-    override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
-        TODO()
-    }
+    override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
+        posixRemoveAdvisoryLock(channel.fd, flock)
 
     internal data class NativeFileChannel(
         val fd: NativeFileFd,

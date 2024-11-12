@@ -91,10 +91,7 @@ private fun Int.errnoToLinkError(): HardlinkError = when (this) {
     ENOSPC -> NoSpace("Can not symlink: no enough space")
     ENOTDIR -> NotDirectory("Error while resolving path: not a directory")
     EPERM -> PermissionDenied("Old path is a directory or no permission to create hardlink")
-    EROFS -> ReadOnlyFileSystem(
-        "Write permission requested for a file on a read-only filesystem.",
-    )
-
+    EROFS -> ReadOnlyFileSystem("Write permission requested for a file on a read-only filesystem.")
     EXDEV -> PermissionDenied("Oldpath and newpath are not on the same mounted filesystem")
     else -> IoError("Other error: $this (${strerror(this)?.toKStringFromUtf8()})")
 }

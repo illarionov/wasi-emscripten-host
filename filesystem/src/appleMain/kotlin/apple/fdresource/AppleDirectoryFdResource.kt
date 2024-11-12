@@ -9,6 +9,10 @@ package at.released.weh.filesystem.apple.fdresource
 import arrow.core.Either
 import arrow.core.left
 import at.released.weh.filesystem.apple.ext.posixFd
+import at.released.weh.filesystem.apple.nativefunc.appleChmodFd
+import at.released.weh.filesystem.apple.nativefunc.appleChownFd
+import at.released.weh.filesystem.apple.nativefunc.appleFdAttributes
+import at.released.weh.filesystem.apple.nativefunc.appleSetTimestamp
 import at.released.weh.filesystem.apple.nativefunc.appleStatFd
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.BadFileDescriptor
@@ -41,9 +45,9 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
+import at.released.weh.filesystem.posix.nativefunc.posixClose
 import at.released.weh.filesystem.preopened.VirtualPath
 
-// TODO: merge with linux fd resource
 internal class AppleDirectoryFdResource(
     val nativeFd: NativeDirectoryFd,
     val isPreopened: Boolean = false,
@@ -57,7 +61,7 @@ internal class AppleDirectoryFdResource(
     }
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        TODO()
+        return appleFdAttributes(nativeFd, rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {
@@ -92,12 +96,12 @@ internal class AppleDirectoryFdResource(
         return BadFileDescriptor("Can not truncate on a directory").left()
     }
 
-    override fun chmod(mode: Int): Either<ChmodError, Unit> = TODO()
+    override fun chmod(mode: Int): Either<ChmodError, Unit> = appleChmodFd(nativeFd, mode)
 
-    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = TODO()
+    override fun chown(owner: Int, group: Int): Either<ChownError, Unit> = appleChownFd(nativeFd, owner, group)
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        TODO()
+        return appleSetTimestamp(nativeFd, atimeNanoseconds, mtimeNanoseconds)
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
@@ -112,5 +116,5 @@ internal class AppleDirectoryFdResource(
         return BadFileDescriptor("Can not add remove lock on a directory").left()
     }
 
-    override fun close(): Either<CloseError, Unit> = TODO()
+    override fun close(): Either<CloseError, Unit> = posixClose(nativeFd)
 }

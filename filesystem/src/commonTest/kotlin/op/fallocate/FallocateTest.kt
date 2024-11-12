@@ -19,7 +19,6 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.test.filesystem.assertions.fileSize
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.buffered
@@ -29,7 +28,6 @@ import kotlinx.io.readByteArray
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreApple
 @IgnoreMingw
 class FallocateTest : BaseFileSystemIntegrationTest() {
     @Test

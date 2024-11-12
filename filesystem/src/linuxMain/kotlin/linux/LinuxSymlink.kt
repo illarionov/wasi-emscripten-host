@@ -8,13 +8,12 @@ package at.released.weh.filesystem.linux
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.raise.either
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxSymlink
 import at.released.weh.filesystem.op.symlink.Symlink
+import at.released.weh.filesystem.posix.validateSymlinkTarget
 
 internal class LinuxSymlink(
     private val fsState: LinuxFileSystemState,
@@ -25,16 +24,6 @@ internal class LinuxSymlink(
                 .flatMap {
                     linuxSymlink(input.oldPath, input.newPath, directoryFd)
                 }
-        }
-    }
-
-    private fun validateSymlinkTarget(
-        target: String,
-        allowAbsolutePath: Boolean,
-    ): Either<SymlinkError, Unit> = either {
-        val cleanedTarget = target.trim()
-        if (!allowAbsolutePath && cleanedTarget.startsWith("/")) {
-            raise(InvalidArgument("link destination should be relative"))
         }
     }
 }

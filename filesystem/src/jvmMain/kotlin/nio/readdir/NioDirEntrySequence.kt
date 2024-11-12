@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.nio.readdir
 
+import at.released.weh.filesystem.internal.op.readdir.OffsetCookieDecorator
 import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import kotlinx.io.IOException

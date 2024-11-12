@@ -6,9 +6,11 @@
 
 package at.released.weh.filesystem.testutil
 
+import at.released.weh.filesystem.AppleFileSystem
 import at.released.weh.filesystem.FileSystemEngine
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
 
 internal actual fun <E : FileSystemEngineConfig> getDefaultTestEngine(): FileSystemEngine<E> {
-    TODO("Not yet implemented")
+    @Suppress("UNCHECKED_CAST")
+    return AppleFileSystem as FileSystemEngine<E>
 }

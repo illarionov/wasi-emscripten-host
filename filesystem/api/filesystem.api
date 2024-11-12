@@ -367,7 +367,7 @@ public final class at/released/weh/filesystem/error/NotImplemented : at/released
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NotSupported : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError {
+public final class at/released/weh/filesystem/error/NotSupported : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NotSupported;

@@ -25,7 +25,6 @@ public class FdFdstatSetRightsFunctionHandle(
         @RightsType fdFlagsBase: Rights,
         @RightsType fdFlagsInheriting: Rights,
     ): Errno {
-        // TODO
         return Errno.NOTSUP
     }
 }
