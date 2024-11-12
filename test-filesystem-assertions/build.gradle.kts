@@ -32,7 +32,15 @@ kotlin {
     macosX64()
     mingwX64()
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val appleAndLinuxMain by creating {
+            dependsOn(nativeMain.get())
+        }
+        appleMain.get().dependsOn(appleAndLinuxMain)
+        linuxMain.get().dependsOn(appleAndLinuxMain)
+
         commonMain.dependencies {
             api(kotlin("test"))
             api(libs.assertk)

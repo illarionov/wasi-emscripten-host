@@ -8,9 +8,39 @@ package at.released.weh.host.apple
 
 import at.released.weh.host.LocalTimeFormatter
 import at.released.weh.host.LocalTimeFormatter.StructTm
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.LongVarOf
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.toKStringFromUtf8
+import kotlinx.cinterop.value
+import platform.posix.localtime_r
+import platform.posix.time_t
+import platform.posix.tm
 
-internal class AppleLocalTimeFormatter : LocalTimeFormatter {
-    override fun format(epochSeconds: Long): StructTm {
-        TODO("Not yet implemented")
+internal object AppleLocalTimeFormatter : LocalTimeFormatter {
+    override fun format(epochSeconds: Long): StructTm = memScoped {
+        val epochRef: LongVarOf<time_t> = alloc<LongVarOf<time_t>>().apply {
+            value = epochSeconds
+        }
+        val resultBuf: tm = alloc()
+
+        val result: CPointer<tm> = localtime_r(epochRef.ptr, resultBuf.ptr) ?: error("localtime_r() failed")
+        val tm = result.pointed
+        StructTm(
+            tm_sec = tm.tm_sec,
+            tm_min = tm.tm_min,
+            tm_hour = tm.tm_hour,
+            tm_mday = tm.tm_mday,
+            tm_mon = tm.tm_mon,
+            tm_year = tm.tm_year,
+            tm_wday = tm.tm_wday,
+            tm_yday = tm.tm_yday,
+            tm_isdst = tm.tm_isdst,
+            tm_gmtoff = tm.tm_gmtoff,
+            tm_zone = tm.tm_zone?.toKStringFromUtf8(),
+        )
     }
 }

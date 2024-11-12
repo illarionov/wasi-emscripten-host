@@ -7,9 +7,17 @@
 package at.released.weh.host.apple
 
 import at.released.weh.host.TimeZoneInfo
+import kotlinx.cinterop.get
+import kotlinx.cinterop.toKStringFromUtf8
+import platform.posix.tzname
 
-internal class AppleTimeZoneInfoProvider : TimeZoneInfo.Provider {
+internal object AppleTimeZoneInfoProvider : TimeZoneInfo.Provider {
     override fun getTimeZoneInfo(): TimeZoneInfo {
-        error("Not implemented")
+        return TimeZoneInfo(
+            timeZone = platform.posix.timezone_,
+            daylight = platform.posix.daylight,
+            stdName = tzname[0]?.toKStringFromUtf8() ?: "unk",
+            dstName = tzname[1]?.toKStringFromUtf8() ?: "unk",
+        )
     }
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.linux
+package at.released.weh.host.apple
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -13,10 +13,10 @@ import at.released.weh.host.TimeZoneInfoProviderTestFixtures.europeParis
 import at.released.weh.test.utils.withTimeZone
 import kotlin.test.Test
 
-class LinuxTimeZoneInfoProviderTest {
+class AppleTimeZoneInfoProviderTest {
     @Test
     fun time_zone_provider_should_work() = withTimeZone(europeParis.timeZoneName) {
-        val timeZoneInfo: TimeZoneInfo = LinuxTimeZoneInfoProvider.getTimeZoneInfo()
+        val timeZoneInfo: TimeZoneInfo = AppleTimeZoneInfoProvider.getTimeZoneInfo()
         assertThat(timeZoneInfo).isEqualTo(europeParis.timeZoneInfo)
     }
 }
