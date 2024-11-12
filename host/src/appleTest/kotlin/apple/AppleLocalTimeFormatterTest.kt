@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.linux
+package at.released.weh.host.apple
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -13,11 +13,11 @@ import at.released.weh.host.LocalTimeFormatterTestFixtures
 import at.released.weh.test.utils.withTimeZone
 import kotlin.test.Test
 
-class LinuxLocalTimeFormatterTest {
+class AppleLocalTimeFormatterTest {
     @Test
     fun formatter_should_work() = LocalTimeFormatterTestFixtures.novosibirskJul27.let { test ->
         withTimeZone(test.timeZone) {
-            val tm: StructTm = LinuxLocalTimeFormatter.format(test.timeEpochSeconds)
+            val tm: StructTm = AppleLocalTimeFormatter.format(test.timeEpochSeconds)
             assertThat(tm).isEqualTo(test.timeInfo)
         }
     }
