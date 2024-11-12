@@ -10,6 +10,7 @@ import arrow.core.Either
 import arrow.core.left
 import at.released.weh.filesystem.apple.ext.posixFd
 import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
+import at.released.weh.filesystem.apple.readdir.AppleReadDirSequence
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -17,7 +18,6 @@ import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.nativefunc.PosixDupfdMapper.dupErrorToReadDirError
-import at.released.weh.filesystem.posix.readdir.PosixDirEntrySequence
 import at.released.weh.filesystem.posix.readdir.posixOpenDir
 import platform.posix.dup
 import platform.posix.errno
@@ -38,7 +38,7 @@ internal class AppleReadDirFd(
             }
 
             posixOpenDir(NativeDirectoryFd(dirFdDup)).map { dirPointer ->
-                PosixDirEntrySequence(resource.virtualPath, dirPointer, input.startPosition)
+                AppleReadDirSequence(resource.virtualPath, dirPointer, input.startPosition)
             }
         }
     }

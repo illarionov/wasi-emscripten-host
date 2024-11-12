@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.nio.readdir
+package at.released.weh.filesystem.internal.op.readdir
 
 import at.released.weh.filesystem.op.readdir.DirEntry
 import kotlinx.io.IOException
 
 /**
- * Adds offset as a directory cookie
+ * Adds offset as a directory cookie.
+ *
+ * Dirty incorrect workaround for systems where system cookies are not available.
  */
 internal class OffsetCookieDecorator(
     private val delegate: Iterator<DirEntry>,

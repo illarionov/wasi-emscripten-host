@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.nio.readdir
+package at.released.weh.filesystem.internal.op.readdir
 
 import assertk.assertThat
 import assertk.assertions.containsExactlyInAnyOrder

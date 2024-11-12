@@ -6,8 +6,6 @@
 
 package at.released.weh.filesystem.posix.readdir
 
-import arrow.core.Either
-import arrow.core.getOrElse
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadDirError
@@ -33,7 +31,7 @@ import platform.posix.set_posix_errno
 import platform.posix.strerror
 
 internal expect val dirent.inode: Long
-internal expect fun getCookie(dir: CPointer<DIR>, dirent: dirent): Either<BadFileDescriptor, Long>
+internal expect val dirent.cookie: Long
 
 internal fun posixReadDir(
     dir: CPointer<DIR>,
@@ -64,7 +62,7 @@ internal fun posixReadDir(
             name = dirent[0].d_name.toKStringFromUtf8(),
             type = fileType,
             inode = inode,
-            cookie = getCookie(dir, dirent[0]).getOrElse { -1 },
+            cookie = dirent[0].cookie,
         ),
     )
 }

@@ -34,6 +34,7 @@ wasiTestsuiteTestGen {
     )
     rustIgnores = listOf(
         "fd_fdstat_set_rights", // legacy, not used anywhere
+        "interesting_paths", // resolveBeneath is not yet implemented on apple
         "poll_oneoff_stdio",
         "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
     )
