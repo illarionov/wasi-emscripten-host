@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import at.released.weh.gradle.multiplatform.test.setupCopyDirectoryToIosTestResources
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.jetbrains.kotlin.gradle.plugin.ExecutionTaskHolder
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
@@ -20,6 +21,8 @@ plugins {
 group = "at.released.weh"
 
 private val wasiTestSuiteRoot = layout.projectDirectory.dir("../wasi-testsuite/tests")
+
+setupCopyDirectoryToIosTestResources(provider { wasiTestSuiteRoot })
 
 wasiTestsuiteTestGen {
     wasiTestsuiteTestsRoot = wasiTestSuiteRoot
@@ -42,9 +45,9 @@ wasiTestsuiteTestGen {
 
 kotlin {
     jvm()
-    // iosSimulatorArm64()
-    // iosArm64()
-    // iosX64()
+    iosSimulatorArm64()
+    iosArm64()
+    iosX64()
     macosArm64()
     macosX64()
     linuxArm64()
