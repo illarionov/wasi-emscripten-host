@@ -6,8 +6,10 @@
 
 package at.released.weh.test.utils
 
+import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.FileAttribute
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
 import kotlin.io.path.ExperimentalPathApi
@@ -36,16 +38,23 @@ public class JvmTempFolder private constructor(
         public fun create(
             namePrefix: String,
         ): JvmTempFolder {
-            val folder = Files.createTempDirectory(
-                namePrefix,
-                PosixFilePermissions.asFileAttribute(
-                    setOf(
-                        PosixFilePermission.OWNER_EXECUTE,
-                        PosixFilePermission.OWNER_READ,
-                        PosixFilePermission.OWNER_WRITE,
+            val hasPosixFilePermissionSupport = FileSystems.getDefault().supportedFileAttributeViews().contains("posix")
+            val attrs: Array<FileAttribute<*>> = if (hasPosixFilePermissionSupport) {
+                arrayOf(
+                    PosixFilePermissions.asFileAttribute(
+                        setOf(
+                            PosixFilePermission.OWNER_EXECUTE,
+                            PosixFilePermission.OWNER_READ,
+                            PosixFilePermission.OWNER_WRITE,
+                        ),
                     ),
-                ),
-            )
+                )
+            } else {
+                emptyArray()
+            }
+
+            @Suppress("SpreadOperator")
+            val folder = Files.createTempDirectory(namePrefix, *attrs)
             return JvmTempFolder(folder)
         }
     }
