@@ -14,9 +14,8 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.ext.asFileAttribute
 import at.released.weh.filesystem.ext.asLinkOptions
-import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
+import at.released.weh.filesystem.ext.fileModeAsFileAttributesIfSupported
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.fdresource.nio.nioOpenFile
 import at.released.weh.filesystem.fdrights.FdRightsBlock
@@ -72,7 +71,7 @@ internal class NioOpen(
             )
         }
         val fileModeAttributes: Array<FileAttribute<*>> = input.mode?.let {
-            arrayOf(it.fileModeToPosixFilePermissions().asFileAttribute())
+            path.fileSystem.fileModeAsFileAttributesIfSupported(it)
         } ?: emptyArray()
 
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()

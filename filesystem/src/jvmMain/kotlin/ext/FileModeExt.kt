@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.ext
 
+import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileModeFlag.S_IRGRP
 import at.released.weh.filesystem.model.FileModeFlag.S_IROTH
 import at.released.weh.filesystem.model.FileModeFlag.S_IRUSR
@@ -15,12 +16,18 @@ import at.released.weh.filesystem.model.FileModeFlag.S_IWUSR
 import at.released.weh.filesystem.model.FileModeFlag.S_IXGRP
 import at.released.weh.filesystem.model.FileModeFlag.S_IXOTH
 import at.released.weh.filesystem.model.FileModeFlag.S_IXUSR
+import java.nio.file.FileSystem
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
 
-internal fun Set<PosixFilePermission>.asFileAttribute(): FileAttribute<Set<PosixFilePermission>> =
-    PosixFilePermissions.asFileAttribute(this)
+internal fun FileSystem.fileModeAsFileAttributesIfSupported(
+    @FileMode mode: Int,
+): Array<FileAttribute<*>> = if (supportedFileAttributeViews().contains("posix")) {
+    arrayOf(PosixFilePermissions.asFileAttribute(mode.fileModeToPosixFilePermissions()))
+} else {
+    emptyArray()
+}
 
 @Suppress("NO_BRACES_IN_CONDITIONALS_AND_LOOPS")
 internal fun Int.fileModeToPosixFilePermissions(): Set<PosixFilePermission> {
