@@ -9,6 +9,7 @@ package at.released.weh.filesystem.op.readlink
 import arrow.core.getOrElse
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isIn
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
@@ -37,7 +38,7 @@ class ReadLinkTest : BaseFileSystemIntegrationTest() {
                 error("Read symlink error: $it")
             }
 
-            assertThat(symlinkTarget).isEqualTo("../target")
+            assertThat(symlinkTarget).isIn("../target", "..\\target")
         }
     }
 }
