@@ -12,9 +12,11 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.SymlinkError
 import java.io.IOException
+import java.nio.file.AccessDeniedException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -36,7 +38,8 @@ private fun validateSymlinkTarget(
     allowAbsolutePath: Boolean,
 ): Either<SymlinkError, Unit> = either {
     val cleanedTarget = target.trim()
-    if (!allowAbsolutePath && Path.of(cleanedTarget).isAbsolute) {
+    // XXX Path.of("/").isAbsolute is false on Windows
+    if (!allowAbsolutePath && (Path.of(cleanedTarget).isAbsolute || cleanedTarget.startsWith("/"))) {
         raise(InvalidArgument("link destination should be relative"))
     }
 }
@@ -50,6 +53,8 @@ private fun createSymlink(
         Unit
     }.mapLeft {
         when (it) {
+            // AccessDeniedException thrown on Windows when linkpath exists
+            is AccessDeniedException -> NoEntry("Access denied")
             is UnsupportedOperationException -> PermissionDenied("Filesystem does not support symbolic links")
             is FileAlreadyExistsException -> Exists("Link path already exists")
             is IOException -> IoError("I/o exception `${it.message}`")

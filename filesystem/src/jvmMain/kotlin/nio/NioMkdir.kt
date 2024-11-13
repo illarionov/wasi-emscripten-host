@@ -40,6 +40,7 @@ internal class NioMkdir(
     ): Either<MkdirError, Unit> {
         val modeAttrs = path.fileSystem.fileModeAsFileAttributesIfSupported(mode)
         val result = Either.catch {
+            @Suppress("SpreadOperator")
             Files.createDirectory(path, *modeAttrs)
             Unit
         }.mapLeft {

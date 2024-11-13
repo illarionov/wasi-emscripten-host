@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit
 
 internal fun Path.readOrGenerateInode(
     basicFileAttributes: BasicFileAttributes,
-): Either<ReadAttributesError, Long> = either{
-    val unixAttrs = readAttributeMapIfSupported("unix:$ATTR_UNI_INO,unix:$ATTR_UNI_CTIME").bind()
+): Either<ReadAttributesError, Long> = either {
+    val unixAttrs = readAttributeMapIfSupported("unix:$ATTR_UNI_INO,$ATTR_UNI_CTIME").bind()
     readOrGenerateInode(basicFileAttributes, unixAttrs)
 }
 
@@ -28,7 +28,7 @@ internal fun Path.readOrGenerateInode(
 // Should we try to read Windows File id somehow?
 internal fun Path.readOrGenerateInode(
     basicFileAttributes: BasicFileAttributes,
-    unixAttrs: Map<String, Any?>
+    unixAttrs: Map<String, Any?>,
 ): Long {
     val unixIno = unixAttrs[ATTR_UNI_INO] as? Long
     if (unixIno != null) {
@@ -43,6 +43,7 @@ internal fun Path.readOrGenerateInode(
     return generateFictiveInode(this, cTimeFileTime?.to(TimeUnit.NANOSECONDS) ?: 0)
 }
 
+@Suppress("MagicNumber")
 internal fun generateFictiveInode(
     path: Path,
     fileCreationTime: Long,

@@ -30,6 +30,7 @@ internal fun <A : BasicFileAttributes> Path.readAttributesNoThrow(
 ): Either<ReadAttributesError, A> {
     val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     return Either.catch {
+        @Suppress("SpreadOperator")
         Files.readAttributes(this, klass.java, *linkOptions)
     }.mapLeft(ReadAttributesError::fromReadAttributesError)
 }
@@ -43,7 +44,7 @@ internal fun Path.readAttributeMapIfSupported(
         readAttributes(attributes, options = linkOptions).right()
     } catch (_: UnsupportedOperationException) {
         emptyMap<String, Any?>().right()
-    } catch (throwable: Throwable) {
+    } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
         ReadAttributesError.fromReadAttributesError(throwable).left()
     }
 }

@@ -15,7 +15,6 @@ import at.released.weh.filesystem.ext.filetype
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import java.io.IOException
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
