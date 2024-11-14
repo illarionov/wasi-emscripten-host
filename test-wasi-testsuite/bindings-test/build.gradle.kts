@@ -5,6 +5,11 @@
  */
 
 import at.released.weh.gradle.multiplatform.test.setupCopyDirectoryToIosTestResources
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.APPLE
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_LINUX
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_MACOS
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_WINDOWS
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.jetbrains.kotlin.gradle.plugin.ExecutionTaskHolder
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
@@ -32,15 +37,24 @@ wasiTestsuiteTestGen {
         WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(
-        "sock_shutdown-invalid_fd",
-        "sock_shutdown-not_sock",
+        TestIgnore("sock_shutdown-invalid_fd"),
+        TestIgnore("sock_shutdown-not_sock"),
     )
     rustIgnores = listOf(
-        "fd_fdstat_set_rights", // legacy, not used anywhere
-        "interesting_paths", // resolveBeneath is not yet implemented on apple
-        "path_link", // Fails on JVM on Windows because hardlinks to file must have the same inode
-        "poll_oneoff_stdio",
-        "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
+        // legacy, not used anywhere
+        TestIgnore("fd_fdstat_set_rights"),
+
+        // resolveBeneath is not yet implemented
+        TestIgnore("interesting_paths", setOf(APPLE, JVM_ON_WINDOWS)),
+
+        // Fails on JVM for Windows because hardlinks to file must have the same inodeTestIgnore("path_link"),
+        TestIgnore("path_link", setOf(JVM_ON_WINDOWS)),
+
+        // Not yes implemented
+        TestIgnore("poll_oneoff_stdio"),
+
+        // Fails on JVM for Linux because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
+        TestIgnore("symlink_filestat", setOf(JVM_ON_LINUX, JVM_ON_MACOS)),
     )
 }
 
@@ -81,6 +95,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.bindingsChasm)
+            implementation(projects.testIgnoreAnnotations)
             implementation(kotlin("test"))
         }
         jvmTest.dependencies {
