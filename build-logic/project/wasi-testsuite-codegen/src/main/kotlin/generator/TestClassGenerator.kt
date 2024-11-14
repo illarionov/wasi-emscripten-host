@@ -6,7 +6,7 @@
 
 package at.released.weh.gradle.wasi.testsuite.codegen.generator
 
-import at.released.weh.gradle.wasi.testsuite.codegen.generator.ClassNames.KotlinTest.KOTLIN_IGNORE
+import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.ClassNames.KotlinTest.KOTLIN_TEST
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.ClassNames.KotlinxIo
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.ClassNames.ROOT_PACKAGE
@@ -23,9 +23,10 @@ internal class TestClassGenerator(
     private val runtimeBindings: WasmRuntimeBindings,
     private val subtrestType: SubtestType,
     private val testNames: List<String>,
-    private val ignoredTestNames: Set<String>,
+    ignoredTests: Set<TestIgnore>,
     private val generateJvmCompanionObjects: Boolean = false,
 ) {
+    private val ignoredTests = IgnoredTests(ignoredTests)
     private val testClassName = ClassName(
         "$ROOT_PACKAGE.${runtimeBindings.name.lowercase().replace("_", "")}",
         formatClassName(runtimeBindings, subtrestType),
@@ -74,10 +75,22 @@ internal class TestClassGenerator(
         formatTestFunctionName(functionName),
     ).apply {
         addAnnotation(KOTLIN_TEST)
-        if (functionName in ignoredTestNames) {
-            addAnnotation(KOTLIN_IGNORE)
+        ignoredTests.addAnnotationsForStaticIgnores(this, functionName)
+
+        val dynamicIgnoreParams = ignoredTests.getDynamicIgnoresMemberNames(functionName)
+
+        if (dynamicIgnoreParams.isEmpty()) {
+            addCode("return runTest(%S)", functionName)
+        } else {
+            val codeFormat = dynamicIgnoreParams.joinToString(
+                separator = ", ",
+                prefix = "return runTest(%S, ignores = setOf(",
+                postfix = "))",
+            ) { "%M" }
+
+            @Suppress("SpreadOperator")
+            addCode(codeFormat, functionName, *dynamicIgnoreParams.toTypedArray())
         }
-        addCode("return runTest(%S)", functionName)
     }.build()
 
     private fun generateLazyFactory(): TypeSpec = TypeSpec.classBuilder(lazyFactoryClassName).apply {

@@ -14,6 +14,8 @@ import kotlinx.io.files.Path
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
+internal expect fun isShouldBeIgnored(ignores: Set<DynamicIgnoreTarget>): Boolean
+
 public abstract class WasiTestSuiteBaseTest(
     public val wasiTestsRoot: Path,
     public val wasmRuntimeExecutorFactory: RuntimeTestExecutor.Factory,
@@ -37,7 +39,12 @@ public abstract class WasiTestSuiteBaseTest(
 
     protected fun runTest(
         testName: String,
+        ignores: Set<DynamicIgnoreTarget> = emptySet(),
     ) {
+        if (isShouldBeIgnored(ignores)) {
+            return
+        }
+
         wasmRuntimeExecutorFactory().let { executor ->
             WasiSuiteTestExecutor(
                 testsRoot = wasiTestsRoot,

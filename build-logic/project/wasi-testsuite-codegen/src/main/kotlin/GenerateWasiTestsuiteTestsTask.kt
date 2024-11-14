@@ -43,15 +43,15 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
     val wasiTestsuiteTestsRoot: DirectoryProperty = objects.directoryProperty()
 
     @get:Input
-    val assemblyscriptIgnores: ListProperty<String> = objects.listProperty<String>()
+    val assemblyscriptIgnores: ListProperty<TestIgnore> = objects.listProperty<TestIgnore>()
         .convention(emptyList())
 
     @get:Input
-    val cIgnores: ListProperty<String> = objects.listProperty<String>()
+    val cIgnores: ListProperty<TestIgnore> = objects.listProperty<TestIgnore>()
         .convention(emptyList())
 
     @get:Input
-    val rustIgnores: ListProperty<String> = objects.listProperty<String>()
+    val rustIgnores: ListProperty<TestIgnore> = objects.listProperty<TestIgnore>()
         .convention(emptyList())
 
     @get:Input
@@ -78,7 +78,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
                         runtimeBindings = bindings,
                         subtrestType = subtestType,
                         testNames = subtestType.getWasiTestNames(),
-                        ignoredTestNames = subtestType.getIgnoredTestNames(),
+                        ignoredTests = subtestType.getIgnoredTests(),
                         generateJvmCompanionObjects = bindings.isJvmOnly,
                     ).generate()
                 }
@@ -101,7 +101,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
         return getWasiTestNames(wasiTestsuiteTestsRoot.get().dir(this.testsuiteSubdir).asFile)
     }
 
-    private fun SubtestType.getIgnoredTestNames(): Set<String> = when (this) {
+    private fun SubtestType.getIgnoredTests(): Set<TestIgnore> = when (this) {
         ASSEMBLYSCRIPT -> assemblyscriptIgnores.get()
         C -> cIgnores.get()
         RUST -> rustIgnores.get()

@@ -21,8 +21,8 @@ internal fun Project.createTestGeneratorExtension(): TestGeneratorExtension {
 
 public interface TestGeneratorExtension {
     val wasiTestsuiteTestsRoot: DirectoryProperty
-    val assemblyscriptIgnores: ListProperty<String>
-    val cIgnores: ListProperty<String>
-    val rustIgnores: ListProperty<String>
+    val assemblyscriptIgnores: ListProperty<TestIgnore>
+    val cIgnores: ListProperty<TestIgnore>
+    val rustIgnores: ListProperty<TestIgnore>
     val runtimes: SetProperty<WasmRuntimeBindings>
 }
