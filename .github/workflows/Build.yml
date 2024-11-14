@@ -76,7 +76,7 @@ jobs:
         with:
           comment_mode: off
           junit_files: '**/build/*test-results/**/*.xml'
-          check_name: "Test results"
+          check_name: "Linux test results"
 
       - name: Bundle the test reports and outputs
         if: failure()
@@ -84,14 +84,14 @@ jobs:
           find . \(
           -type d -path '*/build/reports'  -o -type d -path '*/build/outputs'
           \) -print0
-          | xargs -0 tar -c -I 'zstd -19 -T0' -f test-reports.tar.zst
+          | xargs -0 tar -c -I 'zstd -19 -T0' -f test-reports-linux.tar.zst
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-reports
-          path: test-reports.tar.zst
+          path: test-reports-linux.tar.zst
 
       - name: Save Kotlin Native Cache
         uses: actions/cache/save@v4
@@ -146,7 +146,7 @@ jobs:
         with:
           comment_mode: off
           junit_files: '**/build/*test-results/**/*.xml'
-          check_name: "Test results"
+          check_name: "macOS test results"
 
       - name: Bundle the test reports and outputs
         if: failure()
@@ -162,6 +162,68 @@ jobs:
         with:
           name: test-reports-macos
           path: test-reports-macos.tar.zst
+
+      - name: Save Kotlin Native Cache
+        uses: actions/cache/save@v4
+        if: github.ref_name == 'main'
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+
+  test-windows:
+    name: Run tests on Windows
+    runs-on: windows-latest
+    timeout-minutes: 60
+    if: ${{ !contains(github.event.head_commit.message, '[ci skip]') }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '23'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: generate
+
+      - name: Restore Kotlin Native Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
+          restore-keys: ${{ runner.os }}-konan-
+
+      - name: Assemble debug build, run tests
+        run: >
+          ./gradlew '-Pkotlin.daemon.jvmargs="${{ env.KOTLIN_DAEMON_JVMARGS }}"'
+          check --stacktrace --scan
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        if: ${{ !cancelled() && (github.actor != 'dependabot[bot]') }}
+        with:
+          comment_mode: off
+          junit_files: '**/build/*test-results/**/*.xml'
+          check_name: "Windows test results"
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-reports-windows
+          path: test-reports-windows.tar.zst
 
       - name: Save Kotlin Native Cache
         uses: actions/cache/save@v4
