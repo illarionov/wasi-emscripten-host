@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import arrow.core.Either
+import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
@@ -16,6 +17,7 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import java.io.IOException
 import java.nio.channels.FileChannel
+import java.nio.file.AccessDeniedException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.NoSuchFileException
 import java.nio.file.OpenOption
@@ -32,11 +34,12 @@ internal fun nioOpenFile(
 }.mapLeft { error -> error.openCreateErrorToOpenError(path) }
 
 internal fun Throwable.openCreateErrorToOpenError(path: Path): OpenError = when (this) {
+    is AccessDeniedException -> AccessDenied("Access denied")
     is IllegalArgumentException -> InvalidArgument("Can not open `$path`: invalid combination of options ($message)")
     is UnsupportedOperationException -> InvalidArgument("Can not open `$path`: unsupported operation ($message)")
     is FileAlreadyExistsException -> Exists("`$path` already exists ($message)")
     is NoSuchFileException -> NoEntry("File `$path` not found")
-    is IOException -> if (message?.contains("NOFOLLOW_LINKS specified") == true) {
+    is IOException -> if (this.looksLikeSymbolicLinkErrorOnUnix() || this.looksLikeSymbolicLinkErrorOnWindows()) {
         TooManySymbolicLinks("Can not open `$path`: too many symbolic links ($message)")
     } else {
         IoError("Can not open `$path`: I/O error ($message)")
@@ -44,3 +47,6 @@ internal fun Throwable.openCreateErrorToOpenError(path: Path): OpenError = when 
     is SecurityException -> PermissionDenied("Can not open `$path`: Permission denied ($message)")
     else -> throw IllegalStateException("Unexpected error", this)
 }
+
+private fun Throwable.looksLikeSymbolicLinkErrorOnUnix() = message?.contains("NOFOLLOW_LINKS specified") == true
+private fun Throwable.looksLikeSymbolicLinkErrorOnWindows() = message?.contains("File is symbolic link") == true

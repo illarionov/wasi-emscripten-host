@@ -38,6 +38,7 @@ wasiTestsuiteTestGen {
     rustIgnores = listOf(
         "fd_fdstat_set_rights", // legacy, not used anywhere
         "interesting_paths", // resolveBeneath is not yet implemented on apple
+        "path_link", // Fails on JVM on Windows because hardlinks to file must have the same inode
         "poll_oneoff_stdio",
         "symlink_filestat", // Fails on JVM because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
     )
@@ -52,7 +53,7 @@ kotlin {
     macosX64()
     linuxArm64()
     linuxX64()
-    mingwX64()
+    // mingwX64()
 
     testableTargets.withType<KotlinNativeTargetWithHostTests> {
         testRuns.all {

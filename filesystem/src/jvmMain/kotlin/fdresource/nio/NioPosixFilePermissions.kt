@@ -13,7 +13,6 @@ import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotSupported
-import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
 import at.released.weh.filesystem.model.FileMode
 import java.io.IOException
@@ -31,7 +30,7 @@ internal fun nioSetPosixFilePermissions(
     Unit
 }.mapLeft {
     when (it) {
-        is UnsupportedOperationException -> PermissionDenied("Read-only channel")
+        is UnsupportedOperationException -> NotSupported("Operation not supported: ${it.message}")
         is ClassCastException -> InvalidArgument("Invalid flags")
         is IOException -> IoError("I/O exception: ${it.message}")
         is SecurityException -> AccessDenied("Security Exception")

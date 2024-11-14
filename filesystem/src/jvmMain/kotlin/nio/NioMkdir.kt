@@ -13,8 +13,7 @@ import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
 import at.released.weh.filesystem.error.PermissionDenied
-import at.released.weh.filesystem.ext.asFileAttribute
-import at.released.weh.filesystem.ext.fileModeToPosixFilePermissions
+import at.released.weh.filesystem.ext.fileModeAsFileAttributesIfSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
@@ -39,8 +38,10 @@ internal class NioMkdir(
         @FileMode mode: Int,
         failIfExists: Boolean,
     ): Either<MkdirError, Unit> {
+        val modeAttrs = path.fileSystem.fileModeAsFileAttributesIfSupported(mode)
         val result = Either.catch {
-            Files.createDirectory(path, mode.fileModeToPosixFilePermissions().asFileAttribute())
+            @Suppress("SpreadOperator")
+            Files.createDirectory(path, *modeAttrs)
             Unit
         }.mapLeft {
             when (it) {

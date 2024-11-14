@@ -8,17 +8,24 @@ package at.released.weh.filesystem.fdresource.nio
 
 import arrow.core.Either
 import arrow.core.raise.either
+import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.ext.filetype
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import java.nio.file.Path
+import java.nio.file.attribute.BasicFileAttributes
 
 internal object NioFdAttributes {
     fun getFileFdAttributes(
         channel: NioFileChannel,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = channel.path.readFileType().bind()
+        val fileType = channel.path.readBasicAttributes()
+            .map(BasicFileAttributes::filetype)
+            .mapLeft(::toFdAttributesError)
+            .bind()
         check(fileType != Filetype.DIRECTORY)
 
         FdAttributesResult(
@@ -33,7 +40,10 @@ internal object NioFdAttributes {
         path: Path,
         rights: FdRightsBlock,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = path.readFileType().bind()
+        val fileType = path.readBasicAttributes()
+            .map(BasicFileAttributes::filetype)
+            .mapLeft(::toFdAttributesError)
+            .bind()
         check(fileType == Filetype.DIRECTORY)
 
         FdAttributesResult(
@@ -42,5 +52,11 @@ internal object NioFdAttributes {
             rights = rights.rights,
             inheritingRights = rights.rightsInheriting,
         )
+    }
+
+    private fun toFdAttributesError(error: ReadAttributesError): FdAttributesError = when (error) {
+        is ReadAttributesError.AccessDenied -> AccessDenied("Can not read attributes: ${error.message}")
+        is ReadAttributesError.IoError -> IoError("Can not read attributes: ${error.message}")
+        is ReadAttributesError.NotSupported -> AccessDenied("Can not get BasicFileAttributeView")
     }
 }

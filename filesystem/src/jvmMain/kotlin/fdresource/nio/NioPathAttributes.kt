@@ -7,55 +7,76 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import arrow.core.Either
-import arrow.core.flatMap
-import at.released.weh.filesystem.error.AccessDenied
-import at.released.weh.filesystem.error.FdAttributesError
-import at.released.weh.filesystem.error.IoError
+import arrow.core.left
+import arrow.core.right
+import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.ext.asLinkOptions
-import at.released.weh.filesystem.ext.toFiletype
-import at.released.weh.filesystem.fdresource.nio.NioFileStat.ATTR_UNI_INO
-import at.released.weh.filesystem.model.Filetype
+import at.released.weh.filesystem.model.FileSystemErrno
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.LinkOption
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.io.path.readAttributes
+import kotlin.reflect.KClass
 
-internal fun Path.readFileType(): Either<FdAttributesError, Filetype> = Either.catch {
-    readAttributes<BasicFileAttributes>()
-}
-    .mapLeft(Throwable::readAttributesToFdAttributesError)
-    .map(BasicFileAttributes::toFiletype)
-
-internal fun Path.readInode(
+internal fun Path.readBasicAttributes(
     followSymlinks: Boolean = true,
-): Either<FdAttributesError, Long> = Either.catch {
-    val linkOptions = asLinkOptions(followSymlinks)
-    val attrs = readAttributes("unix:ino", options = linkOptions)
-    (attrs[ATTR_UNI_INO] as? Long) ?: throw UnsupportedOperationException("No inode")
-}
-    .mapLeft(Throwable::readAttributesToFdAttributesError)
-    .swap()
-    .flatMap { _ ->
-        readFileKey(followSymlinks)
-            .map { it?.hashCode()?.toLong() ?: 0 }
-            .swap()
-    }
-    .swap()
+): Either<ReadAttributesError, BasicFileAttributes> = readAttributesNoThrow(BasicFileAttributes::class, followSymlinks)
 
-internal fun Path.readFileKey(
+internal fun <A : BasicFileAttributes> Path.readAttributesNoThrow(
+    klass: KClass<A>,
     followSymlinks: Boolean = true,
-): Either<FdAttributesError, Any?> {
-    val linkOptions = asLinkOptions(followSymlinks)
+): Either<ReadAttributesError, A> {
+    val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     return Either.catch {
-        readAttributes<BasicFileAttributes>(options = linkOptions)
-    }
-        .mapLeft(Throwable::readAttributesToFdAttributesError)
-        .map(BasicFileAttributes::fileKey)
+        @Suppress("SpreadOperator")
+        Files.readAttributes(this, klass.java, *linkOptions)
+    }.mapLeft(ReadAttributesError::fromReadAttributesError)
 }
 
-private fun Throwable.readAttributesToFdAttributesError(): FdAttributesError = when (this) {
-    is UnsupportedOperationException -> AccessDenied("Can not get BasicFileAttributeView")
-    is IOException -> IoError("Can not read attributes: $message")
-    is SecurityException -> AccessDenied("Can not read attributes: $message")
-    else -> throw IllegalStateException("Unexpected error", this)
+internal fun Path.readAttributeMapIfSupported(
+    attributes: String,
+    followSymlinks: Boolean = true,
+): Either<ReadAttributesError, Map<String, Any?>> {
+    val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
+    return try {
+        readAttributes(attributes, options = linkOptions).right()
+    } catch (_: UnsupportedOperationException) {
+        emptyMap<String, Any?>().right()
+    } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
+        ReadAttributesError.fromReadAttributesError(throwable).left()
+    }
+}
+
+internal sealed interface ReadAttributesError : FileSystemOperationError {
+    public data class NotSupported(
+        override val message: String = "Unsupported attribute",
+    ) : ReadAttributesError {
+        override val errno: FileSystemErrno = FileSystemErrno.NOTSUP
+    }
+
+    public data class IoError(
+        override val message: String,
+    ) : ReadAttributesError {
+        override val errno: FileSystemErrno = FileSystemErrno.IO
+    }
+
+    public data class AccessDenied(
+        override val message: String,
+    ) : ReadAttributesError {
+        override val errno: FileSystemErrno = FileSystemErrno.ACCES
+    }
+
+    companion object {
+        internal fun fromReadAttributesError(
+            throwable: Throwable,
+            view: String = "BasicFileAttributeView",
+        ): ReadAttributesError = when (throwable) {
+            is UnsupportedOperationException -> NotSupported("Can not get $view")
+            is IOException -> IoError("Can not read attributes `$view`: ${throwable.message}")
+            is SecurityException -> AccessDenied("Can not read attributes: ${throwable.message}")
+            else -> IoError("Can not read attributes `$view`: ${throwable.message}")
+        }
+    }
 }

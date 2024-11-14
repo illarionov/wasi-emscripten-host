@@ -9,7 +9,7 @@ package at.released.weh.filesystem.ext
 import at.released.weh.filesystem.model.Filetype
 import java.nio.file.attribute.BasicFileAttributes
 
-internal fun BasicFileAttributes.toFiletype(): Filetype = when {
+internal val BasicFileAttributes.filetype: Filetype get() = when {
     this.isRegularFile -> Filetype.REGULAR_FILE
     this.isDirectory -> Filetype.DIRECTORY
     this.isSymbolicLink -> Filetype.SYMBOLIC_LINK
