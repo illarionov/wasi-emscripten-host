@@ -15,6 +15,7 @@ import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.MonotonicClock
 import at.released.weh.host.internal.EmptyCommandArgsProvider
+import at.released.weh.host.windows.WindowsEntropySource
 import at.released.weh.host.windows.WindowsLocalTimeFormatter
 import at.released.weh.host.windows.WindowsSystemEnvProvider
 import at.released.weh.host.windows.WindowsTimeZoneInfoProvider
@@ -32,7 +33,7 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: WindowsCputimeSource
     override val localTimeFormatter: LocalTimeFormatter = builder.localTimeFormatter ?: WindowsLocalTimeFormatter
     override val timeZoneInfo: Provider = builder.timeZoneInfo ?: WindowsTimeZoneInfoProvider
-    override val entropySource: EntropySource = builder.entropySource ?: TODO()
+    override val entropySource: EntropySource = builder.entropySource ?: WindowsEntropySource
 }
 
 internal object EmptyEnvProvider : SystemEnvProvider {
