@@ -1,0 +1,15 @@
+headerFilter = Windows.h wchar.h
+noStringConversion = MultiByteToWideChar
+
+---
+
+#include <wchar.h>
+
+extern int MultiByteToWideChar(
+    unsigned CodePage,
+    unsigned long dwFlags,
+    const char *lpMultiByteStr,
+    int cbMultiByte,
+    wchar_t *lpWideCharStr,
+    int cchWideChar
+);

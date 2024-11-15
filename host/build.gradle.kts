@@ -27,7 +27,15 @@ kotlin {
     linuxX64()
     macosArm64()
     macosX64()
-    mingwX64()
+    mingwX64 {
+        compilations.named("main") {
+            cinterops {
+                create("windows") {
+                    packageName("at.released.weh.host.platform.windows")
+                }
+            }
+        }
+    }
 
     sourceSets {
         commonMain.dependencies {
