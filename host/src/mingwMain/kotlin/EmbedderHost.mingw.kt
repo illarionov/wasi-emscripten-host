@@ -8,12 +8,13 @@ package at.released.weh.host
 
 import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.FileSystem
-import at.released.weh.filesystem.NotImplementedFileSystem
+import at.released.weh.filesystem.WindowsFileSystem
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.TimeZoneInfo.Provider
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.MonotonicClock
+import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.internal.EmptyCommandArgsProvider
 import at.released.weh.host.windows.WindowsEntropySource
 import at.released.weh.host.windows.WindowsLocalTimeFormatter
@@ -27,15 +28,18 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
     override val rootLogger: Logger = builder.rootLogger
     override val systemEnvProvider: SystemEnvProvider = builder.systemEnvProvider ?: WindowsSystemEnvProvider
     override val commandArgsProvider: CommandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
-    override val fileSystem: FileSystem = builder.fileSystem ?: NotImplementedFileSystem
+    override val fileSystem: FileSystem = builder.fileSystem ?: DefaultFileSystem(
+        WindowsFileSystem,
+        builder.stdinProvider,
+        builder.stdoutProvider,
+        builder.stderrProvider,
+        builder.directoriesConfigBlock,
+        builder.rootLogger.withTag("FSmingw"),
+    )
     override val monotonicClock: MonotonicClock = builder.monotonicClock ?: WindowsMonotonicClock
     override val clock: Clock = builder.clock ?: WindowsClock
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: WindowsCputimeSource
     override val localTimeFormatter: LocalTimeFormatter = builder.localTimeFormatter ?: WindowsLocalTimeFormatter
     override val timeZoneInfo: Provider = builder.timeZoneInfo ?: WindowsTimeZoneInfoProvider
     override val entropySource: EntropySource = builder.entropySource ?: WindowsEntropySource
-}
-
-internal object EmptyEnvProvider : SystemEnvProvider {
-    override fun getSystemEnv(): Map<String, String> = emptyMap()
 }

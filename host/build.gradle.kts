@@ -35,6 +35,9 @@ kotlin {
                 }
             }
         }
+        binaries.all {
+            linkerOpts("-lntdll")
+        }
     }
 
     sourceSets {

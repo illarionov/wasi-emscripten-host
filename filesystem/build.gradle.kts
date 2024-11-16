@@ -35,7 +35,9 @@ kotlin {
     }
     macosArm64()
     macosX64()
-    mingwX64()
+    mingwX64 {
+        setupWindowsInterops()
+    }
 
     applyDefaultHierarchyTemplate()
 
@@ -89,6 +91,16 @@ fun KotlinNativeTarget.setupAppleInterops() {
                 create("apple") {
                     packageName("at.released.weh.filesystem.platform.apple")
                 }
+            }
+        }
+    }
+}
+
+fun KotlinNativeTarget.setupWindowsInterops() {
+    compilations.named("main") {
+        cinterops {
+            create("windows") {
+                packageName("at.released.weh.filesystem.platform.windows")
             }
         }
     }
