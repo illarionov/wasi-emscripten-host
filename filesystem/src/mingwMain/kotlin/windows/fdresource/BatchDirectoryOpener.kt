@@ -16,15 +16,13 @@ import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.
 import at.released.weh.filesystem.windows.nativefunc.ntCreateFileEx
 import at.released.weh.filesystem.windows.nativefunc.windowsCloseHandle
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
-import platform.windows.FILE_ATTRIBUTE_NORMAL
 import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
-import platform.windows.FILE_SYNCHRONOUS_IO_ALERT
-import platform.windows.FILE_TRAVERSE
+import platform.windows.FILE_OPEN_FOR_BACKUP_INTENT
 
 internal fun preopenDirectories(
-    currentWorkingDirectoryPath: RealPath = "",
+    currentWorkingDirectoryPath: RealPath = ".",
     preopenedDirectories: List<PreopenedDirectory> = listOf(),
 ): Either<BatchDirectoryOpenerError, PreopenedDirectories> {
     val currentWorkingDirectory: Either<OpenError, WindowsDirectoryChannel> = preopenDirectory(
@@ -64,10 +62,12 @@ private fun preopenDirectory(
     return ntCreateFileEx(
         rootHandle = baseDirectoryChannel?.handle,
         path = path,
-        desiredAccess = FILE_LIST_DIRECTORY or FILE_TRAVERSE,
-        fileAttributes = FILE_ATTRIBUTE_DIRECTORY or FILE_ATTRIBUTE_NORMAL,
+        desiredAccess = FILE_LIST_DIRECTORY,
+        fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
         createDisposition = FILE_OPEN,
-        createOptions = FILE_DIRECTORY_FILE or FILE_SYNCHRONOUS_IO_ALERT,
+        createOptions = FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT,
+        caseSensitive = true,
+        followSymlinks = true,
     ).map { newHandle ->
         WindowsDirectoryChannel(
             handle = newHandle,

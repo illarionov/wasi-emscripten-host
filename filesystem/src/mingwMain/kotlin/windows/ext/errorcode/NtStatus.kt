@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.windows.ext.errorcode
 
+import at.released.weh.filesystem.windows.ext.errorcode.NtStatus.Severity
+
 internal value class NtStatus(
     val raw: UInt,
 ) {
@@ -1002,4 +1004,4 @@ internal value class NtStatus(
     }
 }
 
-internal val NtStatus.isSuccess: Boolean get() = raw >= 0U
+internal val NtStatus.isSuccess: Boolean get() = severity != Severity.ERROR
