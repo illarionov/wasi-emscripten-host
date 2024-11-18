@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.op.close.CloseFd
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
@@ -33,7 +34,7 @@ internal class WindowsFileSystemImpl(
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to WindowsOpen(fsState),
-//        CloseFd to LinuxCloseFd(fsState),
+        CloseFd to WindowsCloseFd(fsState),
 //        AddAdvisoryLockFd to LinuxAddAdvisoryLockFd(fsState),
 //        RemoveAdvisoryLockFd to LinuxRemoveAdvisoryLockFd(fsState),
 //        CheckAccess to LinuxCheckAccess(fsState),

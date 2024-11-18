@@ -7,6 +7,8 @@
 package at.released.weh.filesystem.windows.fdresource
 
 import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
@@ -14,6 +16,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetFdFlagsError
@@ -33,6 +36,7 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.windows.nativefunc.windowsCloseHandle
 import platform.windows.HANDLE
 
 internal class WindowsFileFdResource(
@@ -106,16 +110,15 @@ internal class WindowsFileFdResource(
         // return linuxSetFdflags(channel, flags)
     }
 
-    override fun close(): Either<CloseError, Unit> {
-        TODO()
-    }
+    override fun close(): Either<CloseError, Unit> = windowsCloseHandle(channel.handle)
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
-        TODO()
+        return NotSupported("Not yet implemented").left()
         // return posixAddAdvisoryLockFd(channel.fd, flock)
     }
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
+        return NotSupported("Not yet implemented").left()
         TODO()
         // return posixRemoveAdvisoryLock(channel.fd, flock)
     }
