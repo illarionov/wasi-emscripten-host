@@ -119,7 +119,6 @@ internal class WindowsFileFdResource(
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
         return NotSupported("Not yet implemented").left()
-        TODO()
         // return posixRemoveAdvisoryLock(channel.fd, flock)
     }
 

@@ -13,8 +13,39 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.op.checkaccess.CheckAccess
+import at.released.weh.filesystem.op.chmod.Chmod
+import at.released.weh.filesystem.op.chmod.ChmodFd
+import at.released.weh.filesystem.op.chown.Chown
+import at.released.weh.filesystem.op.chown.ChownFd
 import at.released.weh.filesystem.op.close.CloseFd
+import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.op.fadvise.FadviseFd
+import at.released.weh.filesystem.op.fallocate.FallocateFd
+import at.released.weh.filesystem.op.fdattributes.FdAttributes
+import at.released.weh.filesystem.op.fdrenumber.Fdrenumber
+import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
+import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
+import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.prestat.PrestatFd
+import at.released.weh.filesystem.op.readdir.ReadDirFd
+import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.op.readwrite.ReadFd
+import at.released.weh.filesystem.op.readwrite.WriteFd
+import at.released.weh.filesystem.op.rename.Rename
+import at.released.weh.filesystem.op.seek.SeekFd
+import at.released.weh.filesystem.op.setfdflags.SetFdFlags
+import at.released.weh.filesystem.op.settimestamp.SetTimestamp
+import at.released.weh.filesystem.op.settimestamp.SetTimestampFd
+import at.released.weh.filesystem.op.stat.Stat
+import at.released.weh.filesystem.op.stat.StatFd
+import at.released.weh.filesystem.op.symlink.Symlink
+import at.released.weh.filesystem.op.sync.SyncFd
+import at.released.weh.filesystem.op.truncate.TruncateFd
+import at.released.weh.filesystem.op.unlink.UnlinkDirectory
+import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
@@ -35,37 +66,37 @@ internal class WindowsFileSystemImpl(
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to WindowsOpen(fsState),
         CloseFd to WindowsCloseFd(fsState),
-//        AddAdvisoryLockFd to LinuxAddAdvisoryLockFd(fsState),
-//        RemoveAdvisoryLockFd to LinuxRemoveAdvisoryLockFd(fsState),
-//        CheckAccess to LinuxCheckAccess(fsState),
-//        Chmod to LinuxChmod(fsState),
-//        ChmodFd to LinuxChmodFd(fsState),
-//        Chown to LinuxChown(fsState),
-//        ChownFd to LinuxChownFd(fsState),
-//        FadviseFd to LinuxFadviseFd(fsState),
-//        FallocateFd to LinuxFallocate(fsState),
-//        FdAttributes to LinuxFdAttributes(fsState),
-//        Fdrenumber to LinuxFdrenumber(fsState),
-//        GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(),
-//        Hardlink to LinuxHardlink(fsState),
-//        Mkdir to LinuxMkdir(fsState),
-//        PrestatFd to LinuxPrestatFd(fsState),
-//        Symlink to LinuxSymlink(fsState),
-//        ReadFd to LinuxReadFd(fsState),
-//        ReadDirFd to LinuxReadDirFd(fsState),
-//        ReadLink to LinuxReadLink(fsState),
-//        Rename to LinuxRename(fsState),
-//        SeekFd to LinuxSeekFd(fsState),
-//        SetFdFlags to LinuxSetFdFlags(fsState),
-//        SetTimestamp to LinuxSetTimestamp(fsState),
-//        SetTimestampFd to LinuxSetTimestampFd(fsState),
-//        Stat to LinuxStat(fsState),
-//        StatFd to LinuxStatFd(fsState),
-//        SyncFd to LinuxSync(fsState),
-//        TruncateFd to LinuxTruncateFd(fsState),
-//        UnlinkFile to LinuxUnlinkFile(fsState),
-//        UnlinkDirectory to LinuxUnlinkDirectory(fsState),
-//        WriteFd to LinuxWriteFd(fsState),
+        AddAdvisoryLockFd to WindowsAddAdvisoryLockFd(fsState),
+        RemoveAdvisoryLockFd to WindowsRemoveAdvisoryLockFd(fsState),
+        CheckAccess to WindowsCheckAccess(fsState),
+        Chmod to WindowsChmod(fsState),
+        ChmodFd to WindowsChmodFd(fsState),
+        Chown to WindowsChown(fsState),
+        ChownFd to WindowsChownFd(fsState),
+        FadviseFd to WindowsFadviseFd(fsState),
+        FallocateFd to WindowsFallocate(fsState),
+        FdAttributes to WindowsFdAttributes(fsState),
+        Fdrenumber to WindowsFdrenumber(fsState),
+        GetCurrentWorkingDirectory to WindowsGetCurrentWorkingDirectory(),
+        Hardlink to WindowsHardlink(fsState),
+        Mkdir to WindowsMkdir(fsState),
+        PrestatFd to WindowsPrestatFd(fsState),
+        Symlink to WindowsSymlink(fsState),
+        ReadFd to WindowsReadFd(fsState),
+        ReadDirFd to WindowsReadDirFd(fsState),
+        ReadLink to WindowsReadLink(fsState),
+        Rename to WindowsRename(fsState),
+        SeekFd to WindowsSeekFd(fsState),
+        SetFdFlags to WindowsSetFdFlags(fsState),
+        SetTimestamp to WindowsSetTimestamp(fsState),
+        SetTimestampFd to WindowsSetTimestampFd(fsState),
+        Stat to WindowsStat(fsState),
+        StatFd to WindowsStatFd(fsState),
+        SyncFd to WindowsSync(fsState),
+        TruncateFd to WindowsTruncateFd(fsState),
+        UnlinkFile to WindowsUnlinkFile(fsState),
+        UnlinkDirectory to WindowsUnlinkDirectory(fsState),
+        WriteFd to WindowsWriteFd(fsState),
     )
     private val fsAdapter = DelegateOperationsFileSystem(operations, interceptors)
 
