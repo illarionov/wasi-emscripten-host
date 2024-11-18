@@ -9,9 +9,12 @@ package at.released.weh.filesystem.windows.nativefunc
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.Exists
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.platform.windows.IO_STATUS_BLOCK
@@ -23,6 +26,7 @@ import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.ext.IoStatusBlockInformation
+import at.released.weh.filesystem.windows.ext.WIN32_NT_KERNEL_DEVICES_PREFIX
 import at.released.weh.filesystem.windows.ext.errorcode.NtStatus
 import at.released.weh.filesystem.windows.ext.errorcode.NtStatus.NtStatusCode
 import at.released.weh.filesystem.windows.ext.errorcode.isSuccess
@@ -46,6 +50,7 @@ import platform.windows.FILE_SHARE_WRITE
 import platform.windows.FILE_SYNCHRONOUS_IO_ALERT
 import platform.windows.HANDLE
 import platform.windows.HANDLEVar
+import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
 
 internal fun ntCreateFileEx(
@@ -59,12 +64,20 @@ internal fun ntCreateFileEx(
     followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
 ): Either<OpenError, HANDLE> = memScoped {
-    val handle: HANDLEVar = alloc<HANDLEVar>()
+    val pathWithNamespace = if (!path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
+        WIN32_NT_KERNEL_DEVICES_PREFIX + path
+    } else {
+        path
+    }
+
+    val handle: HANDLEVar = alloc<HANDLEVar>().apply {
+        this.value = INVALID_HANDLE_VALUE
+    }
     val allocationSize: LARGE_INTEGER = alloc<LARGE_INTEGER>().apply {
         this.QuadPart = 0
     }
     val ioStatusBlock: IO_STATUS_BLOCK = alloc<IO_STATUS_BLOCK>()
-    val pathUtf16: CValues<UShortVar> = path.utf16
+    val pathUtf16: CValues<UShortVar> = pathWithNamespace.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
     val objectName: UNICODE_STRING = alloc<UNICODE_STRING>()
@@ -91,7 +104,9 @@ internal fun ntCreateFileEx(
         CreateOptions = createOptions.toUInt(),
         EaBuffer = null,
         EaLength = 0U,
-    ).let { NtStatus(it.toUInt()) }
+    ).let {
+        NtStatus(it.toUInt())
+    }
 
     if (status.isSuccess) {
         val handleValue: HANDLE = handle.value ?: error("Handle is null")
@@ -127,9 +142,16 @@ private fun ntCreateFileExStatusToOpenError(
     }
 
     return when (status.raw) {
+        // TODO: find more possible error codes
+        NtStatus.STATUS_INVALID_PARAMETER -> InvalidArgument("NtCreateFile failed: invalid argument")
         NtStatus.STATUS_UNSUCCESSFUL -> IoError("Other error $status")
-        // TODO: parse error
+        NtStatusCode.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")
+        NtStatusCode.STATUS_NOT_A_DIRECTORY -> NotDirectory("Not a directory")
         NtStatusCode.STATUS_NOT_IMPLEMENTED -> NotSupported("Operation not supported")
+        NtStatusCode.STATUS_OBJECT_NAME_INVALID -> InvalidArgument("Invalid filename")
+        NtStatusCode.STATUS_OBJECT_NAME_NOT_FOUND -> NoEntry("Name not found")
+        NtStatusCode.STATUS_OBJECT_PATH_NOT_FOUND -> NoEntry("Path not found")
+        NtStatusCode.STATUS_OBJECT_PATH_SYNTAX_BAD -> InvalidArgument("Unsupported path format")
         else -> IoError("Other error $status")
     }
 }
