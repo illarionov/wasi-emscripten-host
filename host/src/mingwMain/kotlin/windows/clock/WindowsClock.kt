@@ -6,8 +6,8 @@
 
 package at.released.weh.host.windows.clock
 
+import at.released.weh.filesystem.windows.win32api.ext.unixTimeNs
 import at.released.weh.host.clock.Clock
-import at.released.weh.host.windows.ext.unixTimeNs
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr

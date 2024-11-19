@@ -15,7 +15,7 @@ import at.released.weh.host.clock.CputimeSource.CpuClockId
 import at.released.weh.host.clock.CputimeSource.CpuClockId.PROCESS_CPUTIME
 import at.released.weh.host.clock.CputimeSource.CpuClockId.THREAD_CPUTIME
 import at.released.weh.host.clock.CputimeSource.CputimeClock
-import at.released.weh.host.windows.ext.elapsedTimeNs
+import at.released.weh.filesystem.windows.win32api.ext.elapsedTimeNs
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr

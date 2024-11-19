@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.host.windows.ext
+package at.released.weh.filesystem.windows.win32api.ext
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.UShortVar
 import kotlinx.cinterop.get
@@ -13,13 +14,18 @@ import kotlinx.cinterop.get
 /**
  * Reads zero-terminated opaque sequence of WCHARs starting from [this]
  */
-internal fun CPointer<UShortVar>.readNullTerminatedCharArray(): CharArray {
+@InternalWasiEmscriptenHostApi
+public fun CPointer<UShortVar>.readNullTerminatedCharArray(): CharArray {
     var length = 0
-    val ptr = this
-    while (ptr[length] != 0.toUShort()) {
+    while (this[length] != 0.toUShort()) {
         length += 1
     }
-    return CharArray(length) { idx ->
-        ptr[idx].toInt().toChar()
-    }
+    return this.readChars(length)
+}
+
+/**
+ * Reads [length] opaque WCHARs starting from [this]
+ */
+public fun CPointer<UShortVar>.readChars(length: Int): CharArray = CharArray(length) { idx ->
+    this[idx].toInt().toChar()
 }

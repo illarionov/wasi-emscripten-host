@@ -28,7 +28,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.nativefunc.ntCreateFileEx
+import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
 import platform.posix.O_CREAT
 import platform.posix.O_EXCL
 import platform.posix.O_TRUNC

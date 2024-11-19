@@ -7,17 +7,14 @@
 package at.released.weh.common.ext
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import kotlinx.io.Sink
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.buildByteString
 
 @InternalWasiEmscriptenHostApi
-public fun Sink.writeNullTerminatedString(
-    string: String,
-    truncateAtSize: Int = Int.MAX_VALUE,
-): Int {
-    require(truncateAtSize > 0)
-    val raw = string.encodeToByteArray()
-    val rawSize = raw.size.coerceAtMost(truncateAtSize - 1)
-    write(raw, 0, rawSize)
-    writeByte(0)
-    return rawSize + 1
+public inline operator fun ByteString.Companion.invoke(size: Int, init: (Int) -> Byte): ByteString {
+    return buildByteString(size) {
+        repeat(size) {
+            append(init(it))
+        }
+    }
 }

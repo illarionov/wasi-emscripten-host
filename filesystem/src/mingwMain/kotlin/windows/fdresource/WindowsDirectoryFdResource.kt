@@ -40,7 +40,7 @@ import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 import at.released.weh.filesystem.preopened.VirtualPath
-import at.released.weh.filesystem.windows.nativefunc.windowsCloseHandle
+import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
 internal class WindowsDirectoryFdResource(

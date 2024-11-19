@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.nativefunc
+package at.released.weh.filesystem.windows.win32api
 
 import arrow.core.Either
 import arrow.core.left
@@ -12,7 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.windows.ext.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import platform.windows.CloseHandle
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.HANDLE

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.ext
+package at.released.weh.filesystem.windows.win32api.ext
 
 /**
  * \\?\ Prefix disables string parsing and send string directly to file system.
