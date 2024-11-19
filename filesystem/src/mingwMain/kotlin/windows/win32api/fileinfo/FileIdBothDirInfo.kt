@@ -6,11 +6,51 @@
 
 package at.released.weh.filesystem.windows.win32api.fileinfo
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
+import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.windows.win32api.ext.asStructTimespec
 import at.released.weh.filesystem.windows.win32api.ext.readChars
+import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import kotlinx.cinterop.alignOf
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.sizeOf
 import platform.windows.FILE_ID_BOTH_DIR_INFO
+import platform.windows.GetFileInformationByHandleEx
+import platform.windows.HANDLE
+import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileIdBothDirectoryInfo
+import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileIdBothDirectoryRestartInfo
+
+internal fun windowsGetFileIdBothDirectoryInfo(
+    handle: HANDLE,
+    restart: Boolean = false,
+    bufferSize: Int = 64 * 1024 * 1024,
+): Either<StatError, List<FileIdBothDirInfo>> = memScoped {
+    val buffer = alloc(bufferSize, alignOf<FILE_ID_BOTH_DIR_INFO>())
+    val firstId: FILE_ID_BOTH_DIR_INFO = buffer.reinterpret()
+
+    val infoClass = if (restart) {
+        FileIdBothDirectoryRestartInfo
+    } else {
+        FileIdBothDirectoryInfo
+    }
+
+    val result = GetFileInformationByHandleEx(handle, infoClass, firstId.ptr, bufferSize.toUInt())
+    return if (result != 0) {
+        readListOfItemsByNextEntryOffset(
+            buffer,
+            bufferSize,
+            FileIdBothDirInfo::create,
+            FileIdBothDirInfo::nextEntryOffset,
+        ).right()
+    } else {
+        Win32ErrorCode.getLast().getFileInfoErrorToStatError().left()
+    }
+}
 
 internal data class FileIdBothDirInfo(
     val nextEntryOffset: UInt,

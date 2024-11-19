@@ -10,45 +10,27 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.StatError
-import at.released.weh.filesystem.platform.windows.FILE_ID_INFO
+import at.released.weh.filesystem.platform.windows.FILE_ALIGNMENT_INFO
 import at.released.weh.filesystem.platform.windows.GetFileInformationByHandleEx
-import at.released.weh.filesystem.windows.win32api.ext.asByteString
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.sizeOf
-import kotlinx.io.bytestring.ByteString
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileIdInfo(handle: HANDLE): Either<StatError, FileIdInfo> = memScoped {
-    val info: FILE_ID_INFO = alloc()
+internal fun windowsGetFileAlignmentInfo(handle: HANDLE): Either<StatError, UInt> = memScoped {
+    val info: FILE_ALIGNMENT_INFO = alloc()
     val result = GetFileInformationByHandleEx(
         handle,
-        _FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
+        _FILE_INFO_BY_HANDLE_CLASS.FileAlignmentInfo,
         info.ptr,
-        sizeOf<FILE_ID_INFO>().toUInt(),
+        sizeOf<FILE_ALIGNMENT_INFO>().toUInt(),
     )
     return if (result != 0) {
-        FileIdInfo.create(info).right()
+        info.AlignmentRequirement.right()
     } else {
         Win32ErrorCode.getLast().getFileInfoErrorToStatError().left()
-    }
-}
-
-internal data class FileIdInfo(
-    val volumeSerialNumber: ULong,
-    val fileId: ByteString,
-) {
-    init {
-        check(fileId.size == 16)
-    }
-
-    internal companion object {
-        fun create(info: FILE_ID_INFO) = FileIdInfo(
-            volumeSerialNumber = info.VolumeSerialNumber,
-            fileId = info.FileId.asByteString(),
-        )
     }
 }

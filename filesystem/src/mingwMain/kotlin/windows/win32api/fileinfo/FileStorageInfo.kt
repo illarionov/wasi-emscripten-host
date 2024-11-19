@@ -6,7 +6,34 @@
 
 package at.released.weh.filesystem.windows.win32api.fileinfo
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
+import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.platform.windows.FILE_STORAGE_INFO
+import at.released.weh.filesystem.platform.windows.GetFileInformationByHandleEx
+import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.sizeOf
+import platform.windows.HANDLE
+import platform.windows._FILE_INFO_BY_HANDLE_CLASS
+
+internal fun windowsGetFileStorageInfo(handle: HANDLE): Either<StatError, FileStorageInfo> = memScoped {
+    val info: FILE_STORAGE_INFO = alloc()
+    val result = GetFileInformationByHandleEx(
+        handle,
+        _FILE_INFO_BY_HANDLE_CLASS.FileStorageInfo,
+        info.ptr,
+        sizeOf<FILE_STORAGE_INFO>().toUInt(),
+    )
+    return if (result != 0) {
+        FileStorageInfo.create(info).right()
+    } else {
+        Win32ErrorCode.getLast().getFileInfoErrorToStatError().left()
+    }
+}
 
 internal data class FileStorageInfo(
     val logicalBytesPerSector: UInt,
