@@ -3,7 +3,7 @@
 #
 # These are explicitly windows files and should use crlf
 *.bat           text eol=crlf
-*.api                               linguist-vendored
-*.pro                               linguist-language=Proguard
-*.properties                        linguist-language=Java-Properties
-gradle/verification-metadata.xml    linguist-vendored
+*.api           text                linguist-vendored
+*.pro           text                linguist-language=Proguard
+*.properties    text                linguist-language=Java-Properties
+gradle/verification-metadata.xml    text linguist-vendored
