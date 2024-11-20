@@ -25,6 +25,8 @@ import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileIdBothDirectoryInfo
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileIdBothDirectoryRestartInfo
 
+private const val WINDOWS_8_3_FILENAME_MAX_LENGTH = 12
+
 internal fun windowsGetFileIdBothDirectoryInfo(
     handle: HANDLE,
     restart: Boolean = false,
@@ -71,6 +73,7 @@ internal data class FileIdBothDirInfo(
             info: FILE_ID_BOTH_DIR_INFO,
             maxBytes: Int,
         ): FileIdBothDirInfo? {
+            @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
             val structSize = sizeOf<FILE_ID_BOTH_DIR_INFO>()
             if (maxBytes < structSize) {
                 return null
@@ -90,7 +93,9 @@ internal data class FileIdBothDirInfo(
                 endOfFile = info.EndOfFile.QuadPart,
                 fileAttributes = info.FileAttributes,
                 eaSize = info.EaSize,
-                shortname = info.ShortName.readChars(info.ShortNameLength.toInt().coerceAtMost(12)).concatToString(),
+                shortname = info.ShortName.readChars(
+                    info.ShortNameLength.toInt().coerceAtMost(WINDOWS_8_3_FILENAME_MAX_LENGTH),
+                ).concatToString(),
                 fileId = info.FileId.QuadPart,
                 filename = info.FileName.readChars(info.FileNameLength.toInt()).concatToString(),
             )

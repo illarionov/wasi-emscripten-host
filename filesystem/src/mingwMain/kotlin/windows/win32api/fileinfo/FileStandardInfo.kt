@@ -44,13 +44,13 @@ internal data class FileStandardInfo(
 ) {
     internal companion object {
         fun create(
-            info: FILE_STANDARD_INFO
+            info: FILE_STANDARD_INFO,
         ): FileStandardInfo = FileStandardInfo(
             allocationSize = info.AllocationSize.QuadPart,
             endOfFile = info.EndOfFile.QuadPart,
             numberOfLinks = info.NumberOfLinks,
             isDeletePending = info.DeletePending.toInt() != 0,
-            isDirectory = info.Directory.toInt() != 0
+            isDirectory = info.Directory.toInt() != 0,
         )
     }
 }

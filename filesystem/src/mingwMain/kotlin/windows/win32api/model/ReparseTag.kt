@@ -9,7 +9,7 @@ package at.released.weh.filesystem.windows.win32api.model
 import platform.windows.IO_REPARSE_TAG_SYMLINK
 
 internal value class ReparseTag(
-    val code: UInt
+    val code: UInt,
 ) {
     val isSymlink: Boolean get() = code == IO_REPARSE_TAG_SYMLINK
 }

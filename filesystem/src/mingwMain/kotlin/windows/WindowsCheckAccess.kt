@@ -18,13 +18,5 @@ internal class WindowsCheckAccess(
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
         fsState.executeWithBaseDirectoryResource(input.baseDirectory) { handle ->
             TODO()
-//            windowsCheckAccess(
-//                path = input.path,
-//                baseDirectoryFd = nativeFdOrAtCwd,
-//                mode = input.mode,
-//                useEffectiveUserId = input.useEffectiveUserId,
-//                allowEmptyPath = input.allowEmptyPath,
-//                followSymlinks = input.followSymlinks,
-//            )
         }
 }

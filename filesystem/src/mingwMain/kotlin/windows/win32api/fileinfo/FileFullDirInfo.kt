@@ -70,6 +70,7 @@ internal data class FileFullDirInfo(
             info: FILE_FULL_DIR_INFO,
             maxBytes: Int,
         ): FileFullDirInfo? {
+            @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
             val structSize = sizeOf<FILE_FULL_DIR_INFO>()
             if (maxBytes < structSize) {
                 return null

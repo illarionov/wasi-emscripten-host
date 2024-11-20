@@ -25,8 +25,8 @@ import at.released.weh.filesystem.platform.windows.OBJ_OPENLINK
 import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.win32api.model.IoStatusBlockInformation
 import at.released.weh.filesystem.windows.win32api.ext.WIN32_NT_KERNEL_DEVICES_PREFIX
+import at.released.weh.filesystem.windows.win32api.model.IoStatusBlockInformation
 import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus
 import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.NtStatusCode
 import at.released.weh.filesystem.windows.win32api.model.errorcode.isSuccess

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("MagicNumber")
+
 package at.released.weh.common.ext
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi

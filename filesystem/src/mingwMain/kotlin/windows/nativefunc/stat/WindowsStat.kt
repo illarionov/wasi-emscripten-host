@@ -23,8 +23,10 @@ import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileStorag
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes.Companion.toFiletype
 import platform.windows.HANDLE
 
+private const val DEFAULT_BLOCK_SIZE_BYTES = 512L
+
 internal fun windowsStatFd(
-    handle: HANDLE
+    handle: HANDLE,
 ): Either<StatError, StructStat> = either {
     val deviceInfo = windowsGetFileStorageInfo(handle).bind()
     val fileId = windowsGetFileIdInfo(handle).bind()
@@ -37,7 +39,7 @@ internal fun windowsStatFd(
     val blockSize: Long = if (deviceInfo.logicalBytesPerSector > 0UL) {
         deviceInfo.logicalBytesPerSector.toLong()
     } else {
-        512L
+        DEFAULT_BLOCK_SIZE_BYTES
     }
 
     return StructStat(

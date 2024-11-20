@@ -32,6 +32,8 @@ import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
 import platform.posix.O_CREAT
 import platform.posix.O_EXCL
 import platform.posix.O_TRUNC
+import platform.windows.FILE_ADD_FILE
+import platform.windows.FILE_ADD_SUBDIRECTORY
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
 import platform.windows.FILE_ATTRIBUTE_READONLY
@@ -46,12 +48,14 @@ import platform.windows.FILE_OPEN_IF
 import platform.windows.FILE_OVERWRITE
 import platform.windows.FILE_OVERWRITE_IF
 import platform.windows.FILE_RANDOM_ACCESS
+import platform.windows.FILE_READ_ATTRIBUTES
+import platform.windows.FILE_READ_DATA
 import platform.windows.FILE_SYNCHRONOUS_IO_ALERT
 import platform.windows.FILE_TRAVERSE
+import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.FILE_WRITE_THROUGH
 import platform.windows.HANDLE
 
-// TODO: inline?
 internal fun windowsOpenFileOrDirectory(
     baseHandle: HANDLE?,
     path: RealPath,
@@ -136,7 +140,13 @@ private fun getDesiredAccess(
     isDirectoryOrPathRequest: Boolean,
 ): Int {
     return if (isDirectoryOrPathRequest) {
-        FILE_LIST_DIRECTORY or FILE_TRAVERSE
+        FILE_ADD_FILE or
+                FILE_ADD_SUBDIRECTORY or
+                FILE_LIST_DIRECTORY or
+                FILE_READ_ATTRIBUTES or
+                FILE_READ_DATA or
+                FILE_TRAVERSE or
+                FILE_WRITE_ATTRIBUTES
     } else {
         when (flags and O_ACCMODE) {
             O_RDONLY -> FILE_GENERIC_READ

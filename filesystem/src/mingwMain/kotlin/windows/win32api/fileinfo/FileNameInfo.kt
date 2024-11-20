@@ -26,7 +26,7 @@ import platform.windows.MAX_PATH
 import platform.windows.WCHARVar
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-// TODO: check
+@Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
 internal fun windowsGetFileFilename(handle: HANDLE): Either<StatError, String> {
     var maxLength = MAX_PATH * sizeOf<WCHARVar>()
     val fnSize = sizeOf<FILE_NAME_INFO>()

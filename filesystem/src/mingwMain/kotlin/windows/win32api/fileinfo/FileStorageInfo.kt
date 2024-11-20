@@ -45,6 +45,7 @@ internal data class FileStorageInfo(
     val byteOffsetForPartitionAlignment: UInt,
 ) {
     internal companion object {
+        @Suppress("MaxLineLength")
         fun create(info: FILE_STORAGE_INFO): FileStorageInfo = FileStorageInfo(
             logicalBytesPerSector = info.LogicalBytesPerSector,
             physicalBytesPerSectorForAtomicity = info.PhysicalBytesPerSectorForAtomicity,

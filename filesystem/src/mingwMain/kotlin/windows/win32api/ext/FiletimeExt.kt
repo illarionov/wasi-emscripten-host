@@ -41,7 +41,7 @@ internal val LARGE_INTEGER.asStructTimespec: StructTimespec
     get() = ticksFrom1601ToStructTimespec(QuadPart.toULong())
 
 private fun ticksFrom1601ToStructTimespec(
-    ticksFrom1601: ULong
+    ticksFrom1601: ULong,
 ): StructTimespec {
     val ticksFrom1970 = ticksFrom1601ToTicksFrom1970(ticksFrom1601)
     return StructTimespec(
@@ -51,7 +51,7 @@ private fun ticksFrom1601ToStructTimespec(
 }
 
 private fun ticksFrom1601ToTicksFrom1970(
-    ticksFrom1601: ULong
+    ticksFrom1601: ULong,
 ): ULong = if (ticksFrom1601 >= FILETIME_1970) {
     ticksFrom1601 - FILETIME_1970
 } else {

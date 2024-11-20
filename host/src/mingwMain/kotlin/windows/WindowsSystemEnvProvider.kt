@@ -6,9 +6,9 @@
 
 package at.released.weh.host.windows
 
+import at.released.weh.filesystem.windows.win32api.ext.readNullTerminatedCharArray
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.host.native.parsePosixEnvironToEnvMap
-import at.released.weh.filesystem.windows.win32api.ext.readNullTerminatedCharArray
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.UShortVar
 import kotlinx.cinterop.UShortVarOf

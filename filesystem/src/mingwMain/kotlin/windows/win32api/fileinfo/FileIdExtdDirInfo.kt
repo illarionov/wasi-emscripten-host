@@ -79,6 +79,7 @@ internal data class FileIdExtdDirInfo(
             info: FILE_ID_EXTD_DIR_INFO,
             maxBytes: Int,
         ): FileIdExtdDirInfo? {
+            @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
             val structSize = sizeOf<FILE_ID_EXTD_DIR_INFO>()
             if (maxBytes < structSize) {
                 return null

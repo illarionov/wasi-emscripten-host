@@ -6,9 +6,9 @@
 
 package at.released.weh.filesystem.windows.win32api.ext
 
+import at.released.weh.common.ext.readU64Le
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileIdInfo
 import kotlinx.io.bytestring.ByteString
-import at.released.weh.common.ext.readU64Le
 
 internal fun FileIdInfo.get64bitInode(): Long = get64BitInodeFromFileId(fileId)
 
