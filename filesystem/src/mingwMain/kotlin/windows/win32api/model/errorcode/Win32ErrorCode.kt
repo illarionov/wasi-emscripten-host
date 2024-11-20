@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.ext.errorcode
+package at.released.weh.filesystem.windows.win32api.model.errorcode
 
 import platform.windows.GetLastError
 

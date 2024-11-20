@@ -7,8 +7,10 @@
 package at.released.weh.filesystem.testutil
 
 import at.released.weh.filesystem.FileSystemEngine
+import at.released.weh.filesystem.WindowsFileSystem
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
 
 internal actual fun <E : FileSystemEngineConfig> getDefaultTestEngine(): FileSystemEngine<E> {
-    error("Not yet implemented")
+    @Suppress("UNCHECKED_CAST")
+    return WindowsFileSystem as FileSystemEngine<E>
 }

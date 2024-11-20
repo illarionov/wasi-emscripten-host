@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.nativefunc
+package at.released.weh.filesystem.windows.win32api
 
 import arrow.core.Either
 import arrow.core.left
@@ -25,11 +25,11 @@ import at.released.weh.filesystem.platform.windows.OBJ_OPENLINK
 import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.ext.IoStatusBlockInformation
-import at.released.weh.filesystem.windows.ext.WIN32_NT_KERNEL_DEVICES_PREFIX
-import at.released.weh.filesystem.windows.ext.errorcode.NtStatus
-import at.released.weh.filesystem.windows.ext.errorcode.NtStatus.NtStatusCode
-import at.released.weh.filesystem.windows.ext.errorcode.isSuccess
+import at.released.weh.filesystem.windows.win32api.ext.WIN32_NT_KERNEL_DEVICES_PREFIX
+import at.released.weh.filesystem.windows.win32api.model.IoStatusBlockInformation
+import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus
+import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.NtStatusCode
+import at.released.weh.filesystem.windows.win32api.model.errorcode.isSuccess
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CValues
 import kotlinx.cinterop.UShortVar
@@ -52,6 +52,7 @@ import platform.windows.HANDLE
 import platform.windows.HANDLEVar
 import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
+import platform.windows.PathIsRelativeW
 
 internal fun ntCreateFileEx(
     rootHandle: HANDLE?,
@@ -64,7 +65,9 @@ internal fun ntCreateFileEx(
     followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
 ): Either<OpenError, HANDLE> = memScoped {
-    val pathWithNamespace = if (!path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
+    val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
+
+    val pathWithNamespace = if (!pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
         WIN32_NT_KERNEL_DEVICES_PREFIX + path
     } else {
         path

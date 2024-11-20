@@ -4,7 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("FILE_CONTAINS_ONLY_COMMENTS", "FILE_NO_BLANK_LINE_BETWEEN_BLOCKS")
+package at.released.weh.filesystem.windows.win32api.model
 
-// Workaround for https://youtrack.jetbrains.com/issue/KTIJ-15797
-package at.released.weh.filesystem
+import platform.windows.IO_REPARSE_TAG_SYMLINK
+
+internal value class ReparseTag(
+    val code: UInt,
+) {
+    val isSymlink: Boolean get() = code == IO_REPARSE_TAG_SYMLINK
+}

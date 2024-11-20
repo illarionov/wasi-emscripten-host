@@ -6,12 +6,12 @@
 
 @file:Suppress("LONG_NUMERICAL_VALUES_SEPARATED")
 
-package at.released.weh.filesystem.windows.ext.errorcode
+package at.released.weh.filesystem.windows.win32api.model.errorcode
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.filesystem.windows.ext.errorcode.NtStatus.Severity
+import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.Severity
 import kotlin.test.Test
 
 class NtStatusTest {

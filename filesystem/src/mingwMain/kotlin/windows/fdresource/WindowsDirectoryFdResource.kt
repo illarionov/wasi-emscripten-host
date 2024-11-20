@@ -40,6 +40,8 @@ import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
+import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
 internal class WindowsDirectoryFdResource(
@@ -54,8 +56,7 @@ internal class WindowsDirectoryFdResource(
     }
 
     override fun stat(): Either<StatError, StructStat> {
-        TODO()
-        // return linuxStatFd(nativeFd.linuxFd)
+        return windowsStatFd(channel.handle)
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
@@ -111,9 +112,7 @@ internal class WindowsDirectoryFdResource(
         return BadFileDescriptor("Can not add remove lock on a directory").left()
     }
 
-    override fun close(): Either<CloseError, Unit> {
-        TODO()
-    }
+    override fun close(): Either<CloseError, Unit> = windowsCloseHandle(channel.handle)
 
     internal data class WindowsDirectoryChannel(
         val handle: HANDLE,
