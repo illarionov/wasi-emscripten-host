@@ -14,7 +14,7 @@ import at.released.weh.filesystem.model.Filetype
  *
  * @param deviceId ID of device containing file
  * @param inode Inode number
- * @param mode File type and mode
+ * @param mode File mode
  * @param links Number of hard links
  * @param usedId User ID of owner
  * @param groupId Group ID of owner

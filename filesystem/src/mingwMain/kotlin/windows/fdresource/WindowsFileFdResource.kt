@@ -51,7 +51,7 @@ internal class WindowsFileFdResource(
     }
 
     override fun stat(): Either<StatError, StructStat> {
-        return windowsStatFd(channel)
+        return windowsStatFd(channel.handle)
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {

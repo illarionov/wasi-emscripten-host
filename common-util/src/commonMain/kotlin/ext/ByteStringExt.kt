@@ -18,3 +18,19 @@ public inline operator fun ByteString.Companion.invoke(size: Int, init: (Int) ->
         }
     }
 }
+
+@InternalWasiEmscriptenHostApi
+public fun ByteString.readU64Le(addr: Int): ULong = (this[addr].toULong() and 0xffUL) or
+        (this[addr + 1].toULong() and 0xffUL shl 8) or
+        (this[addr + 2].toULong() and 0xffUL shl 16) or
+        (this[addr + 3].toULong() and 0xffUL shl 24) or
+        (this[addr + 4].toULong() and 0xffUL shl 32) or
+        (this[addr + 5].toULong() and 0xffUL shl 40) or
+        (this[addr + 6].toULong() and 0xffUL shl 48) or
+        (this[addr + 7].toULong() and 0xffUL shl 56)
+
+@InternalWasiEmscriptenHostApi
+public fun ByteString.readU32Le(addr: Int): UInt = (this[addr].toUInt() and 0xffU) or
+        (this[addr + 1].toUInt() and 0xffU shl 8) or
+        (this[addr + 2].toUInt() and 0xffU shl 16) or
+        (this[addr + 3].toUInt() and 0xffU shl 24)

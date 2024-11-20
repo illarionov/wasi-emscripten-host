@@ -37,6 +37,9 @@ kotlin {
     macosX64()
     mingwX64 {
         setupWindowsInterops()
+        binaries.all {
+            linkerOpts("-lntdll")
+        }
     }
 
     applyDefaultHierarchyTemplate()
@@ -72,6 +75,7 @@ kotlin {
             implementation(projects.testIgnoreAnnotations)
             implementation(projects.testTempfolder)
             implementation(libs.assertk)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

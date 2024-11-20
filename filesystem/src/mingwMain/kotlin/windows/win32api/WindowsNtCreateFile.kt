@@ -52,6 +52,7 @@ import platform.windows.HANDLE
 import platform.windows.HANDLEVar
 import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
+import platform.windows.PathIsRelativeW
 
 internal fun ntCreateFileEx(
     rootHandle: HANDLE?,
@@ -64,7 +65,9 @@ internal fun ntCreateFileEx(
     followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
 ): Either<OpenError, HANDLE> = memScoped {
-    val pathWithNamespace = if (!path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
+    val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
+
+    val pathWithNamespace = if (!pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
         WIN32_NT_KERNEL_DEVICES_PREFIX + path
     } else {
         path
