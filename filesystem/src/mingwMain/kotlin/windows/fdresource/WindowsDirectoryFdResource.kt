@@ -41,6 +41,7 @@ import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceTyp
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
+import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
@@ -51,8 +52,7 @@ internal class WindowsDirectoryFdResource(
     override val fdResourceType: FdResourceType = DIRECTORY
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        TODO()
-        // return linuxFdAttributes(nativeFd, rights)
+        return windowsFdAttributes(channel.handle, channel.isPreopened, channel.rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {

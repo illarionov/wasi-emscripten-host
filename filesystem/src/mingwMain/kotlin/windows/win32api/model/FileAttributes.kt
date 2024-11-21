@@ -6,7 +6,6 @@
 
 package at.released.weh.filesystem.windows.win32api.model
 
-import at.released.weh.filesystem.model.Filetype
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_REPARSE_POINT
 
@@ -17,14 +16,4 @@ internal value class FileAttributes(
         get() = mask.toInt() and FILE_ATTRIBUTE_REPARSE_POINT == FILE_ATTRIBUTE_REPARSE_POINT
 
     val isDirectory: Boolean get() = mask.toInt() and FILE_ATTRIBUTE_DIRECTORY == FILE_ATTRIBUTE_DIRECTORY
-
-    internal companion object {
-        internal fun FileAttributes.toFiletype(reparseTag: ReparseTag): Filetype {
-            return when {
-                isSymlinkOrReparsePoint && reparseTag.isSymlink -> Filetype.SYMBOLIC_LINK
-                this.mask.toInt() and FILE_ATTRIBUTE_DIRECTORY == FILE_ATTRIBUTE_DIRECTORY -> Filetype.DIRECTORY
-                else -> Filetype.REGULAR_FILE
-            }
-        }
-    }
 }

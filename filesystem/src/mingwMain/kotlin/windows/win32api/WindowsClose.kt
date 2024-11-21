@@ -28,6 +28,6 @@ internal fun windowsCloseHandle(
 }
 
 private fun Win32ErrorCode.toCloseError(): CloseError = when (this.code.toInt()) {
-    ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file hande")
+    ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     else -> IoError("Other error: `$this`")
 }

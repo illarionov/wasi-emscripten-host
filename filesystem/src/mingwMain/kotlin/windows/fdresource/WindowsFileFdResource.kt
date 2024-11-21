@@ -36,7 +36,9 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
+import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
+import at.released.weh.filesystem.windows.win32api.windowsSetFilePointer
 import platform.windows.HANDLE
 
 internal class WindowsFileFdResource(
@@ -46,8 +48,7 @@ internal class WindowsFileFdResource(
     val fdResourceType: FdResourceType = FdResourceType.FILE
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        TODO()
-        // return linuxFdAttributes(channel)
+        return windowsFdAttributes(channel.handle, channel.isInAppendMode, channel.rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {
@@ -55,8 +56,7 @@ internal class WindowsFileFdResource(
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        TODO()
-        // return posixSeek(channel.fd, fileDelta, whence)
+        return windowsSetFilePointer(channel.handle, fileDelta, whence)
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
