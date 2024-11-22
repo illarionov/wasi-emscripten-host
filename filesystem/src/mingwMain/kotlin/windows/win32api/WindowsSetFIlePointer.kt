@@ -11,13 +11,13 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.model.Whence.CUR
 import at.released.weh.filesystem.model.Whence.END
 import at.released.weh.filesystem.model.Whence.SET
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import kotlinx.cinterop.CValue
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cValue
 import kotlinx.cinterop.memScoped
@@ -36,7 +36,7 @@ internal fun windowsSetFilePointer(
     fileDelta: Long,
     whence: Whence,
 ): Either<SeekError, Long> = memScoped {
-    val distanceToMove = cValue<LARGE_INTEGER> { QuadPart = fileDelta }
+    val distanceToMove: CValue<LARGE_INTEGER> = cValue { QuadPart = fileDelta }
     val newFilePointer: LARGE_INTEGER = alloc()
 
     return if (SetFilePointerEx(handle, distanceToMove, newFilePointer.ptr, whence.asMoveMethod) != 0) {

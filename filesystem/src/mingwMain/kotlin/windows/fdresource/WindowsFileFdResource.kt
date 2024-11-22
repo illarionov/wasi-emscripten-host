@@ -35,6 +35,8 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.windows.nativefunc.readwrite.windowsRead
+import at.released.weh.filesystem.windows.nativefunc.readwrite.windowsWrite
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
@@ -60,13 +62,11 @@ internal class WindowsFileFdResource(
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        TODO()
-        // return linuxRead(channel, iovecs, strategy)
+        return windowsRead(channel.handle, iovecs, strategy)
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        TODO()
-        // return linuxWrite(channel, cIovecs, strategy)
+        return windowsWrite(channel.handle, cIovecs, strategy, channel.isInAppendMode)
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
