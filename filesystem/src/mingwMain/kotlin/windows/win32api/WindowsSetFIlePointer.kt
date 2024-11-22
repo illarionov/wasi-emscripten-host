@@ -31,15 +31,16 @@ import platform.windows.HANDLE
 import platform.windows.LARGE_INTEGER
 import platform.windows.SetFilePointerEx
 
-internal fun windowsSetFilePointer(
-    handle: HANDLE,
+internal fun HANDLE.getFilePointer(): Either<SeekError, Long> = setFilePointer(0, CUR)
+
+internal fun HANDLE.setFilePointer(
     fileDelta: Long,
     whence: Whence,
 ): Either<SeekError, Long> = memScoped {
     val distanceToMove: CValue<LARGE_INTEGER> = cValue { QuadPart = fileDelta }
     val newFilePointer: LARGE_INTEGER = alloc()
 
-    return if (SetFilePointerEx(handle, distanceToMove, newFilePointer.ptr, whence.asMoveMethod) != 0) {
+    return if (SetFilePointerEx(this@setFilePointer, distanceToMove, newFilePointer.ptr, whence.asMoveMethod) != 0) {
         newFilePointer.QuadPart.right()
     } else {
         Win32ErrorCode.getLast().toSeekError().left()

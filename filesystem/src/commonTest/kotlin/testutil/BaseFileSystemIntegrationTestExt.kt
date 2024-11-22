@@ -10,6 +10,7 @@ import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FI
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.test.utils.TempFolder
 import at.released.weh.test.utils.absolutePath
+import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -34,12 +35,21 @@ internal fun TempFolder.path(
 internal fun TempFolder.createTestFile(
     testfilePath: String = TEST_FILE,
     content: String = TEST_CONTENT,
+): Path = createTestFile(testfilePath) { writeString(content) }
+
+internal fun TempFolder.createTestFile(
+    testfilePath: String = TEST_FILE,
+    size: Int = 100,
+    fillByte: Byte = 0xdd.toByte(),
+): Path = createTestFile(testfilePath) { write(ByteArray(size) { fillByte }) }
+
+internal fun TempFolder.createTestFile(
+    testfilePath: String = TEST_FILE,
+    content: Sink.() -> Unit,
 ): Path {
     val filePath = path(testfilePath)
     SystemFileSystem.run {
-        sink(filePath).buffered().use {
-            it.writeString(content)
-        }
+        sink(filePath).buffered().use(content)
     }
     return filePath
 }

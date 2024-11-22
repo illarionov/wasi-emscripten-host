@@ -43,28 +43,24 @@ import platform.windows.ReadFile
 
 internal val SINGLE_EMPTY_IOVEC = listOf(FileSystemByteBuffer(ByteArray(0), 0, 0))
 
-internal fun windowsRead(
-    handle: HANDLE,
+internal fun HANDLE.read(
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
 ): Either<ReadError, ULong> {
     val nonEmptyIovecs = iovecs.ifEmpty { SINGLE_EMPTY_IOVEC }
     return when (strategy) {
-        CurrentPosition -> windowReadChangePosition(handle, nonEmptyIovecs)
-        is Position -> windowsReadDoNotChangePosition(handle, strategy.position, nonEmptyIovecs)
+        CurrentPosition -> readChangePosition(nonEmptyIovecs)
+        is Position -> readDoNotChangePosition(strategy.position, nonEmptyIovecs)
     }
 }
 
-private fun windowReadChangePosition(
-    handle: HANDLE,
-    iovecs: List<FileSystemByteBuffer>,
-): Either<ReadError, ULong> = memScoped {
+private fun HANDLE.readChangePosition(iovecs: List<FileSystemByteBuffer>): Either<ReadError, ULong> = memScoped {
     var totalBytesRead = 0UL
     val bytesRead: DWORDVar = alloc()
     for (iovec in iovecs) {
         val bytesReadOrError = iovec.array.usePinned { pinnedBuffer ->
             val result = ReadFile(
-                handle,
+                this@readChangePosition,
                 pinnedBuffer.addressOf(iovec.offset),
                 iovec.length.toUInt(),
                 bytesRead.ptr,
@@ -89,8 +85,8 @@ private fun windowReadChangePosition(
 }
 
 // TODO: test
-private fun windowsReadDoNotChangePosition(
-    handle: HANDLE,
+@Suppress("LoopWithTooManyJumpStatements")
+private fun HANDLE.readDoNotChangePosition(
     offset: Long,
     iovecs: List<FileSystemByteBuffer>,
 ): Either<ReadError, ULong> = memScoped {
@@ -105,14 +101,14 @@ private fun windowsReadDoNotChangePosition(
 
         val readResult = iovec.array.usePinned { pinnedBuffer ->
             val resultRaw = ReadFile(
-                handle,
+                this@readDoNotChangePosition,
                 pinnedBuffer.addressOf(iovec.offset),
                 iovec.length.toUInt(),
                 bytesRead.ptr,
                 overlapped.ptr,
             )
             if (resultRaw != 0) {
-                if (GetOverlappedResult(handle, overlapped.ptr, bytesRead.ptr, 0) == 0) {
+                if (GetOverlappedResult(this@readDoNotChangePosition, overlapped.ptr, bytesRead.ptr, 0) == 0) {
                     error("Failed to get overlapped result")
                 }
                 ReadFileResult.ReadSuccess(bytesRead.value.toULong())
@@ -135,20 +131,11 @@ private fun windowsReadDoNotChangePosition(
                 currentOffset += readResult.readBytes
             }
 
-            is ReadFileResult.ReadError -> {
-                return readResult.error.toReadError().left()
-            }
+            is ReadFileResult.ReadError -> return readResult.error.toReadError().left()
         }
     }
 
     return totalBytesRead.right()
-}
-
-@Suppress("ConvertObjectToDataObject")
-private sealed class ReadFileResult {
-    class ReadSuccess(val readBytes: ULong) : ReadFileResult()
-    object EndOfFile : ReadFileResult()
-    class ReadError(val error: Win32ErrorCode) : ReadFileResult()
 }
 
 private fun Win32ErrorCode.toReadError(): ReadError = when (this.code.toInt()) {
@@ -159,4 +146,11 @@ private fun Win32ErrorCode.toReadError(): ReadError = when (this.code.toInt()) {
     ERROR_OPERATION_ABORTED -> Interrupted("Read operation interrupted")
     ERROR_INSUFFICIENT_BUFFER -> Nxio("Buffer too small to read mailslot")
     else -> IoError("Read error. Errno: `$this`")
+}
+
+@Suppress("ConvertObjectToDataObject")
+private sealed class ReadFileResult {
+    object EndOfFile : ReadFileResult()
+    class ReadSuccess(val readBytes: ULong) : ReadFileResult()
+    class ReadError(val error: Win32ErrorCode) : ReadFileResult()
 }

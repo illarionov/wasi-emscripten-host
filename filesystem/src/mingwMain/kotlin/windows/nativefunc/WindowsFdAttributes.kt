@@ -25,7 +25,7 @@ import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.filetype
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileAttributeTagInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes
 import platform.windows.FILE_FLAG_NO_BUFFERING
 import platform.windows.FILE_FLAG_WRITE_THROUGH
@@ -36,7 +36,7 @@ internal fun windowsFdAttributes(
     isInAppendMode: Boolean,
     rights: FdRightsBlock,
 ): Either<FdAttributesError, FdAttributesResult> = either {
-    val attrTag: FileAttributeTagInfo = windowsGetFileAttributeTagInfo(handle)
+    val attrTag: FileAttributeTagInfo = handle.getFileAttributeTagInfo()
         .mapLeft(StatError::toFdattributesError)
         .bind()
 

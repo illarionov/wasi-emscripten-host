@@ -21,10 +21,10 @@ import platform.windows.BY_HANDLE_FILE_INFORMATION
 import platform.windows.GetFileInformationByHandle
 import platform.windows.HANDLE
 
-internal fun windowsGetFileInformationByHandle(handle: HANDLE): Either<StatError, FileByHandleInfo> = memScoped {
+internal fun HANDLE.getFileInformationByHandle(): Either<StatError, FileByHandleInfo> = memScoped {
     val info: BY_HANDLE_FILE_INFORMATION = alloc()
     val result = GetFileInformationByHandle(
-        handle,
+        this@getFileInformationByHandle,
         info.ptr,
     )
     return if (result != 0) {

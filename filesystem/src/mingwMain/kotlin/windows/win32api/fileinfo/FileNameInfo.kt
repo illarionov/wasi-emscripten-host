@@ -27,7 +27,7 @@ import platform.windows.WCHARVar
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
 @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
-internal fun windowsGetFileFilename(handle: HANDLE): Either<StatError, String> {
+internal fun HANDLE.getFileFilename(): Either<StatError, String> {
     var maxLength = MAX_PATH * sizeOf<WCHARVar>()
     val fnSize = sizeOf<FILE_NAME_INFO>()
     val fnAlign = alignOf<FILE_NAME_INFO>()
@@ -38,7 +38,7 @@ internal fun windowsGetFileFilename(handle: HANDLE): Either<StatError, String> {
             val filenameInfo: FILE_NAME_INFO = fileNameInfoBuf.reinterpret()
 
             val result = GetFileInformationByHandleEx(
-                handle,
+                this@getFileFilename,
                 _FILE_INFO_BY_HANDLE_CLASS.FileNameInfo,
                 filenameInfo.ptr,
                 totalSize.toUInt(),

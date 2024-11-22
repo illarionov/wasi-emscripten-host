@@ -24,10 +24,10 @@ import platform.windows.GetFileInformationByHandleEx
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileAttributeTagInfo(handle: HANDLE): Either<StatError, FileAttributeTagInfo> = memScoped {
+internal fun HANDLE.getFileAttributeTagInfo(): Either<StatError, FileAttributeTagInfo> = memScoped {
     val fileAttributeTagInfo: FILE_ATTRIBUTE_TAG_INFO = alloc()
     val result = GetFileInformationByHandleEx(
-        handle,
+        this@getFileAttributeTagInfo,
         _FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo,
         fileAttributeTagInfo.ptr,
         sizeOf<FILE_ATTRIBUTE_TAG_INFO>().toUInt(),

@@ -8,6 +8,7 @@ package at.released.weh.filesystem.windows.nativefunc.readwrite
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
@@ -22,12 +23,14 @@ import at.released.weh.filesystem.error.Pipe
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.model.Whence.END
+import at.released.weh.filesystem.model.Whence.SET
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
+import at.released.weh.filesystem.windows.win32api.getFilePointer
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
-import at.released.weh.filesystem.windows.win32api.windowsSetFilePointer
+import at.released.weh.filesystem.windows.win32api.setFilePointer
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -50,39 +53,35 @@ import platform.windows.HANDLE
 import platform.windows.OVERLAPPED
 import platform.windows.WriteFile
 
-internal fun windowsWrite(
-    handle: HANDLE,
+internal fun HANDLE.write(
     iovecs: List<FileSystemByteBuffer>,
     strategy: ReadWriteStrategy,
-    isInAppendMode: Boolean,
+    writeInAppendMode: Boolean,
 ): Either<WriteError, ULong> {
     val nonEmptyIovecs = iovecs.ifEmpty { SINGLE_EMPTY_IOVEC }
     return when (strategy) {
-        CurrentPosition -> if (isInAppendMode) {
-            windowsWriteDoNotChangePosition(handle, 0xff_ff_ff_ff_ff_ff_ff_ffU, nonEmptyIovecs)
+        CurrentPosition -> if (writeInAppendMode) {
+            writeDoNotChangePosition(0xff_ff_ff_ff_ff_ff_ff_ffU, nonEmptyIovecs)
                 .flatMap { bytesWritten ->
-                    windowsSetFilePointer(handle, 0, END)
+                    setFilePointer(0, END)
                         .mapLeft(SeekError::toWriteError)
                         .map { bytesWritten }
                 }
         } else {
-            windowWriteChangePosition(handle, nonEmptyIovecs)
+            writeChangePosition(nonEmptyIovecs)
         }
 
-        is Position -> windowsWriteDoNotChangePosition(handle, strategy.position.toULong(), nonEmptyIovecs)
+        is Position -> writeDoNotChangePosition(strategy.position.toULong(), nonEmptyIovecs)
     }
 }
 
-private fun windowWriteChangePosition(
-    handle: HANDLE,
-    cIovecs: List<FileSystemByteBuffer>,
-): Either<WriteError, ULong> = memScoped {
+internal fun HANDLE.writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Either<WriteError, ULong> = memScoped {
     var totalBytesWritten = 0UL
     val bytesWritten: DWORDVar = alloc()
     for (ciovec in cIovecs) {
         val bytesWrittenOrError = ciovec.array.usePinned { pinnedBuffer ->
             val result = WriteFile(
-                handle,
+                this@writeChangePosition,
                 pinnedBuffer.addressOf(ciovec.offset),
                 ciovec.length.toUInt(),
                 bytesWritten.ptr,
@@ -106,48 +105,56 @@ private fun windowWriteChangePosition(
     return totalBytesWritten.right()
 }
 
-private fun windowsWriteDoNotChangePosition(
-    handle: HANDLE,
+internal fun HANDLE.writeDoNotChangePosition(
     offset: ULong,
     iovecs: List<FileSystemByteBuffer>,
-): Either<WriteError, ULong> = memScoped {
-    var totalBytesWritten = 0UL
-    val overlapped: OVERLAPPED = alloc<OVERLAPPED>()
-    val bytesWritten: DWORDVar = alloc()
-    var currentOffset: ULong = offset
-    for (ciovec in iovecs) {
-        memset(overlapped.ptr, 0, sizeOf<OVERLAPPED>().toULong())
-        overlapped.Offset = (currentOffset and 0xff_ff_ff_ffUL).toUInt()
-        overlapped.OffsetHigh = (currentOffset shr 32 and 0xff_ff_ff_ffUL).toUInt()
+): Either<WriteError, ULong> {
+    val initialPosition = getFilePointer()
+        .mapLeft(SeekError::toWriteError)
+        .getOrElse { return it.left() }
 
-        val bytesWrittenOrError = ciovec.array.usePinned { pinnedBuffer ->
-            val resultRaw = WriteFile(
-                handle,
-                pinnedBuffer.addressOf(ciovec.offset),
-                ciovec.length.toUInt(),
-                bytesWritten.ptr,
-                overlapped.ptr,
-            )
-            if (resultRaw != 0) {
-                if (GetOverlappedResult(handle, overlapped.ptr, bytesWritten.ptr, 0) == 0) {
-                    error("Failed to get overlapped result")
+    val totalBytesWritten = memScoped {
+        var totalBytesWritten = 0UL
+        val overlapped: OVERLAPPED = alloc<OVERLAPPED>()
+        val bytesWritten: DWORDVar = alloc()
+        var currentOffset: ULong = offset
+        for (ciovec in iovecs) {
+            memset(overlapped.ptr, 0, sizeOf<OVERLAPPED>().toULong())
+            overlapped.Offset = (currentOffset and 0xff_ff_ff_ffUL).toUInt()
+            overlapped.OffsetHigh = (currentOffset shr 32 and 0xff_ff_ff_ffUL).toUInt()
+
+            val bytesWrittenOrError = ciovec.array.usePinned { pinnedBuffer ->
+                val resultRaw = WriteFile(
+                    this@writeDoNotChangePosition,
+                    pinnedBuffer.addressOf(ciovec.offset),
+                    ciovec.length.toUInt(),
+                    null,
+                    overlapped.ptr,
+                )
+                if (resultRaw != 0) {
+                    if (GetOverlappedResult(this@writeDoNotChangePosition, overlapped.ptr, bytesWritten.ptr, 0) == 0) {
+                        error("Failed to get overlapped result")
+                    }
+                    bytesWritten.value.toLong()
+                } else {
+                    -1L
                 }
-                bytesWritten.value.toLong()
-            } else {
-                -1L
+            }
+            if (bytesWrittenOrError < 0L) {
+                return Win32ErrorCode.getLast().toWriteError().left()
+            }
+            totalBytesWritten += bytesWrittenOrError.toULong()
+            currentOffset += bytesWrittenOrError.toULong()
+            if (bytesWrittenOrError < ciovec.length) {
+                break
             }
         }
-        if (bytesWrittenOrError < 0L) {
-            return Win32ErrorCode.getLast().toWriteError().left()
-        }
-        totalBytesWritten += bytesWrittenOrError.toULong()
-        currentOffset += bytesWrittenOrError.toULong()
-        if (bytesWrittenOrError < ciovec.length) {
-            break
-        }
-    }
 
-    return totalBytesWritten.right()
+        totalBytesWritten
+    }
+    return setFilePointer(initialPosition, SET)
+        .mapLeft(SeekError::toWriteError)
+        .map { totalBytesWritten }
 }
 
 private fun Win32ErrorCode.toWriteError(): WriteError = when (this.code.toInt()) {

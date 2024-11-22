@@ -28,8 +28,7 @@ import kotlinx.io.bytestring.ByteString
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetExtDirInfo(
-    handle: HANDLE,
+internal fun HANDLE.getExtDirInfo(
     restart: Boolean = false,
     bufferSize: Int = 64 * 1024 * 1024,
 ): Either<StatError, List<FileIdExtdDirInfo>> = memScoped {
@@ -42,7 +41,12 @@ internal fun windowsGetExtDirInfo(
         _FILE_INFO_BY_HANDLE_CLASS.FileIdExtdDirectoryInfo
     }
 
-    val result = GetFileInformationByHandleEx(handle, infoClass, firstId.ptr, bufferSize.toUInt())
+    val result = GetFileInformationByHandleEx(
+        this@getExtDirInfo,
+        infoClass,
+        firstId.ptr,
+        bufferSize.toUInt(),
+    )
     return if (result != 0) {
         readListOfItemsByNextEntryOffset(
             buffer,

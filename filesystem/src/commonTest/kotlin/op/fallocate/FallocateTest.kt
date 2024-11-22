@@ -18,9 +18,8 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
+import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.test.filesystem.assertions.fileSize
-import at.released.weh.test.ignore.annotations.IgnoreMingw
-import at.released.weh.test.utils.absolutePath
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -28,14 +27,13 @@ import kotlinx.io.readByteArray
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreMingw
 class FallocateTest : BaseFileSystemIntegrationTest() {
     @Test
     public fun fallocate_success_case_from_middle_of_file_with_extend() {
-        val testFile = createTestFile(size = 100)
+        val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, crestOpenFileCommand(testFile))
+            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
                 .getOrElse { fail("Can not open test file") }
 
             fs.execute(SeekFd, SeekFd(fd, 50, SET)).onLeft { fail("Can not set new position") }
@@ -59,10 +57,10 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
 
     @Test
     public fun fallocate_in_file_should_not_change_size_and_position() {
-        val testFile = createTestFile(size = 100)
+        val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, crestOpenFileCommand(testFile))
+            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
                 .getOrElse { fail("Can not open test file") }
 
             fs.execute(SeekFd, SeekFd(fd, 50, SET)).onLeft { fail("Can not set new position") }
@@ -86,10 +84,10 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
 
     @Test
     public fun fallocate_outsize_file_should_change_size() {
-        val testFile = createTestFile(size = 100)
+        val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, crestOpenFileCommand(testFile))
+            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
                 .getOrElse { fail("Can not open test file") }
             fs.execute(FallocateFd, FallocateFd(fd, 199, 1)).onLeft { fail("Can not fallocate") }
         }
@@ -97,20 +95,7 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
         assertThat(testFile).fileSize().isEqualTo(200)
     }
 
-    private fun createTestFile(
-        name: String = "testFile",
-        size: Int = 100,
-    ): Path {
-        val root: Path = tempFolder.absolutePath()
-        val testFile = Path(root, name)
-
-        SystemFileSystem.sink(testFile).buffered().use { sink ->
-            sink.write(ByteArray(size) { 0xdd.toByte() })
-        }
-        return testFile
-    }
-
-    private fun crestOpenFileCommand(testfilePath: Path) = Open(
+    private fun generateOpenFileCommand(testfilePath: Path) = Open(
         path = testfilePath.name,
         baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
         openFlags = OpenFileFlag.O_RDWR,

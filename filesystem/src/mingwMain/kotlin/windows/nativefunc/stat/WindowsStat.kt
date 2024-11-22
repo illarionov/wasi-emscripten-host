@@ -16,11 +16,11 @@ import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.windows.win32api.ext.get64bitInode
 import at.released.weh.filesystem.windows.win32api.fileinfo.filetype
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileAttributeTagInfo
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileBasicInfo
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileIdInfo
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileStandardInfo
-import at.released.weh.filesystem.windows.win32api.fileinfo.windowsGetFileStorageInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileBasicInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileIdInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileStandardInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileStorageInfo
 import platform.windows.HANDLE
 
 private const val DEFAULT_BLOCK_SIZE_BYTES = 512L
@@ -28,11 +28,11 @@ private const val DEFAULT_BLOCK_SIZE_BYTES = 512L
 internal fun windowsStatFd(
     handle: HANDLE,
 ): Either<StatError, StructStat> = either {
-    val deviceInfo = windowsGetFileStorageInfo(handle).bind()
-    val fileId = windowsGetFileIdInfo(handle).bind()
-    val basicInfo = windowsGetFileBasicInfo(handle).bind()
-    val standardInfo = windowsGetFileStandardInfo(handle).bind()
-    val tagInfo = windowsGetFileAttributeTagInfo(handle).bind()
+    val deviceInfo = handle.getFileStorageInfo().bind()
+    val fileId = handle.getFileIdInfo().bind()
+    val basicInfo = handle.getFileBasicInfo().bind()
+    val standardInfo = handle.getFileStandardInfo().bind()
+    val tagInfo = handle.getFileAttributeTagInfo().bind()
 
     val blockSize: Long = if (deviceInfo.logicalBytesPerSector > 0UL) {
         deviceInfo.logicalBytesPerSector.toLong()
