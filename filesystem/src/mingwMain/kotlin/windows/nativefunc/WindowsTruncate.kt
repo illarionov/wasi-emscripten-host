@@ -57,7 +57,7 @@ internal fun HANDLE.truncate(length: Long): Either<TruncateError, Unit> = either
     }
 
     // Restore file position
-    if (originalFilePosition < newFileSizePosition) {
+    if (originalFilePosition != newFileSizePosition) {
         setFilePointer(originalFilePosition, SET).mapLeft(SeekError::toTruncateError).bind()
     }
     return setEndOfFileResult

@@ -34,7 +34,7 @@ class TruncateTest : BaseFileSystemIntegrationTest() {
         tableOf("testFileName", "cursorPosition", "expectedNewCursorPosition")
             .row("t1", 10L, 10L)
             .row("t2", 50L, 50L)
-            .row("t3", 70L, 50L)
+            .row("t3", 70L, 70L)
             .forAll { testFileName, cursorPosition, expectedNewPosition ->
                 val testFile = tempFolder.createTestFile(testfilePath = testFileName, size = 100)
                 createTestFileSystem().use { fs ->
