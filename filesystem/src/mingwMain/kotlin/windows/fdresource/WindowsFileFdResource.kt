@@ -27,6 +27,7 @@ import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
+import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
@@ -41,21 +42,29 @@ import at.released.weh.filesystem.windows.nativefunc.readwrite.read
 import at.released.weh.filesystem.windows.nativefunc.readwrite.write
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.truncate
-import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
+import at.released.weh.filesystem.windows.nativefunc.windowsGetFdAttributes
 import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.flushFileBuffers
 import at.released.weh.filesystem.windows.win32api.setFilePointer
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
+import kotlinx.atomicfu.locks.ReentrantLock
+import kotlinx.atomicfu.locks.reentrantLock
+import kotlinx.atomicfu.locks.withLock
 import platform.windows.HANDLE
 
 internal class WindowsFileFdResource(
     channel: WindowsFileChannel,
 ) : FdResource {
-    private val channel = channel.copy()
+    private val channel = WindowsFileChannel(
+        channel.handle,
+        channel.isInAppendMode,
+        channel.rights,
+        channel.fdresourceLock,
+    )
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return windowsFdAttributes(channel.handle, channel.isInAppendMode, channel.rights)
+        return windowsGetFdAttributes(channel.handle, channel.isInAppendMode, channel.rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {
@@ -110,8 +119,9 @@ internal class WindowsFileFdResource(
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
-        TODO()
-        // return linuxSetFdflags(channel, flags)
+        // Only APPEND flag is changeable. Should we use ReOpenFile to set other flags?
+        channel.updateIsInAppendMode { _ -> flags and FD_APPEND == FD_APPEND }
+        return Unit.right()
     }
 
     override fun close(): Either<CloseError, Unit> = windowsCloseHandle(channel.handle)
@@ -124,9 +134,18 @@ internal class WindowsFileFdResource(
         return NotSupported("Not yet implemented").left()
     }
 
-    internal data class WindowsFileChannel(
+    internal class WindowsFileChannel(
         val handle: HANDLE,
-        var isInAppendMode: Boolean = false,
+        isInAppendMode: Boolean = false,
         val rights: FdRightsBlock,
-    )
+        internal val fdresourceLock: ReentrantLock = reentrantLock(),
+    ) {
+        private var _isInAppendMode: Boolean = isInAppendMode
+        public val isInAppendMode: Boolean
+            get() = fdresourceLock.withLock { _isInAppendMode }
+
+        internal inline fun updateIsInAppendMode(valueFactory: (Boolean) -> Boolean): Unit = fdresourceLock.withLock {
+            _isInAppendMode = valueFactory(_isInAppendMode)
+        }
+    }
 }

@@ -31,7 +31,7 @@ import platform.windows.FILE_FLAG_NO_BUFFERING
 import platform.windows.FILE_FLAG_WRITE_THROUGH
 import platform.windows.HANDLE
 
-internal fun windowsFdAttributes(
+internal fun windowsGetFdAttributes(
     handle: HANDLE,
     isInAppendMode: Boolean,
     rights: FdRightsBlock,

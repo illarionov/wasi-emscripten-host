@@ -16,11 +16,9 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_RDONLY
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.op.createForTestFile
-import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreMingw
 class SetFdflagsTest : BaseFileSystemIntegrationTest() {
     @Test
     fun set_fdflags_success_case() {
@@ -48,7 +46,7 @@ class SetFdflagsTest : BaseFileSystemIntegrationTest() {
             assertThat(newFlags)
                 .isIn(
                     0, // Apple
-                    FdFlag.FD_SYNC, // JVM
+                    FdFlag.FD_SYNC, // JVM, Windows
                     FdFlag.FD_DSYNC or FdFlag.FD_RSYNC or FdFlag.FD_SYNC, // Linux, sync flag is not changeable
                 )
         }
