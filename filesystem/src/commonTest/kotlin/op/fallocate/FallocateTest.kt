@@ -10,18 +10,15 @@ import arrow.core.getOrElse
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
-import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Whence.CUR
 import at.released.weh.filesystem.model.Whence.SET
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.seek.SeekFd
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
+import at.released.weh.filesystem.testutil.op.createForTestFile
 import at.released.weh.test.filesystem.assertions.fileSize
 import kotlinx.io.buffered
-import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
 import kotlin.test.Test
@@ -33,7 +30,7 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
         val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
+            val fd = fs.execute(Open, Open.createForTestFile(testFile))
                 .getOrElse { fail("Can not open test file") }
 
             fs.execute(SeekFd, SeekFd(fd, 50, SET)).onLeft { fail("Can not set new position") }
@@ -60,7 +57,7 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
         val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
+            val fd = fs.execute(Open, Open.createForTestFile(testFile))
                 .getOrElse { fail("Can not open test file") }
 
             fs.execute(SeekFd, SeekFd(fd, 50, SET)).onLeft { fail("Can not set new position") }
@@ -87,18 +84,11 @@ class FallocateTest : BaseFileSystemIntegrationTest() {
         val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val fd = fs.execute(Open, generateOpenFileCommand(testFile))
+            val fd = fs.execute(Open, Open.createForTestFile(testFile))
                 .getOrElse { fail("Can not open test file") }
             fs.execute(FallocateFd, FallocateFd(fd, 199, 1)).onLeft { fail("Can not fallocate") }
         }
 
         assertThat(testFile).fileSize().isEqualTo(200)
     }
-
-    private fun generateOpenFileCommand(testfilePath: Path) = Open(
-        path = testfilePath.name,
-        baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
-        openFlags = OpenFileFlag.O_RDWR,
-        fdFlags = 0,
-    )
 }

@@ -22,7 +22,7 @@ import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.TEST_CONTENT
-import at.released.weh.filesystem.testutil.TEST_FILE
+import at.released.weh.filesystem.testutil.TEST_FILE_NAME
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.createTestSymlink
@@ -42,12 +42,12 @@ import kotlin.test.fail
 class RenameTest : BaseFileSystemIntegrationTest() {
     @Test
     public fun rename_file_success_case() {
-        val testFilePath = tempFolder.createTestFile(TEST_FILE, TEST_CONTENT)
+        val testFilePath = tempFolder.createTestFile(TEST_FILE_NAME, TEST_CONTENT)
 
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, TEST_FILE, tempFolderDirectoryFd, "newfile.txt"),
+                Rename(tempFolderDirectoryFd, TEST_FILE_NAME, tempFolderDirectoryFd, "newfile.txt"),
             ).onLeft { fail("Can not rename file: $it") }
         }
 
@@ -59,7 +59,7 @@ class RenameTest : BaseFileSystemIntegrationTest() {
 
     @Test
     public fun rename_file_to_itself_should_do_nothing() {
-        val testFilePath = tempFolder.createTestFile(TEST_FILE, TEST_CONTENT)
+        val testFilePath = tempFolder.createTestFile(TEST_FILE_NAME, TEST_CONTENT)
 
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(

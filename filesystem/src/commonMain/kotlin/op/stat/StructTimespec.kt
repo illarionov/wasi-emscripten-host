@@ -15,6 +15,8 @@ public data class StructTimespec(
     override fun toString(): String {
         return "TS($seconds sec $nanoseconds nsec)"
     }
+
+    internal companion object
 }
 
 public val StructTimespec.timeMillis: Long

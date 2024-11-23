@@ -10,13 +10,11 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
-import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlin.test.Test
 
-@IgnoreMingw
 public class WriteFdChangePositionTest : BaseFileSystemIntegrationTest() {
     @Test
-    public fun write_with_emty_iovecs_should_check_fd() {
+    public fun write_with_empty_iovecs_should_check_fd() {
         val request = WriteFd(
             fd = -327542,
             cIovecs = emptyList(),
