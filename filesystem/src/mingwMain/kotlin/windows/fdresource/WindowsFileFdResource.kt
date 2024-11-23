@@ -124,10 +124,6 @@ internal class WindowsFileFdResource(
         return NotSupported("Not yet implemented").left()
     }
 
-    /**
-     * We implement append mode without using the system's O_APPEND, as it restricts writing to
-     * arbitrary positions in the file, which is necessary for implementing the `fd_write` WASI function.
-     */
     internal data class WindowsFileChannel(
         val handle: HANDLE,
         var isInAppendMode: Boolean = false,

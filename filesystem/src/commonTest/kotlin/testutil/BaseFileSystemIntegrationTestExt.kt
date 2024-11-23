@@ -17,8 +17,8 @@ import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
 import kotlinx.io.writeString
 
-internal const val TEST_DIRECTORY = "testdirectory"
-internal const val TEST_FILE = "testfile.txt"
+internal const val TEST_DIRECTORY_NAME = "testdirectory"
+internal const val TEST_FILE_NAME = "testfile.txt"
 internal const val TEST_CONTENT = "Test Content"
 internal const val TEST_LINK = "testlink"
 
@@ -33,18 +33,18 @@ internal fun TempFolder.path(
 ) = Path(absolutePath(), relativePath)
 
 internal fun TempFolder.createTestFile(
-    testfilePath: String = TEST_FILE,
+    testfilePath: String = TEST_FILE_NAME,
     content: String = TEST_CONTENT,
 ): Path = createTestFile(testfilePath) { writeString(content) }
 
 internal fun TempFolder.createTestFile(
-    testfilePath: String = TEST_FILE,
+    testfilePath: String = TEST_FILE_NAME,
     size: Int = 100,
     fillByte: Byte = 0xdd.toByte(),
 ): Path = createTestFile(testfilePath) { write(ByteArray(size) { fillByte }) }
 
 internal fun TempFolder.createTestFile(
-    testfilePath: String = TEST_FILE,
+    testfilePath: String = TEST_FILE_NAME,
     content: Sink.() -> Unit,
 ): Path {
     val filePath = path(testfilePath)
@@ -55,7 +55,7 @@ internal fun TempFolder.createTestFile(
 }
 
 internal fun TempFolder.createTestDirectory(
-    testDirectoryPath: String = TEST_DIRECTORY,
+    testDirectoryPath: String = TEST_DIRECTORY_NAME,
 ): Path {
     val path = path(testDirectoryPath)
     SystemFileSystem.createDirectories(path, mustCreate = true)
@@ -72,7 +72,7 @@ internal fun TempFolder.createTestSymlink(
 }
 
 internal fun TempFolder.readFileContentToString(
-    testfilePath: String = TEST_FILE,
+    testfilePath: String = TEST_FILE_NAME,
 ): String = SystemFileSystem.source(path(testfilePath)).buffered().use {
     it.readString()
 }

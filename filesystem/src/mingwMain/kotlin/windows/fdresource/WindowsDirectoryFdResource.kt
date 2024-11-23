@@ -36,20 +36,19 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
+import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
+import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
+import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
 internal class WindowsDirectoryFdResource(
     channel: WindowsDirectoryChannel,
-) : PosixFdResource, FdResource {
+) : FdResource {
     internal val channel = channel.copy()
-    override val fdResourceType: FdResourceType = DIRECTORY
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return windowsFdAttributes(channel.handle, channel.isPreopened, channel.rights)
@@ -96,8 +95,13 @@ internal class WindowsDirectoryFdResource(
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        TODO()
-        // return linuxSetTimestamp(nativeFd, atimeNanoseconds, mtimeNanoseconds)
+        return channel.handle.setFileBasicInfo(
+            creationTime = null,
+            lastAccessTime = atimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            lastWriteTime = mtimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            changeTime = mtimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            fileAttributes = null,
+        )
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {

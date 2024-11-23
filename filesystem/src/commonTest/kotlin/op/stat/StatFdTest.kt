@@ -13,21 +13,19 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isGreaterThanOrEqualTo
 import assertk.assertions.isNotZero
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
-import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.model.Filetype.REGULAR_FILE
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.op.opencreate.OpenFileFlag
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_RDONLY
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
+import at.released.weh.filesystem.testutil.createTestDirectory
+import at.released.weh.filesystem.testutil.createTestFile
+import at.released.weh.filesystem.testutil.op.createForTestDirectory
+import at.released.weh.filesystem.testutil.op.createForTestFile
 import at.released.weh.test.ignore.annotations.IgnoreApple
 import at.released.weh.test.ignore.annotations.IgnoreJvm
 import at.released.weh.test.ignore.annotations.IgnoreLinux
-import at.released.weh.test.utils.absolutePath
 import kotlinx.datetime.Clock
-import kotlinx.io.Buffer
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
 import kotlin.test.Test
 import kotlin.test.fail
 
@@ -38,16 +36,11 @@ class StatFdTest : BaseFileSystemIntegrationTest() {
     @IgnoreApple
     fun statfd_file_success_case() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
-
-        setTempfolderContent()
+        val testFile = tempFolder.createTestFile(size = 100)
 
         createTestFileSystem().use { fs ->
-            val openRequest = Open(
-                path = "file1",
-                baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
-                openFlags = OpenFileFlag.O_RDONLY,
-                fdFlags = 0,
-            )
+            val openRequest = Open.createForTestFile(testFile, O_RDONLY)
+
             val fd = fs.execute(Open, openRequest).getOrElse { fail("Open error: $it") }
 
             val statfd = fs.execute(StatFd, StatFd(fd)).getOrElse { fail("Statfd() failed: $it") }
@@ -78,15 +71,11 @@ class StatFdTest : BaseFileSystemIntegrationTest() {
     fun statfd_directory_success_case() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
 
-        setTempfolderContent()
+        val tempDirectory = tempFolder.createTestDirectory()
 
         createTestFileSystem().use { fs ->
-            val openRequest = Open(
-                path = "dir1",
-                baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
-                openFlags = OpenFileFlag.O_DIRECTORY,
-                fdFlags = 0,
-            )
+            val openRequest = Open.createForTestDirectory(tempDirectory)
+
             val fd = fs.execute(Open, openRequest).getOrElse { fail("Open error: $it") }
 
             val statfd = fs.execute(StatFd, StatFd(fd)).getOrElse { fail("Statfd() failed: $it") }
@@ -106,22 +95,6 @@ class StatFdTest : BaseFileSystemIntegrationTest() {
                 currentTimeMillis,
                 currentTimeMillis + MAX_TIME_GAP_MS,
             )
-        }
-    }
-
-    private fun setTempfolderContent() {
-        val root: Path = tempFolder.absolutePath()
-
-        val file1Content = Buffer().also { buffer ->
-            val bytes = ByteArray(100) { it.toByte() }
-            buffer.write(bytes)
-        }
-
-        SystemFileSystem.run {
-            sink(Path(root, "file1")).use {
-                it.write(file1Content, file1Content.size)
-            }
-            this.createDirectories(Path(root, "dir1"))
         }
     }
 
