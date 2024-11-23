@@ -35,13 +35,15 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.windows.nativefunc.fallocate
 import at.released.weh.filesystem.windows.nativefunc.readwrite.read
 import at.released.weh.filesystem.windows.nativefunc.readwrite.write
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.truncate
 import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
+import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
+import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.flushFileBuffers
 import at.released.weh.filesystem.windows.win32api.setFilePointer
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
@@ -51,7 +53,6 @@ internal class WindowsFileFdResource(
     channel: WindowsFileChannel,
 ) : FdResource {
     private val channel = channel.copy()
-    val fdResourceType: FdResourceType = FdResourceType.FILE
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return windowsFdAttributes(channel.handle, channel.isInAppendMode, channel.rights)
@@ -91,18 +92,21 @@ internal class WindowsFileFdResource(
     }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {
-        TODO()
-        // return linuxChmodFd(channel.fd, mode)
+        return NotSupported("Not supported by file system").left()
     }
 
     override fun chown(owner: Int, group: Int): Either<ChownError, Unit> {
-        TODO()
-        // return linuxChownFd(channel.fd, owner, group)
+        return NotSupported("Not supported by file system").left()
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        TODO()
-        // return linuxSetTimestamp(channel.fd, atimeNanoseconds, mtimeNanoseconds)
+        return channel.handle.setFileBasicInfo(
+            creationTime = null,
+            lastAccessTime = atimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            lastWriteTime = mtimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            changeTime = mtimeNanoseconds?.let(StructTimespec::fromNanoseconds),
+            fileAttributes = null,
+        )
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {
@@ -114,12 +118,10 @@ internal class WindowsFileFdResource(
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
         return NotSupported("Not yet implemented").left()
-        // return posixAddAdvisoryLockFd(channel.fd, flock)
     }
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
         return NotSupported("Not yet implemented").left()
-        // return posixRemoveAdvisoryLock(channel.fd, flock)
     }
 
     /**
