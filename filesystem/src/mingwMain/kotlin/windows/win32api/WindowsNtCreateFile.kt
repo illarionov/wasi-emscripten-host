@@ -79,7 +79,7 @@ internal fun ntCreateFileEx(
     val allocationSize: LARGE_INTEGER = alloc<LARGE_INTEGER>().apply {
         this.QuadPart = 0
     }
-    val ioStatusBlock: IO_STATUS_BLOCK = alloc<IO_STATUS_BLOCK>()
+    val ioStatusBlock: IO_STATUS_BLOCK = alloc()
     val pathUtf16: CValues<UShortVar> = pathWithNamespace.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
