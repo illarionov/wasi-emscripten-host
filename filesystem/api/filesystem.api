@@ -750,6 +750,7 @@ public final class at/released/weh/filesystem/model/FileSystemErrno$Companion {
 public final class at/released/weh/filesystem/model/Filetype : java/lang/Enum {
 	public static final field BLOCK_DEVICE Lat/released/weh/filesystem/model/Filetype;
 	public static final field CHARACTER_DEVICE Lat/released/weh/filesystem/model/Filetype;
+	public static final field Companion Lat/released/weh/filesystem/model/Filetype$Companion;
 	public static final field DIRECTORY Lat/released/weh/filesystem/model/Filetype;
 	public static final field REGULAR_FILE Lat/released/weh/filesystem/model/Filetype;
 	public static final field SOCKET_DGRAM Lat/released/weh/filesystem/model/Filetype;
@@ -760,6 +761,9 @@ public final class at/released/weh/filesystem/model/Filetype : java/lang/Enum {
 	public final fun getId ()I
 	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/filesystem/model/Filetype;
 	public static fun values ()[Lat/released/weh/filesystem/model/Filetype;
+}
+
+public final class at/released/weh/filesystem/model/Filetype$Companion {
 }
 
 public abstract interface annotation class at/released/weh/filesystem/model/IntFileDescriptor : java/lang/annotation/Annotation {

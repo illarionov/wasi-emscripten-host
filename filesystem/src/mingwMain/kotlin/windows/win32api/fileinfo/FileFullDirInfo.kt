@@ -25,8 +25,7 @@ import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileFullDirectoryInfo
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileFullDirectoryRestartInfo
 
-internal fun windowsGetFileIdFullDirectoryInfo(
-    handle: HANDLE,
+internal fun HANDLE.getFileIdFullDirectoryInfo(
     restart: Boolean = false,
     bufferSize: Int = 64 * 1024 * 1024,
 ): Either<StatError, List<FileFullDirInfo>> = memScoped {
@@ -39,7 +38,12 @@ internal fun windowsGetFileIdFullDirectoryInfo(
         FileFullDirectoryInfo
     }
 
-    val result = GetFileInformationByHandleEx(handle, infoClass, firstId.ptr, bufferSize.toUInt())
+    val result = GetFileInformationByHandleEx(
+        this@getFileIdFullDirectoryInfo,
+        infoClass,
+        firstId.ptr,
+        bufferSize.toUInt(),
+    )
     return if (result != 0) {
         readListOfItemsByNextEntryOffset(
             buffer,

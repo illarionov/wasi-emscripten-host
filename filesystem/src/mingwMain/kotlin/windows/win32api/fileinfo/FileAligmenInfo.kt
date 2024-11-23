@@ -20,10 +20,10 @@ import kotlinx.cinterop.sizeOf
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileAlignmentInfo(handle: HANDLE): Either<StatError, UInt> = memScoped {
+internal fun HANDLE.getFileAlignmentInfo(): Either<StatError, UInt> = memScoped {
     val info: FILE_ALIGNMENT_INFO = alloc()
     val result = GetFileInformationByHandleEx(
-        handle,
+        this@getFileAlignmentInfo,
         _FILE_INFO_BY_HANDLE_CLASS.FileAlignmentInfo,
         info.ptr,
         sizeOf<FILE_ALIGNMENT_INFO>().toUInt(),

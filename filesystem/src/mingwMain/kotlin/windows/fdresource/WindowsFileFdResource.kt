@@ -8,6 +8,7 @@ package at.released.weh.filesystem.windows.fdresource
 
 import arrow.core.Either
 import arrow.core.left
+import arrow.core.right
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.ChownError
@@ -35,7 +36,14 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
+import at.released.weh.filesystem.windows.nativefunc.fallocate
+import at.released.weh.filesystem.windows.nativefunc.readwrite.read
+import at.released.weh.filesystem.windows.nativefunc.readwrite.write
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
+import at.released.weh.filesystem.windows.nativefunc.truncate
+import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
+import at.released.weh.filesystem.windows.win32api.flushFileBuffers
+import at.released.weh.filesystem.windows.win32api.setFilePointer
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
@@ -46,8 +54,7 @@ internal class WindowsFileFdResource(
     val fdResourceType: FdResourceType = FdResourceType.FILE
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        TODO()
-        // return linuxFdAttributes(channel)
+        return windowsFdAttributes(channel.handle, channel.isInAppendMode, channel.rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {
@@ -55,38 +62,32 @@ internal class WindowsFileFdResource(
     }
 
     override fun seek(fileDelta: Long, whence: Whence): Either<SeekError, Long> {
-        TODO()
-        // return posixSeek(channel.fd, fileDelta, whence)
+        return channel.handle.setFilePointer(fileDelta, whence)
     }
 
     override fun read(iovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<ReadError, ULong> {
-        TODO()
-        // return linuxRead(channel, iovecs, strategy)
+        return channel.handle.read(iovecs, strategy)
     }
 
     override fun write(cIovecs: List<FileSystemByteBuffer>, strategy: ReadWriteStrategy): Either<WriteError, ULong> {
-        TODO()
-        // return linuxWrite(channel, cIovecs, strategy)
+        return channel.handle.write(cIovecs, strategy, channel.isInAppendMode)
     }
 
     override fun sync(syncMetadata: Boolean): Either<SyncError, Unit> {
-        TODO()
-        // return linuxSync(channel.fd, syncMetadata)
+        return channel.handle.flushFileBuffers()
     }
 
     override fun fadvise(offset: Long, length: Long, advice: Advice): Either<FadviseError, Unit> {
-        TODO()
-        // return linuxFadvise(channel.fd, offset, length, advice)
+        // Do nothing. File flags cannot be changed for open files on Windows
+        return Unit.right()
     }
 
     override fun fallocate(offset: Long, length: Long): Either<FallocateError, Unit> {
-        TODO()
-        // return posixFallocate(channel.fd, offset, length)
+        return channel.handle.fallocate(offset, length)
     }
 
     override fun truncate(length: Long): Either<TruncateError, Unit> {
-        TODO()
-        // return linuxTruncate(channel.fd, length)
+        return channel.handle.truncate(length)
     }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {

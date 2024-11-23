@@ -27,8 +27,7 @@ import platform.windows._FILE_INFO_BY_HANDLE_CLASS.FileIdBothDirectoryRestartInf
 
 private const val WINDOWS_8_3_FILENAME_MAX_LENGTH = 12
 
-internal fun windowsGetFileIdBothDirectoryInfo(
-    handle: HANDLE,
+internal fun HANDLE.getFileIdBothDirectoryInfo(
     restart: Boolean = false,
     bufferSize: Int = 64 * 1024 * 1024,
 ): Either<StatError, List<FileIdBothDirInfo>> = memScoped {
@@ -41,13 +40,18 @@ internal fun windowsGetFileIdBothDirectoryInfo(
         FileIdBothDirectoryInfo
     }
 
-    val result = GetFileInformationByHandleEx(handle, infoClass, firstId.ptr, bufferSize.toUInt())
+    val result = GetFileInformationByHandleEx(
+        hFile = this@getFileIdBothDirectoryInfo,
+        FileInformationClass = infoClass,
+        lpFileInformation = firstId.ptr,
+        dwBufferSize = bufferSize.toUInt(),
+    )
     return if (result != 0) {
         readListOfItemsByNextEntryOffset(
-            buffer,
-            bufferSize,
-            FileIdBothDirInfo::create,
-            FileIdBothDirInfo::nextEntryOffset,
+            buffer = buffer,
+            bufferSize = bufferSize,
+            itemFactory = FileIdBothDirInfo::create,
+            nextEntryOffset = FileIdBothDirInfo::nextEntryOffset,
         ).right()
     } else {
         Win32ErrorCode.getLast().getFileInfoErrorToStatError().left()

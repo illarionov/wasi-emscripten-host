@@ -31,7 +31,6 @@ import kotlinx.io.files.SystemFileSystem
 import kotlin.test.Test
 import kotlin.test.fail
 
-
 class StatFdTest : BaseFileSystemIntegrationTest() {
     @Test
     @IgnoreLinux // TODO: check

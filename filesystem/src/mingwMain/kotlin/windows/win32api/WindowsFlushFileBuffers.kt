@@ -10,24 +10,22 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.CloseError
-import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
-import platform.windows.CloseHandle
 import platform.windows.ERROR_INVALID_HANDLE
+import platform.windows.FlushFileBuffers
 import platform.windows.HANDLE
 
-internal fun windowsCloseHandle(
-    handle: HANDLE,
-): Either<CloseError, Unit> {
-    return if (CloseHandle(handle) != 0) {
+internal fun HANDLE.flushFileBuffers(): Either<SyncError, Unit> {
+    return if (FlushFileBuffers(this) == 0) {
         Unit.right()
     } else {
-        Win32ErrorCode.getLast().toCloseError().left()
+        Win32ErrorCode.getLast().toSyncError().left()
     }
 }
 
-private fun Win32ErrorCode.toCloseError(): CloseError = when (this.code.toInt()) {
+private fun Win32ErrorCode.toSyncError(): SyncError = when (this.code.toInt()) {
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
-    else -> IoError("Other error: `$this`")
+    else -> InvalidArgument("Other error: `$this`")
 }

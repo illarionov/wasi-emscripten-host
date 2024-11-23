@@ -10,24 +10,25 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.CloseError
-import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
-import platform.windows.CloseHandle
 import platform.windows.ERROR_INVALID_HANDLE
+import platform.windows.ERROR_INVALID_PARAMETER
 import platform.windows.HANDLE
+import platform.windows.SetEndOfFile
 
-internal fun windowsCloseHandle(
-    handle: HANDLE,
-): Either<CloseError, Unit> {
-    return if (CloseHandle(handle) != 0) {
+internal fun HANDLE.setEndOfFile(): Either<TruncateError, Unit> {
+    return if (SetEndOfFile(this) != 0) {
         Unit.right()
     } else {
-        Win32ErrorCode.getLast().toCloseError().left()
+        Win32ErrorCode.getLast().toTruncateError().left()
     }
 }
 
-private fun Win32ErrorCode.toCloseError(): CloseError = when (this.code.toInt()) {
+private fun Win32ErrorCode.toTruncateError(): TruncateError = when (this.code.toInt()) {
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
-    else -> IoError("Other error: `$this`")
+    ERROR_INVALID_PARAMETER -> InvalidArgument("Incorrect file pointer position")
+    // TODO: find error codes for ENOSPC, EFBIG.
+    else -> InvalidArgument("Other error: `$this`")
 }

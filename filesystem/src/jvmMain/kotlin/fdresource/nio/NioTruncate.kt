@@ -19,7 +19,11 @@ internal fun NioFileChannel.truncate(length: Long): Either<TruncateError, Unit> 
     // XXX this operation should be atomic
     val appendBytes = length - this.channel.size()
     if (appendBytes < 0) {
+        val filePosition = channel.position()
         channel.truncate(length)
+        if (filePosition > length) {
+            channel.position(filePosition)
+        }
     } else if (appendBytes > 0) {
         extendPreTouch(appendBytes)
     }

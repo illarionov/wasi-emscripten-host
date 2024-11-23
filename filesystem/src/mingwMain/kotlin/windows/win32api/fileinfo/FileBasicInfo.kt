@@ -23,10 +23,10 @@ import platform.windows.GetFileInformationByHandleEx
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileBasicInfo(handle: HANDLE): Either<StatError, FileBasicInfo> = memScoped {
+internal fun HANDLE.getFileBasicInfo(): Either<StatError, FileBasicInfo> = memScoped {
     val basicInfo: FILE_BASIC_INFO = alloc()
     val result = GetFileInformationByHandleEx(
-        handle,
+        this@getFileBasicInfo,
         _FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
         basicInfo.ptr,
         sizeOf<FILE_BASIC_INFO>().toUInt(),

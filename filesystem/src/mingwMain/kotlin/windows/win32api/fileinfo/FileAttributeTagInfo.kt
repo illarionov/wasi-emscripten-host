@@ -10,6 +10,8 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.StatError
+import at.released.weh.filesystem.model.Filetype
+import at.released.weh.filesystem.windows.win32api.ext.fromAttributes
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes
 import at.released.weh.filesystem.windows.win32api.model.ReparseTag
 import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
@@ -22,10 +24,10 @@ import platform.windows.GetFileInformationByHandleEx
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileAttributeTagInfo(handle: HANDLE): Either<StatError, FileAttributeTagInfo> = memScoped {
+internal fun HANDLE.getFileAttributeTagInfo(): Either<StatError, FileAttributeTagInfo> = memScoped {
     val fileAttributeTagInfo: FILE_ATTRIBUTE_TAG_INFO = alloc()
     val result = GetFileInformationByHandleEx(
-        handle,
+        this@getFileAttributeTagInfo,
         _FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo,
         fileAttributeTagInfo.ptr,
         sizeOf<FILE_ATTRIBUTE_TAG_INFO>().toUInt(),
@@ -46,3 +48,5 @@ internal data class FileAttributeTagInfo(
 ) {
     val isSymlink = fileAttributes.isSymlinkOrReparsePoint && reparseTag.isSymlink
 }
+
+internal val FileAttributeTagInfo.filetype: Filetype get() = Filetype.fromAttributes(fileAttributes, reparseTag)

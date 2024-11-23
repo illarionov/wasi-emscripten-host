@@ -20,10 +20,10 @@ import kotlinx.cinterop.sizeOf
 import platform.windows.HANDLE
 import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
-internal fun windowsGetFileStorageInfo(handle: HANDLE): Either<StatError, FileStorageInfo> = memScoped {
+internal fun HANDLE.getFileStorageInfo(): Either<StatError, FileStorageInfo> = memScoped {
     val info: FILE_STORAGE_INFO = alloc()
     val result = GetFileInformationByHandleEx(
-        handle,
+        this@getFileStorageInfo,
         _FILE_INFO_BY_HANDLE_CLASS.FileStorageInfo,
         info.ptr,
         sizeOf<FILE_STORAGE_INFO>().toUInt(),
