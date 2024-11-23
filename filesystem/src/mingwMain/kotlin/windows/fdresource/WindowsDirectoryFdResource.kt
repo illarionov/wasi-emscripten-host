@@ -39,7 +39,7 @@ import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
-import at.released.weh.filesystem.windows.nativefunc.windowsFdAttributes
+import at.released.weh.filesystem.windows.nativefunc.windowsGetFdAttributes
 import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
@@ -51,7 +51,7 @@ internal class WindowsDirectoryFdResource(
     internal val channel = channel.copy()
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
-        return windowsFdAttributes(channel.handle, channel.isPreopened, channel.rights)
+        return windowsGetFdAttributes(channel.handle, channel.isPreopened, channel.rights)
     }
 
     override fun stat(): Either<StatError, StructStat> {

@@ -24,14 +24,13 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
+import at.released.weh.filesystem.windows.win32api.fileinfo.FileModeFlag
 import at.released.weh.filesystem.windows.win32api.fileinfo.filetype
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
-import at.released.weh.filesystem.windows.win32api.model.FileAttributes
-import platform.windows.FILE_FLAG_NO_BUFFERING
-import platform.windows.FILE_FLAG_WRITE_THROUGH
+import at.released.weh.filesystem.windows.win32api.fileinfo.ntQueryFileModeInformation
 import platform.windows.HANDLE
 
-internal fun windowsFdAttributes(
+internal fun windowsGetFdAttributes(
     handle: HANDLE,
     isInAppendMode: Boolean,
     rights: FdRightsBlock,
@@ -39,9 +38,12 @@ internal fun windowsFdAttributes(
     val attrTag: FileAttributeTagInfo = handle.getFileAttributeTagInfo()
         .mapLeft(StatError::toFdattributesError)
         .bind()
+    val mode: Set<FileModeFlag> = handle.ntQueryFileModeInformation()
+        .mapLeft(StatError::toFdattributesError)
+        .bind()
 
     @OpenFileFlagsType
-    val fileStatus: Fdflags = getFdFlags(attrTag.fileAttributes, isInAppendMode)
+    val fileStatus: Fdflags = getFdFlags(mode, isInAppendMode)
 
     return FdAttributesResult(
         type = attrTag.filetype,
@@ -52,7 +54,7 @@ internal fun windowsFdAttributes(
 }
 
 private fun getFdFlags(
-    attributes: FileAttributes,
+    mode: Set<FileModeFlag>,
     isInAppendMode: Boolean,
 ): Fdflags {
     var fdflags: Fdflags = if (isInAppendMode) {
@@ -60,12 +62,11 @@ private fun getFdFlags(
     } else {
         0
     }
-    // XXX are these flags available in FILE_ATTRIBUTE_TAG_INFO attributes?
-    if (attributes.mask and FILE_FLAG_NO_BUFFERING.toUInt() == FILE_FLAG_NO_BUFFERING.toUInt()) {
-        fdflags = fdflags or FdFlag.FD_SYNC or FdFlag.FD_RSYNC
+    if (FileModeFlag.FILE_NO_INTERMEDIATE_BUFFERING in mode) {
+        fdflags = fdflags or FdFlag.FD_RSYNC or FdFlag.FD_SYNC or FdFlag.FD_DSYNC
     }
-    if (attributes.mask and FILE_FLAG_WRITE_THROUGH == FILE_FLAG_WRITE_THROUGH) {
-        fdflags = fdflags or FdFlag.FD_DSYNC
+    if (FileModeFlag.FILE_WRITE_THROUGH in mode) {
+        fdflags = fdflags or FdFlag.FD_SYNC
     }
     return fdflags
 }
