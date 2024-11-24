@@ -11,4 +11,11 @@ import kotlinx.io.files.Path
 internal expect fun createSymlink(
     oldPath: String,
     newPath: Path,
+    type: SymlinkType = SymlinkType.NOT_SPECIFIED,
 )
+
+internal enum class SymlinkType {
+    NOT_SPECIFIED,
+    SYMLINK_TO_FILE,
+    SYMLINK_TO_DIRECTORY,
+}

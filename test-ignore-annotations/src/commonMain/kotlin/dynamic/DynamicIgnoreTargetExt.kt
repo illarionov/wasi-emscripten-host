@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.bindings.test
+package at.released.weh.test.ignore.annotations.dynamic
 
-internal actual fun isShouldBeIgnored(ignores: Set<DynamicIgnoreTarget>): Boolean = false
+public expect fun checkIfShouldBeIgnored(ignores: Set<DynamicIgnoreTarget>): Boolean

@@ -20,6 +20,7 @@ public data class NameTooLong(
     RenameError,
     OpenError,
     ReadLinkError,
+    ResolveRelativePathErrors,
     SetTimestampError,
     StatError,
     SymlinkError,

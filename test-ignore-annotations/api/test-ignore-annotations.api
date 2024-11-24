@@ -22,3 +22,20 @@ public abstract interface annotation class at/released/weh/test/ignore/annotatio
 public abstract interface annotation class at/released/weh/test/ignore/annotations/IgnoreWasmJs : java/lang/annotation/Annotation {
 }
 
+public final class at/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget : java/lang/Enum {
+	public static final field JVM_ON_LINUX Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;
+	public static final field JVM_ON_MACOS Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;
+	public static final field JVM_ON_WINDOWS Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;
+	public static fun values ()[Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;
+}
+
+public final class at/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTargetExt_jvmKt {
+	public static final fun checkIfShouldBeIgnored (Ljava/util/Set;)Z
+}
+
+public final class at/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget_jvmKt {
+	public static final fun isCurrentSystem (Lat/released/weh/test/ignore/annotations/dynamic/DynamicIgnoreTarget;)Z
+}
+

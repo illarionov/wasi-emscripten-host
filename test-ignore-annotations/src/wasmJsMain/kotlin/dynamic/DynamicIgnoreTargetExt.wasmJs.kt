@@ -4,10 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.wasi.bindings.test
+package at.released.weh.test.ignore.annotations.dynamic
 
-public enum class DynamicIgnoreTarget {
-    JVM_ON_LINUX,
-    JVM_ON_MACOS,
-    JVM_ON_WINDOWS,
+public actual fun checkIfShouldBeIgnored(ignores: Set<DynamicIgnoreTarget>): Boolean {
+    return false
 }

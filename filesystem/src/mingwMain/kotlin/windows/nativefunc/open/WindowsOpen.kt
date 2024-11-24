@@ -7,11 +7,13 @@
 package at.released.weh.filesystem.windows.nativefunc.open
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.raise.either
-import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.FdFlag.FD_DSYNC
 import at.released.weh.filesystem.model.FdFlag.FD_RSYNC
@@ -28,12 +30,11 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
 import platform.posix.O_CREAT
 import platform.posix.O_EXCL
 import platform.posix.O_TRUNC
-import platform.windows.FILE_ADD_FILE
-import platform.windows.FILE_ADD_SUBDIRECTORY
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
 import platform.windows.FILE_ATTRIBUTE_READONLY
@@ -44,12 +45,12 @@ import platform.windows.FILE_GENERIC_READ
 import platform.windows.FILE_GENERIC_WRITE
 import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
+import platform.windows.FILE_OPEN_FOR_BACKUP_INTENT
 import platform.windows.FILE_OPEN_IF
 import platform.windows.FILE_OVERWRITE
 import platform.windows.FILE_OVERWRITE_IF
 import platform.windows.FILE_RANDOM_ACCESS
 import platform.windows.FILE_READ_ATTRIBUTES
-import platform.windows.FILE_READ_DATA
 import platform.windows.FILE_SYNCHRONOUS_IO_ALERT
 import platform.windows.FILE_TRAVERSE
 import platform.windows.FILE_WRITE_ATTRIBUTES
@@ -87,7 +88,7 @@ internal fun windowsOpenFileOrDirectory(
     val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest)
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
 
-    val handle: HANDLE = ntCreateFileEx(
+    return ntCreateFileEx(
         rootHandle = baseHandle,
         path = path,
         desiredAccess = desiredAccess,
@@ -95,14 +96,18 @@ internal fun windowsOpenFileOrDirectory(
         createDisposition = createDisposition,
         createOptions = createOptions,
         followSymlinks = followSymlinks,
-    ).bind()
-
-    // TODO: read file type
-    return if (isDirectoryOrPathRequest) {
-        FileDirectoryHandle.Directory(handle)
-    } else {
-        FileDirectoryHandle.File(handle, isInAppendMode)
-    }.right()
+    ).flatMap { handle: HANDLE ->
+        handle.getFileAttributeTagInfo()
+            .mapLeft(StatError::toOpenError)
+            .map {
+                val isDirectory = it.fileAttributes.isDirectory
+                if (isDirectory) {
+                    FileDirectoryHandle.Directory(handle)
+                } else {
+                    FileDirectoryHandle.File(handle, isInAppendMode)
+                }
+            }
+    }
 }
 
 private fun getCreateDisposition(
@@ -140,13 +145,7 @@ private fun getDesiredAccess(
     isDirectoryOrPathRequest: Boolean,
 ): Int {
     return if (isDirectoryOrPathRequest) {
-        FILE_ADD_FILE or
-                FILE_ADD_SUBDIRECTORY or
-                FILE_LIST_DIRECTORY or
-                FILE_READ_ATTRIBUTES or
-                FILE_READ_DATA or
-                FILE_TRAVERSE or
-                FILE_WRITE_ATTRIBUTES
+        FILE_LIST_DIRECTORY or FILE_READ_ATTRIBUTES or FILE_TRAVERSE or FILE_WRITE_ATTRIBUTES
     } else {
         when (flags and O_ACCMODE) {
             O_RDONLY -> FILE_GENERIC_READ
@@ -184,11 +183,17 @@ private fun getCreateOptions(
     isDirectoryOrPathRequest: Boolean,
 ): Int {
     if (isDirectoryOrPathRequest) {
-        return FILE_DIRECTORY_FILE
+        return FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT
     }
     var flags = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT
     if (fdFlags and (FD_DSYNC or FD_SYNC or FD_RSYNC) != 0) {
         flags = flags or FILE_WRITE_THROUGH
     }
     return flags
+}
+
+private fun StatError.toOpenError(): OpenError = if (this is OpenError) {
+    this
+} else {
+    IoError("Can not get stat of file handle: $this")
 }

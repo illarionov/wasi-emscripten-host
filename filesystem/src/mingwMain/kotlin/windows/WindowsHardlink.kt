@@ -13,13 +13,9 @@ import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 
 internal class WindowsHardlink(
-    private val fsState: WindowsFileSystemState,
+    @Suppress("unused") private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> {
-        return fsState.executeWithBaseDirectoryResource(input.newBaseDirectory) { newDirectoryFd ->
-            fsState.executeWithBaseDirectoryResource(input.oldBaseDirectory) { oldDirectoryFd ->
-                TODO()
-            }
-        }
+        TODO()
     }
 }

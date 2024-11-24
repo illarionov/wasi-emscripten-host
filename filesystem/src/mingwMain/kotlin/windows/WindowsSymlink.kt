@@ -7,17 +7,21 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
+import arrow.core.getOrElse
+import arrow.core.left
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 
 internal class WindowsSymlink(
     private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> {
-        return fsState.executeWithBaseDirectoryResource(input.newPathBaseDirectory) { directoryFd ->
-            TODO()
-        }
+        @Suppress("unused")
+        val path = fsState.pathResolver.resolveRealPath(input.newPathBaseDirectory, input.newPath)
+            .getOrElse { return it.left() }
+        TODO()
     }
 }

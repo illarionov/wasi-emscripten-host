@@ -65,9 +65,10 @@ internal fun TempFolder.createTestDirectory(
 internal fun TempFolder.createTestSymlink(
     oldPath: String,
     newPath: String = TEST_LINK,
+    type: SymlinkType = SymlinkType.NOT_SPECIFIED,
 ): Path {
     val newAbsolutePath = path(newPath)
-    createSymlink(oldPath, newAbsolutePath)
+    createSymlink(oldPath, newAbsolutePath, type)
     return newAbsolutePath
 }
 

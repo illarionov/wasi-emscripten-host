@@ -89,13 +89,13 @@ kotlin {
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
             implementation(projects.testFilesystemAssertions)
+            implementation(projects.testIgnoreAnnotations)
         }
         jvmMain.dependencies {
             implementation(kotlin("test-junit"))
         }
         commonTest.dependencies {
             implementation(projects.bindingsChasm)
-            implementation(projects.testIgnoreAnnotations)
             implementation(kotlin("test"))
         }
         jvmTest.dependencies {

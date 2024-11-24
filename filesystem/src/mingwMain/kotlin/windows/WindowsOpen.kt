@@ -8,6 +8,7 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
 import arrow.core.left
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
@@ -31,34 +32,35 @@ internal class WindowsOpen(
         val isDirectoryRequest = input.path.endsWith("/")
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequest).onLeft { return it.left() }
 
-        return fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryHandle ->
-            val baseDirectoryRights = directoryHandle?.rights ?: DIRECTORY_BASE_RIGHTS_BLOCK
+        val directoryChannel = fsState.pathResolver.resolveBaseDirectory(input.baseDirectory)
+            .getOrElse { return it.left() }
 
-            windowsOpenFileOrDirectory(
-                baseHandle = directoryHandle?.handle,
-                path = input.path,
-                flags = input.openFlags,
-                fdFlags = input.fdFlags,
-            ).flatMap { nativeChannel ->
-                when (nativeChannel) {
-                    is File -> fsState.addFile(
-                        WindowsFileChannel(
-                            handle = nativeChannel.handle,
-                            isInAppendMode = nativeChannel.isInAppendMode,
-                            rights = baseDirectoryRights.getChildFileRights(input.rights),
-                        ),
-                    )
+        val baseDirectoryRights = directoryChannel?.rights ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
-                    is Directory -> fsState.addDirectory(
-                        WindowsDirectoryChannel(
-                            handle = nativeChannel.handle,
-                            isPreopened = false,
-                            rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
-                            virtualPath = input.path, // TODO
-                        ),
-                    )
-                }
-            }.map { (fd: FileDescriptor, _) -> fd }
-        }
+        return windowsOpenFileOrDirectory(
+            baseHandle = directoryChannel?.handle,
+            path = input.path,
+            flags = input.openFlags,
+            fdFlags = input.fdFlags,
+        ).flatMap { nativeChannel ->
+            when (nativeChannel) {
+                is File -> fsState.addFile(
+                    WindowsFileChannel(
+                        handle = nativeChannel.handle,
+                        isInAppendMode = nativeChannel.isInAppendMode,
+                        rights = baseDirectoryRights.getChildFileRights(input.rights),
+                    ),
+                )
+
+                is Directory -> fsState.addDirectory(
+                    WindowsDirectoryChannel(
+                        handle = nativeChannel.handle,
+                        isPreopened = false,
+                        rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
+                        virtualPath = input.path, // TODO
+                    ),
+                )
+            }
+        }.map { (fd: FileDescriptor, _) -> fd }
     }
 }
