@@ -13,13 +13,9 @@ import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 
 internal class WindowsRename(
-    private val fsState: WindowsFileSystemState,
+    @Suppress("unused") private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> {
-        return fsState.executeWithBaseDirectoryResource(input.oldBaseDirectory) { oldDirFd ->
-            fsState.executeWithBaseDirectoryResource(input.newBaseDirectory) { newDirFd ->
-                TODO()
-            }
-        }
+        TODO()
     }
 }

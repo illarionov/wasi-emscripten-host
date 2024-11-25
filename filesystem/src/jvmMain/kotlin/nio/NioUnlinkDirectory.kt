@@ -16,8 +16,11 @@ import at.released.weh.filesystem.nio.NioUnlinkFile.Companion.toUnlinkError
 import at.released.weh.filesystem.nio.cwd.PathResolver
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import java.nio.file.Files
+import java.nio.file.LinkOption.NOFOLLOW_LINKS
 import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isSymbolicLink
 
 internal class NioUnlinkDirectory(
     private val pathResolver: PathResolver,
@@ -28,8 +31,12 @@ internal class NioUnlinkDirectory(
             .mapLeft { it.toUnlinkError() }
             .getOrElse { return it.left() }
 
-        if (!path.isDirectory()) {
-            return NotDirectory("`$path` is not a directory").left()
+        if (!path.isDirectory(NOFOLLOW_LINKS)) {
+            val isSymlinkToDirectory = path.isSymbolicLink() && path.isDirectory()
+            val isSymlinkToNonExistent = path.isSymbolicLink() && !path.exists()
+            if (!isSymlinkToDirectory && !isSymlinkToNonExistent) {
+                return NotDirectory("`$path` is not a directory").left()
+            }
         }
 
         return Either.catch {

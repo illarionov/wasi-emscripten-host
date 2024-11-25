@@ -13,23 +13,17 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
-import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.FileDescriptorTable
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
-import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
-import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
+import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
@@ -42,7 +36,7 @@ internal class WindowsFileSystemState private constructor(
 ) : AutoCloseable {
     private val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
-    val pathResolver = PathResolver(fileDescriptors, fdsLock)
+    val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock)
 
     init {
         pathResolver.setupPreopenedDirectories(preopenedDirectories)
@@ -74,9 +68,6 @@ internal class WindowsFileSystemState private constructor(
         @IntFileDescriptor fd: FileDescriptor,
     ): Either<BadFileDescriptor, FdResource> = fdsLock.withLock {
         return fileDescriptors.release(fd)
-            .onRight { resource ->
-                pathResolver.onFileDescriptorRemovedUnsafe(resource)
-            }
     }
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithResource(
@@ -86,19 +77,6 @@ internal class WindowsFileSystemState private constructor(
         @Suppress("UNCHECKED_CAST")
         val resource: FdResource = get(fd) ?: return (BadFileDescriptor(fileDescriptorNotOpenMessage(fd)) as E).left()
         return block(resource)
-    }
-
-    // TODO: resolve with absolute path
-    inline fun <E : FileSystemOperationError, R : Any> executeWithBaseDirectoryResource(
-        baseDirectory: BaseDirectory,
-        crossinline block: (handle: WindowsDirectoryChannel?) -> Either<E, R>,
-    ): Either<E, R> {
-        val nativeFd: WindowsDirectoryChannel? = pathResolver.resolveNativeDirectory(baseDirectory)
-            .getOrElse { bfe: FileSystemOperationError ->
-                @Suppress("UNCHECKED_CAST")
-                return (bfe as E).left()
-            }
-        return block(nativeFd)
     }
 
     fun renumber(
@@ -131,65 +109,6 @@ internal class WindowsFileSystemState private constructor(
         }
         for (fd in fdResources) {
             fd.close().onLeft { /* ignore error */ }
-        }
-    }
-
-    class PathResolver(
-        private val fileDescriptors: FileDescriptorTable<FdResource>,
-        private val fsLock: ReentrantLock,
-    ) {
-        private val openedDirectories: MutableMap<String, FdResource> = mutableMapOf()
-        private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD
-
-        fun setupPreopenedDirectories(
-            preopened: PreopenedDirectories,
-        ) {
-            require(openedDirectories.isEmpty())
-
-            preopened
-                .preopenedDirectories
-                .entries
-                .forEachIndexed { index, (path: RealPath, ch: WindowsDirectoryChannel) ->
-                    val resource = WindowsDirectoryFdResource(ch)
-                    fileDescriptors[index + WASI_FIRST_PREOPEN_FD] = resource
-                    openedDirectories[path] = resource
-                }
-
-            currentWorkingDirectoryFd = preopened.currentWorkingDirectory.fold(
-                ifLeft = { -1 },
-            ) { channel: WindowsDirectoryChannel ->
-                val fd = WASI_FIRST_PREOPEN_FD + preopened.preopenedDirectories.size
-                fileDescriptors[fd] = WindowsDirectoryFdResource(channel)
-                fd
-            }
-        }
-
-        fun resolveNativeDirectory(
-            directory: BaseDirectory,
-        ): Either<FileSystemOperationError, WindowsDirectoryChannel?> = when (directory) {
-            CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
-                getDirectoryNativeFd(currentWorkingDirectoryFd)
-            } else {
-                null.right()
-            }
-
-            is DirectoryFd -> getDirectoryNativeFd(directory.fd)
-        }
-
-        private fun getDirectoryNativeFd(
-            fd: FileDescriptor,
-        ): Either<FileSystemOperationError, WindowsDirectoryChannel> = fsLock.withLock {
-            when (val fdResource = fileDescriptors[fd]) {
-                null -> BadFileDescriptor("Directory File descriptor $fd is not open").left()
-                is WindowsDirectoryFdResource -> fdResource.channel.right()
-                else -> NotDirectory("FD $fd is not a directory").left()
-            }
-        }
-
-        fun onFileDescriptorRemovedUnsafe(
-            fdResource: FdResource,
-        ) {
-            openedDirectories.values.remove(fdResource)
         }
     }
 

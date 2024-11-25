@@ -19,9 +19,8 @@ internal fun Open.Companion.createForTestFile(
     testfilePath: Path,
     openFlags: OpenFileFlags = OpenFileFlag.O_RDWR,
     fdflags: Fdflags = 0,
-) = Open(
+) = createTest(
     path = testfilePath.name,
-    baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
     openFlags = openFlags,
     fdFlags = fdflags,
 )
@@ -30,9 +29,30 @@ internal fun Open.Companion.createForTestDirectory(
     testfilePath: Path = Path(TEST_DIRECTORY_NAME),
     openFlags: OpenFileFlags = OpenFileFlag.O_DIRECTORY,
     fdflags: Fdflags = 0,
-) = Open(
+) = createTest(
     path = testfilePath.name,
-    baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
     openFlags = openFlags,
     fdFlags = fdflags,
+)
+
+internal fun Open.Companion.createForTestFileOrDirectory(
+    testPath: Path,
+    openFlags: OpenFileFlags = OpenFileFlag.O_RDONLY,
+    fdflags: Fdflags = 0,
+) = createTest(
+    path = testPath.name,
+    openFlags = openFlags,
+    fdFlags = fdflags,
+)
+
+private fun Open.Companion.createTest(
+    path: String,
+    baseDirectory: BaseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
+    openFlags: OpenFileFlags = OpenFileFlag.O_RDONLY,
+    fdFlags: Fdflags = 0,
+) = Open(
+    path = path,
+    baseDirectory = baseDirectory,
+    openFlags = openFlags,
+    fdFlags = fdFlags,
 )

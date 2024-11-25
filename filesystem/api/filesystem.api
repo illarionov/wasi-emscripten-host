@@ -250,7 +250,7 @@ public final class at/released/weh/filesystem/error/Mlink : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NameTooLong : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/NameTooLong : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NameTooLong;
@@ -469,7 +469,7 @@ public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/rele
 public abstract interface class at/released/weh/filesystem/error/RenameError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
-public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError {
+public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/UnlinkError {
 }
 
 public abstract interface class at/released/weh/filesystem/error/SeekError : at/released/weh/filesystem/error/FileSystemOperationError {

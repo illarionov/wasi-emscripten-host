@@ -7,18 +7,21 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chmod.Chmod
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 
 internal class WindowsChmod(
     private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
-    override fun invoke(input: Chmod): Either<ChmodError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            NotSupported("Not supported by file system").left()
-        }
+    override fun invoke(input: Chmod): Either<ChmodError, Unit> {
+        // Resolve path to validate file descriptor
+        return fsState.pathResolver.resolveRealPath(input.baseDirectory, input.path)
+            .flatMap { NotSupported("Not supported by file system").left() }
+    }
 }

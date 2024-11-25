@@ -20,6 +20,9 @@ import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_OPEN_FOR_BACKUP_INTENT
+import platform.windows.FILE_READ_ATTRIBUTES
+import platform.windows.FILE_TRAVERSE
+import platform.windows.FILE_WRITE_ATTRIBUTES
 
 internal fun preopenDirectories(
     currentWorkingDirectoryPath: RealPath = ".",
@@ -62,7 +65,10 @@ private fun preopenDirectory(
     return ntCreateFileEx(
         rootHandle = baseDirectoryChannel?.handle,
         path = path,
-        desiredAccess = FILE_LIST_DIRECTORY,
+        desiredAccess = FILE_LIST_DIRECTORY or
+                FILE_READ_ATTRIBUTES or
+                FILE_TRAVERSE or
+                FILE_WRITE_ATTRIBUTES,
         fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
         createDisposition = FILE_OPEN,
         createOptions = FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT,

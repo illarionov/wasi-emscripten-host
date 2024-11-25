@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("COMMENTED_OUT_CODE")
+
 package at.released.weh.filesystem.windows.win32api
 
 import arrow.core.Either
@@ -21,7 +23,6 @@ import at.released.weh.filesystem.platform.windows.IO_STATUS_BLOCK
 import at.released.weh.filesystem.platform.windows.NtCreateFile
 import at.released.weh.filesystem.platform.windows.OBJECT_ATTRIBUTES
 import at.released.weh.filesystem.platform.windows.OBJ_CASE_INSENSITIVE
-import at.released.weh.filesystem.platform.windows.OBJ_OPENLINK
 import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
 import at.released.weh.filesystem.preopened.RealPath
@@ -67,10 +68,14 @@ internal fun ntCreateFileEx(
 ): Either<OpenError, HANDLE> = memScoped {
     val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
 
-    val pathWithNamespace = if (!pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX)) {
-        WIN32_NT_KERNEL_DEVICES_PREFIX + path
-    } else {
-        path
+    if (!pathIsRelative && rootHandle != null) {
+        return InvalidArgument("Path should be relative when open with root handle").left()
+    }
+
+    val pathWithNamespace = when {
+        !pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) -> WIN32_NT_KERNEL_DEVICES_PREFIX + path
+        path == "." -> """"""
+        else -> path
     }
 
     val handle: HANDLEVar = alloc<HANDLEVar>().apply {
@@ -94,6 +99,17 @@ internal fun ntCreateFileEx(
         SecurityDescriptor = null
         SecurityQualityOfService = null
     }
+
+    // TODO: remove
+//    WindowsNtCreateFileDebug.ntCreateFileArgsToString(
+//        path = pathWithNamespace,
+//        objectAttributes = objectAttributes,
+//        desiredAccess = desiredAccess,
+//        fileAttributes = fileAttributes,
+//        shareAccess = shareAccess,
+//        createDisposition = createDisposition,
+//        createOptions = createOptions
+//    ).also { println("NtCreateFile($it`)") }
 
     val status: NtStatus = NtCreateFile(
         FileHandle = handle.ptr,
@@ -121,17 +137,18 @@ internal fun ntCreateFileEx(
 
 private fun getObjectAttributes(
     caseSensitive: Boolean,
-    followSymlinks: Boolean,
+    @Suppress("UnusedParameter") followSymlinks: Boolean,
 ): UInt {
     var flags = if (!caseSensitive) {
         OBJ_CASE_INSENSITIVE.toUInt()
     } else {
         0U
     }
-    if (!followSymlinks) {
-        // TODO: OBJ_DONT_REPARSE?
-        flags = flags or OBJ_OPENLINK.toUInt()
-    }
+    // TODO: OBJ_OPENLINK is invalid argumnent in NtCreateFile
+//    if (!followSymlinks) {
+//        // TODO: OBJ_DONT_REPARSE?
+//        flags = flags or OBJ_OPENLINK.toUInt()
+//    }
     return flags
 }
 

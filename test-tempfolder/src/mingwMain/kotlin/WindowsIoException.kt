@@ -11,11 +11,11 @@ import kotlinx.io.IOException
 public class WindowsIoException : IOException {
     public val lastError: UInt?
 
-    internal constructor(lastError: UInt? = null) : super() {
+    public constructor(lastError: UInt? = null) : super() {
         this.lastError = lastError
     }
 
-    internal constructor(message: String, lastError: UInt? = null) : super(message) {
+    public constructor(message: String, lastError: UInt? = null) : super(message) {
         this.lastError = lastError
     }
 }

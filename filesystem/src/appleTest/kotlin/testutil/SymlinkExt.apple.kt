@@ -13,7 +13,7 @@ import platform.posix.errno
 import platform.posix.strerror
 import platform.posix.symlink
 
-internal actual fun createSymlink(oldPath: String, newPath: Path) {
+internal actual fun createSymlink(oldPath: String, newPath: Path, type: SymlinkType) {
     if (symlink(oldPath, newPath.toString()) < 0) {
         throw IOException(
             "Failed to create symlink `$oldPath` to `$newPath`: `${strerror(errno)?.toKStringFromUtf8()}`",

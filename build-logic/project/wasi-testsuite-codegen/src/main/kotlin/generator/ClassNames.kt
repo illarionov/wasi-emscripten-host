@@ -53,7 +53,7 @@ internal object ClassNames {
     }
 
     object WehDynamicIgnoreTestMember {
-        private const val ROOT_PACKAGE: String = "at.released.weh.wasi.bindings.test"
+        private const val ROOT_PACKAGE: String = "at.released.weh.test.ignore.annotations.dynamic"
         private val dynamicIgnoreTargetClass: ClassName = ClassName(ROOT_PACKAGE, "DynamicIgnoreTarget")
         val JVM_ON_LINUX: MemberName = dynamicIgnoreTargetClass.member("JVM_ON_LINUX")
         val JVM_ON_MACOS: MemberName = dynamicIgnoreTargetClass.member("JVM_ON_MACOS")

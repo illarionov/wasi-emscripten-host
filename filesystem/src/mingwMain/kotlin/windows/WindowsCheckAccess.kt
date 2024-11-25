@@ -13,10 +13,9 @@ import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 
 internal class WindowsCheckAccess(
-    private val fsState: WindowsFileSystemState,
+    @Suppress("unused") private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
-    override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) { handle ->
-            TODO()
-        }
+    override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> {
+        TODO()
+    }
 }

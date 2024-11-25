@@ -7,19 +7,21 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 
 internal class WindowsChown(
     private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
-    override fun invoke(input: Chown): Either<ChownError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            // TODO: implement on windows?
-            NotSupported("Not supported by file system").left()
-        }
+    override fun invoke(input: Chown): Either<ChownError, Unit> {
+        // Resolve path to validate file descriptor
+        return fsState.pathResolver.resolveRealPath(input.baseDirectory, input.path)
+            .flatMap { NotSupported("Not supported by file system").left() }
+    }
 }

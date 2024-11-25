@@ -6,8 +6,30 @@
 
 package at.released.weh.filesystem.testutil
 
+import at.released.weh.filesystem.testutil.SymlinkType.NOT_SPECIFIED
+import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
+import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_FILE
+import at.released.weh.test.utils.WindowsIoException
 import kotlinx.io.files.Path
+import platform.windows.CreateSymbolicLinkW
+import platform.windows.GetLastError
+import platform.windows.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE
+import platform.windows.SYMBOLIC_LINK_FLAG_DIRECTORY
 
-internal actual fun createSymlink(oldPath: String, newPath: Path) {
-    error("Not implemented")
+internal actual fun createSymlink(oldPath: String, newPath: Path, type: SymlinkType) {
+    val flags = type.mask or SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE.toUInt()
+
+    if (CreateSymbolicLinkW(newPath.toString(), oldPath, flags).toInt() == 0) {
+        val lastError = GetLastError()
+        throw WindowsIoException(
+            "Can not create symlink `$newPath` to `$oldPath`: error 0x${lastError.toString(16)}",
+            lastError,
+        )
+    }
 }
+
+private val SymlinkType.mask: UInt
+    get() = when (this) {
+        NOT_SPECIFIED, SYMLINK_TO_FILE -> 0
+        SYMLINK_TO_DIRECTORY -> SYMBOLIC_LINK_FLAG_DIRECTORY
+    }.toUInt()
