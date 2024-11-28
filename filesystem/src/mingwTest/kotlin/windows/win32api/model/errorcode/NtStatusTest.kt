@@ -11,7 +11,9 @@ package at.released.weh.filesystem.windows.win32api.model.errorcode
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
-import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.Severity
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.Severity
+import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
 import kotlin.test.Test
 
 class NtStatusTest {

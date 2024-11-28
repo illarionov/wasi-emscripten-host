@@ -7,7 +7,10 @@
 package at.released.weh.filesystem.windows.win32api.model
 
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
+import platform.windows.FILE_ATTRIBUTE_HIDDEN
+import platform.windows.FILE_ATTRIBUTE_READONLY
 import platform.windows.FILE_ATTRIBUTE_REPARSE_POINT
+import platform.windows.FILE_ATTRIBUTE_SYSTEM
 
 internal value class FileAttributes(
     val mask: UInt,
@@ -15,5 +18,15 @@ internal value class FileAttributes(
     val isSymlinkOrReparsePoint: Boolean
         get() = mask.toInt() and FILE_ATTRIBUTE_REPARSE_POINT == FILE_ATTRIBUTE_REPARSE_POINT
 
-    val isDirectory: Boolean get() = mask.toInt() and FILE_ATTRIBUTE_DIRECTORY == FILE_ATTRIBUTE_DIRECTORY
+    val isDirectory: Boolean
+        get() = mask.toInt() and FILE_ATTRIBUTE_DIRECTORY == FILE_ATTRIBUTE_DIRECTORY
+
+    val isReadOnly: Boolean
+        get() = mask.toInt() and FILE_ATTRIBUTE_READONLY == FILE_ATTRIBUTE_READONLY
+
+    val isHidden: Boolean
+        get() = mask.toInt() and FILE_ATTRIBUTE_HIDDEN == FILE_ATTRIBUTE_HIDDEN
+
+    val isSystem: Boolean
+        get() = mask.toInt() and FILE_ATTRIBUTE_SYSTEM == FILE_ATTRIBUTE_SYSTEM
 }

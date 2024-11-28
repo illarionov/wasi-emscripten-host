@@ -6,7 +6,7 @@
 
 @file:Suppress("COMMENTED_OUT_CODE")
 
-package at.released.weh.filesystem.windows.win32api
+package at.released.weh.filesystem.windows.win32api.createfile
 
 import arrow.core.Either
 import arrow.core.left
@@ -26,11 +26,11 @@ import at.released.weh.filesystem.platform.windows.OBJ_CASE_INSENSITIVE
 import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.win32api.ext.WIN32_NT_KERNEL_DEVICES_PREFIX
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.NtStatusCode
+import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
+import at.released.weh.filesystem.windows.win32api.ext.convertPathToNtPath
 import at.released.weh.filesystem.windows.win32api.model.IoStatusBlockInformation
-import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus
-import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.NtStatusCode
-import at.released.weh.filesystem.windows.win32api.model.errorcode.isSuccess
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CValues
 import kotlinx.cinterop.UShortVar
@@ -72,11 +72,7 @@ internal fun ntCreateFileEx(
         return InvalidArgument("Path should be relative when open with root handle").left()
     }
 
-    val pathWithNamespace = when {
-        !pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) -> WIN32_NT_KERNEL_DEVICES_PREFIX + path
-        path == "." -> """"""
-        else -> path
-    }
+    val ntPath = convertPathToNtPath(path)
 
     val handle: HANDLEVar = alloc<HANDLEVar>().apply {
         this.value = INVALID_HANDLE_VALUE
@@ -85,7 +81,7 @@ internal fun ntCreateFileEx(
         this.QuadPart = 0
     }
     val ioStatusBlock: IO_STATUS_BLOCK = alloc()
-    val pathUtf16: CValues<UShortVar> = pathWithNamespace.utf16
+    val pathUtf16: CValues<UShortVar> = ntPath.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
     val objectName: UNICODE_STRING = alloc<UNICODE_STRING>()
@@ -102,7 +98,7 @@ internal fun ntCreateFileEx(
 
     // TODO: remove
 //    WindowsNtCreateFileDebug.ntCreateFileArgsToString(
-//        path = pathWithNamespace,
+//        path = ntPath,
 //        objectAttributes = objectAttributes,
 //        desiredAccess = desiredAccess,
 //        fileAttributes = fileAttributes,

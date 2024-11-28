@@ -40,9 +40,9 @@ import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.windowsGetFdAttributes
+import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
-import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import platform.windows.HANDLE
 
 internal class WindowsDirectoryFdResource(
@@ -116,7 +116,7 @@ internal class WindowsDirectoryFdResource(
         return BadFileDescriptor("Can not add remove lock on a directory").left()
     }
 
-    override fun close(): Either<CloseError, Unit> = windowsCloseHandle(channel.handle)
+    override fun close(): Either<CloseError, Unit> = channel.handle.close()
 
     internal data class WindowsDirectoryChannel(
         val handle: HANDLE,

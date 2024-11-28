@@ -11,24 +11,24 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.Filetype
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.fromAttributes
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes
 import at.released.weh.filesystem.windows.win32api.model.ReparseTag
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.sizeOf
 import platform.windows.FILE_ATTRIBUTE_TAG_INFO
+import platform.windows.FILE_INFO_BY_HANDLE_CLASS
 import platform.windows.GetFileInformationByHandleEx
 import platform.windows.HANDLE
-import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
 internal fun HANDLE.getFileAttributeTagInfo(): Either<StatError, FileAttributeTagInfo> = memScoped {
     val fileAttributeTagInfo: FILE_ATTRIBUTE_TAG_INFO = alloc()
     val result = GetFileInformationByHandleEx(
         this@getFileAttributeTagInfo,
-        _FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo,
+        FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo,
         fileAttributeTagInfo.ptr,
         sizeOf<FILE_ATTRIBUTE_TAG_INFO>().toUInt(),
     )

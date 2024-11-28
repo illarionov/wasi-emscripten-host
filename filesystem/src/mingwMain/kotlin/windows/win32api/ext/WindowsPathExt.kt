@@ -6,6 +6,9 @@
 
 package at.released.weh.filesystem.windows.win32api.ext
 
+import at.released.weh.filesystem.preopened.RealPath
+import platform.windows.PathIsRelativeW
+
 /**
  * \\?\ Prefix disables string parsing and send string directly to file system.
  *
@@ -24,12 +27,28 @@ internal const val WIN32_NT_KERNEL_DEVICES_PREFIX = """\??\"""
 
 // TODO: normalize path?
 internal fun combinePath(root: String, child: String): String {
+    val rootNormalized = root.replace('/', '\\')
     if (child.isEmpty()) {
-        return root
+        return rootNormalized
     }
-    return if (root.endsWith("\\") || root.endsWith("/")) {
-        """$root$child"""
+    val childNormalized = child.replace('/', '\\')
+
+    return if (rootNormalized.endsWith("\\")) {
+        """$rootNormalized$childNormalized"""
     } else {
-        """$root\$child"""
+        """$rootNormalized\$childNormalized"""
     }
+}
+
+internal fun convertPathToNtPath(
+    path: RealPath,
+): RealPath {
+    val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
+    val winPath = path.replace('/', '\\')
+    val ntPath = when {
+        !pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) -> WIN32_NT_KERNEL_DEVICES_PREFIX + winPath
+        path == "." -> """"""
+        else -> winPath
+    }
+    return ntPath
 }

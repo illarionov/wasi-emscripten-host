@@ -10,13 +10,13 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
-import at.released.weh.filesystem.error.CloseError
+import arrow.core.right
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
-import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
+import at.released.weh.filesystem.windows.win32api.close
+import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
 import kotlinx.io.IOException
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_READ_ATTRIBUTES
@@ -32,27 +32,41 @@ internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
 ): Either<E, R> {
-    val handle = windowsOpenForAttributeAccess(baseHandle, path, followSymlinks, writeAccess)
+    val handle: HANDLE = windowsOpenForAttributeAccess(baseHandle, path, followSymlinks, writeAccess)
         .mapLeft(errorMapper)
         .getOrElse { return it.left() }
-    try {
-        val blockResult = block(handle)
-        val closeResult = windowsCloseHandle(handle)
-        return when {
-            blockResult.isLeft() -> blockResult
-            closeResult.isLeft() -> errorMapper(closeResult.left() as OpenError).left()
-            else -> blockResult
-        }
-    } catch (@Suppress("TooGenericExceptionCaught") ex: RuntimeException) {
-        when (val closeResult = windowsCloseHandle(handle)) {
-            is Either.Left<CloseError> -> {
-                val closeException = IOException("Close() failed: ${closeResult.value}")
-                ex.addSuppressed(closeException)
-                throw ex
+
+    val blockResult = executeBlockSafe(handle, block)
+    val closeResult = handle.close()
+
+    return blockResult.fold(
+        ifRight = { result: R ->
+            if (closeResult.isRight()) {
+                result.right()
+            } else {
+                errorMapper(closeResult.left() as OpenError).left()
             }
-            else -> throw ex
-        }
-    }
+        },
+        ifLeft = { throwableOrError: Either<Throwable, E> ->
+            val blockFilesystemError = throwableOrError.getOrElse { throwable ->
+                closeResult.leftOrNull()?.let { closeError ->
+                    val closeException = IOException("Close() failed: $closeError")
+                    throwable.addSuppressed(closeException)
+                }
+                throw throwable
+            }
+            blockFilesystemError.left()
+        },
+    )
+}
+
+private fun <E : FileSystemOperationError, R : Any> executeBlockSafe(
+    handle: HANDLE,
+    block: (HANDLE) -> Either<E, R>,
+): Either<Either<Throwable, E>, R> = try {
+    block(handle).mapLeft { it.right() }
+} catch (@Suppress("TooGenericExceptionCaught") ex: Throwable) {
+    ex.left().left()
 }
 
 internal fun windowsOpenForAttributeAccess(

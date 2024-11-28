@@ -13,11 +13,11 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.platform.windows.FILE_ID_EXTD_DIR_INFO
 import at.released.weh.filesystem.platform.windows.GetFileInformationByHandleEx
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.asByteString
 import at.released.weh.filesystem.windows.win32api.ext.asStructTimespec
 import at.released.weh.filesystem.windows.win32api.ext.readChars
 import at.released.weh.filesystem.windows.win32api.model.ReparseTag
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import kotlinx.cinterop.NativePointed
 import kotlinx.cinterop.alignOf
 import kotlinx.cinterop.memScoped

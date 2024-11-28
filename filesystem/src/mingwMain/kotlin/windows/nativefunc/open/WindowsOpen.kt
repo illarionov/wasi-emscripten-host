@@ -30,11 +30,8 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
-import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
-import platform.posix.O_CREAT
-import platform.posix.O_EXCL
-import platform.posix.O_TRUNC
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
 import platform.windows.FILE_ATTRIBUTE_READONLY
@@ -70,7 +67,7 @@ internal fun windowsOpenFileOrDirectory(
             flags and OpenFileFlag.O_PATH == OpenFileFlag.O_PATH ||
             isDirectoryRequest
     if (isDirectoryOrPathRequest) {
-        if (flags and O_CREAT == O_CREAT) {
+        if (flags and OpenFileFlag.O_CREAT == OpenFileFlag.O_CREAT) {
             return InvalidArgument("O_CREAT cannot be used to create directories").left()
         }
         if (flags and O_ACCMODE != O_RDONLY) {
@@ -118,12 +115,12 @@ private fun getCreateDisposition(
         return FILE_OPEN
     }
 
-    val mayCreateFile = flags and O_CREAT == O_CREAT
-    val truncate = flags and O_TRUNC == O_TRUNC
+    val mayCreateFile = flags and OpenFileFlag.O_CREAT == OpenFileFlag.O_CREAT
+    val truncate = flags and OpenFileFlag.O_TRUNC == OpenFileFlag.O_TRUNC
 
     return if (mayCreateFile) {
-        val createFailIfExists = flags and O_EXCL == O_EXCL
-        if (createFailIfExists) {
+        val createFileIfExists = flags and OpenFileFlag.O_EXCL == OpenFileFlag.O_EXCL
+        if (createFileIfExists) {
             FILE_CREATE
         } else {
             if (truncate) {
@@ -149,7 +146,7 @@ private fun getDesiredAccess(
     } else {
         when (flags and O_ACCMODE) {
             O_RDONLY -> FILE_GENERIC_READ
-            O_WRONLY -> FILE_GENERIC_WRITE
+            O_WRONLY -> FILE_GENERIC_WRITE or FILE_READ_ATTRIBUTES
             else -> FILE_GENERIC_READ or FILE_GENERIC_WRITE
         }
     }

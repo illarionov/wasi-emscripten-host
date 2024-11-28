@@ -8,14 +8,31 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import at.released.weh.filesystem.error.CheckAccessError
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
+import at.released.weh.filesystem.windows.nativefunc.windowsCheckAccessFd
+import platform.windows.HANDLE
 
 internal class WindowsCheckAccess(
-    @Suppress("unused") private val fsState: WindowsFileSystemState,
+    private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> {
-        TODO()
+        return fsState.executeWithOpenFileHandle(
+            baseDirectory = input.baseDirectory,
+            path = input.path,
+            followSymlinks = input.followSymlinks,
+            writeAccess = false,
+            errorMapper = { it.toCheckAccessError() },
+        ) { handle: HANDLE -> windowsCheckAccessFd(handle, input.mode, input.useEffectiveUserId) }
+    }
+
+    private fun OpenError.toCheckAccessError(): CheckAccessError = if (this is CheckAccessError) {
+        this
+    } else {
+        IoError(this.message)
     }
 }

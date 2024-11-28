@@ -10,7 +10,7 @@ package at.released.weh.filesystem.windows.win32api.filepath
 
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileSystemErrno
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_INVALID_HANDLE
 

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.win32api.model.errorcode
+package at.released.weh.filesystem.windows.win32api.errorcode
 
-import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus.Severity
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.Severity
 
 internal value class NtStatus(
     val raw: UInt,

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.win32api
+package at.released.weh.filesystem.windows.win32api.createfile
 
 import at.released.weh.common.ext.maskToString
 import at.released.weh.filesystem.platform.windows.OBJECT_ATTRIBUTES

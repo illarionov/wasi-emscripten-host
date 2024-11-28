@@ -12,15 +12,13 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CloseHandle
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.HANDLE
 
-internal fun windowsCloseHandle(
-    handle: HANDLE,
-): Either<CloseError, Unit> {
-    return if (CloseHandle(handle) != 0) {
+internal fun HANDLE.close(): Either<CloseError, Unit> {
+    return if (CloseHandle(this) != 0) {
         Unit.right()
     } else {
         Win32ErrorCode.getLast().toCloseError().left()
