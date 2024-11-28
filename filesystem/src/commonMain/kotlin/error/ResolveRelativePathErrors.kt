@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.error
 
 public sealed interface ResolveRelativePathErrors :
+    CheckAccessError,
     ChmodError,
     ChownError,
     HardlinkError,

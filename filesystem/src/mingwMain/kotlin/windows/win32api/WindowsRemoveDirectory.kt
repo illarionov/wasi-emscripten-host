@@ -16,7 +16,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_DIRECTORY
 import platform.windows.ERROR_DIR_NOT_EMPTY

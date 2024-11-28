@@ -12,7 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.platform.windows.FILE_STORAGE_INFO
 import at.released.weh.filesystem.platform.windows.GetFileInformationByHandleEx
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr

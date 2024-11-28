@@ -11,9 +11,9 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.op.stat.StructTimespec
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.asStructTimespec
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr

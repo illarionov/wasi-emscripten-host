@@ -19,7 +19,7 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.CurrentPosition
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy.Position
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped

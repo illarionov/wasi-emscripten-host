@@ -13,8 +13,8 @@ import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
-import at.released.weh.filesystem.windows.win32api.ntCreateFileEx
-import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
+import at.released.weh.filesystem.windows.win32api.close
+import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_LIST_DIRECTORY
@@ -95,7 +95,7 @@ internal data class BatchDirectoryOpenerError(
 )
 
 internal fun Collection<WindowsDirectoryChannel>.closeSilent() = this.forEach { dsResource ->
-    windowsCloseHandle(dsResource.handle).onLeft {
+    dsResource.handle.close().onLeft {
         // IGNORE
     }
 }

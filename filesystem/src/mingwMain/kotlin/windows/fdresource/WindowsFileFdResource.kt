@@ -43,11 +43,11 @@ import at.released.weh.filesystem.windows.nativefunc.readwrite.write
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.truncate
 import at.released.weh.filesystem.windows.nativefunc.windowsGetFdAttributes
+import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.flushFileBuffers
 import at.released.weh.filesystem.windows.win32api.setFilePointer
-import at.released.weh.filesystem.windows.win32api.windowsCloseHandle
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
@@ -124,7 +124,7 @@ internal class WindowsFileFdResource(
         return Unit.right()
     }
 
-    override fun close(): Either<CloseError, Unit> = windowsCloseHandle(channel.handle)
+    override fun close(): Either<CloseError, Unit> = channel.handle.close()
 
     override fun addAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> {
         return NotSupported("Not yet implemented").left()

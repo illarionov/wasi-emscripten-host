@@ -9,9 +9,9 @@ package at.released.weh.filesystem.windows.win32api.filepath
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.readChars
 import at.released.weh.filesystem.windows.win32api.filepath.WindowsVolumeNameType.DOS
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.memScoped

@@ -16,7 +16,7 @@ import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.model.Whence.CUR
 import at.released.weh.filesystem.model.Whence.END
 import at.released.weh.filesystem.model.Whence.SET
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.CValue
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.cValue

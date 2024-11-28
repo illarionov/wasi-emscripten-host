@@ -16,8 +16,8 @@ import at.released.weh.filesystem.platform.windows.FILE_MODE_INFORMATION
 import at.released.weh.filesystem.platform.windows.FileModeInformation
 import at.released.weh.filesystem.platform.windows.IO_STATUS_BLOCK
 import at.released.weh.filesystem.platform.windows.NtQueryInformationFile
-import at.released.weh.filesystem.windows.win32api.model.errorcode.NtStatus
-import at.released.weh.filesystem.windows.win32api.model.errorcode.isSuccess
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
+import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr

@@ -12,7 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.SyncError
-import at.released.weh.filesystem.windows.win32api.model.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.FlushFileBuffers
 import platform.windows.HANDLE
