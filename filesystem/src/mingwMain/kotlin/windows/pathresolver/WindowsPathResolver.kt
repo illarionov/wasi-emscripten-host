@@ -37,7 +37,7 @@ internal class WindowsPathResolver(
         preopened
             .preopenedDirectories
             .entries
-            .forEachIndexed { index, (path: RealPath, ch: WindowsDirectoryChannel) ->
+            .forEachIndexed { index, (_: RealPath, ch: WindowsDirectoryChannel) ->
                 val resource = WindowsDirectoryFdResource(ch)
                 fileDescriptors[index + FileDescriptorTable.WASI_FIRST_PREOPEN_FD] = resource
             }

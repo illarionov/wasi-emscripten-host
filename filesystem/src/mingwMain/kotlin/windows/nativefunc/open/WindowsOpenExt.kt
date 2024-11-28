@@ -16,7 +16,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.win32api.close
-import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
+import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import kotlinx.io.IOException
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_READ_ATTRIBUTES
@@ -88,7 +88,7 @@ internal fun windowsOpenForAttributeAccess(
         FILE_READ_ATTRIBUTES
     }
 
-    return ntCreateFileEx(
+    return windowsNtCreateFileEx(
         rootHandle = rootHandle,
         path = path,
         desiredAccess = desiredAccess,

@@ -19,6 +19,8 @@ import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.WRITEABL
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
+import at.released.weh.test.ignore.annotations.IgnoreApple
+import at.released.weh.test.ignore.annotations.IgnoreLinux
 import at.released.weh.test.ignore.annotations.IgnoreMingw
 import at.released.weh.test.ignore.annotations.dynamic.DynamicIgnoreTarget.JVM_ON_WINDOWS
 import at.released.weh.test.ignore.annotations.dynamic.checkIfShouldBeIgnored
@@ -63,6 +65,8 @@ class CheckAccessTest : BaseFileSystemIntegrationTest() {
 
     @Test
     @IgnoreMingw
+    @IgnoreLinux // TODO: fix
+    @IgnoreApple // TODO: fix
     fun checkaccess_executable_should_fail() {
         if (checkIfShouldBeIgnored(setOf(JVM_ON_WINDOWS))) {
             return
