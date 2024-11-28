@@ -54,8 +54,9 @@ import platform.windows.HANDLEVar
 import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
 import platform.windows.PathIsRelativeW
+import platform.windows.STATUS_INVALID_PARAMETER
 
-internal fun ntCreateFileEx(
+internal fun windowsNtCreateFileEx(
     rootHandle: HANDLE?,
     path: RealPath,
     desiredAccess: Int = FILE_GENERIC_WRITE,
@@ -65,11 +66,35 @@ internal fun ntCreateFileEx(
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
     followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
-): Either<OpenError, HANDLE> = memScoped {
+): Either<OpenError, HANDLE> {
+    return windowsNtCreateFile(
+        rootHandle = rootHandle,
+        path = path,
+        desiredAccess = desiredAccess,
+        fileAttributes = fileAttributes,
+        shareAccess = shareAccess,
+        createDisposition = createDisposition,
+        createOptions = createOptions,
+        followSymlinks = followSymlinks,
+        caseSensitive = caseSensitive,
+    ).mapLeft(NtCreateFileResult::toOpenError)
+}
+
+internal fun windowsNtCreateFile(
+    rootHandle: HANDLE?,
+    path: RealPath,
+    desiredAccess: Int = FILE_GENERIC_WRITE,
+    fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
+    shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
+    createDisposition: Int = FILE_OPEN,
+    createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
+    followSymlinks: Boolean = true,
+    caseSensitive: Boolean = true,
+): Either<NtCreateFileResult, HANDLE> = memScoped {
     val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
 
     if (!pathIsRelative && rootHandle != null) {
-        return InvalidArgument("Path should be relative when open with root handle").left()
+        return NtCreateFileResult(NtStatus(STATUS_INVALID_PARAMETER), 0UL).left()
     }
 
     val ntPath = convertPathToNtPath(path)
@@ -127,7 +152,7 @@ internal fun ntCreateFileEx(
         val handleValue: HANDLE = handle.value ?: error("Handle is null")
         handleValue.right()
     } else {
-        ntCreateFileExStatusToOpenError(status, ioStatusBlock).left()
+        NtCreateFileResult(status, ioStatusBlock.Information).left()
     }
 }
 
@@ -148,11 +173,13 @@ private fun getObjectAttributes(
     return flags
 }
 
-private fun ntCreateFileExStatusToOpenError(
-    status: NtStatus,
-    ioStatusBlock: IO_STATUS_BLOCK,
-): OpenError {
-    when (ioStatusBlock.Information.toUInt()) {
+internal data class NtCreateFileResult(
+    val status: NtStatus,
+    val ioStatusBlockInformation: ULong,
+)
+
+private fun NtCreateFileResult.toOpenError(): OpenError {
+    when (ioStatusBlockInformation.toUInt()) {
         IoStatusBlockInformation.FILE_EXISTS -> return Exists("File exists")
         IoStatusBlockInformation.FILE_DOES_NOT_EXIST -> return NoEntry("File not exists")
     }

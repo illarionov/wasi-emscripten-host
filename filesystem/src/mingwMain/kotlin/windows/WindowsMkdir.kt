@@ -8,17 +8,91 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
+import arrow.core.left
+import arrow.core.raise.either
+import at.released.weh.filesystem.error.AccessDenied
+import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.CloseError
+import at.released.weh.filesystem.error.DiskQuota
+import at.released.weh.filesystem.error.Exists
+import at.released.weh.filesystem.error.Interrupted
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
+import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NoSpace
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
+import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
+import at.released.weh.filesystem.windows.win32api.close
+import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
+import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
+import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
+import platform.windows.FILE_ATTRIBUTE_DIRECTORY
+import platform.windows.FILE_CREATE
+import platform.windows.FILE_DIRECTORY_FILE
+import platform.windows.FILE_LIST_DIRECTORY
+import platform.windows.FILE_OPEN_IF
+import platform.windows.FILE_READ_ATTRIBUTES
+import platform.windows.FILE_TRAVERSE
+import platform.windows.FILE_WRITE_ATTRIBUTES
 
 internal class WindowsMkdir(
     private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
-    override fun invoke(input: Mkdir): Either<MkdirError, Unit> {
-        return fsState.pathResolver.resolveRealPath(input.baseDirectory, input.path)
-            .flatMap { TODO() }
+    override fun invoke(input: Mkdir): Either<MkdirError, Unit> = either {
+        val path = input.path
+        validatePath(path).bind()
+
+        val directoryChannel = fsState.pathResolver.resolveBaseDirectory(input.baseDirectory)
+            .getOrElse { return it.left() }
+
+        val createDisposition = if (input.failIfExists) {
+            FILE_CREATE
+        } else {
+            FILE_OPEN_IF
+        }
+
+        return windowsNtCreateFile(
+            rootHandle = directoryChannel?.handle,
+            path = path,
+            desiredAccess = FILE_LIST_DIRECTORY or
+                    FILE_READ_ATTRIBUTES or
+                    FILE_TRAVERSE or
+                    FILE_WRITE_ATTRIBUTES,
+            fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
+            createDisposition = createDisposition,
+            createOptions = FILE_DIRECTORY_FILE,
+        )
+            .mapLeft(::ntCreateFileResultToMkdirError)
+            .flatMap { handle ->
+                handle.close().mapLeft(::closeErrorToMkdirError)
+            }
+    }
+
+    private fun ntCreateFileResultToMkdirError(result: NtCreateFileResult): MkdirError = when (result.status.raw) {
+        // TODO: find more possible error codes
+        NtStatus.STATUS_INVALID_PARAMETER -> InvalidArgument("NtCreateFile failed: invalid argument")
+        NtStatus.STATUS_UNSUCCESSFUL -> IoError("Other error ${result.status}")
+        NtStatus.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")
+        NtStatus.STATUS_NOT_A_DIRECTORY -> NotDirectory("Not a directory")
+        NtStatus.STATUS_NOT_IMPLEMENTED -> InvalidArgument("Operation not supported")
+        NtStatus.STATUS_OBJECT_NAME_INVALID -> InvalidArgument("Invalid filename")
+        NtStatus.STATUS_OBJECT_NAME_NOT_FOUND -> NoEntry("Name not found")
+        NtStatus.STATUS_OBJECT_PATH_NOT_FOUND -> NoEntry("Path not found")
+        NtStatus.STATUS_OBJECT_NAME_COLLISION -> Exists("Directory exists")
+        NtStatus.STATUS_OBJECT_PATH_SYNTAX_BAD -> InvalidArgument("Unsupported path format")
+        else -> IoError("Other error ${result.status}")
+    }
+
+    private fun closeErrorToMkdirError(err: CloseError): MkdirError = when (err) {
+        is BadFileDescriptor -> err
+        is DiskQuota -> err
+        is Interrupted -> IoError(err.message)
+        is IoError -> err
+        is NoSpace -> err
     }
 }

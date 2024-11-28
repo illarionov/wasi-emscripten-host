@@ -30,7 +30,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
+import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
@@ -85,7 +85,7 @@ internal fun windowsOpenFileOrDirectory(
     val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest)
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
 
-    return ntCreateFileEx(
+    return windowsNtCreateFileEx(
         rootHandle = baseHandle,
         path = path,
         desiredAccess = desiredAccess,

@@ -14,12 +14,11 @@ import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.win32api.close
-import at.released.weh.filesystem.windows.win32api.createfile.ntCreateFileEx
+import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
-import platform.windows.FILE_OPEN_FOR_BACKUP_INTENT
 import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_TRAVERSE
 import platform.windows.FILE_WRITE_ATTRIBUTES
@@ -62,7 +61,7 @@ private fun preopenDirectory(
     path: RealPath,
     baseDirectoryChannel: WindowsDirectoryChannel?,
 ): Either<OpenError, WindowsDirectoryChannel> {
-    return ntCreateFileEx(
+    return windowsNtCreateFileEx(
         rootHandle = baseDirectoryChannel?.handle,
         path = path,
         desiredAccess = FILE_LIST_DIRECTORY or
@@ -71,7 +70,7 @@ private fun preopenDirectory(
                 FILE_WRITE_ATTRIBUTES,
         fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
         createDisposition = FILE_OPEN,
-        createOptions = FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT,
+        createOptions = FILE_DIRECTORY_FILE,
         caseSensitive = true,
         followSymlinks = true,
     ).map { newHandle ->
