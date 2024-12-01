@@ -20,7 +20,7 @@ buildscript {
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.30.0")
         classpath("dev.adamko.dokkatoo:dokkatoo-plugin:2.4.0")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0-RC2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
         classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.0-RC2")
         classpath(
             "org.jetbrains.kotlinx.binary-compatibility-validator:" +
