@@ -9,9 +9,14 @@ package at.released.weh.filesystem.posix.readdir
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.op.readdir.DirEntry
 
-internal sealed class PosixReadDirResult {
+internal sealed class ReadDirResult {
     @Suppress("ConvertObjectToDataObject")
-    object EndOfStream : PosixReadDirResult()
-    data class Entry(val entry: DirEntry) : PosixReadDirResult()
-    data class Error(val error: ReadDirError) : PosixReadDirResult()
+    object EndOfStream : ReadDirResult()
+    data class Entry(val entry: DirEntry) : ReadDirResult()
+    data class Error(val error: ReadDirError) : ReadDirResult()
+
+    internal companion object {
+        internal fun DirEntry.readDirResult(): ReadDirResult = Entry(this)
+        internal fun ReadDirError.readDirResult(): ReadDirResult = Error(this)
+    }
 }

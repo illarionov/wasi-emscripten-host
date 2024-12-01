@@ -19,14 +19,14 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.sizeOf
 import kotlinx.io.bytestring.ByteString
+import platform.windows.FILE_INFO_BY_HANDLE_CLASS
 import platform.windows.HANDLE
-import platform.windows._FILE_INFO_BY_HANDLE_CLASS
 
 internal fun HANDLE.getFileIdInfo(): Either<StatError, FileIdInfo> = memScoped {
     val info: FILE_ID_INFO = alloc()
     val result = GetFileInformationByHandleEx(
         this@getFileIdInfo,
-        _FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
+        FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
         info.ptr,
         sizeOf<FILE_ID_INFO>().toUInt(),
     )

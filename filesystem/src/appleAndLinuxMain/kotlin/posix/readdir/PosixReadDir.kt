@@ -11,6 +11,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.Companion.readDirResult
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.get
 import kotlinx.cinterop.toKStringFromUtf8
@@ -35,15 +36,15 @@ internal expect val dirent.cookie: Long
 
 internal fun posixReadDir(
     dir: CPointer<DIR>,
-): PosixReadDirResult {
+): ReadDirResult {
     set_posix_errno(0)
     val dirent: CPointer<dirent>? = readdir(dir)
     if (dirent == null) {
         val error = errno
         return if (error != 0) {
-            PosixReadDirResult.Error(error.errnoToReadDirError())
+            error.errnoToReadDirError().readDirResult()
         } else {
-            PosixReadDirResult.EndOfStream
+            ReadDirResult.EndOfStream
         }
     }
 
@@ -57,14 +58,12 @@ internal fun posixReadDir(
         dTypeToFiletype(srcType) to srcIno
     }
 
-    return PosixReadDirResult.Entry(
-        DirEntry(
-            name = dirent[0].d_name.toKStringFromUtf8(),
-            type = fileType,
-            inode = inode,
-            cookie = dirent[0].cookie,
-        ),
-    )
+    return DirEntry(
+        name = dirent[0].d_name.toKStringFromUtf8(),
+        type = fileType,
+        inode = inode,
+        cookie = dirent[0].cookie,
+    ).readDirResult()
 }
 
 private fun Int.errnoToReadDirError(): ReadDirError {

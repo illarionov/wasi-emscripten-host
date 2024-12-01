@@ -14,9 +14,9 @@ import assertk.assertions.isInstanceOf
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.model.Filetype.REGULAR_FILE
 import at.released.weh.filesystem.op.readdir.DirEntry
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.EndOfStream
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Entry
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Error
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.Companion.readDirResult
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.EndOfStream
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.Error
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_CURRENT_DIR_ENTRY
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_PARENT_DIR_ENTRY
 import kotlinx.io.IOException
@@ -29,12 +29,12 @@ class PosixDirectoryIteratorTest {
         val testDirEntry = DirEntry("testFile", REGULAR_FILE, 42, 44)
         var nextDirCounter = 0
         val iterator = PosixDirectoryIterator(
-            next = Entry(TEST_CURRENT_DIR_ENTRY),
+            next = TEST_CURRENT_DIR_ENTRY.readDirResult(),
             streamIsClosed = { false },
             nextDirProvider = {
                 when (nextDirCounter++) {
-                    0 -> Entry(TEST_PARENT_DIR_ENTRY)
-                    1 -> Entry(testDirEntry)
+                    0 -> TEST_PARENT_DIR_ENTRY.readDirResult()
+                    1 -> testDirEntry.readDirResult()
                     2 -> EndOfStream
                     else -> error("Should not be called")
                 }

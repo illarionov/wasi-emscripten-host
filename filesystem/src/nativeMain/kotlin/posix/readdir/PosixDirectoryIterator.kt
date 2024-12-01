@@ -7,15 +7,15 @@
 package at.released.weh.filesystem.posix.readdir
 
 import at.released.weh.filesystem.op.readdir.DirEntry
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.EndOfStream
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Entry
-import at.released.weh.filesystem.posix.readdir.PosixReadDirResult.Error
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.EndOfStream
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.Entry
+import at.released.weh.filesystem.posix.readdir.ReadDirResult.Error
 import kotlinx.io.IOException
 
 internal class PosixDirectoryIterator(
-    private var next: PosixReadDirResult,
+    private var next: ReadDirResult,
     private val streamIsClosed: () -> Boolean,
-    private val nextDirProvider: () -> PosixReadDirResult,
+    private val nextDirProvider: () -> ReadDirResult,
 ) : Iterator<DirEntry> {
     override fun hasNext(): Boolean {
         return next != EndOfStream
@@ -24,7 +24,7 @@ internal class PosixDirectoryIterator(
     override fun next(): DirEntry {
         check(!streamIsClosed()) { "Stream is closed" }
 
-        when (val current: PosixReadDirResult = next) {
+        when (val current: ReadDirResult = next) {
             EndOfStream -> throw NoSuchElementException()
 
             is Entry -> {
