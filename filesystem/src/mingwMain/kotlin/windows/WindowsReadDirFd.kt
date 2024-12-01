@@ -8,6 +8,7 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import arrow.core.left
+import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -15,6 +16,7 @@ import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.readdir.WindowsDirEntrySequence
 
 internal class WindowsReadDirFd(
     private val fsState: WindowsFileSystemState,
@@ -24,7 +26,7 @@ internal class WindowsReadDirFd(
             if (resource !is WindowsDirectoryFdResource) {
                 return@executeWithResource BadFileDescriptor("${input.fd} is not a directory").left()
             }
-            TODO()
+            WindowsDirEntrySequence(resource.channel.handle, input.startPosition).right()
         }
     }
 }

@@ -37,8 +37,8 @@ internal class PosixDirEntrySequence(
                 // This works only on Linux. On other OSes location returned by the telldir is valid only within
                 // the same opened descriptor DIR.
                 seekdir(dir, startPosition.cookie)
-                val cookiedEntry: PosixReadDirResult = posixReadDir(dir)
-                if (cookiedEntry is PosixReadDirResult.Entry && cookiedEntry.entry.cookie == startPosition.cookie) {
+                val cookiedEntry: ReadDirResult = posixReadDir(dir)
+                if (cookiedEntry is ReadDirResult.Entry && cookiedEntry.entry.cookie == startPosition.cookie) {
                     posixReadDir(dir)
                 } else {
                     cookiedEntry

@@ -45,6 +45,9 @@ internal fun convertPathToNtPath(
 ): RealPath {
     val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
     val winPath = path.replace('/', '\\')
+        .substringAfter(WIN32_LITERAL_FILE_NAMESPACE_PREFIX)
+        .substringAfter(WIN32_NORMALIZED_FILE_NAMESPACE_PREFIX)
+
     val ntPath = when {
         !pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) -> WIN32_NT_KERNEL_DEVICES_PREFIX + winPath
         path == "." -> """"""

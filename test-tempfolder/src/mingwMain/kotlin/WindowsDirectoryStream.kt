@@ -30,7 +30,7 @@ internal class WindowsDirectoryStream(
     private val path: String,
 ) : AutoCloseable {
     private var childItemsHandle: HANDLE? = null
-    private var findData: WIN32_FIND_DATAW = nativeHeap.alloc()
+    private val findData: WIN32_FIND_DATAW = nativeHeap.alloc()
     private var isClosed: Boolean = false
 
     fun next(): DirectoryStreamItem {

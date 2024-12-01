@@ -80,9 +80,15 @@ internal fun HANDLE.writeChangePosition(cIovecs: List<FileSystemByteBuffer>): Ei
     val bytesWritten: DWORDVar = alloc()
     for (ciovec in cIovecs) {
         val bytesWrittenOrError = ciovec.array.usePinned { pinnedBuffer ->
+            val address = if (ciovec.array.isNotEmpty()) {
+                pinnedBuffer.addressOf(ciovec.offset)
+            } else {
+                null
+            }
+
             val result = WriteFile(
                 this@writeChangePosition,
-                pinnedBuffer.addressOf(ciovec.offset),
+                address,
                 ciovec.length.toUInt(),
                 bytesWritten.ptr,
                 null,
@@ -124,9 +130,15 @@ internal fun HANDLE.writeDoNotChangePosition(
             overlapped.OffsetHigh = (currentOffset shr 32 and 0xff_ff_ff_ffUL).toUInt()
 
             val bytesWrittenOrError = ciovec.array.usePinned { pinnedBuffer ->
+                val address = if (ciovec.array.isNotEmpty()) {
+                    pinnedBuffer.addressOf(ciovec.offset)
+                } else {
+                    null
+                }
+
                 val resultRaw = WriteFile(
                     this@writeDoNotChangePosition,
-                    pinnedBuffer.addressOf(ciovec.offset),
+                    address,
                     ciovec.length.toUInt(),
                     null,
                     overlapped.ptr,

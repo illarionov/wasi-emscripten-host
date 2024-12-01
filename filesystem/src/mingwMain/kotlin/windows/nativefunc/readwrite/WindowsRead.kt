@@ -59,9 +59,15 @@ private fun HANDLE.readChangePosition(iovecs: List<FileSystemByteBuffer>): Eithe
     val bytesRead: DWORDVar = alloc()
     for (iovec in iovecs) {
         val bytesReadOrError = iovec.array.usePinned { pinnedBuffer ->
+            val address = if (iovec.array.isNotEmpty()) {
+                pinnedBuffer.addressOf(iovec.offset)
+            } else {
+                null
+            }
+
             val result = ReadFile(
                 this@readChangePosition,
-                pinnedBuffer.addressOf(iovec.offset),
+                address,
                 iovec.length.toUInt(),
                 bytesRead.ptr,
                 null,
@@ -100,9 +106,15 @@ private fun HANDLE.readDoNotChangePosition(
         overlapped.OffsetHigh = (currentOffset shr 32 and 0xff_ff_ff_ffUL).toUInt()
 
         val readResult = iovec.array.usePinned { pinnedBuffer ->
+            val address = if (iovec.array.isNotEmpty()) {
+                pinnedBuffer.addressOf(iovec.offset)
+            } else {
+                null
+            }
+
             val resultRaw = ReadFile(
                 this@readDoNotChangePosition,
-                pinnedBuffer.addressOf(iovec.offset),
+                address,
                 iovec.length.toUInt(),
                 bytesRead.ptr,
                 overlapped.ptr,
@@ -121,6 +133,7 @@ private fun HANDLE.readDoNotChangePosition(
                 }
             }
         }
+
         when (readResult) {
             ReadFileResult.EndOfFile -> break
             is ReadFileResult.ReadSuccess -> {

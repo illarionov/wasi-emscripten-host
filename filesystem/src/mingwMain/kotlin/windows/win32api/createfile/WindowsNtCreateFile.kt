@@ -41,20 +41,41 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.utf16
 import kotlinx.cinterop.value
+import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
+import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_GENERIC_WRITE
+import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_RANDOM_ACCESS
+import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_SHARE_DELETE
 import platform.windows.FILE_SHARE_READ
 import platform.windows.FILE_SHARE_WRITE
 import platform.windows.FILE_SYNCHRONOUS_IO_ALERT
+import platform.windows.FILE_TRAVERSE
 import platform.windows.HANDLE
 import platform.windows.HANDLEVar
 import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
 import platform.windows.PathIsRelativeW
 import platform.windows.STATUS_INVALID_PARAMETER
+
+internal fun windowsNtOpenDirectory(
+    path: RealPath,
+    rootHandle: HANDLE? = null,
+    desiredAccess: Int = FILE_LIST_DIRECTORY or FILE_READ_ATTRIBUTES or FILE_TRAVERSE,
+    followSymlinks: Boolean = true,
+): Either<OpenError, HANDLE> = windowsNtCreateFileEx(
+    rootHandle = rootHandle,
+    path = path,
+    desiredAccess = desiredAccess,
+    fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
+    createDisposition = FILE_OPEN,
+    createOptions = FILE_DIRECTORY_FILE,
+    caseSensitive = true,
+    followSymlinks = followSymlinks,
+)
 
 internal fun windowsNtCreateFileEx(
     rootHandle: HANDLE?,
