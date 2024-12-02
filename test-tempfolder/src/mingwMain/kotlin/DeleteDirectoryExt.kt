@@ -14,8 +14,11 @@ import at.released.weh.test.utils.WindowsDirectoryStream.Filetype.DIRECTORY
 import at.released.weh.test.utils.WindowsDirectoryStream.Filetype.FILE
 import at.released.weh.test.utils.WindowsDirectoryStream.Filetype.OTHER
 import platform.windows.DeleteFileW
+import platform.windows.ERROR_ACCESS_DENIED
+import platform.windows.FILE_ATTRIBUTE_NORMAL
 import platform.windows.GetLastError
 import platform.windows.RemoveDirectoryW
+import platform.windows.SetFileAttributesW
 
 @Throws(WindowsIoException::class)
 internal fun deleteDirectoryRecursively(
@@ -34,13 +37,30 @@ private fun FileItem.delete() {
     when (type) {
         FILE, OTHER -> if (DeleteFileW(absolutePath) == 0) {
             val lastErr = GetLastError()
-            throw WindowsIoException("Failed to delete file `$absolutePath`: $lastErr", lastErr)
+            if (lastErr == ERROR_ACCESS_DENIED.toUInt()) {
+                try {
+                    stripReadOnlyAttribute(absolutePath)
+                } catch (@Suppress("SwallowedException") _: WindowsIoException) {
+                    // Ignore
+                }
+                if (DeleteFileW(absolutePath) == 0) {
+                    val newLastErr = GetLastError()
+                    throw WindowsIoException("Failed to delete file `$absolutePath`", newLastErr)
+                }
+            }
         }
 
         DIRECTORY -> if (RemoveDirectoryW(absolutePath) == 0) {
             val lastErr = GetLastError()
-            throw WindowsIoException("Failed to delete directory `$absolutePath`: $lastErr", lastErr)
+            throw WindowsIoException("Failed to delete directory `$absolutePath`", lastErr)
         }
+    }
+}
+
+private fun stripReadOnlyAttribute(path: String) {
+    if (SetFileAttributesW(path, FILE_ATTRIBUTE_NORMAL.toUInt()) != 0) {
+        val lastErr = GetLastError()
+        throw WindowsIoException("Failed to set file attributes to normal on`$path`", lastErr)
     }
 }
 

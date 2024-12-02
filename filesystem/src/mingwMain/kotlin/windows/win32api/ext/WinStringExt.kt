@@ -26,6 +26,9 @@ public fun CPointer<UShortVar>.readNullTerminatedCharArray(): CharArray {
 /**
  * Reads [length] opaque WCHARs starting from [this]
  */
-public fun CPointer<UShortVar>.readChars(length: Int): CharArray = CharArray(length) { idx ->
-    this[idx].toInt().toChar()
+public fun CPointer<UShortVar>.readChars(
+    length: Int,
+    fromIndex: Int = 0,
+): CharArray = CharArray(length) { idx ->
+    this[idx + fromIndex].toInt().toChar()
 }

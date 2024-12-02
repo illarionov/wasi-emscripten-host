@@ -47,6 +47,7 @@ import platform.windows.FILE_DIRECTORY_FILE
 import platform.windows.FILE_GENERIC_WRITE
 import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
+import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_RANDOM_ACCESS
 import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_SHARE_DELETE
@@ -66,16 +67,23 @@ internal fun windowsNtOpenDirectory(
     rootHandle: HANDLE? = null,
     desiredAccess: Int = FILE_LIST_DIRECTORY or FILE_READ_ATTRIBUTES or FILE_TRAVERSE,
     followSymlinks: Boolean = true,
-): Either<OpenError, HANDLE> = windowsNtCreateFileEx(
-    rootHandle = rootHandle,
-    path = path,
-    desiredAccess = desiredAccess,
-    fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
-    createDisposition = FILE_OPEN,
-    createOptions = FILE_DIRECTORY_FILE,
-    caseSensitive = true,
-    followSymlinks = followSymlinks,
-)
+): Either<OpenError, HANDLE> {
+    val createOptions = if (followSymlinks) {
+        FILE_DIRECTORY_FILE
+    } else {
+        FILE_DIRECTORY_FILE or FILE_OPEN_REPARSE_POINT
+    }
+
+    return windowsNtCreateFileEx(
+        rootHandle = rootHandle,
+        path = path,
+        desiredAccess = desiredAccess,
+        fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
+        createDisposition = FILE_OPEN,
+        createOptions = createOptions,
+        caseSensitive = true,
+    )
+}
 
 internal fun windowsNtCreateFileEx(
     rootHandle: HANDLE?,
@@ -85,7 +93,6 @@ internal fun windowsNtCreateFileEx(
     shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
     createDisposition: Int = FILE_OPEN,
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
-    followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
 ): Either<OpenError, HANDLE> {
     return windowsNtCreateFile(
@@ -96,7 +103,6 @@ internal fun windowsNtCreateFileEx(
         shareAccess = shareAccess,
         createDisposition = createDisposition,
         createOptions = createOptions,
-        followSymlinks = followSymlinks,
         caseSensitive = caseSensitive,
     ).mapLeft(NtCreateFileResult::toOpenError)
 }
@@ -109,7 +115,6 @@ internal fun windowsNtCreateFile(
     shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
     createDisposition: Int = FILE_OPEN,
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
-    followSymlinks: Boolean = true,
     caseSensitive: Boolean = true,
 ): Either<NtCreateFileResult, HANDLE> = memScoped {
     val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
@@ -137,7 +142,7 @@ internal fun windowsNtCreateFile(
         Length = sizeOf<OBJECT_ATTRIBUTES>().toUInt()
         RootDirectory = rootHandle
         ObjectName = objectName.ptr
-        Attributes = getObjectAttributes(caseSensitive, followSymlinks)
+        Attributes = getObjectAttributes(caseSensitive)
         SecurityDescriptor = null
         SecurityQualityOfService = null
     }
@@ -179,19 +184,12 @@ internal fun windowsNtCreateFile(
 
 private fun getObjectAttributes(
     caseSensitive: Boolean,
-    @Suppress("UnusedParameter") followSymlinks: Boolean,
 ): UInt {
-    var flags = if (!caseSensitive) {
+    return if (!caseSensitive) {
         OBJ_CASE_INSENSITIVE.toUInt()
     } else {
         0U
     }
-    // TODO: OBJ_OPENLINK is invalid argumnent in NtCreateFile
-//    if (!followSymlinks) {
-//        // TODO: OBJ_DONT_REPARSE?
-//        flags = flags or OBJ_OPENLINK.toUInt()
-//    }
-    return flags
 }
 
 internal data class NtCreateFileResult(

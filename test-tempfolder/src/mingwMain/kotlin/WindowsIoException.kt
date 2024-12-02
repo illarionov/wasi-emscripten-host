@@ -15,7 +15,9 @@ public class WindowsIoException : IOException {
         this.lastError = lastError
     }
 
-    public constructor(message: String, lastError: UInt? = null) : super(message) {
+    public constructor(messagePrefix: String, lastError: UInt? = null) : super(
+        messagePrefix + (lastError?.let { ": 0x${it.toString(16)}" } ?: ""),
+    ) {
         this.lastError = lastError
     }
 }

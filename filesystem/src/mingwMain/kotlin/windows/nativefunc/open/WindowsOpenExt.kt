@@ -19,6 +19,7 @@ import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import kotlinx.io.IOException
 import platform.windows.FILE_OPEN
+import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.HANDLE
@@ -88,13 +89,18 @@ internal fun windowsOpenForAttributeAccess(
         FILE_READ_ATTRIBUTES
     }
 
+    val createOptions = if (followSymlinks) {
+        0
+    } else {
+        FILE_OPEN_REPARSE_POINT
+    }
+
     return windowsNtCreateFileEx(
         rootHandle = rootHandle,
         path = path,
         desiredAccess = desiredAccess,
         fileAttributes = 0,
         createDisposition = FILE_OPEN,
-        createOptions = 0,
-        followSymlinks = followSymlinks,
+        createOptions = createOptions,
     )
 }
