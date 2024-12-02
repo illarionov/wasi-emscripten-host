@@ -1,7 +1,8 @@
-headerFilter = winternl.h
+headerFilter = winternl.h stddef.h
 
 ---
 
+#include <stddef.h>
 #include <winternl.h>
 
 extern NTSTATUS NtCreateFile(
@@ -61,3 +62,32 @@ BOOL GetFileInformationByHandleEx(
   LPVOID lpFileInformation,
   DWORD dwBufferSize
 );
+
+// Ntifs.h
+typedef struct _REPARSE_DATA_BUFFER {
+  ULONG  ReparseTag;
+  USHORT ReparseDataLength;
+  USHORT Reserved;
+  union {
+    struct {
+      USHORT SubstituteNameOffset;
+      USHORT SubstituteNameLength;
+      USHORT PrintNameOffset;
+      USHORT PrintNameLength;
+      ULONG  Flags;
+      WCHAR  PathBuffer[1];
+    } SymbolicLinkReparseBuffer;
+    struct {
+      USHORT SubstituteNameOffset;
+      USHORT SubstituteNameLength;
+      USHORT PrintNameOffset;
+      USHORT PrintNameLength;
+      WCHAR  PathBuffer[1];
+    } MountPointReparseBuffer;
+    struct {
+      UCHAR DataBuffer[1];
+    } GenericReparseBuffer;
+  } DUMMYUNIONNAME;
+} REPARSE_DATA_BUFFER, *PREPARSE_DATA_BUFFER;
+
+const int REPARSE_DATA_BUFFER_SYMLINK_PATH_BUFFER_OFFSET = offsetof(REPARSE_DATA_BUFFER, SymbolicLinkReparseBuffer.PathBuffer);

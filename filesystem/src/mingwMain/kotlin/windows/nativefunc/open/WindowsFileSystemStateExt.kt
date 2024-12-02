@@ -27,7 +27,9 @@ internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.exec
 ): Either<E, R> {
     val directoryFd: WindowsDirectoryChannel? = pathResolver.resolveBaseDirectory(baseDirectory)
         .mapLeft { errorMapper(it as OpenError) }
-        .getOrElse { return it.left() }
+        .getOrElse {
+            return it.left()
+        }
 
     return useFileForAttributeAccess(
         baseHandle = directoryFd?.handle,

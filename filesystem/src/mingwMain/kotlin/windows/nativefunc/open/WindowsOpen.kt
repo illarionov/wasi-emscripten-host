@@ -44,6 +44,7 @@ import platform.windows.FILE_LIST_DIRECTORY
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_OPEN_FOR_BACKUP_INTENT
 import platform.windows.FILE_OPEN_IF
+import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_OVERWRITE
 import platform.windows.FILE_OVERWRITE_IF
 import platform.windows.FILE_RANDOM_ACCESS
@@ -82,8 +83,8 @@ internal fun windowsOpenFileOrDirectory(
     val desiredAccess = getDesiredAccess(flags, isDirectoryOrPathRequest)
     val fileAttributes = getFileAttributes(flags, isDirectoryOrPathRequest)
     val createDisposition = getCreateDisposition(flags, isDirectoryRequest)
-    val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest)
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
+    val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest, followSymlinks)
 
     return windowsNtCreateFileEx(
         rootHandle = baseHandle,
@@ -92,7 +93,6 @@ internal fun windowsOpenFileOrDirectory(
         fileAttributes = fileAttributes,
         createDisposition = createDisposition,
         createOptions = createOptions,
-        followSymlinks = followSymlinks,
     ).flatMap { handle: HANDLE ->
         handle.getFileAttributeTagInfo()
             .mapLeft(StatError::toOpenError)
@@ -178,6 +178,7 @@ private fun getFileAttributes(
 private fun getCreateOptions(
     @FdflagsType fdFlags: Fdflags,
     isDirectoryOrPathRequest: Boolean,
+    followSymlinks: Boolean,
 ): Int {
     if (isDirectoryOrPathRequest) {
         return FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT
@@ -185,6 +186,9 @@ private fun getCreateOptions(
     var flags = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT
     if (fdFlags and (FD_DSYNC or FD_SYNC or FD_RSYNC) != 0) {
         flags = flags or FILE_WRITE_THROUGH
+    }
+    if (!followSymlinks) {
+        flags = flags or FILE_OPEN_REPARSE_POINT
     }
     return flags
 }
