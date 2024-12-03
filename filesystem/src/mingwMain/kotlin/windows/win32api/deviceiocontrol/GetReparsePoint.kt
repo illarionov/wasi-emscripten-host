@@ -21,6 +21,7 @@ import at.released.weh.filesystem.platform.windows.REPARSE_DATA_BUFFER
 import at.released.weh.filesystem.platform.windows.REPARSE_DATA_BUFFER_SYMLINK_PATH_BUFFER_OFFSET
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.readChars
+import kotlinx.cinterop.alignOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
@@ -45,7 +46,7 @@ import platform.windows.WCHARVar
 internal fun HANDLE.getReparsePoint(): Either<ReadLinkError, String> {
     maxSizes().forEach { size ->
         memScoped {
-            val outBuffer = alloc(size)
+            val outBuffer = alloc(size, alignOf<REPARSE_DATA_BUFFER>())
             val reparsePoint: REPARSE_DATA_BUFFER = outBuffer.reinterpret()
             val bytesReturned: DWORDVar = alloc()
 
