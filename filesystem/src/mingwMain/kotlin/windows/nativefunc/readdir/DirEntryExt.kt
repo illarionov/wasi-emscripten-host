@@ -40,7 +40,6 @@ internal fun readDirEntry(
         baseHandle = baseHandle,
         path = path,
         followSymlinks = false,
-        writeAccess = false,
         errorMapper = { it.toReadDirError() },
     ) { fileHandle -> fileHandle.getFileIdInfo().mapLeft(StatError::toReadDirError) }.bind()
 

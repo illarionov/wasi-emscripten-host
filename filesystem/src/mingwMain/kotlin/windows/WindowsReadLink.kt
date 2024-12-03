@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.win32api.deviceiocontrol.getReparsePoint
 
@@ -24,7 +25,7 @@ internal class WindowsReadLink(
             baseDirectory = input.baseDirectory,
             path = input.path,
             followSymlinks = false,
-            writeAccess = false,
+            access = READ_ONLY,
             errorMapper = { it.toReadLinkError() },
         ) { handle ->
             handle.getReparsePoint()

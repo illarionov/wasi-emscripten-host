@@ -25,6 +25,7 @@ import kotlinx.cinterop.sizeOf
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.ERROR_INVALID_PARAMETER
 import platform.windows.FILE_BASIC_INFO
+import platform.windows.FILE_INFO_BY_HANDLE_CLASS
 import platform.windows.GetFileInformationByHandleEx
 import platform.windows.HANDLE
 import platform.windows.LARGE_INTEGER
@@ -47,13 +48,13 @@ internal fun HANDLE.getFileBasicInfo(): Either<StatError, FileBasicInfo> = memSc
 }
 
 internal fun HANDLE.setFileBasicInfo(
-    creationTime: StructTimespec?,
+    creationTime: StructTimespec? = null,
     lastAccessTime: StructTimespec? = null,
     lastWriteTime: StructTimespec? = null,
     changeTime: StructTimespec? = null,
     fileAttributes: FileAttributes? = null,
 ): Either<SetTimestampError, Unit> = memScoped {
-    val basicInfo: FILE_BASIC_INFO = alloc<FILE_BASIC_INFO>().apply {
+    val basicInfo: FILE_BASIC_INFO = alloc<FILE_BASIC_INFO> {
         this.CreationTime.setFiletime(creationTime)
         this.LastAccessTime.setFiletime(lastAccessTime)
         this.LastWriteTime.setFiletime(lastWriteTime)
@@ -62,7 +63,7 @@ internal fun HANDLE.setFileBasicInfo(
     }
     val result = SetFileInformationByHandle(
         this@setFileBasicInfo,
-        _FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
+        FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo,
         basicInfo.ptr,
         sizeOf<FILE_BASIC_INFO>().toUInt(),
     )

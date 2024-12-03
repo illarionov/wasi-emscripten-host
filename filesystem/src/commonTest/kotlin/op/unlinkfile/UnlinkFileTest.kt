@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.model.FileSystemErrno.ISDIR
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
+import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.createTestSymlink
@@ -55,6 +56,17 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
             fs.execute(UnlinkFile, request).getOrElse { fail("UnlinkFile failed for symlink: $it") }
         }
         assertThat(testFile).isExists()
+        assertThat(testSymlink).isNotExists()
+    }
+
+    @Test
+    fun unlinkfile_on_symlink_to_directory_should_success() {
+        val testSymlink = tempFolder.createTestSymlink("testDirectory", "testSymlink", SYMLINK_TO_DIRECTORY)
+
+        createTestFileSystem().use { fs ->
+            val request = UnlinkFile(testSymlink.name, tempFolderDirectoryFd)
+            fs.execute(UnlinkFile, request).getOrElse { fail("UnlinkFile failed for symlink: $it") }
+        }
         assertThat(testSymlink).isNotExists()
     }
 }

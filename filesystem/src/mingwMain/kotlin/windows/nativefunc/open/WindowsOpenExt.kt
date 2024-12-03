@@ -15,9 +15,13 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import kotlinx.io.IOException
+import platform.windows.DELETE
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_READ_ATTRIBUTES
@@ -29,11 +33,11 @@ internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
     baseHandle: HANDLE?,
     path: RealPath,
     followSymlinks: Boolean = true,
-    writeAccess: Boolean = true,
+    access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
 ): Either<E, R> {
-    val handle: HANDLE = windowsOpenForAttributeAccess(baseHandle, path, followSymlinks, writeAccess)
+    val handle: HANDLE = windowsOpenForAttributeAccess(baseHandle, path, followSymlinks, access)
         .mapLeft(errorMapper)
         .getOrElse { return it.left() }
 
@@ -74,7 +78,7 @@ internal fun windowsOpenForAttributeAccess(
     baseHandle: HANDLE?,
     path: RealPath,
     followSymlinks: Boolean = true,
-    writeAccess: Boolean,
+    access: AttributeDesiredAccess,
 ): Either<OpenError, HANDLE> = either {
     val rootHandle = if (baseHandle != null && PathIsRelativeW(path) != 0) {
         baseHandle
@@ -82,12 +86,6 @@ internal fun windowsOpenForAttributeAccess(
         null
     }
     validatePath(path).bind()
-
-    val desiredAccess = if (writeAccess) {
-        FILE_READ_ATTRIBUTES or FILE_WRITE_ATTRIBUTES
-    } else {
-        FILE_READ_ATTRIBUTES
-    }
 
     val createOptions = if (followSymlinks) {
         0
@@ -98,9 +96,22 @@ internal fun windowsOpenForAttributeAccess(
     return windowsNtCreateFileEx(
         rootHandle = rootHandle,
         path = path,
-        desiredAccess = desiredAccess,
+        desiredAccess = access.ntOpenDesiredAccess,
         fileAttributes = 0,
         createDisposition = FILE_OPEN,
         createOptions = createOptions,
     )
 }
+
+internal enum class AttributeDesiredAccess {
+    READ_ONLY,
+    READ_WRITE,
+    READ_WRITE_DELETE,
+}
+
+private val AttributeDesiredAccess.ntOpenDesiredAccess: Int
+    get() = when (this) {
+        READ_ONLY -> FILE_READ_ATTRIBUTES
+        READ_WRITE -> FILE_READ_ATTRIBUTES or FILE_WRITE_ATTRIBUTES
+        READ_WRITE_DELETE -> FILE_READ_ATTRIBUTES or FILE_WRITE_ATTRIBUTES or DELETE
+    }

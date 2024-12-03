@@ -58,14 +58,14 @@ private fun FileItem.delete() {
 }
 
 private fun stripReadOnlyAttribute(path: String) {
-    if (SetFileAttributesW(path, FILE_ATTRIBUTE_NORMAL.toUInt()) != 0) {
+    if (SetFileAttributesW(path, FILE_ATTRIBUTE_NORMAL.toUInt()) == 0) {
         val lastErr = GetLastError()
         throw WindowsIoException("Failed to set file attributes to normal on`$path`", lastErr)
     }
 }
 
 private class BottomUpFileTreeWalker(
-    val path: String,
+    path: String,
 ) : AutoCloseable {
     private val stack: ArrayDeque<Pair<WindowsDirectoryStream, FileItem>> = ArrayDeque()
 
