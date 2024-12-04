@@ -33,12 +33,10 @@ import at.released.weh.test.filesystem.assertions.isDirectory
 import at.released.weh.test.filesystem.assertions.isExists
 import at.released.weh.test.filesystem.assertions.isNotExists
 import at.released.weh.test.filesystem.assertions.isRegularFile
-import at.released.weh.test.ignore.annotations.IgnoreMingw
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.fail
 
-@IgnoreMingw
 class RenameTest : BaseFileSystemIntegrationTest() {
     @Test
     public fun rename_file_success_case() {
