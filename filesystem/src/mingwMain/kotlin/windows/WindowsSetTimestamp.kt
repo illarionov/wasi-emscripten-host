@@ -36,6 +36,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.filesystem.op.stat.StructTimespec
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.win32api.ext.fromNanoseconds
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
@@ -49,7 +50,7 @@ internal class WindowsSetTimestamp(
         baseDirectory = input.baseDirectory,
         path = input.path,
         followSymlinks = input.followSymlinks,
-        writeAccess = true,
+        access = READ_WRITE,
         errorMapper = { it.toSetTimestampError() },
     ) { handle ->
         handle.setFileBasicInfo(

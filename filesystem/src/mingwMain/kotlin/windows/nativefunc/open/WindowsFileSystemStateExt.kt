@@ -15,13 +15,14 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import platform.windows.HANDLE
 
 internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.executeWithOpenFileHandle(
     baseDirectory: BaseDirectory,
     path: RealPath,
     followSymlinks: Boolean = true,
-    writeAccess: Boolean = true,
+    access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
 ): Either<E, R> {
@@ -35,7 +36,7 @@ internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.exec
         baseHandle = directoryFd?.handle,
         path = path,
         followSymlinks = followSymlinks,
-        writeAccess = writeAccess,
+        access = access,
         errorMapper = errorMapper,
         block = block,
     )

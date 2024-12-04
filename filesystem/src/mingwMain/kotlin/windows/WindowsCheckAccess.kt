@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.windowsCheckAccessFd
 import platform.windows.HANDLE
@@ -25,7 +26,7 @@ internal class WindowsCheckAccess(
             baseDirectory = input.baseDirectory,
             path = input.path,
             followSymlinks = input.followSymlinks,
-            writeAccess = false,
+            access = READ_ONLY,
             errorMapper = { it.toCheckAccessError() },
         ) { handle: HANDLE -> windowsCheckAccessFd(handle, input.mode, input.useEffectiveUserId) }
     }

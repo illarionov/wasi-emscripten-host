@@ -36,6 +36,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 
@@ -46,7 +47,7 @@ internal class WindowsStat(
         baseDirectory = input.baseDirectory,
         path = input.path,
         followSymlinks = input.followSymlinks,
-        writeAccess = false,
+        access = READ_ONLY,
         errorMapper = { it.toStatError() },
     ) { handle -> windowsStatFd(handle) }
 }
