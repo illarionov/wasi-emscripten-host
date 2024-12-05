@@ -56,15 +56,14 @@ import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
+import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileBasicInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileDispositionInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.setFileRenameInfo
 import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.InvalidHandle
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.MaxAttemptsReached
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.OtherError
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
+import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
 import at.released.weh.filesystem.windows.win32api.model.FileAttributes
 import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_ALREADY_EXISTS
@@ -112,7 +111,7 @@ internal class WindowsRename(
     private fun replaceExistingFile(
         handle: HANDLE,
         destinationPath: RealPath,
-        destintationType: DestinationFileType,
+        destinationType: DestinationFileType,
         dstHandle: HANDLE?,
     ): Either<RenameError, Unit> {
         var dstHandleClosed = false
@@ -120,16 +119,16 @@ internal class WindowsRename(
             val sourceType = handle.getFileAttributeTagInfo()
                 .mapLeft(::statErrorToRenameError)
                 .bind()
-            when (destintationType) {
+            when (destinationType) {
                 NotExists -> error("Should not be called")
                 is File -> {
                     if (sourceType.fileAttributes.isDirectory || sourceType.isSymlink) {
                         raise(NotDirectory("Can not rename directory to non-directory"))
                     }
-                    if (destintationType.attributes.isReadOnly) {
+                    if (destinationType.attributes.isReadOnly) {
                         dstHandle?.setFileBasicInfo(
                             fileAttributes = FileAttributes(
-                                destintationType.attributes.mask and FILE_ATTRIBUTE_READONLY.toUInt().inv(),
+                                destinationType.attributes.mask and FILE_ATTRIBUTE_READONLY.toUInt().inv(),
                             ),
                         )
                             ?.mapLeft(::setTimestampErrorToRenameError)
@@ -141,7 +140,7 @@ internal class WindowsRename(
                     if (!sourceType.fileAttributes.isDirectory || sourceType.isSymlink) {
                         raise(PathIsDirectory("Can not rename non-directory to directory"))
                     }
-                    if (!destintationType.isEmpty) {
+                    if (!destinationType.isEmpty) {
                         raise(DirectoryNotEmpty("Can not overwrite non-empty directory"))
                     }
                     dstHandle?.setFileDispositionInfo(true)
@@ -217,51 +216,42 @@ internal class WindowsRename(
             return handle.getFileAttributeTagInfo()
                 .mapLeft(::statErrorToRenameError)
                 .flatMap { attrs ->
-                    when {
-                        attrs.isSymlink -> getSymlinkInfo(handle, attrs.fileAttributes.isDirectory)
-                        attrs.fileAttributes.isDirectory -> getDirectoryInfo(handle)
-                        else -> getFileInfo(handle, attrs.fileAttributes)
-                    }
+                    handle.getFinalPath()
+                        .mapLeft(GetFinalPathError::toResolveRelativePathError)
+                        .map { finalPath ->
+                            getPathInfo(handle, finalPath, attrs)
+                        }
                 }
         }
 
-        private fun getSymlinkInfo(
+        private fun getPathInfo(
             attributesHandle: HANDLE,
-            isDirectory: Boolean,
-        ): Either<RenameError, DestinationPathInfo> =
-            pathResolver.resolveRealPath(newBaseDirectory, newPath).map { resolvedPath ->
-                DestinationPathInfo(
-                    resolvedRealPath = resolvedPath,
-                    type = if (isDirectory) SymlinkToDirectory else SymlinkToFile,
-                    dstHandle = attributesHandle,
-                )
-            }
-
-        private fun getDirectoryInfo(
-            attributesHandle: HANDLE,
-        ): Either<RenameError, DestinationPathInfo> = attributesHandle.getFinalPath()
-            .mapLeft(::getFinalPathErrorToRenameError)
-            .map { finalPath ->
-                val isEmpty = PathIsDirectoryEmptyW(finalPath)
-                DestinationPathInfo(
+            finalPath: RealPath,
+            fileAttributes: FileAttributeTagInfo,
+        ): DestinationPathInfo {
+            return when {
+                fileAttributes.isSymlink -> DestinationPathInfo(
                     resolvedRealPath = finalPath,
-                    type = Directory(isEmpty = isEmpty != 0),
+                    type = if (fileAttributes.fileAttributes.isDirectory) SymlinkToDirectory else SymlinkToFile,
                     dstHandle = attributesHandle,
                 )
-            }
 
-        private fun getFileInfo(
-            attributesHandle: HANDLE,
-            attrs: FileAttributes,
-        ) = attributesHandle.getFinalPath()
-            .mapLeft(::getFinalPathErrorToRenameError)
-            .map { finalPath ->
-                DestinationPathInfo(
+                fileAttributes.fileAttributes.isDirectory -> {
+                    val isEmpty = PathIsDirectoryEmptyW(finalPath)
+                    DestinationPathInfo(
+                        resolvedRealPath = finalPath,
+                        type = Directory(isEmpty = isEmpty != 0),
+                        dstHandle = attributesHandle,
+                    )
+                }
+
+                else -> DestinationPathInfo(
                     resolvedRealPath = finalPath,
-                    type = File(attrs),
+                    type = File(fileAttributes.fileAttributes),
                     dstHandle = attributesHandle,
                 )
             }
+        }
     }
 
     private sealed class DestinationFileType {
@@ -279,13 +269,6 @@ internal class WindowsRename(
     )
 
     private companion object {
-        private fun getFinalPathErrorToRenameError(error: GetFinalPathError): RenameError = when (error) {
-            is GetFinalPathError.AccessDenied -> AccessDenied(error.message)
-            is InvalidHandle -> BadFileDescriptor(error.message)
-            is MaxAttemptsReached -> TooManySymbolicLinks(error.message)
-            is OtherError -> IoError(error.message)
-        }
-
         private fun statErrorToRenameError(error: StatError): RenameError = if (error is RenameError) {
             error
         } else {

@@ -9,6 +9,10 @@ package at.released.weh.filesystem.windows.win32api.filepath
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.readChars
 import at.released.weh.filesystem.windows.win32api.filepath.WindowsVolumeNameType.DOS
@@ -42,6 +46,13 @@ internal fun HANDLE.getFinalPath(
         }
     }
     return GetFinalPathError.MaxAttemptsReached("Can not get path: max attempts reached").left()
+}
+
+internal fun GetFinalPathError.toResolveRelativePathError(): ResolveRelativePathErrors = when (this) {
+    is GetFinalPathError.AccessDenied -> at.released.weh.filesystem.error.NotCapable(this.message)
+    is GetFinalPathError.InvalidHandle -> BadFileDescriptor(this.message)
+    is GetFinalPathError.MaxAttemptsReached -> NameTooLong(this.message)
+    is GetFinalPathError.OtherError -> InvalidArgument(this.message)
 }
 
 private fun getPathFlags(

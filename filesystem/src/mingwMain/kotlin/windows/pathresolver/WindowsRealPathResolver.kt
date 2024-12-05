@@ -10,8 +10,6 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
-import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.preopened.RealPath
@@ -19,6 +17,7 @@ import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.windows.win32api.ext.combinePath
 import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
+import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
 import platform.windows.PathIsRelativeW
 
 internal fun WindowsPathResolver.resolveRealPath(
@@ -36,11 +35,4 @@ internal fun WindowsPathResolver.resolveRealPath(
             .bind()
         combinePath(baseChannelPath, path)
     }
-}
-
-private fun GetFinalPathError.toResolveRelativePathError(): ResolveRelativePathErrors = when (this) {
-    is GetFinalPathError.AccessDenied -> at.released.weh.filesystem.error.NotCapable(this.message)
-    is GetFinalPathError.InvalidHandle -> InvalidArgument(this.message)
-    is GetFinalPathError.MaxAttemptsReached -> NameTooLong(this.message)
-    is GetFinalPathError.OtherError -> InvalidArgument(this.message)
 }
