@@ -34,7 +34,7 @@ internal class WindowsFileSystemState private constructor(
     internal val isRootAccessAllowed: Boolean,
     preopenedDirectories: PreopenedDirectories,
 ) : AutoCloseable {
-    private val fdsLock: ReentrantLock = reentrantLock()
+    internal val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
     val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock)
 
