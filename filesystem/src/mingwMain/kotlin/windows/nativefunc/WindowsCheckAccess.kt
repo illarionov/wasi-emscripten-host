@@ -22,10 +22,8 @@ import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.InvalidHandle
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.MaxAttemptsReached
-import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError.OtherError
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
+import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
 import at.released.weh.filesystem.windows.win32api.security.windowsAccessCheck
 import at.released.weh.filesystem.windows.win32api.security.windowsGetFileSecurity
 import at.released.weh.filesystem.windows.win32api.security.windowsOpenProcessToken
@@ -68,7 +66,7 @@ internal fun windowsCheckAccessFd(
     }
 
     val path = handle.getFinalPath()
-        .mapLeft(GetFinalPathError::toCheckAccessError)
+        .mapLeft(GetFinalPathError::toResolveRelativePathError)
         .bind()
 
     // XXX ACL should be checked on handle using GetSecurityInfo?
@@ -130,13 +128,6 @@ private fun Win32ErrorCode.getFileSecurityErrorToCheckAccessError(): CheckAccess
     ERROR_INVALID_PARAMETER -> InvalidArgument("Invalid parameters")
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     else -> InvalidArgument("Other error: $this")
-}
-
-private fun GetFinalPathError.toCheckAccessError(): CheckAccessError = when (this) {
-    is GetFinalPathError.AccessDenied -> AccessDenied("Access denied")
-    is InvalidHandle -> BadFileDescriptor("Bad file handle")
-    is MaxAttemptsReached -> BadFileDescriptor("Can not get final path")
-    is OtherError -> InvalidArgument("Other error: $this")
 }
 
 private fun StatError.toCheckAccessError(): CheckAccessError = if (this is CheckAccessError) {
