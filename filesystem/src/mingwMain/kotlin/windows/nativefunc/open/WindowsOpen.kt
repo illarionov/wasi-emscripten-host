@@ -161,9 +161,6 @@ private fun getFileAttributes(
     }
 
     var attrs = 0
-    if (flags and O_ACCMODE == O_RDONLY) {
-        attrs = attrs or FILE_ATTRIBUTE_READONLY
-    }
     if (flags and O_TMPFILE == O_TMPFILE) {
         attrs = attrs or FILE_ATTRIBUTE_TEMPORARY
     }
