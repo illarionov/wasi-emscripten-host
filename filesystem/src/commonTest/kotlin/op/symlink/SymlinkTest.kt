@@ -11,6 +11,7 @@ import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.TEST_CONTENT
 import at.released.weh.filesystem.testutil.TEST_FILE_NAME
+import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.readFileContentToString
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
@@ -25,6 +26,23 @@ class SymlinkTest : BaseFileSystemIntegrationTest() {
             fileSystem.execute(
                 Symlink,
                 Symlink(TEST_FILE_NAME, "newfile.txt", newPathBaseDirectory = tempFolderDirectoryFd),
+            ).onLeft { error("Can not create symlink: $it") }
+        }
+
+        val newFileContent = tempFolder.readFileContentToString("newfile.txt")
+
+        assertThat(newFileContent).isEqualTo(TEST_CONTENT)
+    }
+
+    @Test
+    fun symlink_into_subdirectory_success_case() {
+        tempFolder.createTestDirectory("subdir")
+        tempFolder.createTestFile("subdir/testfile", TEST_CONTENT)
+
+        createTestFileSystem().use { fileSystem ->
+            fileSystem.execute(
+                Symlink,
+                Symlink("subdir/testfile", "newfile.txt", newPathBaseDirectory = tempFolderDirectoryFd),
             ).onLeft { error("Can not create symlink: $it") }
         }
 
