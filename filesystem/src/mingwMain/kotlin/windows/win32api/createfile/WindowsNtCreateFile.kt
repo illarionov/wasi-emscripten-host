@@ -210,6 +210,7 @@ private fun NtCreateFileResult.toOpenError(): OpenError {
         NtStatusCode.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")
         NtStatusCode.STATUS_NOT_A_DIRECTORY -> NotDirectory("Not a directory")
         NtStatusCode.STATUS_NOT_IMPLEMENTED -> NotSupported("Operation not supported")
+        NtStatusCode.STATUS_OBJECT_NAME_COLLISION -> Exists("File exists")
         NtStatusCode.STATUS_OBJECT_NAME_INVALID -> InvalidArgument("Invalid filename")
         NtStatusCode.STATUS_OBJECT_NAME_NOT_FOUND -> NoEntry("Name not found")
         NtStatusCode.STATUS_OBJECT_PATH_NOT_FOUND -> NoEntry("Path not found")
