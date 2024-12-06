@@ -65,11 +65,7 @@ internal class WindowsSymlink(
         allowAbsolutePath: Boolean,
     ): Either<SymlinkError, Unit> = either {
         val cleanedTarget = target.trim()
-        if (!allowAbsolutePath && (
-                    Path(cleanedTarget).isAbsolute ||
-                            cleanedTarget.startsWith("/") ||
-                            cleanedTarget.startsWith("\\"))
-        ) {
+        if (!allowAbsolutePath && (Path(cleanedTarget).isAbsolute || cleanedTarget.startsWith("/"))) {
             raise(InvalidArgument("link destination should be relative"))
         }
     }

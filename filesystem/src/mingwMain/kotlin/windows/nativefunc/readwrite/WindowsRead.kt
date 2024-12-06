@@ -13,6 +13,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
@@ -29,6 +30,7 @@ import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import platform.posix.memset
 import platform.windows.DWORDVar
+import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_HANDLE_EOF
 import platform.windows.ERROR_INSUFFICIENT_BUFFER
 import platform.windows.ERROR_INVALID_HANDLE
@@ -90,7 +92,6 @@ private fun HANDLE.readChangePosition(iovecs: List<FileSystemByteBuffer>): Eithe
     return totalBytesRead.right()
 }
 
-// TODO: test
 @Suppress("LoopWithTooManyJumpStatements")
 private fun HANDLE.readDoNotChangePosition(
     offset: Long,
@@ -153,7 +154,8 @@ private fun HANDLE.readDoNotChangePosition(
 
 private fun Win32ErrorCode.toReadError(): ReadError = when (this.code.toInt()) {
     ERROR_IO_PENDING -> error("Should be handled earlier")
-    ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file hande")
+    ERROR_ACCESS_DENIED -> NotCapable("Access denied")
+    ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     ERROR_INVALID_PARAMETER -> InvalidArgument("Invalid argument in request")
     ERROR_NOT_ENOUGH_QUOTA -> Nxio("Memory quota exceeded")
     ERROR_OPERATION_ABORTED -> Interrupted("Read operation interrupted")

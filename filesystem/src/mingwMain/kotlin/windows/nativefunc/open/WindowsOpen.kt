@@ -97,14 +97,14 @@ internal fun windowsOpenFileOrDirectory(
     ).flatMap { handle: HANDLE ->
         handle.getFileAttributeTagInfo()
             .mapLeft(StatError::toOpenError)
-            .flatMap {
-                if (it.fileAttributes.isSymlinkOrReparsePoint) {
-                    handle.close().onLeft { /* ignore error */ }
-                    TooManySymbolicLinks("Can not open symlink").left()
-                } else if (it.fileAttributes.isDirectory) {
-                    FileDirectoryHandle.Directory(handle).right()
-                } else {
-                    FileDirectoryHandle.File(handle, isInAppendMode).right()
+            .flatMap { attrs ->
+                when {
+                    attrs.fileAttributes.isSymlinkOrReparsePoint -> {
+                        handle.close().onLeft { /* ignore error */ }
+                        TooManySymbolicLinks("Can not open symlink").left()
+                    }
+                    attrs.fileAttributes.isDirectory -> FileDirectoryHandle.Directory(handle).right()
+                    else -> FileDirectoryHandle.File(handle, isInAppendMode).right()
                 }
             }
     }

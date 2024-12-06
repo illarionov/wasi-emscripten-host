@@ -11,6 +11,7 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
@@ -20,11 +21,13 @@ import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CreateSymbolicLinkW
 import platform.windows.ERROR_ACCESS_DENIED
+import platform.windows.ERROR_ALREADY_EXISTS
 import platform.windows.ERROR_DIRECTORY
 import platform.windows.ERROR_FILE_NOT_FOUND
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.ERROR_INVALID_PARAMETER
 import platform.windows.ERROR_PRIVILEGE_NOT_HELD
+import platform.windows.PathFileExistsW
 import platform.windows.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE
 
 internal fun windowsCreateSymbolicLink(
@@ -38,18 +41,28 @@ internal fun windowsCreateSymbolicLink(
         if (lastError.code == ERROR_PRIVILEGE_NOT_HELD.toUInt()) {
             val newFlags = flags or SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE.toUInt()
             if (CreateSymbolicLinkW(newPath, oldPath, newFlags).toInt() == 0) {
-                return Win32ErrorCode.getLast().toSymlinkError().left()
+                return getSymlinkError(Win32ErrorCode.getLast(), newPath).left()
             }
         } else {
-            return lastError.toSymlinkError().left()
+            return getSymlinkError(lastError, newPath).left()
         }
     }
     return Unit.right()
 }
 
+private fun getSymlinkError(
+    code: Win32ErrorCode,
+    newPath: String,
+): SymlinkError = if (code.code.toInt() == ERROR_ACCESS_DENIED && PathFileExistsW(newPath) != 0) {
+    Exists("Path already exists")
+} else {
+    code.toSymlinkError()
+}
+
 private fun Win32ErrorCode.toSymlinkError(): SymlinkError = when (this.code.toInt()) {
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     ERROR_ACCESS_DENIED -> AccessDenied("Cannot Create symlink, access denied")
+    ERROR_ALREADY_EXISTS -> Exists("Path already exists")
     ERROR_FILE_NOT_FOUND -> NoEntry("source path not found")
     ERROR_INVALID_PARAMETER -> InvalidArgument("Incorrect path")
     ERROR_DIRECTORY -> NotDirectory("Invalid directory name")
