@@ -23,6 +23,7 @@ import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDesc
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
+import at.released.weh.filesystem.preopened.VirtualPath
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -34,11 +35,12 @@ internal class JvmPathResolver(
     private val fsState: NioFileSystemState,
 ) : PathResolver {
     override fun resolve(
-        path: String?,
+        path: VirtualPath?,
         baseDirectory: BaseDirectory,
         allowEmptyPath: Boolean,
         followSymlinks: Boolean,
     ): Either<ResolvePathError, Path> {
+        val pathIsAbsolute = (path ?: "").startsWith("/")
         val nioPath = try {
             val pathString = path ?: ""
             javaFs.getPath(pathString)
@@ -69,14 +71,14 @@ internal class JvmPathResolver(
             if (fsState.isRootAccessAllowed) {
                 it.resolve(nioPath).normalize().right()
             } else {
-                it.resolveBeneath(nioPath)
+                it.resolveBeneath(nioPath, pathIsAbsolute)
             }
         }
     }
 
     private companion object {
-        private fun Path.resolveBeneath(other: Path): Either<ResolvePathError, Path> {
-            if (other.isAbsolute) {
+        private fun Path.resolveBeneath(other: Path, otherSourceIsAbsolute: Boolean): Either<ResolvePathError, Path> {
+            if (otherSourceIsAbsolute || other.isAbsolute) {
                 return AbsolutePath("Opening file relative to directory with absolute path").left()
             }
             var path = this
