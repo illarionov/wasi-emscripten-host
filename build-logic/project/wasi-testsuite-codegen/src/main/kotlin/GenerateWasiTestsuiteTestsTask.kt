@@ -76,7 +76,7 @@ open class GenerateWasiTestsuiteTestsTask @Inject constructor(
                 SubtestType.values().map { subtestType ->
                     TestClassGenerator(
                         runtimeBindings = bindings,
-                        subtrestType = subtestType,
+                        subtestType = subtestType,
                         testNames = subtestType.getWasiTestNames(),
                         ignoredTests = subtestType.getIgnoredTests(),
                         generateJvmCompanionObjects = bindings.isJvmOnly,

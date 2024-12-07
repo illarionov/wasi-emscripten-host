@@ -7,17 +7,10 @@
 package at.released.weh.host.internal
 
 import at.released.weh.common.api.Logger
-import at.released.weh.filesystem.FileSystem
-import at.released.weh.filesystem.FileSystemEngine
-import at.released.weh.filesystem.dsl.DirectoryConfigBlock
-import at.released.weh.filesystem.dsl.FileSystemConfigBlock
-import at.released.weh.filesystem.dsl.FileSystemEngineConfig
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor.LoggingEvents
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor.LoggingEvents.OperationEnd
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor.OperationLoggingLevel.BASIC
-import at.released.weh.filesystem.stdio.SinkProvider
-import at.released.weh.filesystem.stdio.SourceProvider
 
 internal operator fun LoggingFileSystemInterceptor.Companion.invoke(
     logger: Logger,
@@ -32,30 +25,4 @@ internal operator fun LoggingFileSystemInterceptor.Companion.invoke(
             ),
         ),
     )
-}
-
-@Suppress("FunctionName")
-internal fun <E : FileSystemEngineConfig> DefaultFileSystem(
-    engine: FileSystemEngine<E>,
-    stdinProvider: SourceProvider?,
-    stdoutProvider: SinkProvider?,
-    stderrProvider: SinkProvider?,
-    directoriesConfig: DirectoryConfigBlock,
-    rootLogger: Logger,
-    block: FileSystemConfigBlock<E>.() -> Unit = {},
-): FileSystem = FileSystem(engine) {
-    addInterceptor(LoggingFileSystemInterceptor(rootLogger))
-    stdio {
-        this.stdinProvider = stdinProvider
-        this.stdoutProvider = stdoutProvider
-        this.stderrProvider = stderrProvider
-    }
-    this.directories {
-        this.isRootAccessAllowed = directoriesConfig.isRootAccessAllowed
-        this.currentWorkingDirectory = directoriesConfig.currentWorkingDirectory
-        this.preopened {
-            addAll(directoriesConfig.preopenedDirectories)
-        }
-    }
-    block()
 }

@@ -2,7 +2,7 @@ public abstract interface class at/released/weh/host/CommandArgsProvider {
 	public abstract fun getCommandArgs ()Ljava/util/List;
 }
 
-public abstract interface class at/released/weh/host/EmbedderHost {
+public abstract interface class at/released/weh/host/EmbedderHost : java/lang/AutoCloseable {
 	public abstract fun getClock ()Lat/released/weh/host/clock/Clock;
 	public abstract fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
 	public abstract fun getCputimeSource ()Lat/released/weh/host/clock/CputimeSource;

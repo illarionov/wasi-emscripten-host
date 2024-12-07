@@ -19,6 +19,7 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoBufferSpace
 import at.released.weh.filesystem.error.NoSpace
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.PermissionDenied
@@ -117,6 +118,7 @@ private fun StatError.toFallocateError(): FallocateError = when (this) {
     else -> InvalidArgument(this.message)
 }
 
+@Suppress("CyclomaticComplexMethod")
 private fun WriteError.toFallocateError(): FallocateError = when (this) {
     is Again -> IoError("Write last block failed: ${this.message}")
     is BadFileDescriptor -> this
@@ -127,6 +129,7 @@ private fun WriteError.toFallocateError(): FallocateError = when (this) {
     is IoError -> this
     is NoBufferSpace -> NoSpace(this.message)
     is NoSpace -> this
+    is NotCapable -> IoError(this.message)
     is Nxio -> IoError(this.message)
     is PermissionDenied -> IoError(this.message)
     is Pipe -> IoError(this.message)

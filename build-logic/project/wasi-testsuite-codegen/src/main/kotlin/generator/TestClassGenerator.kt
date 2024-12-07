@@ -21,7 +21,7 @@ import java.util.Locale
 
 internal class TestClassGenerator(
     private val runtimeBindings: WasmRuntimeBindings,
-    private val subtrestType: SubtestType,
+    private val subtestType: SubtestType,
     private val testNames: List<String>,
     ignoredTests: Set<TestIgnore>,
     private val generateJvmCompanionObjects: Boolean = false,
@@ -29,7 +29,7 @@ internal class TestClassGenerator(
     private val ignoredTests = IgnoredTests(ignoredTests)
     private val testClassName = ClassName(
         "$ROOT_PACKAGE.${runtimeBindings.name.lowercase().replace("_", "")}",
-        formatClassName(runtimeBindings, subtrestType),
+        formatClassName(runtimeBindings, subtestType),
     )
     private val lazyFactoryClassName: ClassName = testClassName
         .nestedClass("LazyFactory")
@@ -44,7 +44,7 @@ internal class TestClassGenerator(
         }
 
         val testExecutorFactoryClass = if (!generateJvmCompanionObjects) {
-            runtimeBindings.testExecutorfactoryClassName
+            runtimeBindings.runtimeFactoryClassName
         } else {
             lazyFactoryClassName
         }
@@ -56,7 +56,7 @@ internal class TestClassGenerator(
                 "⇥\nwasiTestsRoot = %T(%M,%S)",
                 KotlinxIo.KOTLINX_PATH,
                 WASI_TESTS_TESTSUITE_ROOT,
-                subtrestType.testsuiteSubdir,
+                subtestType.testsuiteSubdir,
             )
             addSuperclassConstructorParameter(
                 "\nwasmRuntimeExecutorFactory = %T()\n⇤",
@@ -94,11 +94,11 @@ internal class TestClassGenerator(
     }.build()
 
     private fun generateLazyFactory(): TypeSpec = TypeSpec.classBuilder(lazyFactoryClassName).apply {
-        addSuperinterface(ClassNames.RUNTIME_TEST_EXECUTOR_FACTORY)
+        addSuperinterface(ClassNames.WASM_TEST_RUNTIME_FACTORY)
         addFunction(
             FunSpec.builder("invoke")
                 .addModifiers(OVERRIDE)
-                .returns(ClassNames.RUNTIME_TEST_EXECUTOR)
+                .returns(ClassNames.WASM_TEST_RUNTIME)
                 .addCode("""return checkNotNull(%N).invoke()""", "factoryInstance")
                 .build(),
         )
@@ -113,7 +113,7 @@ internal class TestClassGenerator(
     private fun generateJvmCompanion(): TypeSpec = TypeSpec.companionObjectBuilder().apply {
         val factoryinstanceProperty = PropertySpec.builder(
             "factoryInstance",
-            ClassNames.RUNTIME_TEST_EXECUTOR_FACTORY.copy(nullable = true),
+            ClassNames.WASM_TEST_RUNTIME_FACTORY.copy(nullable = true),
         )
             .mutable(true)
             .initializer("""null""")
@@ -124,7 +124,7 @@ internal class TestClassGenerator(
             FunSpec.builder("setupFactory")
                 .addAnnotation(ClassNames.KotlinJvm.JVM_STATIC)
                 .addAnnotation(ClassNames.JunitTest.BEFORE_CLASS)
-                .addCode("""%N = %T()""", factoryinstanceProperty.name, runtimeBindings.testExecutorfactoryClassName)
+                .addCode("""%N = %T()""", factoryinstanceProperty.name, runtimeBindings.runtimeFactoryClassName)
                 .build(),
         )
         addFunction(

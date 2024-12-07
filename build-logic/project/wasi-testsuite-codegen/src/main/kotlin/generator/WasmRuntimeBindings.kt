@@ -9,36 +9,36 @@ package at.released.weh.gradle.wasi.testsuite.codegen.generator
 import com.squareup.kotlinpoet.ClassName
 
 public enum class WasmRuntimeBindings(
-    val testExecutorfactoryClassName: ClassName,
+    val runtimeFactoryClassName: ClassName,
 ) {
     CHASM(
-        testExecutorfactoryClassName = ClassName(
+        runtimeFactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.chasm.base",
-            "ChasmRuntimeTestExecutor",
+            "ChasmWasmTestRuntime",
         ).nestedClass("Factory"),
     ),
     CHICORY(
-        testExecutorfactoryClassName = ClassName(
+        runtimeFactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.chicory.base",
-            "ChicoryRuntimeTestExecutor",
+            "ChicoryWasmTestRuntime",
         ).nestedClass("Factory"),
     ),
     CHICORY_NATIVE(
-        testExecutorfactoryClassName = ClassName(
+        runtimeFactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.chicory.base",
-            "ChicoryNativeRuntimeTestExecutor",
+            "ChicoryNativeWasmTestRuntime",
         ).nestedClass("Factory"),
     ),
     GRAALVM(
-        testExecutorfactoryClassName = ClassName(
+        runtimeFactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.graalvm.base",
-            "GraalvmRuntimeTestExecutor",
+            "GraalvmWasmTestRuntime",
         ).nestedClass("Factory"),
     ),
     GRAALVM_NATIVE(
-        testExecutorfactoryClassName = ClassName(
+        runtimeFactoryClassName = ClassName(
             "at.released.weh.wasi.bindings.test.graalvm.base",
-            "GraalvmNativeRuntimeTestExecutor",
+            "GraalvmNativeWasmTestRuntime",
         ).nestedClass("Factory"),
     ),
 }

@@ -9,7 +9,7 @@ package at.released.weh.wasi.bindings.test.runner
 import at.released.weh.host.EmbedderHost
 import kotlinx.io.files.Path
 
-public interface RuntimeTestExecutor {
+public interface WasmTestRuntime {
     public fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -18,6 +18,6 @@ public interface RuntimeTestExecutor {
     ): Int
 
     public interface Factory : AutoCloseable {
-        public operator fun invoke(): RuntimeTestExecutor
+        public operator fun invoke(): WasmTestRuntime
     }
 }

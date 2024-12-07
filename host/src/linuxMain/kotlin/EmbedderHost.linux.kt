@@ -9,8 +9,8 @@ package at.released.weh.host
 import at.released.weh.filesystem.LinuxFileSystem
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.clock.CputimeSource
-import at.released.weh.host.internal.DefaultFileSystem
 import at.released.weh.host.internal.EmptyCommandArgsProvider
+import at.released.weh.host.internal.thisOrCreateDefaultFileSystem
 import at.released.weh.host.linux.LinuxEntropySource
 import at.released.weh.host.linux.LinuxLocalTimeFormatter
 import at.released.weh.host.linux.LinuxSystemEnvProvider
@@ -23,18 +23,14 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
     override val rootLogger = builder.rootLogger
     override val systemEnvProvider = builder.systemEnvProvider ?: LinuxSystemEnvProvider
     override val commandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
-    override val fileSystem = builder.fileSystem ?: DefaultFileSystem(
-        LinuxFileSystem,
-        builder.stdinProvider,
-        builder.stdoutProvider,
-        builder.stderrProvider,
-        builder.directoriesConfigBlock,
-        builder.rootLogger.withTag("FSlnx"),
-    )
+    override val fileSystem = builder.thisOrCreateDefaultFileSystem(LinuxFileSystem, "FSlnx")
     override val monotonicClock = builder.monotonicClock ?: LinuxMonotonicClock
     override val clock = builder.clock ?: LinuxClock
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: LinuxCputimeSource
     override val localTimeFormatter = builder.localTimeFormatter ?: LinuxLocalTimeFormatter
     override val timeZoneInfo = builder.timeZoneInfo ?: LinuxTimeZoneInfoProvider
     override val entropySource = builder.entropySource ?: LinuxEntropySource
+    override fun close() {
+        fileSystem.close()
+    }
 }

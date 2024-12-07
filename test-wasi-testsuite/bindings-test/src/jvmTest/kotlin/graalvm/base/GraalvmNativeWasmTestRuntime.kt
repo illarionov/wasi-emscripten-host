@@ -6,39 +6,54 @@
 
 package at.released.weh.wasi.bindings.test.graalvm.base
 
-import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
+import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import kotlinx.io.files.Path
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.ByteSequence
+import org.graalvm.polyglot.io.IOAccess
+import java.io.ByteArrayOutputStream
+import kotlin.text.Charsets.UTF_8
+import java.nio.file.Path as JvmPath
 
-class GraalvmRuntimeTestExecutor(
+class GraalvmNativeWasmTestRuntime(
     private val engine: Engine,
-) : RuntimeTestExecutor {
+) : WasmTestRuntime {
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
         arguments: WasiTestsuiteArguments,
         rootDir: Path,
     ): Int {
+        val stdOut = ByteArrayOutputStream()
+        val stdErr = ByteArrayOutputStream()
+
         val source = Source.newBuilder("wasm", ByteSequence.create(wasmFile), "testproc").build()
+
+        val preopenedDirs = arguments.dirs.joinToString(",") { virtualPath ->
+            val hostPath = Path(rootDir, virtualPath).toString()
+            "$virtualPath::$hostPath"
+        }
 
         val context: Context = Context.newBuilder()
             .engine(engine)
+            .option("wasm.Builtins", "wasi_snapshot_preview1")
+            .option("wasm.WasiMapDirs", preopenedDirs)
+            .arguments("wasm", (listOf("testproc") + arguments.args).toTypedArray())
+            .environment(arguments.env)
+            .currentWorkingDirectory(JvmPath.of(rootDir.toString()))
+            .err(stdErr)
+            .out(stdOut)
+            .allowIO(IOAccess.ALL)
             .build()
-        context.use {
-            context.initialize("wasm")
 
-            val installer = GraalvmHostFunctionInstaller(context) {
-                this.host = host
-            }
-            installer.setupWasiPreview1Module()
-
+        val exitCode = context.use {
             context.eval(source)
 
             val startFunc = context
@@ -56,13 +71,18 @@ class GraalvmRuntimeTestExecutor(
                     throw pex
                 }
             }
-            return exitCode
+            exitCode
         }
+
+        assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)
+        assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(arguments.stderr)
+
+        return exitCode
     }
 
-    class Factory : RuntimeTestExecutor.Factory {
+    class Factory : WasmTestRuntime.Factory {
         private val engine = Engine.newBuilder("wasm").build()
-        override fun invoke(): RuntimeTestExecutor = GraalvmRuntimeTestExecutor(engine)
+        override fun invoke(): WasmTestRuntime = GraalvmNativeWasmTestRuntime(engine)
         override fun close() = engine.close()
     }
 }

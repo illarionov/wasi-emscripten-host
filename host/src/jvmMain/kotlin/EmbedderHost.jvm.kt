@@ -10,7 +10,7 @@ import at.released.weh.filesystem.nio.NioFileSystem
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.UnsupportedCputimeSource
-import at.released.weh.host.internal.DefaultFileSystem
+import at.released.weh.host.internal.thisOrCreateDefaultFileSystem
 import at.released.weh.host.jvm.JvmCommandArgsProvider
 import at.released.weh.host.jvm.JvmEntropySource
 import at.released.weh.host.jvm.JvmLocalTimeFormatter
@@ -23,18 +23,14 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
     override val rootLogger = builder.rootLogger
     override val systemEnvProvider = builder.systemEnvProvider ?: JvmSystemEnvProvider
     override val commandArgsProvider = builder.commandArgsProvider ?: JvmCommandArgsProvider
-    override val fileSystem = builder.fileSystem ?: DefaultFileSystem(
-        NioFileSystem,
-        builder.stdinProvider,
-        builder.stdoutProvider,
-        builder.stderrProvider,
-        builder.directoriesConfigBlock,
-        builder.rootLogger.withTag("FSnio"),
-    )
+    override val fileSystem = builder.thisOrCreateDefaultFileSystem(NioFileSystem, "FSnio")
     override val clock = builder.clock ?: JvmClock
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: UnsupportedCputimeSource
     override val monotonicClock = builder.monotonicClock ?: JvmMonotonicClock
     override val localTimeFormatter = builder.localTimeFormatter ?: JvmLocalTimeFormatter()
     override val timeZoneInfo = builder.timeZoneInfo ?: JvmTimeZoneInfoProvider()
     override val entropySource = builder.entropySource ?: JvmEntropySource()
+    override fun close() {
+        fileSystem.close()
+    }
 }
