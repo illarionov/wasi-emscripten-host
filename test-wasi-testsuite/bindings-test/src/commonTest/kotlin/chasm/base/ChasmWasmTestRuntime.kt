@@ -9,8 +9,8 @@ package at.released.weh.wasi.bindings.test.chasm.base
 import at.released.weh.bindings.chasm.ChasmHostFunctionInstaller
 import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
+import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import io.github.charlietap.chasm.embedding.instance
 import io.github.charlietap.chasm.embedding.invoke
 import io.github.charlietap.chasm.embedding.module
@@ -22,7 +22,7 @@ import io.github.charlietap.chasm.embedding.shapes.fold
 import io.github.charlietap.chasm.embedding.store
 import kotlinx.io.files.Path
 
-object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
+object ChasmWasmTestRuntime : WasmTestRuntime {
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -72,8 +72,8 @@ object ChasmRuntimeTestExecutor : RuntimeTestExecutor {
 
     class WasmException(message: String) : RuntimeException(message)
 
-    class Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChasmRuntimeTestExecutor
+    class Factory : WasmTestRuntime.Factory {
+        override fun invoke(): WasmTestRuntime = ChasmWasmTestRuntime
         override fun close() = Unit
     }
 }

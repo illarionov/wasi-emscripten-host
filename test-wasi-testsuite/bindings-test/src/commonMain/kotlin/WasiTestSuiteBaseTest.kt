@@ -10,15 +10,15 @@ import at.released.weh.test.ignore.annotations.dynamic.DynamicIgnoreTarget
 import at.released.weh.test.ignore.annotations.dynamic.checkIfShouldBeIgnored
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.test.utils.TempFolder
-import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiSuiteTestExecutor
+import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import kotlinx.io.files.Path
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 public abstract class WasiTestSuiteBaseTest(
     public val wasiTestsRoot: Path,
-    public val wasmRuntimeExecutorFactory: RuntimeTestExecutor.Factory,
+    public val wasmRuntimeExecutorFactory: WasmTestRuntime.Factory,
 ) {
     private var tempFolder: TempFolder? = null
 
@@ -49,7 +49,7 @@ public abstract class WasiTestSuiteBaseTest(
             WasiSuiteTestExecutor(
                 testsRoot = wasiTestsRoot,
                 testName = testName,
-                runtimeTestExecutor = executor,
+                wasmTestRuntime = executor,
                 tempRoot = Path(tempFolder!!.path),
             ).runTest()
         }

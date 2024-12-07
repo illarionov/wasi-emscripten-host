@@ -40,6 +40,10 @@ internal fun combinePath(root: String, child: String): String {
     }
 }
 
+internal fun convertUnixPathToWindowsPath(path: String): String {
+    return convertPathToNtPath(path)
+}
+
 internal fun convertPathToNtPath(
     path: RealPath,
 ): RealPath {

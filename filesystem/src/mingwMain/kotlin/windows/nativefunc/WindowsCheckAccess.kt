@@ -69,27 +69,16 @@ internal fun windowsCheckAccessFd(
         .mapLeft(GetFinalPathError::toResolveRelativePathError)
         .bind()
 
-    // XXX ACL should be checked on handle using GetSecurityInfo?
-    checkFileAcl(path, true, mode, useEffectiveUserId).bind()
-}
-
-internal fun windowsCheckAccess(
-    path: RealPath,
-    followSymlink: Boolean,
-    mode: Set<FileAccessibilityCheck>,
-    useEffectiveUserId: Boolean,
-): Either<CheckAccessError, Unit> = either {
-    checkFileAcl(path, followSymlink, mode, useEffectiveUserId).bind()
+    // TODO ACL should be checked on handle using GetSecurityInfo?
+    checkFileAcl(path, mode, useEffectiveUserId).bind()
 }
 
 private fun checkFileAcl(
     path: RealPath,
-    @Suppress("UnusedParameter") followSymlink: Boolean,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean,
 ): Either<CheckAccessError, Unit> = either {
     memScoped {
-        // TODO: resolve path with followSymlink
         val fileSecurityDescriptor: PSECURITY_DESCRIPTOR = windowsGetFileSecurity(
             path,
             (DACL_SECURITY_INFORMATION or OWNER_SECURITY_INFORMATION or GROUP_SECURITY_INFORMATION).toUInt(),

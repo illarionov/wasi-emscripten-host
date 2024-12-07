@@ -15,8 +15,10 @@ public data class NotCapable(
     ChmodError,
     ChownError,
     OpenError,
+    ReadError,
     ResolveRelativePathErrors,
     StatError,
-    UnlinkError {
+    UnlinkError,
+    WriteError {
     override val errno: FileSystemErrno = FileSystemErrno.NOTCAPABLE
 }

@@ -10,8 +10,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.bindings.chicory.ProcExitException
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
+import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import com.dylibso.chicory.log.SystemLogger
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
@@ -27,7 +27,7 @@ import kotlin.text.Charsets.UTF_8
 /**
  * Chicory implementation of WASI Preview 1 for reference
  */
-object ChicoryNativeRuntimeTestExecutor : RuntimeTestExecutor {
+object ChicoryNativeWasmTestRuntime : WasmTestRuntime {
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -81,8 +81,8 @@ object ChicoryNativeRuntimeTestExecutor : RuntimeTestExecutor {
         }
     }
 
-    class Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChicoryNativeRuntimeTestExecutor
+    class Factory : WasmTestRuntime.Factory {
+        override fun invoke(): WasmTestRuntime = ChicoryNativeWasmTestRuntime
         override fun close() = Unit
     }
 }

@@ -9,8 +9,8 @@ package at.released.weh.wasi.bindings.test.chicory.base
 import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller
 import at.released.weh.bindings.chicory.ProcExitException
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.bindings.test.runner.RuntimeTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
+import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
@@ -19,7 +19,7 @@ import com.dylibso.chicory.wasi.WasiExitException
 import com.dylibso.chicory.wasm.Parser
 import kotlinx.io.files.Path
 
-object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
+object ChicoryWasmTestRuntime : WasmTestRuntime {
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -72,8 +72,8 @@ object ChicoryRuntimeTestExecutor : RuntimeTestExecutor {
         return null
     }
 
-    class Factory : RuntimeTestExecutor.Factory {
-        override fun invoke(): RuntimeTestExecutor = ChicoryRuntimeTestExecutor
+    class Factory : WasmTestRuntime.Factory {
+        override fun invoke(): WasmTestRuntime = ChicoryWasmTestRuntime
         override fun close() = Unit
     }
 }

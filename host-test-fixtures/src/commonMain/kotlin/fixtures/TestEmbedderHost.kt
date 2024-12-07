@@ -45,4 +45,8 @@ public open class TestEmbedderHost(
     override var entropySource: EntropySource = EntropySource { size ->
         ByteArray(size) { 4 }
     },
-) : EmbedderHost
+) : EmbedderHost {
+    override fun close() {
+        fileSystem.close()
+    }
+}

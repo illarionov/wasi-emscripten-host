@@ -17,6 +17,7 @@ import at.released.weh.filesystem.error.Interrupted
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoBufferSpace
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.Nxio
 import at.released.weh.filesystem.error.Overflow
 import at.released.weh.filesystem.error.Pipe
@@ -40,6 +41,7 @@ import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import platform.posix.memset
 import platform.windows.DWORDVar
+import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_INSUFFICIENT_BUFFER
 import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.ERROR_INVALID_PARAMETER
@@ -170,8 +172,9 @@ internal fun HANDLE.writeDoNotChangePosition(
 }
 
 private fun Win32ErrorCode.toWriteError(): WriteError = when (this.code.toInt()) {
-    // TODO
+    // The list of codes is incomplete and needs additional clarification.
     ERROR_IO_PENDING -> error("Should be handled earlier")
+    ERROR_ACCESS_DENIED -> NotCapable("Access denied")
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file hande")
     ERROR_INVALID_PARAMETER -> InvalidArgument("Invalid argument in request")
     ERROR_NOT_ENOUGH_QUOTA -> DiskQuota("Memory quota exceeded")

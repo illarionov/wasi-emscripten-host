@@ -32,7 +32,7 @@ import kotlinx.serialization.json.Json
 public class WasiSuiteTestExecutor(
     private val testsRoot: Path,
     private val testName: String,
-    private val runtimeTestExecutor: RuntimeTestExecutor,
+    private val wasmTestRuntime: WasmTestRuntime,
     private val tempRoot: Path,
     private val fileSystem: FileSystem = SystemFileSystem,
     private val logger: Logger = TestLogger(minSeverity = Verbose),
@@ -47,14 +47,15 @@ public class WasiSuiteTestExecutor(
         val arguments = readArguments()
 
         prepareTempRoot(arguments.dirs)
-        val host = setupHost(arguments)
+        val exitCode: Int = setupHost(arguments).use { host: EmbedderHost ->
+            wasmTestRuntime.runTest(
+                wasmFile = wasmFilename,
+                host = host,
+                arguments = arguments,
+                rootDir = tempRoot,
+            )
+        }
 
-        val exitCode = runtimeTestExecutor.runTest(
-            wasmFile = wasmFilename,
-            host = host,
-            arguments = arguments,
-            rootDir = tempRoot,
-        )
         val stdout = testStdout.readContent()
         val stderr = testStderr.readContent()
 

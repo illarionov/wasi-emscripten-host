@@ -18,8 +18,8 @@ internal object ClassNames {
         "at.released.weh.wasi.bindings.test.ext",
         "wasiTestsuiteRoot",
     )
-    val RUNTIME_TEST_EXECUTOR = ClassName("$ROOT_PACKAGE.runner", "RuntimeTestExecutor")
-    val RUNTIME_TEST_EXECUTOR_FACTORY = RUNTIME_TEST_EXECUTOR.nestedClass("Factory")
+    val WASM_TEST_RUNTIME = ClassName("$ROOT_PACKAGE.runner", "WasmTestRuntime")
+    val WASM_TEST_RUNTIME_FACTORY = WASM_TEST_RUNTIME.nestedClass("Factory")
 
     object KotlinJvm {
         val JVM_STATIC = JvmStatic::class.asClassName()

@@ -334,7 +334,7 @@ public final class at/released/weh/filesystem/error/NoTty : at/released/weh/file
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/NotCapable : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/NotCapable : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/NotCapable;

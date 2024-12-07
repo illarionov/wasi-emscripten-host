@@ -44,6 +44,7 @@ import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHan
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.SymlinkType
 import at.released.weh.filesystem.windows.win32api.SymlinkType.SYMLINK_TO_FILE
+import at.released.weh.filesystem.windows.win32api.ext.convertUnixPathToWindowsPath
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.windowsCreateSymbolicLink
 import kotlinx.io.files.Path
@@ -52,11 +53,11 @@ internal class WindowsSymlink(
     private val fsState: WindowsFileSystemState,
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> = either {
-        validateSymlinkTarget(input.oldPath, input.allowAbsoluteOldPath).bind()
-        val path = fsState.pathResolver.resolveRealPath(input.newPathBaseDirectory, input.newPath)
-            .bind()
-        val symlinkType = getSymlinkType(input.newPathBaseDirectory, input.oldPath).bind()
-        return windowsCreateSymbolicLink(input.oldPath, path, symlinkType)
+        val windowsOldPath = convertUnixPathToWindowsPath(input.oldPath)
+        validateSymlinkTarget(windowsOldPath, input.allowAbsoluteOldPath).bind()
+        val path = fsState.pathResolver.resolveRealPath(input.newPathBaseDirectory, input.newPath).bind()
+        val symlinkType = getSymlinkTypeByTargetType(input.newPathBaseDirectory, windowsOldPath).bind()
+        return windowsCreateSymbolicLink(windowsOldPath, path, symlinkType)
     }
 
     private fun validateSymlinkTarget(
@@ -69,7 +70,7 @@ internal class WindowsSymlink(
         }
     }
 
-    private fun getSymlinkType(
+    private fun getSymlinkTypeByTargetType(
         baseDirectory: BaseDirectory,
         target: String,
     ): Either<SymlinkError, SymlinkType> {

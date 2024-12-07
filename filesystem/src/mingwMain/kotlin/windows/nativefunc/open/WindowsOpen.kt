@@ -10,10 +10,12 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.raise.either
+import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.StatError
+import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.FdFlag.FD_DSYNC
 import at.released.weh.filesystem.model.FdFlag.FD_RSYNC
@@ -30,11 +32,11 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
-import platform.windows.FILE_ATTRIBUTE_READONLY
 import platform.windows.FILE_ATTRIBUTE_TEMPORARY
 import platform.windows.FILE_CREATE
 import platform.windows.FILE_DIRECTORY_FILE
@@ -77,7 +79,6 @@ internal fun windowsOpenFileOrDirectory(
     }
 
     // TODO: validate windows path
-    // TODO: nofollow
     validatePath(path).bind()
 
     val desiredAccess = getDesiredAccess(flags, isDirectoryOrPathRequest)
@@ -96,12 +97,14 @@ internal fun windowsOpenFileOrDirectory(
     ).flatMap { handle: HANDLE ->
         handle.getFileAttributeTagInfo()
             .mapLeft(StatError::toOpenError)
-            .map {
-                val isDirectory = it.fileAttributes.isDirectory
-                if (isDirectory) {
-                    FileDirectoryHandle.Directory(handle)
-                } else {
-                    FileDirectoryHandle.File(handle, isInAppendMode)
+            .flatMap { attrs ->
+                when {
+                    attrs.fileAttributes.isSymlinkOrReparsePoint -> {
+                        handle.close().onLeft { /* ignore error */ }
+                        TooManySymbolicLinks("Can not open symlink").left()
+                    }
+                    attrs.fileAttributes.isDirectory -> FileDirectoryHandle.Directory(handle).right()
+                    else -> FileDirectoryHandle.File(handle, isInAppendMode).right()
                 }
             }
     }
@@ -161,9 +164,6 @@ private fun getFileAttributes(
     }
 
     var attrs = 0
-    if (flags and O_ACCMODE == O_RDONLY) {
-        attrs = attrs or FILE_ATTRIBUTE_READONLY
-    }
     if (flags and O_TMPFILE == O_TMPFILE) {
         attrs = attrs or FILE_ATTRIBUTE_TEMPORARY
     }
@@ -180,15 +180,19 @@ private fun getCreateOptions(
     isDirectoryOrPathRequest: Boolean,
     followSymlinks: Boolean,
 ): Int {
-    if (isDirectoryOrPathRequest) {
-        return FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT
+    var flags = if (!followSymlinks) {
+        FILE_OPEN_REPARSE_POINT
+    } else {
+        0
     }
-    var flags = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT
+    if (isDirectoryOrPathRequest) {
+        return flags or FILE_DIRECTORY_FILE or FILE_OPEN_FOR_BACKUP_INTENT
+    }
+
+    flags = flags or FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT
+
     if (fdFlags and (FD_DSYNC or FD_SYNC or FD_RSYNC) != 0) {
         flags = flags or FILE_WRITE_THROUGH
-    }
-    if (!followSymlinks) {
-        flags = flags or FILE_OPEN_REPARSE_POINT
     }
     return flags
 }

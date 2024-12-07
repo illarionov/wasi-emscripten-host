@@ -22,7 +22,7 @@ import kotlin.jvm.JvmSynthetic
 
 internal expect fun createDefaultEmbedderHost(builder: Builder): EmbedderHost
 
-public interface EmbedderHost {
+public interface EmbedderHost : AutoCloseable {
     public val rootLogger: Logger
     public val systemEnvProvider: SystemEnvProvider
     public val commandArgsProvider: CommandArgsProvider

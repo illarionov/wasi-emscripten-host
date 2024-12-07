@@ -23,6 +23,7 @@ public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/w
 	public fun <init> ()V
 	public fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/clock/MonotonicClock;Lat/released/weh/host/clock/Clock;Lat/released/weh/host/clock/CputimeSource;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;)V
 	public synthetic fun <init> (Lat/released/weh/common/api/Logger;Lat/released/weh/host/SystemEnvProvider;Lat/released/weh/host/CommandArgsProvider;Lat/released/weh/filesystem/FileSystem;Lat/released/weh/host/clock/MonotonicClock;Lat/released/weh/host/clock/Clock;Lat/released/weh/host/clock/CputimeSource;Lat/released/weh/host/LocalTimeFormatter;Lat/released/weh/host/TimeZoneInfo$Provider;Lat/released/weh/host/EntropySource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
 	public fun getClock ()Lat/released/weh/host/clock/Clock;
 	public fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
 	public fun getCputimeSource ()Lat/released/weh/host/clock/CputimeSource;
