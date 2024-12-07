@@ -197,6 +197,7 @@ internal data class NtCreateFileResult(
     val ioStatusBlockInformation: ULong,
 )
 
+@Suppress("CyclomaticComplexMethod")
 private fun NtCreateFileResult.toOpenError(): OpenError {
     when (ioStatusBlockInformation.toUInt()) {
         IoStatusBlockInformation.FILE_EXISTS -> return Exists("File exists")
@@ -208,6 +209,7 @@ private fun NtCreateFileResult.toOpenError(): OpenError {
         NtStatus.STATUS_INVALID_PARAMETER -> InvalidArgument("NtCreateFile failed: invalid argument")
         NtStatus.STATUS_UNSUCCESSFUL -> IoError("Other error $status")
         NtStatusCode.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")
+        NtStatusCode.STATUS_DELETE_PENDING -> Exists("Delete pending")
         NtStatusCode.STATUS_NOT_A_DIRECTORY -> NotDirectory("Not a directory")
         NtStatusCode.STATUS_NOT_IMPLEMENTED -> NotSupported("Operation not supported")
         NtStatusCode.STATUS_OBJECT_NAME_COLLISION -> Exists("File exists")

@@ -46,9 +46,6 @@ wasiTestsuiteTestGen {
         TestIgnore("fd_fdstat_set_rights"),
 
         // TODO: fix
-        TestIgnore("dangling_fd", setOf(MINGW)),
-
-        // TODO: fix
         TestIgnore("unlink_file_trailing_slashes", setOf(MINGW)),
 
         // resolveBeneath is not yet implemented
