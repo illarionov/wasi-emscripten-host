@@ -7,15 +7,18 @@
 package at.released.weh.filesystem.linux.fdresource
 
 import arrow.core.Either
+import arrow.core.getOrElse
+import arrow.core.left
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
+import at.released.weh.filesystem.path.PosixPathConverter.convertRealPathToVirtualPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 
 internal fun preopenDirectories(
     currentWorkingDirectoryPath: RealPath = "",
@@ -57,6 +60,8 @@ private fun preopenDirectory(
     path: RealPath,
     baseDirectoryFd: NativeDirectoryFd,
 ): Either<OpenError, LinuxDirectoryFdResource> {
+    val virtualPath = convertRealPathToVirtualPath(path).getOrElse { return it.left() }
+
     return linuxOpenRaw(
         baseDirectoryFd = baseDirectoryFd,
         path = path,
@@ -67,7 +72,7 @@ private fun preopenDirectory(
         LinuxDirectoryFdResource(
             nativeFd = NativeDirectoryFd(nativeFd),
             isPreopened = true,
-            virtualPath = path,
+            virtualPath = virtualPath,
             rights = FdRightsBlock.DIRECTORY_BASE_RIGHTS_BLOCK,
         )
     }

@@ -10,13 +10,14 @@ import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.SymlinkError
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
 
 internal fun validateSymlinkTarget(
-    target: String,
+    target: VirtualPath,
     allowAbsolutePath: Boolean,
 ): Either<SymlinkError, Unit> = either {
-    val cleanedTarget = target.trim()
-    if (!allowAbsolutePath && cleanedTarget.startsWith("/")) {
+    if (!allowAbsolutePath && target.isAbsolute()) {
         raise(InvalidArgument("link destination should be relative"))
     }
 }

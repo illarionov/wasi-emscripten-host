@@ -8,6 +8,7 @@ package at.released.weh.filesystem.fdresource
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
@@ -16,8 +17,9 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
+import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 import java.io.IOError
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
@@ -65,25 +67,37 @@ internal class BatchDirectoryOpener(
     private fun preopenDirectory(
         preopenedDirectory: RealPath,
         basePath: Path,
-    ): Either<OpenError, NioDirectoryFdResource> = Either.catch {
-        basePath.resolve(preopenedDirectory).toAbsolutePath()
-    }.mapLeft { ex ->
-        when (ex) {
-            is InvalidPathException -> InvalidArgument("Can not resolve path `$preopenedDirectory`")
-            is IOError -> IoError(ex.message.toString())
-            else -> throw ex
+    ): Either<OpenError, NioDirectoryFdResource> {
+        val virtualPath = convertRealPathToVirtualPath(preopenedDirectory)
+            .getOrElse { return it.left() }
+
+        return Either.catch {
+            basePath.resolve(preopenedDirectory).toAbsolutePath()
+        }.mapLeft { ex ->
+            when (ex) {
+                is InvalidPathException -> InvalidArgument("Can not resolve path `$preopenedDirectory`")
+                is IOError -> IoError(ex.message.toString())
+                else -> throw ex
+            }
+        }.flatMap { path ->
+            if (!path.isDirectory()) {
+                NotDirectory("`$path` is not a directory").left()
+            } else {
+                NioDirectoryFdResource(
+                    path,
+                    virtualPath = virtualPath,
+                    isPreopened = true,
+                    rights = DIRECTORY_BASE_RIGHTS_BLOCK,
+                ).right()
+            }
         }
-    }.flatMap { path ->
-        if (!path.isDirectory()) {
-            NotDirectory("`$path` is not a directory").left()
-        } else {
-            NioDirectoryFdResource(
-                path,
-                virtualPath = preopenedDirectory,
-                isPreopened = true,
-                rights = DIRECTORY_BASE_RIGHTS_BLOCK,
-            ).right()
-        }
+    }
+
+    private fun convertRealPathToVirtualPath(
+        path: RealPath,
+    ): Either<InvalidArgument, VirtualPath> {
+        return VirtualPath.of(path)
+            .mapLeft { InvalidArgument(it.message) }
     }
 
     class PreopenedDirectories(

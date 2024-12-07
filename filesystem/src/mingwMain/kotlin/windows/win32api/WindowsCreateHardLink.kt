@@ -15,7 +15,7 @@ import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotDirectory
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CreateHardLinkW
 import platform.windows.ERROR_ACCESS_DENIED

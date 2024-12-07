@@ -25,8 +25,9 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
-import at.released.weh.filesystem.posix.ext.validatePath
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.windows.path.WindowsPathConverter
+import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
@@ -41,13 +42,15 @@ import platform.windows.FILE_TRAVERSE
 import platform.windows.FILE_WRITE_ATTRIBUTES
 
 internal class WindowsMkdir(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> = either {
-        val path = input.path
-        validatePath(path).bind()
+        val realPath = VirtualPath.of(input.path)
+            .mapLeft { InvalidArgument(it.message) }
+            .map { WindowsPathConverter.convertToRealPath(it) }
+            .bind()
 
-        val directoryChannel = fsState.pathResolver.resolveBaseDirectory(input.baseDirectory)
+        val directoryChannel = pathResolver.resolveBaseDirectory(input.baseDirectory)
             .getOrElse { return it.left() }
 
         val createDisposition = if (input.failIfExists) {
@@ -58,7 +61,7 @@ internal class WindowsMkdir(
 
         return windowsNtCreateFile(
             rootHandle = directoryChannel?.handle,
-            path = path,
+            path = realPath,
             desiredAccess = FILE_LIST_DIRECTORY or
                     FILE_READ_ATTRIBUTES or
                     FILE_TRAVERSE or

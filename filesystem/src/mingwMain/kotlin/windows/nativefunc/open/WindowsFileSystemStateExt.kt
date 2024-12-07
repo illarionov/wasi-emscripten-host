@@ -12,7 +12,7 @@ import arrow.core.left
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY

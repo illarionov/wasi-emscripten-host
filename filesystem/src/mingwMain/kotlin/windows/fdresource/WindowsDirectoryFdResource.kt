@@ -37,7 +37,7 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 import at.released.weh.filesystem.windows.nativefunc.windowsGetFdAttributes
 import at.released.weh.filesystem.windows.win32api.close

@@ -8,7 +8,7 @@ package at.released.weh.filesystem.op.prestat
 
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class PrestatResult(
     @IntFileDescriptor

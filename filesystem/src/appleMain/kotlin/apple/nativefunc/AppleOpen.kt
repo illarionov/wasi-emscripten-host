@@ -46,10 +46,10 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.platform.apple.openat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
-import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.posix.op.open.fdFdFlagsToPosixMask
 import at.released.weh.filesystem.posix.op.open.getFileOpenModeConsideringOpenFlags
 import at.released.weh.filesystem.posix.op.open.openFileFlagsToPosixMask
@@ -76,18 +76,17 @@ import platform.posix.EOPNOTSUPP
 import platform.posix.EOVERFLOW
 import platform.posix.EROFS
 import platform.posix.ETXTBSY
+import platform.posix.EWOULDBLOCK
 import platform.posix.errno
 
 internal fun appleOpenFileOrDirectory(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: RealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
 ): Either<OpenError, FileDirectoryFd> = either<OpenError, FileDirectoryFd> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
-
-    validatePath(path).bind()
 
     val existingFileType: Filetype? = getFileType(baseDirectoryFd, path, flags).bind()
 
@@ -170,7 +169,7 @@ private fun getAppleOpenFileFlags(
     return openFileFlagsToPosixMask(flags) or fdFdFlagsToPosixMask(fdFlags)
 }
 
-@Suppress("CyclomaticComplexMethod")
+@Suppress("CyclomaticComplexMethod", "DUPLICATE_LABEL_IN_WHEN")
 private fun Int.openat2ErrNoToOpenErrorApple(): OpenError = when (this) {
     EACCES -> AccessDenied("No permission")
     EAGAIN -> Again("Operation cannot be performed")
@@ -195,7 +194,7 @@ private fun Int.openat2ErrNoToOpenErrorApple(): OpenError = when (this) {
     EOVERFLOW -> IoError("Size of the file does not fit in off_t")
     EROFS -> ReadOnlyFileSystem("Read-only file system")
     ETXTBSY -> TextFileBusy("Can not write to the executed file")
-    // EWOULDBLOCK -> IoError("File can not be locked without blocking")
+    EWOULDBLOCK -> IoError("File can not be locked without blocking")
     else -> InvalidArgument("Unknown errno $this")
 }
 

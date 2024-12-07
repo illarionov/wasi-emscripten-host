@@ -42,7 +42,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.Directory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.File
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.NotExists
@@ -53,7 +53,7 @@ import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenForAttributeAccess
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
+import at.released.weh.filesystem.windows.pathresolver.resolvePath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
@@ -76,6 +76,7 @@ import platform.windows.PathIsDirectoryEmptyW
 
 internal class WindowsRename(
     private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver = fsState.pathResolver,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> = either {
         return fsState.executeWithOpenFileHandle(
@@ -93,7 +94,7 @@ internal class WindowsRename(
         newPath: RealPath,
     ): Either<RenameError, Unit> = either {
         val (destinationPath, destinationType, dstHandle) = DestinationInfoReader(
-            fsState.pathResolver,
+            pathResolver,
             newBaseDirectory,
             newPath,
         ).read().bind()
@@ -200,7 +201,7 @@ internal class WindowsRename(
         private fun getInfoOnOpenError(
             dstOpenError: OpenError,
         ): Either<RenameError, DestinationPathInfo> = if (dstOpenError is NoEntry) {
-            pathResolver.resolveRealPath(newBaseDirectory, newPath)
+            pathResolver.resolvePath(newBaseDirectory, newPath)
                 .map {
                     DestinationPathInfo(
                         resolvedRealPath = it,

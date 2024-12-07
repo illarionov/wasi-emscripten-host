@@ -11,16 +11,18 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CheckAccessError
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.PathResolver
+import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.WRITEABLE
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import kotlin.io.path.exists
 import kotlin.io.path.isExecutable
 import kotlin.io.path.isReadable
@@ -28,10 +30,12 @@ import kotlin.io.path.isWritable
 import at.released.weh.filesystem.error.NotDirectory as BaseNotDirectory
 
 internal class NioCheckAccess(
-    private val pathResolver: PathResolver,
+    private val pathResolver: JvmPathResolver,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> = either {
-        val path = pathResolver.resolve(input.path, input.baseDirectory, input.allowEmptyPath)
+        val inputPath = VirtualPath.of(input.path).mapLeft { InvalidArgument(it.message) }.bind()
+
+        val path = pathResolver.resolve(inputPath, input.baseDirectory, input.allowEmptyPath)
             .mapLeft { it.toCheckAccessError() }
             .bind()
         if (!path.exists(options = asLinkOptions(input.followSymlinks))) {

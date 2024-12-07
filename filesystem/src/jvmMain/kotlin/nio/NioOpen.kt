@@ -35,7 +35,8 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import com.sun.nio.file.ExtendedOpenOption
 import java.nio.file.LinkOption
 import java.nio.file.OpenOption
@@ -49,18 +50,16 @@ internal class NioOpen(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
-        val virtualPath = input.path // XXX needs better relative path checking
+        val virtualPath = VirtualPath.of(input.path).mapLeft { InvalidArgument(it.message) }.bind()
         val followSymlinks = input.openFlags and OpenFileFlag.O_NOFOLLOW != OpenFileFlag.O_NOFOLLOW
         val path: Path = fsState.pathResolver.resolve(
-            input.path,
+            virtualPath,
             input.baseDirectory,
             allowEmptyPath = true,
             followSymlinks = followSymlinks,
         )
             .mapLeft(ResolvePathError::toCommonError)
             .bind()
-
-        val isDirectoryRequested = virtualPath.endsWith("/")
 
         val openOptionsResult = getOpenOptions(input.openFlags, input.fdFlags)
         if (openOptionsResult.notImplementedFlags != 0U) {
@@ -74,6 +73,7 @@ internal class NioOpen(
             path.fileSystem.fileModeAsFileAttributesIfSupported(it)
         } ?: emptyArray()
 
+        val isDirectoryRequested = virtualPath.isDirectoryRequest()
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()
 
         val baseDirectoryRights = if (input.baseDirectory is DirectoryFd) {

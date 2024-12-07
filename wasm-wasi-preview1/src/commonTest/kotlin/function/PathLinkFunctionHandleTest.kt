@@ -16,6 +16,7 @@ import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.NOENT
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
@@ -51,8 +52,8 @@ class PathLinkFunctionHandleTest {
             Unit.right()
         }
 
-        val oldPath = "target"
-        val newPath = "preopened/newPath"
+        val oldPath = "target".toVirtualPath()
+        val newPath = "preopened/newPath".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)
@@ -74,9 +75,9 @@ class PathLinkFunctionHandleTest {
         assertThat(hardlink).isEqualTo(
             Hardlink(
                 oldBaseDirectory = BaseDirectory.DirectoryFd(4),
-                oldPath = oldPath,
+                oldPath = oldPath.toString(),
                 newBaseDirectory = BaseDirectory.DirectoryFd(5),
-                newPath = newPath,
+                newPath = newPath.toString(),
                 followSymlinks = false,
             ),
         )
@@ -86,8 +87,8 @@ class PathLinkFunctionHandleTest {
     fun path_hardlink_should_fail_with_trailing_slash() {
         fileSystem.onOperation(Hardlink) { _ -> Unit.right() }
 
-        val oldPath = "target"
-        val newPath = "preopened/newPath/"
+        val oldPath = "target".toVirtualPath()
+        val newPath = "preopened/newPath/".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)
@@ -112,8 +113,8 @@ class PathLinkFunctionHandleTest {
     fun path_hardlink_should_fail_with_follow_symlinks() {
         fileSystem.onOperation(Hardlink) { _ -> Unit.right() }
 
-        val oldPath = "target"
-        val newPath = "preopened/newPath"
+        val oldPath = "target".toVirtualPath()
+        val newPath = "preopened/newPath".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)

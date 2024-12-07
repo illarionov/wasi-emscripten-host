@@ -16,11 +16,12 @@ import at.released.weh.filesystem.model.FileSystemErrno.NOENT
 import at.released.weh.filesystem.model.FileSystemErrno.NOTCAPABLE
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
 import at.released.weh.filesystem.model.FileSystemErrno.PERM
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.nio.file.Path
 
 internal interface PathResolver {
     fun resolve(
-        path: String?,
+        path: VirtualPath?,
         baseDirectory: BaseDirectory,
         allowEmptyPath: Boolean = false,
         followSymlinks: Boolean = true,

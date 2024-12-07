@@ -7,8 +7,8 @@
 package at.released.weh.filesystem.dsl
 
 import at.released.weh.common.api.WasiEmscriptenHostDsl
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 
 @WasiEmscriptenHostDsl
 public class DirectoryConfigBlock {

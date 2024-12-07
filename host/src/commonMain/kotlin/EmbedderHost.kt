@@ -10,8 +10,8 @@ import at.released.weh.common.api.Logger
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.dsl.DirectoryConfigBlock
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.host.EmbedderHost.Builder

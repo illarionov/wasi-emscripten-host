@@ -16,6 +16,7 @@ import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.NOENT
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
@@ -50,8 +51,8 @@ class PathSymlinkFunctionHandleTest {
             Unit.right()
         }
 
-        val oldPath = "../target"
-        val newPath = "preopened/newPath"
+        val oldPath = "../target".toVirtualPath()
+        val newPath = "preopened/newPath".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)
@@ -70,8 +71,8 @@ class PathSymlinkFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(symlinkRequest).isEqualTo(
             Symlink(
-                oldPath = oldPath,
-                newPath = newPath,
+                oldPath = oldPath.toString(),
+                newPath = newPath.toString(),
                 newPathBaseDirectory = BaseDirectory.DirectoryFd(4),
                 allowAbsoluteOldPath = false,
             ),
@@ -82,8 +83,8 @@ class PathSymlinkFunctionHandleTest {
     fun path_symlink_should_fail_with_trailing_slash() {
         fileSystem.onOperation(Symlink) { _ -> Unit.right() }
 
-        val oldPath = "../target"
-        val newPath = "preopened/newPath/"
+        val oldPath = "../target".toVirtualPath()
+        val newPath = "preopened/newPath/".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)

@@ -9,7 +9,7 @@ package at.released.weh.filesystem.windows.win32api.fileinfo
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.CValues
 import kotlinx.cinterop.UShortVar

@@ -36,9 +36,7 @@ public class FdPrestatGetFunctionHandle(
         return host.fileSystem.execute(PrestatFd, PrestatFd(fd))
             .onRight { prestatResult: PrestatResult ->
                 memory.sinkWithMaxSize(dstAddr, PRESTAT_PACKED_SIZE).buffered().use {
-                    PrestatDir(
-                        prNameLen = prestatResult.path.encodedLength(),
-                    ).packTo(it)
+                    PrestatDir(prNameLen = prestatResult.path.encodedLength()).packTo(it)
                 }
             }.foldToErrno()
     }

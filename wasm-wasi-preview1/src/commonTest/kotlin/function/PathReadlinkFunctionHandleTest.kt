@@ -15,6 +15,7 @@ import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasm.core.test.assertions.byteAt
@@ -49,7 +50,7 @@ class PathReadlinkFunctionHandleTest {
         fileSystem.onOperation(ReadLink) { _: ReadLink -> targetValue.right() }
 
         val linkpathAddr = 0x80
-        val linkPath = "linktPath"
+        val linkPath = "linktPath".toVirtualPath()
         val linkPathBinarySize = memory.writeFilesystemPath(linkpathAddr, linkPath)
 
         val bufAddr = 0x100
@@ -77,7 +78,7 @@ class PathReadlinkFunctionHandleTest {
         fileSystem.onOperation(ReadLink) { _: ReadLink -> targetValue.right() }
 
         val linkpathAddr = 0x80
-        val linkPath = "linkPath"
+        val linkPath = "linkPath".toVirtualPath()
         val linkPathBinarySize = memory.writeFilesystemPath(linkpathAddr, linkPath)
         val bufAddr = 0x100
         val bufLen = 4

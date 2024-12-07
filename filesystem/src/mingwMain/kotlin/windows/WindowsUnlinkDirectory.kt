@@ -8,18 +8,22 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import arrow.core.flatMap
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.windowsRemoveDirectory
 
 internal class WindowsUnlinkDirectory(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
     override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> {
-        return fsState.pathResolver.resolveRealPath(input.baseDirectory, input.path)
+        return VirtualPath.of(input.path)
+            .mapLeft { InvalidArgument(it.message) }
+            .flatMap { virtualPath -> pathResolver.resolveRealPath(input.baseDirectory, virtualPath) }
             .flatMap(::windowsRemoveDirectory)
     }
 }
