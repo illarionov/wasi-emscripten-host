@@ -12,8 +12,8 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.RealPath
+import at.released.weh.filesystem.path.VirtualPath
 import at.released.weh.filesystem.windows.win32api.ext.combinePath
 import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath

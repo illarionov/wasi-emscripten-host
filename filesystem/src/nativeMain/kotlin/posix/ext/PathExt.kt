@@ -11,7 +11,7 @@ import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.VirtualPath
 
 internal fun validatePath(path: VirtualPath): Either<InvalidArgument, Unit> = either {
     if (!path.all(Char::isValidPathChar)) {

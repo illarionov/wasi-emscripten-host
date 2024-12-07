@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.windows.win32api.ext
 
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.RealPath
 import platform.windows.PathIsRelativeW
 
 /**

@@ -23,7 +23,7 @@ import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDesc
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.VirtualPath
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory

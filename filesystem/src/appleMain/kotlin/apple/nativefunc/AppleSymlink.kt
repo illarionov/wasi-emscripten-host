@@ -22,8 +22,8 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.preopened.VirtualPath
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.EACCES
 import platform.posix.EBADF

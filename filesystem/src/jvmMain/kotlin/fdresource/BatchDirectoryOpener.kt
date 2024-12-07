@@ -16,8 +16,8 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
+import at.released.weh.filesystem.path.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 import java.io.IOError
 import java.nio.file.InvalidPathException
 import java.nio.file.Path

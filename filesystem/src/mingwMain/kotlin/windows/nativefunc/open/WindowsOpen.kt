@@ -30,8 +30,8 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TMPFILE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_WRONLY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.path.RealPath
 import at.released.weh.filesystem.posix.ext.validatePath
-import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo

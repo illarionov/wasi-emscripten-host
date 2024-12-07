@@ -42,7 +42,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.RealPath
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.Directory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.File
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.NotExists

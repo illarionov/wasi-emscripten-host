@@ -6,7 +6,7 @@
 
 package at.released.weh.wasi.preview1.ext
 
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.VirtualPath
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory

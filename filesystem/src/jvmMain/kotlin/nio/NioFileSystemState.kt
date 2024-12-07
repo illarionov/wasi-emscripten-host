@@ -29,9 +29,9 @@ import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.nio.cwd.PathResolver
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.path.RealPath
+import at.released.weh.filesystem.path.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.io.IOException
 import java.nio.channels.FileChannel

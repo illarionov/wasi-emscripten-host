@@ -35,7 +35,7 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.VirtualPath
 import com.sun.nio.file.ExtendedOpenOption
 import java.nio.file.LinkOption
 import java.nio.file.OpenOption

@@ -13,8 +13,8 @@ import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.path.RealPath
 import at.released.weh.filesystem.posix.ext.validatePath
-import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE

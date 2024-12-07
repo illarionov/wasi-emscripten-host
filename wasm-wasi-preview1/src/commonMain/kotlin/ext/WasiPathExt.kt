@@ -7,7 +7,7 @@
 package at.released.weh.wasi.preview1.ext
 
 import arrow.core.Either
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.VirtualPath
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.IntWasmPtr
