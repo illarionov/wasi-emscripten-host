@@ -29,6 +29,7 @@ internal val _FILE_INFO_BY_HANDLE_CLASS.Companion.FileAlignmentInfo: Int get() =
 internal val _FILE_INFO_BY_HANDLE_CLASS.Companion.FileIdInfo: Int get() = 0x12
 internal val _FILE_INFO_BY_HANDLE_CLASS.Companion.FileIdExtdDirectoryInfo: Int get() = 0x13
 internal val _FILE_INFO_BY_HANDLE_CLASS.Companion.FileIdExtdDirectoryRestartInfo: Int get() = 0x14
+internal val _FILE_INFO_BY_HANDLE_CLASS.Companion.FileDispositionInfoEx: Int get() = 0x15
 
 internal inline fun <R : Any, reified T : CStructVar> readListOfItemsByNextEntryOffset(
     buffer: NativePointed,
