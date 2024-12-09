@@ -10,6 +10,7 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 /**
  * Retrieves information about the file at the given [path].
@@ -19,7 +20,7 @@ import at.released.weh.filesystem.op.FileSystemOperation
  * the status of the symbolic link itself is returned instead of the target file.
  */
 public data class Stat(
-    val path: String,
+    val path: VirtualPath,
     val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
     val followSymlinks: Boolean = true,
 ) {

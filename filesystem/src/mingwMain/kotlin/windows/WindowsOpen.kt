@@ -10,7 +10,6 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
 import at.released.weh.filesystem.fdrights.getChildDirectoryRights
@@ -19,7 +18,6 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
@@ -35,11 +33,7 @@ internal class WindowsOpen(
     private val pathResolver: WindowsPathResolver = fsState.pathResolver,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
-        val virtualPath = VirtualPath.of(input.path)
-            .mapLeft { InvalidArgument(it.message) }
-            .flatMap { virtualPath ->
-                checkOpenFlags(input.openFlags, input.rights, virtualPath.isDirectoryRequest()).map { virtualPath }
-            }
+        checkOpenFlags(input.openFlags, input.rights, input.path.isDirectoryRequest())
             .getOrElse { return it.left() }
 
         val directoryChannel: WindowsDirectoryChannel? = pathResolver.resolveBaseDirectory(input.baseDirectory)
@@ -49,7 +43,7 @@ internal class WindowsOpen(
 
         return windowsOpenFileOrDirectory(
             baseHandle = directoryChannel?.handle,
-            path = WindowsPathConverter.convertToRealPath(virtualPath),
+            path = WindowsPathConverter.convertToRealPath(input.path),
             flags = input.openFlags,
             fdFlags = input.fdFlags,
         ).flatMap { nativeChannel ->
@@ -67,7 +61,7 @@ internal class WindowsOpen(
                         handle = nativeChannel.handle,
                         isPreopened = false,
                         rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
-                        virtualPath = virtualPath,
+                        virtualPath = input.path,
                     ),
                 )
             }

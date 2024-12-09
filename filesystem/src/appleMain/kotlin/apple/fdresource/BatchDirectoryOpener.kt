@@ -14,7 +14,7 @@ import at.released.weh.filesystem.apple.nativefunc.appleOpenRaw
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
-import at.released.weh.filesystem.path.PosixPathConverter.convertRealPathToVirtualPath
+import at.released.weh.filesystem.path.PosixPathConverter.convertToVirtualPath
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
@@ -61,7 +61,7 @@ private fun preopenDirectory(
     path: RealPath,
     baseDirectoryFd: NativeDirectoryFd,
 ): Either<OpenError, AppleDirectoryFdResource> {
-    val virtualPath = convertRealPathToVirtualPath(path).getOrElse { return it.left() }
+    val virtualPath = convertToVirtualPath(path).getOrElse { return it.left() }
 
     return appleOpenRaw(
         baseDirectoryFd = baseDirectoryFd,

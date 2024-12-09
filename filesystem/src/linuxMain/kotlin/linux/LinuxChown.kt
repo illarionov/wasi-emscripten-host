@@ -17,7 +17,7 @@ internal class LinuxChown(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
     override fun invoke(input: Chown): Either<ChownError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxChown(it, input.path, input.owner, input.group, input.followSymlinks)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
+            linuxChown(realBaseDirectory, realPath, input.owner, input.group, input.followSymlinks)
         }
 }

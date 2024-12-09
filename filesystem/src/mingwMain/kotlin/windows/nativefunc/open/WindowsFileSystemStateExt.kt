@@ -12,7 +12,7 @@ import arrow.core.left
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
@@ -20,7 +20,7 @@ import platform.windows.HANDLE
 
 internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.executeWithOpenFileHandle(
     baseDirectory: BaseDirectory,
-    path: RealPath,
+    path: VirtualPath,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
@@ -31,7 +31,6 @@ internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.exec
         .getOrElse {
             return it.left()
         }
-
     return useFileForAttributeAccess(
         baseHandle = directoryFd?.handle,
         path = path,

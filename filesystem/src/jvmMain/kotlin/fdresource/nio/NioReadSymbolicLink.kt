@@ -18,9 +18,9 @@ import java.nio.file.Path
 
 internal fun readSymbolicLink(
     path: Path,
-): Either<ReadLinkError, String> {
+): Either<ReadLinkError, Path> {
     return Either.catch {
-        Files.readSymbolicLink(path).toString()
+        Files.readSymbolicLink(path)
     }.mapLeft {
         when (it) {
             is UnsupportedOperationException -> InvalidArgument("Symbolic links are not supported")

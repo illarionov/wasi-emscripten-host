@@ -12,7 +12,7 @@ import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import java.nio.file.Path
 
 internal class JvmCurrentDirectoryProvider(
-    val javaFs: java.nio.file.FileSystem,
+    private val javaFs: java.nio.file.FileSystem,
 ) : CurrentDirectoryProvider {
     override fun getCurrentWorkingDirectory(): Either<GetCurrentWorkingDirectoryError, Path> {
         return javaFs.getPath("").toAbsolutePath().right()

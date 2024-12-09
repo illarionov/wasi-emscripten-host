@@ -8,11 +8,13 @@ package at.released.weh.filesystem.op.unlink
 
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.model.BaseDirectory
+import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class UnlinkDirectory(
-    public val path: String,
-    public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
+    public val path: VirtualPath,
+    public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 ) {
     public companion object : FileSystemOperation<UnlinkDirectory, UnlinkError, Unit> {
         override val tag: String = "unlinkdir"

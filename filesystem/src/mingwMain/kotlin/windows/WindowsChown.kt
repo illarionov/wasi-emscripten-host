@@ -10,19 +10,17 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.ChownError
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chown.Chown
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 
 internal class WindowsChown(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
-    override fun invoke(input: Chown): Either<ChownError, Unit> = VirtualPath.of(input.path)
-        .mapLeft { InvalidArgument(it.message) }
-        .flatMap { virtualPath -> pathResolver.resolveRealPath(input.baseDirectory, virtualPath) }
-        .flatMap { NotSupported("Not supported by file system").left() }
+    override fun invoke(input: Chown): Either<ChownError, Unit> {
+        return pathResolver.resolveRealPath(input.baseDirectory, input.path)
+            .flatMap { NotSupported("Not supported by file system").left() }
+    }
 }

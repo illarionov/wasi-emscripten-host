@@ -6,11 +6,13 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.getOrElse
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_READLINKAT
 import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
@@ -18,8 +20,9 @@ import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.readNullTerminatedString
 import at.released.weh.wasm.core.memory.sinkWithMaxSize
-import kotlinx.io.Buffer
-import kotlinx.io.writeString
+import kotlinx.io.buffered
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.write
 
 public class SyscallReadlinkatFunctionHandle(
     host: EmbedderHost,
@@ -36,21 +39,22 @@ public class SyscallReadlinkatFunctionHandle(
         if (bufSize < 0) {
             return -Errno.INVAL.code
         }
+        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         return host.fileSystem.execute(
             ReadLink,
             ReadLink(
-                path = path,
+                path = virtualPath,
                 baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
             ),
         ).fold(
             ifLeft = { -it.errno.wasiPreview1Code },
-        ) { linkPath: String ->
-            val linkpathBuffer = Buffer().also { it.writeString(linkPath) }
-            val len = linkpathBuffer.size.toInt().coerceAtMost(bufSize)
+        ) { linkPath: VirtualPath ->
+            val linkpathBytes: ByteString = linkPath.utf8
+            val len = linkpathBytes.size.toInt().coerceAtMost(bufSize)
 
-            memory.sinkWithMaxSize(buf, len).use {
-                it.write(linkpathBuffer, len.toLong())
+            memory.sinkWithMaxSize(buf, len).buffered().use {
+                it.write(linkpathBytes, 0, len)
             }
             len
         }

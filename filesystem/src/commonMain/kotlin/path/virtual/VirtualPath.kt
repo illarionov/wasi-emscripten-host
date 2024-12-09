@@ -44,7 +44,24 @@ public class VirtualPath private constructor(
         check(utf8.isNotEmpty())
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || this::class != other::class) {
+            return false
+        }
+
+        other as VirtualPath
+
+        return utf8 == other.utf8
+    }
+
     override fun toString(): String = utf8String
+
+    override fun hashCode(): Int {
+        return utf8.hashCode()
+    }
 
     public companion object {
         @JvmStatic
@@ -55,7 +72,7 @@ public class VirtualPath private constructor(
             }
         }
 
-        internal fun VirtualPath.isDirectoryRequest() = utf8String.last() == '/'
-        internal fun VirtualPath.isAbsolute() = utf8String.first() == '/'
+        public fun VirtualPath.isDirectoryRequest(): Boolean = utf8String.last() == '/'
+        public fun VirtualPath.isAbsolute(): Boolean = utf8String.first() == '/'
     }
 }

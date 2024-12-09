@@ -19,6 +19,8 @@ import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import kotlin.test.Test
 
 class DelegateOperationsFileSystemTest {
@@ -27,9 +29,9 @@ class DelegateOperationsFileSystemTest {
         val delegateFs = DelegateOperationsFileSystem(testHandlers, emptyList())
 
         val cwd = delegateFs.execute(GetCurrentWorkingDirectory, Unit)
-        assertThat(cwd.getOrNull()).isEqualTo("/")
+        assertThat(cwd.getOrNull()).isEqualTo("/".toVirtualPath())
 
-        val link = delegateFs.execute(ReadLink, ReadLink("/link"))
+        val link = delegateFs.execute(ReadLink, ReadLink("/link".toVirtualPath()))
         assertThat(link.leftOrNull())
             .isEqualTo(NoEntry("Test not entry"))
     }
@@ -46,11 +48,11 @@ class DelegateOperationsFileSystemTest {
     }
 
     internal companion object {
-        private val testCwdHandler: FileSystemOperationHandler<Unit, GetCurrentWorkingDirectoryError, String> =
+        private val testCwdHandler: FileSystemOperationHandler<Unit, GetCurrentWorkingDirectoryError, VirtualPath> =
             FileSystemOperationHandler { _ ->
-                "/".right()
+                "/".toVirtualPath().right()
             }
-        val testReadlinkHandler: FileSystemOperationHandler<ReadLink, ReadLinkError, String> =
+        val testReadlinkHandler: FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> =
             FileSystemOperationHandler { _ ->
                 NoEntry("Test not entry").left()
             }

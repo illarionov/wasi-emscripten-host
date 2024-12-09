@@ -7,16 +7,22 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.CurrentDirectoryProvider
+import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
-import java.nio.file.Path
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class NioGetCurrentWorkingDirectory(
     private val currentDirectoryProvider: CurrentDirectoryProvider,
-) : FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, String> {
-    override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, String> {
-        return currentDirectoryProvider.getCurrentWorkingDirectory().map(Path::toString)
+    private val pathConverter: JvmNioPathConverter,
+) : FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, VirtualPath> {
+    override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, VirtualPath> {
+        return currentDirectoryProvider.getCurrentWorkingDirectory().flatMap { realPath ->
+            pathConverter.toVirtualPath(realPath).mapLeft { error -> InvalidArgument(error.message) }
+        }
     }
 }

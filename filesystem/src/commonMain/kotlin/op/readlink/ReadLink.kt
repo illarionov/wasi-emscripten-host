@@ -10,13 +10,13 @@ import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class ReadLink(
-    public val path: String,
+    public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 ) {
-    // TODO: VirtualPath
-    public companion object : FileSystemOperation<ReadLink, ReadLinkError, String> {
+    public companion object : FileSystemOperation<ReadLink, ReadLinkError, VirtualPath> {
         override val tag: String = "readlink"
     }
 }

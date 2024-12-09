@@ -31,6 +31,7 @@ import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.path.PosixPathConverter
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -97,16 +98,23 @@ internal class AppleFileSystemState private constructor(
         return block(resource)
     }
 
-    inline fun <E : FileSystemOperationError, R : Any> executeWithBaseDirectoryResource(
+    inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
+        path: VirtualPath,
         baseDirectory: BaseDirectory,
-        crossinline block: (directoryNativeFdOrCwd: NativeDirectoryFd) -> Either<E, R>,
+        crossinline block: (path: RealPath, baseDirectory: NativeDirectoryFd) -> Either<E, R>,
     ): Either<E, R> {
+        val realPath = PosixPathConverter.toRealPath(path)
+            .getOrElse { bfe ->
+                @Suppress("UNCHECKED_CAST")
+                return (bfe as E).left()
+            }
+
         val nativeFd: NativeDirectoryFd = pathResolver.resolveNativeDirectoryFd(baseDirectory)
             .getOrElse { bfe ->
                 @Suppress("UNCHECKED_CAST")
                 return (bfe as E).left()
             }
-        return block(nativeFd)
+        return block(realPath, nativeFd)
     }
 
     fun renumber(

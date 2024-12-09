@@ -10,6 +10,7 @@ import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 /**
  * Creates a symbolic link.
@@ -17,8 +18,8 @@ import at.released.weh.filesystem.op.FileSystemOperation
  * [newPath] is a destination path of the symbolic link, resolved relative to the [newPathBaseDirectory].
  */
 public data class Symlink(
-    public val oldPath: String,
-    public val newPath: String,
+    public val oldPath: VirtualPath,
+    public val newPath: VirtualPath,
     public val newPathBaseDirectory: BaseDirectory = CurrentWorkingDirectory,
     public val allowAbsoluteOldPath: Boolean = false,
 ) {

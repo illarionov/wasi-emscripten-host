@@ -17,8 +17,8 @@ internal class AppleStat(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
     override fun invoke(input: Stat): Either<StatError, StructStat> {
-        return fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleStat(it, input.path, input.followSymlinks)
+        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+            appleStat(baseDirectory, realPath, input.followSymlinks)
         }
     }
 }

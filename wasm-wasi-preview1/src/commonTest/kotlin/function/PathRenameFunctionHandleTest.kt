@@ -72,8 +72,8 @@ class PathRenameFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(renameRequest).isEqualTo(
             Rename(
-                oldPath = oldPath.toString(),
-                newPath = newPath.toString(),
+                oldPath = oldPath,
+                newPath = newPath,
                 oldBaseDirectory = BaseDirectory.DirectoryFd(3),
                 newBaseDirectory = BaseDirectory.DirectoryFd(3),
             ),

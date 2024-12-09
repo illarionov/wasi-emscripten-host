@@ -8,6 +8,7 @@ package at.released.weh.filesystem.op.hardlink
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.readFileContentToString
@@ -23,9 +24,9 @@ class HardlinkTest : BaseFileSystemIntegrationTest() {
                 Hardlink,
                 Hardlink(
                     oldBaseDirectory = tempFolderDirectoryFd,
-                    oldPath = "testfile.txt",
+                    oldPath = "testfile.txt".toVirtualPath(),
                     newBaseDirectory = tempFolderDirectoryFd,
-                    newPath = "newfile.txt",
+                    newPath = "newfile.txt".toVirtualPath(),
                     followSymlinks = false,
                 ),
             ).onLeft { error("Can not create hardlink: $it") }

@@ -8,13 +8,11 @@ package at.released.weh.filesystem.apple
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.getOrElse
 import arrow.core.left
 import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.apple.nativefunc.FileDirectoryFd
 import at.released.weh.filesystem.apple.nativefunc.appleOpenFileOrDirectory
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
 import at.released.weh.filesystem.fdrights.getChildDirectoryRights
@@ -24,25 +22,22 @@ import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 
 internal class AppleOpen(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
-        val inputPath = VirtualPath.of(input.path).getOrElse { return InvalidArgument(it.message).left() }
+        checkOpenFlags(input.openFlags, input.rights, input.path.isDirectoryRequest()).onLeft { return it.left() }
 
-        checkOpenFlags(input.openFlags, input.rights, inputPath.isDirectoryRequest()).onLeft { return it.left() }
-
-        return fsState.executeWithBaseDirectoryResource(input.baseDirectory) { directoryFd ->
+        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
             val baseDirectoryRights = (input.baseDirectory as? DirectoryFd)?.let { baseDirectoryFd ->
                 (fsState.get(baseDirectoryFd.fd) as? AppleDirectoryFdResource)?.rights
             } ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
             appleOpenFileOrDirectory(
-                baseDirectoryFd = directoryFd,
-                path = input.path,
+                baseDirectoryFd = baseDirectory,
+                path = realPath,
                 flags = input.openFlags,
                 fdFlags = input.fdFlags,
                 mode = input.mode,
@@ -57,7 +52,7 @@ internal class AppleOpen(
 
                     is FileDirectoryFd.Directory -> fsState.addDirectory(
                         nativeFd = nativeChannel.fd,
-                        virtualPath = inputPath,
+                        virtualPath = input.path,
                         rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
                     )
                 }

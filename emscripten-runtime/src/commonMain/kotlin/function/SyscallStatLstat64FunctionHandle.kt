@@ -6,6 +6,7 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.getOrElse
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_LSTAT64
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_STAT64
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
@@ -14,7 +15,9 @@ import at.released.weh.emcripten.runtime.include.sys.packTo
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.HostFunction
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -34,10 +37,12 @@ public class SyscallStatLstat64FunctionHandle private constructor(
         @IntWasmPtr(StructStat::class) dstAddr: WasmPtr,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
+        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+
         return host.fileSystem.execute(
             Stat,
             Stat(
-                path = path,
+                path = virtualPath,
                 baseDirectory = CurrentWorkingDirectory,
                 followSymlinks = followSymlinks,
             ),

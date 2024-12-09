@@ -31,7 +31,7 @@ import platform.windows.PathFileExistsW
 import platform.windows.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE
 
 internal fun windowsCreateSymbolicLink(
-    oldPath: String,
+    oldPath: RealPath,
     newPath: RealPath,
     type: SymlinkType,
 ): Either<SymlinkError, Unit> {

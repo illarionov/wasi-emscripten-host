@@ -38,7 +38,7 @@ class WindowsPathConverterTest {
             .row("""d:\tmp\""", "/d/tmp/")
             .row("""tmp\a\..\.""", "tmp/a/../.")
             .forAll { realPath, expectedVirtualPath ->
-                val virtualPath: VirtualPath = WindowsPathConverter.generatePreopenedDirectoryVirtualPath(realPath)
+                val virtualPath: VirtualPath = WindowsPathConverter.convertToVirtualPath(realPath)
                     .getOrElse { fail("Can not create virtual path for `$realPath`") }
                 assertThat(virtualPath.toString()).isEqualTo(expectedVirtualPath)
             }

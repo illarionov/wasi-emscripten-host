@@ -16,7 +16,7 @@ internal class AppleChmod(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleChmod(it, input.path, input.mode, input.followSymlinks)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+            appleChmod(baseDirectory, realPath, input.mode, input.followSymlinks)
         }
 }

@@ -8,26 +8,17 @@ package at.released.weh.filesystem.apple
 
 import arrow.core.Either
 import at.released.weh.filesystem.apple.nativefunc.appleRename
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.path.PosixPathConverter.convertToRealPath
-import at.released.weh.filesystem.path.real.RealPath
 
 internal class AppleRename(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> {
-        return Either.zipOrAccumulate(
-            { oldPathError: InvalidArgument, _: InvalidArgument -> oldPathError },
-            convertToRealPath(input.oldPath),
-            convertToRealPath(input.newPath),
-        ) { oldPath: RealPath, newPath: RealPath ->
-            fsState.executeWithBaseDirectoryResource(input.oldBaseDirectory) { oldDirFd ->
-                fsState.executeWithBaseDirectoryResource(input.newBaseDirectory) { newDirFd ->
-                    appleRename(oldDirFd, oldPath, newDirFd, newPath)
-                }
+        return fsState.executeWithPath(input.oldPath, input.oldBaseDirectory) { oldRealPath, oldBaseDirectory ->
+            fsState.executeWithPath(input.newPath, input.newBaseDirectory) { newRealPath, newBaseDirectory ->
+                appleRename(oldBaseDirectory, oldRealPath, newBaseDirectory, newRealPath)
             }
         }
     }

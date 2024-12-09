@@ -19,7 +19,9 @@ import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor.Operation
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import kotlin.test.Test
 
 class LoggingFileSystemDecoratorTest {
@@ -44,10 +46,14 @@ class LoggingFileSystemDecoratorTest {
                 ),
             ),
         )
-        val chain = object : Chain<ReadLink, ReadLinkError, String> {
-            override val operation: FileSystemOperation<ReadLink, ReadLinkError, String> = ReadLink.Companion
-            override val input: ReadLink = ReadLink(path = "/testPath", baseDirectory = CurrentWorkingDirectory)
-            override fun proceed(input: ReadLink): Either<ReadLinkError, String> = "/link".right()
+        val chain = object : Chain<ReadLink, ReadLinkError, VirtualPath> {
+            override val operation: FileSystemOperation<ReadLink, ReadLinkError, VirtualPath> = ReadLink
+            override val input: ReadLink = ReadLink(
+                path = "/testPath".toVirtualPath(),
+                baseDirectory = CurrentWorkingDirectory,
+            )
+
+            override fun proceed(input: ReadLink): Either<ReadLinkError, VirtualPath> = "/link".toVirtualPath().right()
         }
 
         loggingInterceptor.intercept(chain)

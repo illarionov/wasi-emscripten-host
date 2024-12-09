@@ -25,7 +25,6 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.close
@@ -45,11 +44,7 @@ internal class WindowsMkdir(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> = either {
-        val realPath = VirtualPath.of(input.path)
-            .mapLeft { InvalidArgument(it.message) }
-            .map { WindowsPathConverter.convertToRealPath(it) }
-            .bind()
-
+        val realPath = WindowsPathConverter.convertToRealPath(input.path)
         val directoryChannel = pathResolver.resolveBaseDirectory(input.baseDirectory)
             .getOrElse { return it.left() }
 

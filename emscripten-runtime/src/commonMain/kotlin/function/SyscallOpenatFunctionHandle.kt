@@ -6,6 +6,7 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.getOrElse
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_OPENAT
 import at.released.weh.emcripten.runtime.ext.EmscriptenFdFlagsMapper
 import at.released.weh.emcripten.runtime.ext.EmscriptenOpenFileFlagsMapper
@@ -15,7 +16,9 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileSystemErrno.Companion.wasiPreview1Code
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
@@ -35,8 +38,10 @@ public class SyscallOpenatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val path = memory.readNullTerminatedString(pathnamePtr)
 
+        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+
         val fsOperation = Open(
-            path = path,
+            path = virtualPath,
             baseDirectory = baseDirectory,
             openFlags = EmscriptenOpenFileFlagsMapper.getOpenFlags(rawFlags),
             fdFlags = EmscriptenFdFlagsMapper.getFdFlags(rawFlags),

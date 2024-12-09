@@ -7,16 +7,21 @@
 package at.released.weh.filesystem.apple
 
 import arrow.core.Either
+import arrow.core.flatMap
 import at.released.weh.filesystem.apple.nativefunc.appleReadLink
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.PosixPathConverter.convertToVirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class AppleReadLink(
     private val fsState: AppleFileSystemState,
-) : FileSystemOperationHandler<ReadLink, ReadLinkError, String> {
-    override fun invoke(input: ReadLink): Either<ReadLinkError, String> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleReadLink(it, input.path)
+) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
+    override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> =
+        fsState.executeWithPath(input.path, input.baseDirectory) { basePath, baseDirectory ->
+            appleReadLink(baseDirectory, basePath)
+        }.flatMap { targetRealPath ->
+            convertToVirtualPath(targetRealPath)
         }
 }

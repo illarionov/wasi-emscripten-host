@@ -75,9 +75,9 @@ class PathLinkFunctionHandleTest {
         assertThat(hardlink).isEqualTo(
             Hardlink(
                 oldBaseDirectory = BaseDirectory.DirectoryFd(4),
-                oldPath = oldPath.toString(),
+                oldPath = oldPath,
                 newBaseDirectory = BaseDirectory.DirectoryFd(5),
-                newPath = newPath.toString(),
+                newPath = newPath,
                 followSymlinks = false,
             ),
         )

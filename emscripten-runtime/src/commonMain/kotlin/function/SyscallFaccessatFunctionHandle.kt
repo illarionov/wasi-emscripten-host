@@ -6,6 +6,7 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.flatMap
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FACCESSAT
 import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
@@ -15,6 +16,7 @@ import at.released.weh.emcripten.runtime.include.Fcntl.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -31,18 +33,20 @@ public class SyscallFaccessatFunctionHandle(
         amode: Int,
         flags: Int,
     ): Int {
-        val path = memory.readNullTerminatedString(pathnamePtr)
-        return host.fileSystem.execute(
-            CheckAccess,
-            CheckAccess(
-                path = path,
-                baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
-                mode = rawModeToFileAccessibilityCheck(amode),
-                useEffectiveUserId = flags and AT_EACCESS == AT_EACCESS,
-                allowEmptyPath = false,
-                followSymlinks = flags and AT_SYMLINK_NOFOLLOW != AT_SYMLINK_NOFOLLOW,
-            ),
-        ).negativeErrnoCode()
+        return VirtualPath.of(memory.readNullTerminatedString(pathnamePtr))
+            .flatMap { virtualPath ->
+                host.fileSystem.execute(
+                    CheckAccess,
+                    CheckAccess(
+                        path = virtualPath,
+                        baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd),
+                        mode = rawModeToFileAccessibilityCheck(amode),
+                        useEffectiveUserId = flags and AT_EACCESS == AT_EACCESS,
+                        followSymlinks = flags and AT_SYMLINK_NOFOLLOW != AT_SYMLINK_NOFOLLOW,
+                    ),
+                )
+            }
+            .negativeErrnoCode()
     }
 
     private companion object {

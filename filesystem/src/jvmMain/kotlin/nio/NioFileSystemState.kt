@@ -27,7 +27,7 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.cwd.JvmPathResolver
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.InvalidCharacters
@@ -141,22 +141,32 @@ internal class NioFileSystemState private constructor(
         return block(resource)
     }
 
+    // TODO: remove
     inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
         baseDirectory: BaseDirectory,
         relativePath: String,
         followSymlinks: Boolean = false,
         crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
     ): Either<E, R> {
-        val path = VirtualPath.of(relativePath)
+        val path: Either<ResolvePathError, Path> = VirtualPath.of(relativePath)
             .mapLeft {
                 when (it) {
                     is InvalidCharacters -> ResolvePathError.InvalidPath(it.message)
                     is PathIsEmpty -> ResolvePathError.EmptyPath(it.message)
                 }
             }.flatMap {
-                pathResolver.resolve(it, baseDirectory, true, followSymlinks)
+                pathResolver.resolve(it, baseDirectory, followSymlinks)
             }
         return block(path)
+    }
+
+    inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
+        baseDirectory: BaseDirectory,
+        path: VirtualPath,
+        followSymlinks: Boolean = false,
+        crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
+    ): Either<E, R> {
+        return block(pathResolver.resolve(path, baseDirectory, followSymlinks))
     }
 
     override fun close() {

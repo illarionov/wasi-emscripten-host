@@ -7,11 +7,9 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.raise.either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.DirectoryNotEmpty
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
@@ -19,10 +17,9 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.PathResolver
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.JvmPathResolver
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.unlink.UnlinkFile
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
@@ -34,27 +31,21 @@ import kotlin.io.path.isDirectory
 import at.released.weh.filesystem.error.NotDirectory as BaseNotDirectory
 
 internal class NioUnlinkFile(
-    private val pathResolver: PathResolver,
+    private val pathResolver: JvmPathResolver,
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
-    @Suppress("ReturnCount")
-    override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
-        val inputVirtualPath = VirtualPath.of(input.path).getOrElse {
-            return InvalidArgument(it.message).left()
-        }
-
+    override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> = either {
         val path: Path = pathResolver.resolve(
-            inputVirtualPath,
+            input.path,
             input.baseDirectory,
-            allowEmptyPath = false,
             followSymlinks = false,
         )
             .mapLeft { it.toUnlinkError() }
-            .getOrElse { return it.left() }
+            .bind()
 
         if (path.isDirectory(NOFOLLOW_LINKS)) {
-            return PathIsDirectory("`$path` is a directory").left()
-        } else if (inputVirtualPath.isDirectoryRequest()) {
-            return NotDirectory("Path with trailing slash").left()
+            raise(PathIsDirectory("`$path` is a directory"))
+        } else if (input.path.isDirectoryRequest()) {
+            raise(NotDirectory("Path with trailing slash"))
         }
 
         return Either.catch {

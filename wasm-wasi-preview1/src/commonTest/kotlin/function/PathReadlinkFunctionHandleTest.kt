@@ -46,7 +46,7 @@ class PathReadlinkFunctionHandleTest {
 
     @Test
     fun path_readlink_success_case() {
-        val targetValue = "../target"
+        val targetValue = "../target".toVirtualPath()
         fileSystem.onOperation(ReadLink) { _: ReadLink -> targetValue.right() }
 
         val linkpathAddr = 0x80
@@ -67,14 +67,14 @@ class PathReadlinkFunctionHandleTest {
             sizeAddr = sizeAddr,
         )
         assertThat(errNo).isEqualTo(SUCCESS)
-        assertThat(memory.readI32(sizeAddr)).isEqualTo(targetValue.length)
-        assertThat(memory).hasBytesAt(bufAddr, targetValue.encodeToByteArray())
-        assertThat(memory).byteAt(bufAddr + targetValue.length).isEqualTo(MEMORY_FILL_BYTE)
+        assertThat(memory.readI32(sizeAddr)).isEqualTo(targetValue.utf8SizeBytes)
+        assertThat(memory).hasBytesAt(bufAddr, targetValue.utf8.toByteArray())
+        assertThat(memory).byteAt(bufAddr + targetValue.utf8SizeBytes).isEqualTo(MEMORY_FILL_BYTE)
     }
 
     @Test
     fun path_readlink_should_truncate_text_on_no_buffer() {
-        val targetValue = "../target"
+        val targetValue = "../target".toVirtualPath()
         fileSystem.onOperation(ReadLink) { _: ReadLink -> targetValue.right() }
 
         val linkpathAddr = 0x80

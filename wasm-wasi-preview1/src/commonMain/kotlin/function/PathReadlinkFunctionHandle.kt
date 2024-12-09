@@ -11,9 +11,9 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
-import at.released.weh.wasi.preview1.ext.encodeToBuffer
 import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.readPathString
 import at.released.weh.wasi.preview1.type.Errno
@@ -21,6 +21,9 @@ import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.sinkWithMaxSize
+import kotlinx.io.buffered
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.write
 
 public class PathReadlinkFunctionHandle(
     host: EmbedderHost,
@@ -41,11 +44,11 @@ public class PathReadlinkFunctionHandle(
         return host.fileSystem.execute(
             ReadLink,
             ReadLink(path, BaseDirectory.DirectoryFd(fd)),
-        ).onRight { symlinkTarget: String ->
-            val targetEncoded = symlinkTarget.encodeToBuffer()
+        ).onRight { symlinkTarget: VirtualPath ->
+            val targetEncoded: ByteString = symlinkTarget.utf8
             val size = targetEncoded.size.toInt().coerceAtMost(bufLen)
-            memory.sinkWithMaxSize(bufAddr, size).use {
-                it.write(targetEncoded, size.toLong())
+            memory.sinkWithMaxSize(bufAddr, size).buffered().use {
+                it.write(targetEncoded, 0, size)
             }
             memory.writeI32(sizeAddr, size)
         }.foldToErrno()

@@ -7,6 +7,7 @@
 package at.released.weh.wasi.preview1.ext
 
 import arrow.core.Either
+import arrow.core.flatMap
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Size
@@ -23,12 +24,10 @@ import kotlinx.io.readByteString
 import kotlinx.io.write
 import kotlinx.io.writeString
 
-// TODO: VirtualPath
 internal fun ReadOnlyMemory.readPathString(
     @IntWasmPtr(Byte::class) path: WasmPtr,
     pathSize: Int,
-): Either<Errno, String> = Either.catch {
-    // XXX need to validate UTF-8?
+): Either<Errno, VirtualPath> = Either.catch {
     sourceWithMaxSize(path, pathSize).buffered().use {
         it.readByteString(pathSize).decodeToString()
     }
@@ -39,6 +38,8 @@ internal fun ReadOnlyMemory.readPathString(
         is EOFException -> Errno.IO
         else -> Errno.FAULT
     }
+}.flatMap { pathString ->
+    VirtualPath.of(pathString).mapLeft { _ -> Errno.INVAL }
 }
 
 /**

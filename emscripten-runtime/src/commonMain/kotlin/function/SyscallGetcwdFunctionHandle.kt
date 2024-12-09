@@ -32,7 +32,7 @@ public class SyscallGetcwdFunctionHandle(
             .fold(
                 ifLeft = { -it.errno.wasiPreview1Code },
             ) { currentWorkingDirectory ->
-                val pathBuffer = currentWorkingDirectory.encodeToNullTerminatedBuffer()
+                val pathBuffer = currentWorkingDirectory.toString().encodeToNullTerminatedBuffer()
                 if (size < pathBuffer.size) {
                     return@fold -Errno.RANGE.code
                 }

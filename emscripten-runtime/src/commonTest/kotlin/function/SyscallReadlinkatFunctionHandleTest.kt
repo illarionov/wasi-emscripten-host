@@ -16,6 +16,7 @@ import at.released.weh.emcripten.runtime.include.Fcntl
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.wasi.preview1.type.Errno
@@ -47,11 +48,11 @@ class SyscallReadlinkatFunctionHandleTest {
 
     @Test
     fun readlinkAt_test_success_case() {
-        val expectedLinkTarget = "usr/sbin"
-        val expectedLinkTargetBytes = expectedLinkTarget.encodeToByteArray()
+        val expectedLinkTarget = "usr/sbin".toVirtualPath()
+        val expectedLinkTargetBytes = expectedLinkTarget.utf8.toByteArray()
 
         fileSystem.onOperation(ReadLink) { operation ->
-            assertThat(operation.path).isEqualTo("/sbin")
+            assertThat(operation.path).isEqualTo("/sbin".toVirtualPath())
             expectedLinkTarget.right()
         }
         @IntWasmPtr(Byte::class)
@@ -118,7 +119,7 @@ class SyscallReadlinkatFunctionHandleTest {
     @Test
     fun readlinkAt_should_not_exceed_bufsize_limit() {
         fileSystem.onOperation(ReadLink) {
-            "usr/sbin".right()
+            "usr/sbin".toVirtualPath().right()
         }
 
         @IntWasmPtr(Byte::class)

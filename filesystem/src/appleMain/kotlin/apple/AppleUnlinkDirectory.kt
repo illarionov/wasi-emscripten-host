@@ -16,7 +16,7 @@ internal class AppleUnlinkDirectory(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
     override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleUnlinkDirectory(it, input.path)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+            appleUnlinkDirectory(baseDirectory, realPath)
         }
 }

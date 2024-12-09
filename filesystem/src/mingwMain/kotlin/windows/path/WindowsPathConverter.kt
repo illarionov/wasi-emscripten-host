@@ -50,7 +50,7 @@ internal object WindowsPathConverter {
         return ntPath
     }
 
-    internal fun generatePreopenedDirectoryVirtualPath(
+    internal fun convertToVirtualPath(
         realPath: RealPath,
     ): Either<ValidateVirtualPathError, VirtualPath> {
         val pathStripped = realPath

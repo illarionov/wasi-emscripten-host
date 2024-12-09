@@ -45,6 +45,7 @@ import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.path.WindowsPathConverter
+import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.SymlinkType
 import at.released.weh.filesystem.windows.win32api.SymlinkType.SYMLINK_TO_FILE
@@ -53,19 +54,17 @@ import at.released.weh.filesystem.windows.win32api.windowsCreateSymbolicLink
 
 internal class WindowsSymlink(
     private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver = fsState.pathResolver,
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> = either {
-        val virtualOldPath = VirtualPath.of(input.oldPath).mapLeft { InvalidArgument(it.message) }.bind()
-
-        validateSymlinkTarget(virtualOldPath, input.allowAbsoluteOldPath).bind()
-
-        val virtualNewPath: VirtualPath = VirtualPath.of(input.newPath).mapLeft { InvalidArgument(it.message) }.bind()
-        val newPath: RealPath = fsState.pathResolver.resolveRealPath(input.newPathBaseDirectory, virtualNewPath).bind()
-
-        val windowsOldPath = WindowsPathConverter.convertToRealPath(virtualOldPath)
-        val symlinkType = getSymlinkTypeByTargetType(input.newPathBaseDirectory, windowsOldPath).bind()
-
-        return windowsCreateSymbolicLink(windowsOldPath, newPath, symlinkType)
+        validateSymlinkTarget(input.oldPath, input.allowAbsoluteOldPath).bind()
+        val newRealPath: RealPath = pathResolver.resolveRealPath(input.newPathBaseDirectory, input.newPath).bind()
+        val symlinkType = getSymlinkTypeByTargetType(input.newPathBaseDirectory, input.oldPath).bind()
+        return windowsCreateSymbolicLink(
+            WindowsPathConverter.convertToRealPath(input.oldPath),
+            newRealPath,
+            symlinkType,
+        )
     }
 
     private fun validateSymlinkTarget(
@@ -79,7 +78,7 @@ internal class WindowsSymlink(
 
     private fun getSymlinkTypeByTargetType(
         baseDirectory: BaseDirectory,
-        target: RealPath,
+        target: VirtualPath,
     ): Either<SymlinkError, SymlinkType> {
         val symlinkType: Either<SymlinkError, SymlinkType> = fsState.executeWithOpenFileHandle(
             baseDirectory = baseDirectory,

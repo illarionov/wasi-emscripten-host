@@ -29,13 +29,11 @@ public class PathCreateDirectoryFunctionHandle(
         @IntWasmPtr(Byte::class) path: WasmPtr,
         pathSize: Int,
     ): Errno {
-        val pathString = memory.readPathString(path, pathSize).getOrElse {
-            return it
-        }
+        val virtualPath = memory.readPathString(path, pathSize).getOrElse { return it }
         @Suppress("MagicNumber")
         return host.fileSystem.execute(
             Mkdir,
-            Mkdir(pathString, BaseDirectory.DirectoryFd(fd), 0b111_111_111, false),
+            Mkdir(virtualPath, BaseDirectory.DirectoryFd(fd), 0b111_111_111, false),
         ).foldToErrno()
     }
 }

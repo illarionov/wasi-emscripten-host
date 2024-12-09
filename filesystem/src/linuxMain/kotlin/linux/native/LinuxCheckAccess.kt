@@ -12,8 +12,8 @@ import arrow.core.right
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.platform.linux.AT_EACCESS
-import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.SYS_faccessat2
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -24,20 +24,18 @@ import platform.posix.syscall
 
 internal fun linuxCheckAccess(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: RealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean = true,
-    allowEmptyPath: Boolean = false,
     followSymlinks: Boolean = false,
 ): Either<CheckAccessError, Unit> =
-    linuxCheckAccess(baseDirectoryFd.linuxFd, path, mode, useEffectiveUserId, allowEmptyPath, followSymlinks)
+    linuxCheckAccess(baseDirectoryFd.linuxFd, path, mode, useEffectiveUserId, followSymlinks)
 
 private fun linuxCheckAccess(
     nativeFdOrArCwd: Int,
-    path: String,
+    path: RealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean,
-    allowEmptyPath: Boolean,
     followSymlinks: Boolean,
 ): Either<CheckAccessError, Unit> {
     val resultCode = syscall(
@@ -45,7 +43,7 @@ private fun linuxCheckAccess(
         nativeFdOrArCwd,
         path,
         fileAccessibilityCheckToPosixModeFlags(mode),
-        getCheckAccessFlags(useEffectiveUserId, allowEmptyPath, followSymlinks),
+        getCheckAccessFlags(useEffectiveUserId, followSymlinks),
     )
     return if (resultCode == 0L) {
         Unit.right()
@@ -56,15 +54,11 @@ private fun linuxCheckAccess(
 
 private fun getCheckAccessFlags(
     useEffectiveUserId: Boolean,
-    allowEmptyPath: Boolean,
     followSymlinks: Boolean,
 ): Int {
     var mask = 0
     if (useEffectiveUserId) {
         mask = mask and AT_EACCESS
-    }
-    if (allowEmptyPath) {
-        mask = mask and AT_EMPTY_PATH
     }
     if (!followSymlinks) {
         mask = mask and AT_SYMLINK_NOFOLLOW

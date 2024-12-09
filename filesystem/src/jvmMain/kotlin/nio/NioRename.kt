@@ -11,7 +11,6 @@ import arrow.core.left
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.Exists
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.PathIsDirectory
@@ -19,10 +18,9 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.fdresource.NioFdResource
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.FileAlreadyExistsException
@@ -42,23 +40,18 @@ internal class NioRename(
         val oldFdResource: NioFdResource?
         val newFdResource: NioFdResource?
 
-        val oldVirtualPath = VirtualPath.of(input.oldPath).mapLeft { InvalidArgument(it.message) }.bind()
-        val newVirtualPath = VirtualPath.of(input.newPath).mapLeft { InvalidArgument(it.message) }.bind()
-
         fsState.fdsLock.withLock {
             oldPath = fsState.pathResolver.resolve(
-                path = oldVirtualPath,
+                path = input.oldPath,
                 baseDirectory = input.oldBaseDirectory,
-                allowEmptyPath = true,
                 followSymlinks = false,
             )
                 .mapLeft(ResolvePathError::toCommonError)
                 .bind()
 
             newPath = fsState.pathResolver.resolve(
-                path = newVirtualPath,
+                path = input.newPath,
                 baseDirectory = input.newBaseDirectory,
-                allowEmptyPath = true,
                 followSymlinks = false,
             )
                 .mapLeft(ResolvePathError::toCommonError)
@@ -74,7 +67,7 @@ internal class NioRename(
 
         rename(oldPath, newPath).bind()
 
-        oldFdResource?.updatePath(newPath, newVirtualPath)
+        oldFdResource?.updatePath(newPath, input.newPath)
     }
 
     private fun rename(

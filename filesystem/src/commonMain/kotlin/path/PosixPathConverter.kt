@@ -26,7 +26,7 @@ internal object PosixPathConverter {
         return virtualPath.utf8.decodeToString().right()
     }
 
-    fun convertRealPathToVirtualPath(path: RealPath): Either<InvalidArgument, VirtualPath> {
+    fun convertToVirtualPath(path: RealPath): Either<InvalidArgument, VirtualPath> {
         return VirtualPath.of(path).mapLeft { InvalidArgument(it.message) }
     }
 }

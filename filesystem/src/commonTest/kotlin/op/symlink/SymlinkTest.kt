@@ -8,6 +8,7 @@ package at.released.weh.filesystem.op.symlink
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.TEST_CONTENT
 import at.released.weh.filesystem.testutil.TEST_FILE_NAME
@@ -25,7 +26,11 @@ class SymlinkTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Symlink,
-                Symlink(TEST_FILE_NAME, "newfile.txt", newPathBaseDirectory = tempFolderDirectoryFd),
+                Symlink(
+                    TEST_FILE_NAME.toVirtualPath(),
+                    "newfile.txt".toVirtualPath(),
+                    newPathBaseDirectory = tempFolderDirectoryFd,
+                ),
             ).onLeft { error("Can not create symlink: $it") }
         }
 
@@ -42,7 +47,11 @@ class SymlinkTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Symlink,
-                Symlink("subdir/testfile", "newfile.txt", newPathBaseDirectory = tempFolderDirectoryFd),
+                Symlink(
+                    "subdir/testfile".toVirtualPath(),
+                    "newfile.txt".toVirtualPath(),
+                    newPathBaseDirectory = tempFolderDirectoryFd,
+                ),
             ).onLeft { error("Can not create symlink: $it") }
         }
 

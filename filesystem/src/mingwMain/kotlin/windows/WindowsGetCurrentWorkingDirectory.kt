@@ -8,7 +8,6 @@ package at.released.weh.filesystem.windows
 
 import arrow.core.Either
 import arrow.core.left
-import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.error.InvalidArgument
@@ -16,6 +15,8 @@ import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.addressOf
@@ -29,15 +30,17 @@ import platform.posix.errno
 import platform.posix.getcwd
 
 internal class WindowsGetCurrentWorkingDirectory :
-    FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, String> {
-    override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, String> {
+    FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, VirtualPath> {
+    override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, VirtualPath> {
         val byteArray = ByteArray(PATH_MAX)
         // TODO: change
         val cwd: CPointer<ByteVarOf<Byte>>? = byteArray.usePinned { bytes ->
             getcwd(bytes.addressOf(0), PATH_MAX)
         }
         return if (cwd != null) {
-            byteArray.decodeToString().right()
+            val realPath = byteArray.decodeToString()
+            WindowsPathConverter.convertToVirtualPath(realPath)
+                .mapLeft { error -> InvalidArgument(error.message) }
         } else {
             errno.errnoToGetCurrentWorkingDirectoryError().left()
         }

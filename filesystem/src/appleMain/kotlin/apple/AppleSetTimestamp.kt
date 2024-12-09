@@ -17,7 +17,10 @@ internal class AppleSetTimestamp(
 ) : FileSystemOperationHandler<SetTimestamp, SetTimestampError, Unit> {
     override fun invoke(
         input: SetTimestamp,
-    ): Either<SetTimestampError, Unit> = fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-        appleSetTimestamp(it, input.path, input.atimeNanoseconds, input.mtimeNanoseconds, input.followSymlinks)
+    ): Either<SetTimestampError, Unit> = fsState.executeWithPath(
+        input.path,
+        input.baseDirectory,
+    ) { realPath, baseDirectory ->
+        appleSetTimestamp(baseDirectory, realPath, input.atimeNanoseconds, input.mtimeNanoseconds, input.followSymlinks)
     }
 }

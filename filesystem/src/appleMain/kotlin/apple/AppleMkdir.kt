@@ -16,7 +16,7 @@ internal class AppleMkdir(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleMkdir(it, input.path, input.mode, input.failIfExists)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+            appleMkdir(baseDirectory, realPath, input.mode, input.failIfExists)
         }
 }
