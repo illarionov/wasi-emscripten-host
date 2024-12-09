@@ -18,7 +18,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.fdresource.PreopenedDirectories
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel

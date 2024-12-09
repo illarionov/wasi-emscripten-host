@@ -7,7 +7,7 @@
 package at.released.weh.wasi.preview1.ext
 
 import arrow.core.Either
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasi.preview1.type.Size
 import at.released.weh.wasm.core.IntWasmPtr
@@ -20,8 +20,10 @@ import kotlinx.io.IOException
 import kotlinx.io.buffered
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.readByteString
+import kotlinx.io.write
 import kotlinx.io.writeString
 
+// TODO: VirtualPath
 internal fun ReadOnlyMemory.readPathString(
     @IntWasmPtr(Byte::class) path: WasmPtr,
     pathSize: Int,
@@ -43,8 +45,12 @@ internal fun ReadOnlyMemory.readPathString(
  * The size of the binary representation of the WASI file system path.
  * This encoded string is not null-terminated.
  */
-internal fun VirtualPath.encodedLength(): Size = this.encodeToByteArray().size
+internal fun VirtualPath.encodedLength(): Size = this.utf8SizeBytes
 
 internal fun VirtualPath.encodeToBuffer(): Buffer = Buffer().also { buffer ->
+    buffer.write(this.utf8)
+}
+
+internal fun String.encodeToBuffer(): Buffer = Buffer().also { buffer ->
     buffer.writeString(this)
 }

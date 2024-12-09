@@ -6,20 +6,21 @@
 
 package at.released.weh.wasi.preview1.ext
 
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.sinkWithMaxSize
+import kotlinx.io.buffered
+import kotlinx.io.write
 
 internal fun Memory.writeFilesystemPath(
     @IntWasmPtr addr: WasmPtr,
     path: VirtualPath,
 ): Int {
-    val buffer = path.encodeToBuffer()
-    val newPathBinarySize = buffer.size.toInt()
-    sinkWithMaxSize(addr, newPathBinarySize).use {
-        it.write(buffer, newPathBinarySize.toLong())
+    val newPathBinarySize = path.utf8SizeBytes
+    sinkWithMaxSize(addr, newPathBinarySize).buffered().use {
+        it.write(path.utf8)
     }
     return newPathBinarySize
 }

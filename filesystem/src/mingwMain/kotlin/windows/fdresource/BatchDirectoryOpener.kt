@@ -7,12 +7,16 @@
 package at.released.weh.filesystem.windows.fdresource
 
 import arrow.core.Either
+import arrow.core.getOrElse
+import arrow.core.left
 import arrow.core.raise.either
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
+import at.released.weh.filesystem.windows.path.WindowsPathConverter.generatePreopenedDirectoryVirtualPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import platform.windows.FILE_LIST_DIRECTORY
@@ -25,7 +29,7 @@ internal fun preopenDirectories(
     preopenedDirectories: List<PreopenedDirectory> = listOf(),
 ): Either<BatchDirectoryOpenerError, PreopenedDirectories> {
     val currentWorkingDirectory: Either<OpenError, WindowsDirectoryChannel> = preopenDirectory(
-        path = currentWorkingDirectoryPath,
+        realPath = currentWorkingDirectoryPath,
         baseDirectoryChannel = null,
     )
 
@@ -34,17 +38,17 @@ internal fun preopenDirectories(
     val opened: MutableMap<RealPath, WindowsDirectoryChannel> = mutableMapOf()
     val directories: Either<BatchDirectoryOpenerError, PreopenedDirectories> = either {
         for (directory in preopenedDirectories) {
-            val realpath = directory.realPath
+            val realPath = directory.realPath
 
-            if (opened.containsKey(realpath)) {
+            if (opened.containsKey(realPath)) {
                 continue
             }
 
-            val fdChannel = preopenDirectory(realpath, cwdChannel)
+            val fdChannel = preopenDirectory(realPath, cwdChannel)
                 .mapLeft { BatchDirectoryOpenerError(directory, it) }
                 .bind()
 
-            opened[realpath] = fdChannel
+            opened[realPath] = fdChannel
         }
 
         PreopenedDirectories(currentWorkingDirectory, opened)
@@ -55,11 +59,14 @@ internal fun preopenDirectories(
 }
 
 private fun preopenDirectory(
-    path: RealPath,
+    realPath: RealPath,
     baseDirectoryChannel: WindowsDirectoryChannel?,
 ): Either<OpenError, WindowsDirectoryChannel> {
+    val virtualPath = generatePreopenedDirectoryVirtualPath(realPath).mapLeft { InvalidArgument(it.message) }
+        .getOrElse { return it.left() }
+
     return windowsNtOpenDirectory(
-        path = path,
+        path = realPath,
         rootHandle = baseDirectoryChannel?.handle,
         desiredAccess = FILE_LIST_DIRECTORY or
                 FILE_READ_ATTRIBUTES or
@@ -70,7 +77,7 @@ private fun preopenDirectory(
             handle = newHandle,
             isPreopened = true,
             rights = FdRightsBlock.DIRECTORY_BASE_RIGHTS_BLOCK,
-            virtualPath = path,
+            virtualPath = virtualPath,
         )
     }
 }

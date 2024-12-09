@@ -41,12 +41,12 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 import at.released.weh.filesystem.posix.nativefunc.posixClose
-import at.released.weh.filesystem.preopened.VirtualPath
 
 internal class AppleDirectoryFdResource(
     val nativeFd: NativeDirectoryFd,

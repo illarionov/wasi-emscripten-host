@@ -32,6 +32,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
 import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
 import at.released.weh.filesystem.platform.linux.RESOLVE_IN_ROOT
@@ -42,7 +43,6 @@ import at.released.weh.filesystem.platform.linux.SYS_openat2
 import at.released.weh.filesystem.platform.linux.open_how
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
-import at.released.weh.filesystem.posix.ext.validatePath
 import at.released.weh.filesystem.posix.op.open.fdFdFlagsToPosixMask
 import at.released.weh.filesystem.posix.op.open.getFileOpenModeConsideringOpenFlags
 import at.released.weh.filesystem.posix.op.open.openFileFlagsToPosixMask
@@ -64,7 +64,7 @@ import platform.posix.syscall
 
 internal fun linuxOpenFileOrDirectory(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: RealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
@@ -72,8 +72,6 @@ internal fun linuxOpenFileOrDirectory(
 ): Either<OpenError, FileDirectoryFd> = either<OpenError, FileDirectoryFd> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
     val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
-
-    validatePath(path).bind()
 
     val existingFileType: Filetype? = getFileType(baseDirectoryFd, path, flags).bind()
 

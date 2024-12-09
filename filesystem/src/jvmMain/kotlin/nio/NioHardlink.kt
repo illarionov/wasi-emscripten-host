@@ -10,6 +10,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.HardlinkError
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadLinkError
@@ -20,6 +21,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
@@ -39,15 +41,18 @@ internal class NioHardlink(
     }
 
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> = either {
+        val oldVirtualPath = VirtualPath.of(input.oldPath).mapLeft { InvalidArgument(it.message) }.bind()
+
         val oldPath = fsState.pathResolver.resolve(
-            path = input.oldPath,
+            path = oldVirtualPath,
             baseDirectory = input.oldBaseDirectory,
             allowEmptyPath = false,
             followSymlinks = input.followSymlinks,
         ).mapLeft(ResolvePathError::toCommonError).bind()
 
+        val newVirtualPath = VirtualPath.of(input.newPath).mapLeft { InvalidArgument(it.message) }.bind()
         val newPath = fsState.pathResolver.resolve(
-            path = input.newPath,
+            path = newVirtualPath,
             baseDirectory = input.newBaseDirectory,
             allowEmptyPath = false,
             followSymlinks = false,

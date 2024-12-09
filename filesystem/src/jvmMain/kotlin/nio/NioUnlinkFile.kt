@@ -11,6 +11,7 @@ import arrow.core.getOrElse
 import arrow.core.left
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.DirectoryNotEmpty
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
@@ -21,6 +22,8 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.PathResolver
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
@@ -35,8 +38,12 @@ internal class NioUnlinkFile(
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
     @Suppress("ReturnCount")
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
+        val inputVirtualPath = VirtualPath.of(input.path).getOrElse {
+            return InvalidArgument(it.message).left()
+        }
+
         val path: Path = pathResolver.resolve(
-            input.path,
+            inputVirtualPath,
             input.baseDirectory,
             allowEmptyPath = false,
             followSymlinks = false,
@@ -46,12 +53,8 @@ internal class NioUnlinkFile(
 
         if (path.isDirectory(NOFOLLOW_LINKS)) {
             return PathIsDirectory("`$path` is a directory").left()
-        }
-
-        input.path.trim().let {
-            if (it.endsWith("/") || it.endsWith("\\")) {
-                return NotDirectory("This command can not be used to remove directory").left()
-            }
+        } else if (inputVirtualPath.isDirectoryRequest()) {
+            return NotDirectory("Path with trailing slash").left()
         }
 
         return Either.catch {

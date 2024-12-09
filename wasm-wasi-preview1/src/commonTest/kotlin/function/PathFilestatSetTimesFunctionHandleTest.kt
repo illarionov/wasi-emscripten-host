@@ -16,6 +16,7 @@ import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.INVAL
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
@@ -61,7 +62,7 @@ class PathFilestatSetTimesFunctionHandleTest {
         }
 
         val testPathAddr = 0x80
-        val testPath = "testPath"
+        val testPath = "testPath".toVirtualPath()
         val testPathBinarySize = memory.writeFilesystemPath(testPathAddr, testPath)
 
         val errNo = filestatSetTimesFunctionHandle.execute(
@@ -77,7 +78,7 @@ class PathFilestatSetTimesFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(timestampRequest).isEqualTo(
             SetTimestamp(
-                path = testPath,
+                path = testPath.toString(),
                 baseDirectory = BaseDirectory.DirectoryFd(4),
                 atimeNanoseconds = currentTime,
                 mtimeNanoseconds = 1244L,
@@ -91,7 +92,7 @@ class PathFilestatSetTimesFunctionHandleTest {
         fileSystem.onOperation(SetTimestamp) { _ -> Unit.right() }
 
         val testPathAddr = 0x80
-        val testPath = "testPath"
+        val testPath = "testPath".toVirtualPath()
         val testPathBinarySize = memory.writeFilesystemPath(testPathAddr, testPath)
 
         tableOf("fstflags")

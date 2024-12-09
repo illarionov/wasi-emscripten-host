@@ -24,11 +24,11 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_FOLLOW
 import at.released.weh.filesystem.platform.linux.linkat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.preopened.VirtualPath
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.EACCES
 import platform.posix.EBADF
@@ -49,9 +49,9 @@ import platform.posix.strerror
 
 internal fun linuxHardlink(
     oldBaseDirectoryFd: NativeDirectoryFd,
-    oldPath: VirtualPath,
+    oldPath: RealPath,
     newBaseDirectoryFd: NativeDirectoryFd,
-    newPath: VirtualPath,
+    newPath: RealPath,
     followSymlinks: Boolean = false,
     allowEmptyPath: Boolean = false,
 ): Either<HardlinkError, Unit> {
@@ -63,6 +63,7 @@ internal fun linuxHardlink(
         flags = flags or AT_SYMLINK_FOLLOW
     }
 
+    // TODO: check RESOLVE_BENEATH
     val resultCode = linkat(
         oldBaseDirectoryFd.linuxFd,
         oldPath,
@@ -81,7 +82,7 @@ internal fun linuxHardlink(
 private fun Int.errnoToLinkError(): HardlinkError = when (this) {
     EACCES -> AccessDenied("Access to linkpath denied")
     EBADF -> BadFileDescriptor("Bad file descriptor")
-    EDQUOT -> DiskQuota("User quota on filesystem resources has been exsausted")
+    EDQUOT -> DiskQuota("User quota on filesystem resources has been exhausted")
     EEXIST -> Exists("Linkpath exists")
     EINVAL -> InvalidArgument("Invalid flags specified")
     EIO -> IoError("I/O error")

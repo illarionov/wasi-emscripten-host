@@ -14,6 +14,7 @@ import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasm.core.test.fixtures.TestMemory
@@ -48,8 +49,8 @@ class PathRenameFunctionHandleTest {
             Unit.right()
         }
 
-        val oldPath = "target"
-        val newPath = "newPath"
+        val oldPath = "target".toVirtualPath()
+        val newPath = "newPath".toVirtualPath()
 
         val oldpathAddr = 0x10
         val oldPathBinarySize = memory.writeFilesystemPath(oldpathAddr, oldPath)
@@ -71,8 +72,8 @@ class PathRenameFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(renameRequest).isEqualTo(
             Rename(
-                oldPath = oldPath,
-                newPath = newPath,
+                oldPath = oldPath.toString(),
+                newPath = newPath.toString(),
                 oldBaseDirectory = BaseDirectory.DirectoryFd(3),
                 newBaseDirectory = BaseDirectory.DirectoryFd(3),
             ),

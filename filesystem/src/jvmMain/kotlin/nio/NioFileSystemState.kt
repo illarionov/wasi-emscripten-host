@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
@@ -26,12 +27,13 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.cwd.JvmPathResolver
-import at.released.weh.filesystem.nio.cwd.PathResolver
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.InvalidCharacters
+import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.PathIsEmpty
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.io.IOException
 import java.nio.channels.FileChannel
@@ -50,7 +52,7 @@ internal class NioFileSystemState private constructor(
 ) : AutoCloseable {
     val fdsLock: Lock = ReentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
-    val pathResolver: PathResolver = JvmPathResolver(javaFs, this)
+    val pathResolver: JvmPathResolver = JvmPathResolver(javaFs, this)
 
     fun <E : FileSystemOperationError> addFile(
         path: Path,
@@ -141,11 +143,19 @@ internal class NioFileSystemState private constructor(
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
         baseDirectory: BaseDirectory,
-        relativePath: VirtualPath,
+        relativePath: String,
         followSymlinks: Boolean = false,
         crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
     ): Either<E, R> {
-        val path = pathResolver.resolve(relativePath, baseDirectory, true, followSymlinks)
+        val path = VirtualPath.of(relativePath)
+            .mapLeft {
+                when (it) {
+                    is InvalidCharacters -> ResolvePathError.InvalidPath(it.message)
+                    is PathIsEmpty -> ResolvePathError.EmptyPath(it.message)
+                }
+            }.flatMap {
+                pathResolver.resolve(it, baseDirectory, true, followSymlinks)
+            }
         return block(path)
     }
 

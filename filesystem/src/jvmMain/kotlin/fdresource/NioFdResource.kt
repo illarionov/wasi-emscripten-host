@@ -7,7 +7,7 @@
 package at.released.weh.filesystem.fdresource
 
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.util.concurrent.locks.Lock
 import java.nio.file.Path as NioPath
 

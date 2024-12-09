@@ -15,6 +15,7 @@ public data class ReadLink(
     public val path: String,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 ) {
+    // TODO: VirtualPath
     public companion object : FileSystemOperation<ReadLink, ReadLinkError, String> {
         override val tag: String = "readlink"
     }

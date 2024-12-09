@@ -23,7 +23,8 @@ import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDesc
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
 import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -40,9 +41,9 @@ internal class JvmPathResolver(
         allowEmptyPath: Boolean,
         followSymlinks: Boolean,
     ): Either<ResolvePathError, Path> {
-        val pathIsAbsolute = (path ?: "").startsWith("/")
+        val pathIsAbsolute = path?.isAbsolute() == true
         val nioPath = try {
-            val pathString = path ?: ""
+            val pathString = path?.toString() ?: ""
             javaFs.getPath(pathString)
         } catch (@Suppress("SwallowedException") ipe: InvalidPathException) {
             return InvalidPath("Path `$path` cannot be converted").left()

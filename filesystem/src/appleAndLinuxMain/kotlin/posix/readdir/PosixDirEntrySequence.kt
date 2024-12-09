@@ -10,7 +10,7 @@ import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd.DirSequenceStartPosition
 import at.released.weh.filesystem.op.readdir.ReadDirFd.DirSequenceStartPosition.Cookie
-import at.released.weh.filesystem.preopened.VirtualPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CPointer

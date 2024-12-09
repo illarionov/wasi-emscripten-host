@@ -17,7 +17,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.SymlinkError
-import at.released.weh.filesystem.preopened.RealPath
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CreateSymbolicLinkW
 import platform.windows.ERROR_ACCESS_DENIED

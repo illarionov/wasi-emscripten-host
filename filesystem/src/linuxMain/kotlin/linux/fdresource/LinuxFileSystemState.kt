@@ -27,10 +27,10 @@ import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.preopened.RealPath
-import at.released.weh.filesystem.preopened.VirtualPath
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
@@ -142,9 +142,11 @@ internal class LinuxFileSystemState private constructor(
         private val fileDescriptors: FileDescriptorTable<FdResource>,
         private val fsLock: ReentrantLock,
     ) {
+        // TODO: remove
         private val openedDirectories: MutableMap<String, FdResource> = mutableMapOf()
         private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD
 
+        // TODO: move out
         fun setupPreopenedDirectories(
             preopened: PreopenedDirectories,
         ) {

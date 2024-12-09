@@ -41,7 +41,7 @@ public class PathReadlinkFunctionHandle(
         return host.fileSystem.execute(
             ReadLink,
             ReadLink(path, BaseDirectory.DirectoryFd(fd)),
-        ).onRight { symlinkTarget ->
+        ).onRight { symlinkTarget: String ->
             val targetEncoded = symlinkTarget.encodeToBuffer()
             val size = targetEncoded.size.toInt().coerceAtMost(bufLen)
             memory.sinkWithMaxSize(bufAddr, size).use {

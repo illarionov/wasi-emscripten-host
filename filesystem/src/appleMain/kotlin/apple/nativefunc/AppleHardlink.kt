@@ -25,8 +25,8 @@ import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.preopened.VirtualPath
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.AT_SYMLINK_FOLLOW
 import platform.posix.EACCES
@@ -52,9 +52,9 @@ import platform.posix.strerror
 
 internal fun appleHardlink(
     oldBaseDirectoryFd: NativeDirectoryFd,
-    oldPath: VirtualPath,
+    oldPath: RealPath,
     newBaseDirectoryFd: NativeDirectoryFd,
-    newPath: VirtualPath,
+    newPath: RealPath,
     followSymlinks: Boolean = false,
 ): Either<HardlinkError, Unit> {
     var flags = 0

@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fchmodat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -43,7 +44,7 @@ import platform.posix.fchmod
 
 internal fun linuxChmod(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: RealPath,
     @FileMode mode: Int,
     followSymlinks: Boolean,
 ): Either<ChmodError, Unit> {

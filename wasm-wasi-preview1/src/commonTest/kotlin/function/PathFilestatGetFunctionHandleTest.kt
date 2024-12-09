@@ -20,6 +20,7 @@ import at.released.weh.filesystem.test.fixtures.TestFileSystem
 import at.released.weh.host.test.fixtures.TestEmbedderHost
 import at.released.weh.test.io.bootstrap.TestEnvironment
 import at.released.weh.wasi.preview1.ext.FILESTAT_PACKED_SIZE
+import at.released.weh.wasi.preview1.ext.toVirtualPath
 import at.released.weh.wasi.preview1.ext.writeFilesystemPath
 import at.released.weh.wasi.preview1.type.Errno.SUCCESS
 import at.released.weh.wasi.preview1.type.LookupflagsFlag.SYMLINK_FOLLOW
@@ -71,7 +72,7 @@ class PathFilestatGetFunctionHandleTest {
         fileSystem.onOperation(Stat) { _ -> testStructStat.right() }
 
         val testPathAddr = 0x80
-        val testPath = "testPath"
+        val testPath = "testPath".toVirtualPath()
         val testPathBinarySize = memory.writeFilesystemPath(testPathAddr, testPath)
 
         val testAddr = 0x200
