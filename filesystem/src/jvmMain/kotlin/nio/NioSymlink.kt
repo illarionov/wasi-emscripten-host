@@ -11,13 +11,15 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
+import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.symlink.Symlink
 import java.nio.file.Path
 
 internal class NioSymlink(
     private val fsState: NioFileSystemState,
+    private val pathConverter: JvmNioPathConverter = JvmNioPathConverter(fsState.javaFs),
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> {
         return fsState.executeWithPath(
@@ -26,8 +28,12 @@ internal class NioSymlink(
         ) { resolvedPath: Either<ResolvePathError, Path> ->
             resolvedPath
                 .mapLeft(ResolvePathError::toCommonError)
-                .flatMap {
-                    createSymlink(it, input.oldPath, input.allowAbsoluteOldPath)
+                .flatMap { newRealPath ->
+                    pathConverter.toNioPath(input.oldPath)
+                        .map { oldRealPath -> newRealPath to oldRealPath }
+                }
+                .flatMap { (newPath, oldPath) ->
+                    createSymlink(newPath, oldPath, input.allowAbsoluteOldPath)
                 }
         }
     }

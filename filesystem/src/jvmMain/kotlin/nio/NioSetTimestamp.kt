@@ -11,7 +11,7 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 

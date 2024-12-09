@@ -14,9 +14,11 @@ import arrow.core.right
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
+import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import kotlinx.io.IOException
@@ -27,6 +29,18 @@ import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.HANDLE
 import platform.windows.PathIsRelativeW
+
+internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
+    baseHandle: HANDLE?,
+    path: VirtualPath,
+    followSymlinks: Boolean = true,
+    access: AttributeDesiredAccess = READ_ONLY,
+    errorMapper: (OpenError) -> E,
+    block: (HANDLE) -> Either<E, R>,
+): Either<E, R> {
+    val realPath = WindowsPathConverter.convertToRealPath(path)
+    return useFileForAttributeAccess(baseHandle, realPath, followSymlinks, access, errorMapper, block)
+}
 
 internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
     baseHandle: HANDLE?,

@@ -6,6 +6,7 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.getOrElse
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_UTIMENSAT
 import at.released.weh.emcripten.runtime.ext.fromRawDirFd
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
@@ -14,7 +15,9 @@ import at.released.weh.emcripten.runtime.include.sys.SysStat.UTIME_NOW
 import at.released.weh.emcripten.runtime.include.sys.SysStat.UTIME_OMIT
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
+import at.released.weh.wasi.preview1.type.Errno
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.WasmPtrUtil.ptrIsNull
@@ -37,6 +40,8 @@ public class SyscallUtimensatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0
         val path = memory.readNullTerminatedString(pathnamePtr)
+        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+
         val atimeNs: Long?
         val mtimeNs: Long?
         @Suppress("MagicNumber")
@@ -57,7 +62,7 @@ public class SyscallUtimensatFunctionHandle(
         return host.fileSystem.execute(
             operation = SetTimestamp,
             input = SetTimestamp(
-                path = path,
+                path = virtualPath,
                 baseDirectory = baseDirectory,
                 atimeNanoseconds = atimeNs,
                 mtimeNanoseconds = mtimeNs,

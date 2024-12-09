@@ -23,23 +23,21 @@ import java.nio.file.Path
 
 internal fun createSymlink(
     linkpath: Path,
-    target: String,
+    target: Path,
     allowAbsoluteOldPath: Boolean,
 ): Either<SymlinkError, Unit> {
     return validateSymlinkTarget(target, allowAbsoluteOldPath)
         .flatMap {
-            val targetPath = Path.of(target)
-            createSymlink(linkpath, targetPath)
+            createSymlink(linkpath, target)
         }
 }
 
 private fun validateSymlinkTarget(
-    target: String,
+    target: Path,
     allowAbsolutePath: Boolean,
 ): Either<SymlinkError, Unit> = either {
-    val cleanedTarget = target.trim()
     // XXX Path.of("/").isAbsolute is false on Windows
-    if (!allowAbsolutePath && (Path.of(cleanedTarget).isAbsolute || cleanedTarget.startsWith("/"))) {
+    if (!allowAbsolutePath && (target.isAbsolute || target.startsWith("/"))) {
         raise(InvalidArgument("link destination should be relative"))
     }
 }

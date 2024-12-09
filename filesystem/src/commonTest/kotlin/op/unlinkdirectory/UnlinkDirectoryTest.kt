@@ -15,6 +15,7 @@ import at.released.weh.filesystem.model.FileSystemErrno.NOENT
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
 import at.released.weh.filesystem.model.FileSystemErrno.NOTEMPTY
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_FILE
@@ -34,7 +35,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
     fun unlinkdirectory_success_case() {
         val testFile = tempFolder.createTestDirectory()
         createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory(testFile.name, tempFolderDirectoryFd)
+            val request = UnlinkDirectory(testFile.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).getOrElse { fail("UnlinkDirectory failed: $it") }
         }
         assertThat(testFile).isNotExists()
@@ -44,7 +45,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
     fun unlinkdirectory_on_file_should_fail() {
         val testDirectory = tempFolder.createTestFile()
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory(testDirectory.name, tempFolderDirectoryFd)
+            val request = UnlinkDirectory(testDirectory.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isEqualTo(NOTDIR)
@@ -53,7 +54,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
     @Test
     fun unlinkdirectory_on_nonexistent_path_should_fail() {
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory("nonexistent", tempFolderDirectoryFd)
+            val request = UnlinkDirectory("nonexistent".toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isIn(NOENT, NOTDIR)
@@ -67,7 +68,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
         val testSymlink = tempFolder.createTestSymlink(testDirectory.name, "testSymlink", SYMLINK_TO_DIRECTORY)
 
         createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory(testSymlink.name, tempFolderDirectoryFd)
+            val request = UnlinkDirectory(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).getOrElse { fail("UnlinkDirectory failed: $it") }
         }
         assertThat(testDirectory).isExists()
@@ -80,7 +81,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
         val testSymlink = tempFolder.createTestSymlink(testFile.name, "testSymlink", SYMLINK_TO_FILE)
 
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory(testSymlink.name, tempFolderDirectoryFd)
+            val request = UnlinkDirectory(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isEqualTo(NOTDIR)
@@ -93,7 +94,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
         val testSymlink = tempFolder.createTestSymlink("nonexistent_target", "testSymlink", SYMLINK_TO_DIRECTORY)
 
         createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory(testSymlink.name, tempFolderDirectoryFd)
+            val request = UnlinkDirectory(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).getOrElse { fail("UnlinkDirectory failed: $it") }
         }
         assertThat(testSymlink).isNotExists()
@@ -105,7 +106,7 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
         tempFolder.createTestFile("testdir/testfile.txt", size = 100)
 
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
-            val request = UnlinkDirectory("testdir", tempFolderDirectoryFd)
+            val request = UnlinkDirectory("testdir".toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkDirectory, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isEqualTo(NOTEMPTY)

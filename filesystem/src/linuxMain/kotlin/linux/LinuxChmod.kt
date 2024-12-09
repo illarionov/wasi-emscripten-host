@@ -7,24 +7,17 @@
 package at.released.weh.filesystem.linux
 
 import arrow.core.Either
-import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChmodError
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxChmod
 import at.released.weh.filesystem.op.chmod.Chmod
-import at.released.weh.filesystem.path.PosixPathConverter.convertToRealPath
 
 internal class LinuxChmod(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
-        convertToRealPath(input.path)
-            .mapLeft { InvalidArgument(it.message) }
-            .flatMap { inputRealPath ->
-                fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-                    linuxChmod(it, inputRealPath, input.mode, input.followSymlinks)
-                }
-            }
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
+            linuxChmod(realBaseDirectory, realPath, input.mode, input.followSymlinks)
+        }
 }

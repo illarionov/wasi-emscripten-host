@@ -18,6 +18,7 @@ import at.released.weh.filesystem.model.Whence.SET
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.seek.SeekFd
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.test.filesystem.assertions.fileSize
@@ -95,7 +96,7 @@ class TruncateTest : BaseFileSystemIntegrationTest() {
     }
 
     private fun generateOpenFileCommand(testfilePath: Path) = Open(
-        path = testfilePath.name,
+        path = testfilePath.name.toVirtualPath(),
         baseDirectory = BaseDirectory.DirectoryFd(WASI_FIRST_PREOPEN_FD),
         openFlags = OpenFileFlag.O_RDWR,
         fdFlags = 0,

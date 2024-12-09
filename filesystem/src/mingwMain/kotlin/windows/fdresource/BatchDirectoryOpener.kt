@@ -16,7 +16,7 @@ import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
-import at.released.weh.filesystem.windows.path.WindowsPathConverter.generatePreopenedDirectoryVirtualPath
+import at.released.weh.filesystem.windows.path.WindowsPathConverter.convertToVirtualPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import platform.windows.FILE_LIST_DIRECTORY
@@ -62,7 +62,7 @@ private fun preopenDirectory(
     realPath: RealPath,
     baseDirectoryChannel: WindowsDirectoryChannel?,
 ): Either<OpenError, WindowsDirectoryChannel> {
-    val virtualPath = generatePreopenedDirectoryVirtualPath(realPath).mapLeft { InvalidArgument(it.message) }
+    val virtualPath = convertToVirtualPath(realPath).mapLeft { InvalidArgument(it.message) }
         .getOrElse { return it.left() }
 
     return windowsNtOpenDirectory(

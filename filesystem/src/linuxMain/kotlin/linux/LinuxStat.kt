@@ -18,8 +18,8 @@ internal class LinuxStat(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
     override fun invoke(input: Stat): Either<StatError, StructStat> {
-        return fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxStat(it, input.path, input.followSymlinks)
+        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
+            linuxStat(realBaseDirectory, realPath, input.followSymlinks)
         }
     }
 }

@@ -16,6 +16,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
@@ -34,16 +35,21 @@ public class NativeRenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Open,
-                Open(srcFile.name, tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, 0),
+                Open(srcFile.name.toVirtualPath(), tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, 0),
             ).getOrElse { fail("Can not open source file") }
             val openedDstFile = fileSystem.execute(
                 Open,
-                Open(dstFile.name, tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, FD_APPEND),
+                Open(dstFile.name.toVirtualPath(), tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, FD_APPEND),
             ).getOrElse { fail("Can not open destination file") }
 
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcFile.name, tempFolderDirectoryFd, dstFile.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcFile.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstFile.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename file: $it") }
 
             @Suppress("MagicNumber")

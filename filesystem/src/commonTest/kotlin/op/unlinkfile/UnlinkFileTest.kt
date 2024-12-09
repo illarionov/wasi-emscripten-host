@@ -12,6 +12,7 @@ import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.model.FileSystemErrno.ISDIR
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.filesystem.testutil.createTestDirectory
@@ -29,7 +30,7 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
     fun unlinkfile_success_case() {
         val testFile = tempFolder.createTestFile(size = 100)
         createTestFileSystem().use { fs ->
-            val request = UnlinkFile(testFile.name, tempFolderDirectoryFd)
+            val request = UnlinkFile(testFile.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkFile, request).getOrElse { fail("UnlinkFile failed: $it") }
         }
         assertThat(testFile).isNotExists()
@@ -40,7 +41,7 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
     fun unlinkfile_on_directory_should_fail() {
         val testDirectory = tempFolder.createTestDirectory()
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
-            val request = UnlinkFile(testDirectory.name, tempFolderDirectoryFd)
+            val request = UnlinkFile(testDirectory.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkFile, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isEqualTo(ISDIR)
@@ -52,7 +53,7 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
         val testSymlink = tempFolder.createTestSymlink(testFile.name, "testSymlink")
 
         createTestFileSystem().use { fs ->
-            val request = UnlinkFile(testSymlink.name, tempFolderDirectoryFd)
+            val request = UnlinkFile(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkFile, request).getOrElse { fail("UnlinkFile failed for symlink: $it") }
         }
         assertThat(testFile).isExists()
@@ -64,7 +65,7 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
         val testSymlink = tempFolder.createTestSymlink("testDirectory", "testSymlink", SYMLINK_TO_DIRECTORY)
 
         createTestFileSystem().use { fs ->
-            val request = UnlinkFile(testSymlink.name, tempFolderDirectoryFd)
+            val request = UnlinkFile(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
             fs.execute(UnlinkFile, request).getOrElse { fail("UnlinkFile failed for symlink: $it") }
         }
         assertThat(testSymlink).isNotExists()

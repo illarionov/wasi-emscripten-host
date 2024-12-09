@@ -36,7 +36,6 @@ import at.released.weh.filesystem.error.TextFileBusy
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
@@ -52,10 +51,7 @@ internal class WindowsHardlink(
     private val pathResolver: WindowsPathResolver = fsState.pathResolver,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> = either {
-        val newVirtualPath = VirtualPath.of(input.newPath)
-            .mapLeft { InvalidArgument(it.message) }
-            .bind()
-        val newPath = pathResolver.resolveRealPath(input.newBaseDirectory, newVirtualPath).bind()
+        val newPath = pathResolver.resolveRealPath(input.newBaseDirectory, input.newPath).bind()
 
         return fsState.executeWithOpenFileHandle(
             baseDirectory = input.oldBaseDirectory,

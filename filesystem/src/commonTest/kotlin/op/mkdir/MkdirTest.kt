@@ -11,6 +11,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.model.FileModeFlag
 import at.released.weh.filesystem.model.FileSystemErrno.EXIST
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.path
@@ -30,7 +31,7 @@ class MkdirTest : BaseFileSystemIntegrationTest() {
 
         createTestFileSystem().use { fs ->
             val request = Mkdir(
-                testdirPath.name,
+                testdirPath.name.toVirtualPath(),
                 tempFolderDirectoryFd,
                 FileModeFlag.S_IRWXU,
             )
@@ -46,7 +47,7 @@ class MkdirTest : BaseFileSystemIntegrationTest() {
         val testDir = tempFolder.createTestDirectory()
         createTestFileSystem().use { fs ->
             val request = Mkdir(
-                path = testDir.name,
+                path = testDir.name.toVirtualPath(),
                 baseDirectory = tempFolderDirectoryFd,
                 mode = FileModeFlag.S_IRWXU,
                 failIfExists = false,
@@ -60,7 +61,7 @@ class MkdirTest : BaseFileSystemIntegrationTest() {
         val testDir = tempFolder.createTestDirectory()
         val error = createTestFileSystem().use { fs ->
             val request = Mkdir(
-                path = testDir.name,
+                path = testDir.name.toVirtualPath(),
                 baseDirectory = tempFolderDirectoryFd,
                 mode = FileModeFlag.S_IRWXU,
                 failIfExists = true,

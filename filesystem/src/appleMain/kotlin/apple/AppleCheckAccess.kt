@@ -16,10 +16,10 @@ internal class AppleCheckAccess(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) { nativeFdOrAtCwd ->
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
             appleCheckAccess(
-                path = input.path,
-                baseDirectoryFd = nativeFdOrAtCwd,
+                path = realPath,
+                baseDirectoryFd = baseDirectory,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
                 followSymlinks = input.followSymlinks,

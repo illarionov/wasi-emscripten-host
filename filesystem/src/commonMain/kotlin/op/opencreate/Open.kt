@@ -9,12 +9,14 @@ package at.released.weh.filesystem.op.opencreate
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.BaseDirectory
+import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToString
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 /**
  * Open or create a	file.
@@ -26,8 +28,8 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.openFileFlagsToStri
  * [Fcntl.O_CREAT]	flag). In this case, file is created with mode [mode].
  */
 public data class Open(
-    public val path: String,
-    public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
+    public val path: VirtualPath,
+    public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 
     @OpenFileFlagsType
     public val openFlags: OpenFileFlags,

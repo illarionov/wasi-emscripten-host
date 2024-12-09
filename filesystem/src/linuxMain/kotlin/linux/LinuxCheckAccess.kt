@@ -17,13 +17,15 @@ internal class LinuxCheckAccess(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) { nativeFdOrAtCwd ->
+        fsState.executeWithPath(
+            input.path,
+            input.baseDirectory,
+        ) { realPath, realBaseDirectory ->
             linuxCheckAccess(
-                path = input.path,
-                baseDirectoryFd = nativeFdOrAtCwd,
+                path = realPath,
+                baseDirectoryFd = realBaseDirectory,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
-                allowEmptyPath = input.allowEmptyPath,
                 followSymlinks = input.followSymlinks,
             )
         }

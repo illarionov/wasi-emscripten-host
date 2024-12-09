@@ -71,8 +71,8 @@ class PathSymlinkFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(symlinkRequest).isEqualTo(
             Symlink(
-                oldPath = oldPath.toString(),
-                newPath = newPath.toString(),
+                oldPath = oldPath,
+                newPath = newPath,
                 newPathBaseDirectory = BaseDirectory.DirectoryFd(4),
                 allowAbsoluteOldPath = false,
             ),

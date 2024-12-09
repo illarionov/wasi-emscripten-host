@@ -11,21 +11,14 @@ import at.released.weh.filesystem.apple.nativefunc.appleHardlink
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
-import at.released.weh.filesystem.path.PosixPathConverter.convertToRealPath
 
 internal class AppleHardlink(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> {
-        return Either.zipOrAccumulate(
-            { oldpathError, _ -> oldpathError },
-            convertToRealPath(input.oldPath),
-            convertToRealPath(input.newPath),
-        ) { oldPath, newPath ->
-            fsState.executeWithBaseDirectoryResource(input.newBaseDirectory) { newDirectoryFd ->
-                fsState.executeWithBaseDirectoryResource(input.oldBaseDirectory) { oldDirectoryFd ->
-                    appleHardlink(oldDirectoryFd, oldPath, newDirectoryFd, newPath, input.followSymlinks)
-                }
+        return fsState.executeWithPath(input.oldPath, input.oldBaseDirectory) { oldRealPath, oldBaseDirectory ->
+            fsState.executeWithPath(input.newPath, input.newBaseDirectory) { newRealPath, newBaseDirectory ->
+                appleHardlink(oldBaseDirectory, oldRealPath, newBaseDirectory, newRealPath, input.followSymlinks)
             }
         }
     }

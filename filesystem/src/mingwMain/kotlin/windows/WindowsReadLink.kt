@@ -7,20 +7,24 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
+import arrow.core.flatMap
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
+import at.released.weh.filesystem.windows.path.WindowsPathConverter.convertToVirtualPath
 import at.released.weh.filesystem.windows.win32api.deviceiocontrol.getReparsePoint
 
 internal class WindowsReadLink(
     private val fsState: WindowsFileSystemState,
-) : FileSystemOperationHandler<ReadLink, ReadLinkError, String> {
-    override fun invoke(input: ReadLink): Either<ReadLinkError, String> {
+) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
+    override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> {
         return fsState.executeWithOpenFileHandle(
             baseDirectory = input.baseDirectory,
             path = input.path,
@@ -29,6 +33,9 @@ internal class WindowsReadLink(
             errorMapper = { it.toReadLinkError() },
         ) { handle ->
             handle.getReparsePoint()
+        }.flatMap { linkRealPath ->
+            convertToVirtualPath(linkRealPath)
+                .mapLeft { InvalidArgument(it.message) }
         }
     }
 

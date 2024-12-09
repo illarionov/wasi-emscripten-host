@@ -9,26 +9,20 @@ package at.released.weh.filesystem.apple
 import arrow.core.Either
 import arrow.core.flatMap
 import at.released.weh.filesystem.apple.nativefunc.appleSymlink
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.symlink.Symlink
-import at.released.weh.filesystem.path.PosixPathConverter.convertToRealPath
 import at.released.weh.filesystem.path.PosixPathConverter.toRealPath
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.validateSymlinkTarget
 
 internal class AppleSymlink(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> {
-        return VirtualPath.of(input.oldPath)
-            .mapLeft { InvalidArgument(it.message) }
-            .flatMap { path -> validateSymlinkTarget(path, input.allowAbsoluteOldPath).map { path } }
-            .flatMap { toRealPath(it) }
-            .flatMap { oldRealpath -> convertToRealPath(input.newPath).map { oldRealpath to it } }
-            .flatMap { (oldRealpath, newRealPath) ->
-                fsState.executeWithBaseDirectoryResource(input.newPathBaseDirectory) { directoryFd ->
+        return validateSymlinkTarget(input.oldPath, input.allowAbsoluteOldPath)
+            .flatMap { toRealPath(input.oldPath) }
+            .flatMap { oldRealpath ->
+                fsState.executeWithPath(input.newPath, input.newPathBaseDirectory) { newRealPath, directoryFd ->
                     appleSymlink(oldRealpath, newRealPath, directoryFd)
                 }
             }

@@ -16,8 +16,9 @@ import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 internal class LinuxUnlinkDirectory(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
-    override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxUnlinkDirectory(it, input.path)
+    override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> {
+        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
+            linuxUnlinkDirectory(realBaseDirectory, realPath)
         }
+    }
 }

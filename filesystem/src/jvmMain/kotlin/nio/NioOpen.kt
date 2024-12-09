@@ -29,7 +29,7 @@ import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
@@ -50,12 +50,10 @@ internal class NioOpen(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
-        val virtualPath = VirtualPath.of(input.path).mapLeft { InvalidArgument(it.message) }.bind()
         val followSymlinks = input.openFlags and OpenFileFlag.O_NOFOLLOW != OpenFileFlag.O_NOFOLLOW
         val path: Path = fsState.pathResolver.resolve(
-            virtualPath,
+            input.path,
             input.baseDirectory,
-            allowEmptyPath = true,
             followSymlinks = followSymlinks,
         )
             .mapLeft(ResolvePathError::toCommonError)
@@ -73,7 +71,7 @@ internal class NioOpen(
             path.fileSystem.fileModeAsFileAttributesIfSupported(it)
         } ?: emptyArray()
 
-        val isDirectoryRequested = virtualPath.isDirectoryRequest()
+        val isDirectoryRequested = input.path.isDirectoryRequest()
         checkOpenFlags(input.openFlags, input.rights, isDirectoryRequested).bind()
 
         val baseDirectoryRights = if (input.baseDirectory is DirectoryFd) {
@@ -86,7 +84,7 @@ internal class NioOpen(
             return openDirectory(
                 fsState = fsState,
                 path = path,
-                virtualPath = virtualPath,
+                virtualPath = input.path,
                 rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
             )
         }

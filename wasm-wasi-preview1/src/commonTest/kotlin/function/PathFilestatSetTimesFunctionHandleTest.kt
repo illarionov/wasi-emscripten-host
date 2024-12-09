@@ -78,7 +78,7 @@ class PathFilestatSetTimesFunctionHandleTest {
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(timestampRequest).isEqualTo(
             SetTimestamp(
-                path = testPath.toString(),
+                path = testPath,
                 baseDirectory = BaseDirectory.DirectoryFd(4),
                 atimeNanoseconds = currentTime,
                 mtimeNanoseconds = 1244L,

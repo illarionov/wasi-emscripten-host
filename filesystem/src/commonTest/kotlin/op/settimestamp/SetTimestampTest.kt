@@ -16,6 +16,7 @@ import at.released.weh.filesystem.op.settimestamp.SetTimestampTestFixtures.TEST_
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.timeNanos
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
@@ -47,7 +48,7 @@ class SetTimestampTest : BaseFileSystemIntegrationTest() {
                     val oldStat = fs.getFileStat(testFile)
 
                     val request = SetTimestamp(
-                        path = testFile.name,
+                        path = testFile.name.toVirtualPath(),
                         baseDirectory = tempFolderDirectoryFd,
                         atimeNanoseconds = testAtime,
                         mtimeNanoseconds = testMtime,
@@ -74,6 +75,9 @@ class SetTimestampTest : BaseFileSystemIntegrationTest() {
     }
 
     private fun FileSystem.getFileStat(path: Path): StructStat {
-        return execute(Stat, Stat(path.name, tempFolderDirectoryFd)).getOrElse { fail("Can not get stat") }
+        return execute(
+            Stat,
+            Stat(path.name.toVirtualPath(), tempFolderDirectoryFd),
+        ).getOrElse { fail("Can not get stat") }
     }
 }

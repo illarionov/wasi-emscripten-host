@@ -806,22 +806,20 @@ public abstract interface class at/released/weh/filesystem/op/FileSystemOperatio
 
 public final class at/released/weh/filesystem/op/checkaccess/CheckAccess {
 	public static final field Companion Lat/released/weh/filesystem/op/checkaccess/CheckAccess$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZZ)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZ)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()Ljava/util/Set;
 	public final fun component4 ()Z
 	public final fun component5 ()Z
-	public final fun component6 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZZ)Lat/released/weh/filesystem/op/checkaccess/CheckAccess;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/checkaccess/CheckAccess;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZZILjava/lang/Object;)Lat/released/weh/filesystem/op/checkaccess/CheckAccess;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZ)Lat/released/weh/filesystem/op/checkaccess/CheckAccess;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/checkaccess/CheckAccess;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/util/Set;ZZILjava/lang/Object;)Lat/released/weh/filesystem/op/checkaccess/CheckAccess;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAllowEmptyPath ()Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
 	public final fun getMode ()Ljava/util/Set;
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun getUseEffectiveUserId ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -842,19 +840,19 @@ public final class at/released/weh/filesystem/op/checkaccess/FileAccessibilityCh
 
 public final class at/released/weh/filesystem/op/chmod/Chmod {
 	public static final field Companion Lat/released/weh/filesystem/op/chmod/Chmod$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZ)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/chmod/Chmod;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/chmod/Chmod;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/Chmod;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/chmod/Chmod;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/chmod/Chmod;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/chmod/Chmod;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
 	public final fun getMode ()I
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -883,21 +881,21 @@ public final class at/released/weh/filesystem/op/chmod/ChmodFd$Companion : at/re
 
 public final class at/released/weh/filesystem/op/chown/Chown {
 	public static final field Companion Lat/released/weh/filesystem/op/chown/Chown$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIZ)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IIZ)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IIZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()I
 	public final fun component5 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIZ)Lat/released/weh/filesystem/op/chown/Chown;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/chown/Chown;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IIZILjava/lang/Object;)Lat/released/weh/filesystem/op/chown/Chown;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IIZ)Lat/released/weh/filesystem/op/chown/Chown;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/chown/Chown;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IIZILjava/lang/Object;)Lat/released/weh/filesystem/op/chown/Chown;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
 	public final fun getGroup ()I
 	public final fun getOwner ()I
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1057,20 +1055,20 @@ public final class at/released/weh/filesystem/op/fdrenumber/Fdrenumber$Companion
 
 public final class at/released/weh/filesystem/op/hardlink/Hardlink {
 	public static final field Companion Lat/released/weh/filesystem/op/hardlink/Hardlink$Companion;
-	public fun <init> (Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Z)V
+	public fun <init> (Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Z)V
 	public final fun component1 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component2 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component3 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component4 ()Ljava/lang/String;
+	public final fun component4 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component5 ()Z
-	public final fun copy (Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Z)Lat/released/weh/filesystem/op/hardlink/Hardlink;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/hardlink/Hardlink;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/hardlink/Hardlink;
+	public final fun copy (Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Z)Lat/released/weh/filesystem/op/hardlink/Hardlink;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/hardlink/Hardlink;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/hardlink/Hardlink;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFollowSymlinks ()Z
 	public final fun getNewBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getNewPath ()Ljava/lang/String;
+	public final fun getNewPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun getOldBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getOldPath ()Ljava/lang/String;
+	public final fun getOldPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1142,19 +1140,19 @@ public final class at/released/weh/filesystem/op/lock/RemoveAdvisoryLockFd$Compa
 
 public final class at/released/weh/filesystem/op/mkdir/Mkdir {
 	public static final field Companion Lat/released/weh/filesystem/op/mkdir/Mkdir$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZ)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/mkdir/Mkdir;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/mkdir/Mkdir;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/mkdir/Mkdir;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZ)Lat/released/weh/filesystem/op/mkdir/Mkdir;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/mkdir/Mkdir;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IZILjava/lang/Object;)Lat/released/weh/filesystem/op/mkdir/Mkdir;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFailIfExists ()Z
 	public final fun getMode ()I
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1165,22 +1163,22 @@ public final class at/released/weh/filesystem/op/mkdir/Mkdir$Companion : at/rele
 
 public final class at/released/weh/filesystem/op/opencreate/Open {
 	public static final field Companion Lat/released/weh/filesystem/op/opencreate/Open$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()I
 	public final fun component4 ()I
 	public final fun component5 ()Ljava/lang/Integer;
 	public final fun component6 ()Lat/released/weh/filesystem/fdrights/FdRightsBlock;
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;)Lat/released/weh/filesystem/op/opencreate/Open;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;ILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;)Lat/released/weh/filesystem/op/opencreate/Open;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/opencreate/Open;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;IILjava/lang/Integer;Lat/released/weh/filesystem/fdrights/FdRightsBlock;ILjava/lang/Object;)Lat/released/weh/filesystem/op/opencreate/Open;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFdFlags ()I
 	public final fun getMode ()Ljava/lang/Integer;
 	public final fun getOpenFlags ()I
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun getRights ()Lat/released/weh/filesystem/fdrights/FdRightsBlock;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1307,15 +1305,15 @@ public final class at/released/weh/filesystem/op/readdir/ReadDirFd$DirSequenceSt
 
 public final class at/released/weh/filesystem/op/readlink/ReadLink {
 	public static final field Companion Lat/released/weh/filesystem/op/readlink/ReadLink$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/readlink/ReadLink;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/readlink/ReadLink;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/readlink/ReadLink;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/readlink/ReadLink;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/readlink/ReadLink;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/readlink/ReadLink;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1400,18 +1398,18 @@ public final class at/released/weh/filesystem/op/readwrite/WriteFd$Companion : a
 
 public final class at/released/weh/filesystem/op/rename/Rename {
 	public static final field Companion Lat/released/weh/filesystem/op/rename/Rename$Companion;
-	public fun <init> (Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;)V
+	public fun <init> (Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;)V
 	public final fun component1 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component2 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component3 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;)Lat/released/weh/filesystem/op/rename/Rename;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/rename/Rename;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/op/rename/Rename;
+	public final fun component4 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
+	public final fun copy (Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;)Lat/released/weh/filesystem/op/rename/Rename;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/rename/Rename;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;ILjava/lang/Object;)Lat/released/weh/filesystem/op/rename/Rename;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getNewBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getNewPath ()Ljava/lang/String;
+	public final fun getNewPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun getOldBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getOldPath ()Ljava/lang/String;
+	public final fun getOldPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1460,21 +1458,21 @@ public final class at/released/weh/filesystem/op/setfdflags/SetFdFlags$Companion
 
 public final class at/released/weh/filesystem/op/settimestamp/SetTimestamp {
 	public static final field Companion Lat/released/weh/filesystem/op/settimestamp/SetTimestamp$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;Z)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()Ljava/lang/Long;
 	public final fun component4 ()Ljava/lang/Long;
 	public final fun component5 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;Z)Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;Z)Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Ljava/lang/Long;Ljava/lang/Long;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/settimestamp/SetTimestamp;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAtimeNanoseconds ()Ljava/lang/Long;
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
 	public final fun getMtimeNanoseconds ()Ljava/lang/Long;
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1505,17 +1503,17 @@ public final class at/released/weh/filesystem/op/settimestamp/SetTimestampFd$Com
 
 public final class at/released/weh/filesystem/op/stat/Stat {
 	public static final field Companion Lat/released/weh/filesystem/op/stat/Stat$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component3 ()Z
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)Lat/released/weh/filesystem/op/stat/Stat;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/stat/Stat;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/Stat;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Z)Lat/released/weh/filesystem/op/stat/Stat;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/stat/Stat;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/stat/Stat;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun getFollowSymlinks ()Z
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1597,19 +1595,19 @@ public final class at/released/weh/filesystem/op/stat/StructTimespecKt {
 
 public final class at/released/weh/filesystem/op/symlink/Symlink {
 	public static final field Companion Lat/released/weh/filesystem/op/symlink/Symlink$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Z)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
+	public final fun component2 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component3 ()Lat/released/weh/filesystem/model/BaseDirectory;
 	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;Z)Lat/released/weh/filesystem/op/symlink/Symlink;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/symlink/Symlink;Ljava/lang/String;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/symlink/Symlink;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;Z)Lat/released/weh/filesystem/op/symlink/Symlink;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/symlink/Symlink;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ZILjava/lang/Object;)Lat/released/weh/filesystem/op/symlink/Symlink;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowAbsoluteOldPath ()Z
-	public final fun getNewPath ()Ljava/lang/String;
+	public final fun getNewPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun getNewPathBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getOldPath ()Ljava/lang/String;
+	public final fun getOldPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1657,15 +1655,15 @@ public final class at/released/weh/filesystem/op/truncate/TruncateFd$Companion :
 
 public final class at/released/weh/filesystem/op/unlink/UnlinkDirectory {
 	public static final field Companion Lat/released/weh/filesystem/op/unlink/UnlinkDirectory$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/unlink/UnlinkDirectory;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1676,15 +1674,15 @@ public final class at/released/weh/filesystem/op/unlink/UnlinkDirectory$Companio
 
 public final class at/released/weh/filesystem/op/unlink/UnlinkFile {
 	public static final field Companion Lat/released/weh/filesystem/op/unlink/UnlinkFile$Companion;
-	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)V
-	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public final fun component2 ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/unlink/UnlinkFile;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/unlink/UnlinkFile;Ljava/lang/String;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/unlink/UnlinkFile;
+	public final fun copy (Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;)Lat/released/weh/filesystem/op/unlink/UnlinkFile;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/op/unlink/UnlinkFile;Lat/released/weh/filesystem/path/virtual/VirtualPath;Lat/released/weh/filesystem/model/BaseDirectory;ILjava/lang/Object;)Lat/released/weh/filesystem/op/unlink/UnlinkFile;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBaseDirectory ()Lat/released/weh/filesystem/model/BaseDirectory;
-	public final fun getPath ()Ljava/lang/String;
+	public final fun getPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1700,13 +1698,17 @@ public abstract class at/released/weh/filesystem/path/virtual/ValidateVirtualPat
 public final class at/released/weh/filesystem/path/virtual/VirtualPath {
 	public static final field Companion Lat/released/weh/filesystem/path/virtual/VirtualPath$Companion;
 	public synthetic fun <init> (Lkotlinx/io/bytestring/ByteString;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getUtf8 ()Lkotlinx/io/bytestring/ByteString;
 	public final fun getUtf8SizeBytes ()I
+	public fun hashCode ()I
 	public static final fun of (Ljava/lang/String;)Larrow/core/Either;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/path/virtual/VirtualPath$Companion {
+	public final fun isAbsolute (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
+	public final fun isDirectoryRequest (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
 	public final fun of (Ljava/lang/String;)Larrow/core/Either;
 }
 

@@ -18,7 +18,16 @@ internal class LinuxSetTimestamp(
 ) : FileSystemOperationHandler<SetTimestamp, SetTimestampError, Unit> {
     override fun invoke(
         input: SetTimestamp,
-    ): Either<SetTimestampError, Unit> = fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-        linuxSetTimestamp(it, input.path, input.atimeNanoseconds, input.mtimeNanoseconds, input.followSymlinks)
+    ): Either<SetTimestampError, Unit> = fsState.executeWithPath(
+        input.path,
+        input.baseDirectory,
+    ) { realPath, realBaseDirectory ->
+        linuxSetTimestamp(
+            realBaseDirectory,
+            realPath,
+            input.atimeNanoseconds,
+            input.mtimeNanoseconds,
+            input.followSymlinks,
+        )
     }
 }

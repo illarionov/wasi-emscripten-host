@@ -10,48 +10,35 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.nio.NioFileSystemState
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.AbsolutePath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.NotDirectory
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
+import at.released.weh.filesystem.nio.cwd.ResolvePathError.AbsolutePath
+import at.released.weh.filesystem.nio.cwd.ResolvePathError.FileDescriptorNotOpen
+import at.released.weh.filesystem.nio.cwd.ResolvePathError.NotDirectory
+import at.released.weh.filesystem.nio.cwd.ResolvePathError.PathOutsideOfRootPath
+import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
-import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
-import kotlin.io.path.pathString
 
 @Suppress("ReturnCount")
 internal class JvmPathResolver(
     private val javaFs: java.nio.file.FileSystem,
     private val fsState: NioFileSystemState,
-) : PathResolver {
-    override fun resolve(
-        path: VirtualPath?,
+    private val pathConverter: JvmNioPathConverter = JvmNioPathConverter(javaFs),
+) {
+    fun resolve(
+        path: VirtualPath,
         baseDirectory: BaseDirectory,
-        allowEmptyPath: Boolean,
         followSymlinks: Boolean,
     ): Either<ResolvePathError, Path> {
-        val pathIsAbsolute = path?.isAbsolute() == true
-        val nioPath = try {
-            val pathString = path?.toString() ?: ""
-            javaFs.getPath(pathString)
-        } catch (@Suppress("SwallowedException") ipe: InvalidPathException) {
-            return InvalidPath("Path `$path` cannot be converted").left()
-        }
-
-        if (nioPath.pathString.isEmpty() && !allowEmptyPath) {
-            return EmptyPath("Empty path is not allowed").left()
-        }
+        val pathIsAbsolute = path.isAbsolute()
 
         val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
             CurrentWorkingDirectory -> javaFs.getPath("").right()
@@ -68,13 +55,21 @@ internal class JvmPathResolver(
             }
         }
 
-        return baseDirectoryPath.flatMap {
-            if (fsState.isRootAccessAllowed) {
-                it.resolve(nioPath).normalize().right()
-            } else {
-                it.resolveBeneath(nioPath, pathIsAbsolute)
+        val nioPath: Either<ResolvePathError, Path> = pathConverter.toNioPath(path)
+            .mapLeft { error: InvalidArgument -> ResolvePathError.InvalidPath(error.message) }
+
+        return Either.zipOrAccumulate(
+            { baseDirectoryPathError, nioPathError -> nioPathError },
+            baseDirectoryPath,
+            nioPath,
+        ) { baseDirectoryPath, nioPath -> baseDirectoryPath to nioPath }
+            .flatMap { (baseDirectoryPath, nioPath) ->
+                if (fsState.isRootAccessAllowed) {
+                    baseDirectoryPath.resolve(nioPath).normalize().right()
+                } else {
+                    baseDirectoryPath.resolveBeneath(nioPath, pathIsAbsolute)
+                }
             }
-        }
     }
 
     private companion object {

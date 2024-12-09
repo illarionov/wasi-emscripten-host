@@ -10,6 +10,7 @@ import arrow.core.getOrElse
 import assertk.assertThat
 import at.released.weh.filesystem.op.stat.StatFdTest.Companion.directoryAttributesLooksCorrect
 import at.released.weh.filesystem.op.stat.StatFdTest.Companion.fileAttributesLooksCorrect
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
@@ -30,7 +31,7 @@ class StatTest : BaseFileSystemIntegrationTest() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
         val testFile = tempFolder.createTestFile(size = 100)
         createTestFileSystem().use { fs ->
-            val statRequest = Stat(testFile.name, tempFolderDirectoryFd, true)
+            val statRequest = Stat(testFile.name.toVirtualPath(), tempFolderDirectoryFd, true)
             val stat: StructStat = fs.execute(Stat, statRequest).getOrElse { fail("Stat() failed: $it") }
             assertThat(stat).fileAttributesLooksCorrect(currentTimeMillis)
         }
@@ -44,7 +45,7 @@ class StatTest : BaseFileSystemIntegrationTest() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
         val tempDirectory = tempFolder.createTestDirectory()
         createTestFileSystem().use { fs ->
-            val statRequest = Stat(tempDirectory.name, tempFolderDirectoryFd, true)
+            val statRequest = Stat(tempDirectory.name.toVirtualPath(), tempFolderDirectoryFd, true)
             val stat: StructStat = fs.execute(Stat, statRequest).getOrElse { fail("Stat() failed: $it") }
             assertThat(stat).directoryAttributesLooksCorrect(currentTimeMillis)
         }

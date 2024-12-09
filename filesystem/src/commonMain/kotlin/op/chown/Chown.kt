@@ -10,9 +10,10 @@ import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class Chown(
-    val path: String,
+    val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
     public val owner: Int,
     public val group: Int,

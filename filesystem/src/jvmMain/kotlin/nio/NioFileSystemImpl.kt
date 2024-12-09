@@ -15,6 +15,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.CurrentDirectoryProvider
 import at.released.weh.filesystem.nio.cwd.JvmCurrentDirectoryProvider
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
+import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.chmod.Chmod
@@ -84,7 +85,10 @@ internal class NioFileSystemImpl(
         FallocateFd to NioFallocate(fsState),
         FdAttributes to NioFdAttributes(fsState),
         Fdrenumber to NioFdrenumber(fsState),
-        GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(currentDirectoryProvider),
+        GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(
+            currentDirectoryProvider,
+            JvmNioPathConverter(javaFs),
+        ),
         Hardlink to NioHardlink(fsState),
         Mkdir to NioMkdir(fsState),
         PrestatFd to NioPrestatFd(fsState),

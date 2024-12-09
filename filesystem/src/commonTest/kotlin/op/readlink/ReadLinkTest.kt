@@ -11,6 +11,8 @@ import assertk.assertThat
 import assertk.assertions.isIn
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
+import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createSymlink
 import at.released.weh.test.utils.absolutePath
@@ -25,16 +27,20 @@ class ReadLinkTest : BaseFileSystemIntegrationTest() {
 
         createSymlink("../target", Path(root, "testlink"))
         createTestFileSystem().use { fileSystem ->
-            val symlinkTarget = fileSystem.execute(
+            val symlinkTarget: VirtualPath = fileSystem.execute(
                 ReadLink,
                 ReadLink(
-                    path = "testlink",
+                    path = "testlink".toVirtualPath(),
                     baseDirectory = DirectoryFd(tempfolderFd),
                 ),
             ).getOrElse {
                 error("Read symlink error: $it")
             }
-            assertThat(symlinkTarget).isIn("../target", "..\\target")
+
+            assertThat(symlinkTarget).isIn(
+                "../target".toVirtualPath(),
+                "..\\target".toVirtualPath(), // TODO: fix on jvm windows, should be converted to /
+            )
         }
     }
 }

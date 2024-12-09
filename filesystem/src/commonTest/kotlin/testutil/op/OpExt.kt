@@ -12,6 +12,7 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.TEST_DIRECTORY_NAME
 import kotlinx.io.files.Path
 
@@ -51,7 +52,7 @@ private fun Open.Companion.createTest(
     openFlags: OpenFileFlags = OpenFileFlag.O_RDONLY,
     fdFlags: Fdflags = 0,
 ) = Open(
-    path = path,
+    path = path.toVirtualPath(),
     baseDirectory = baseDirectory,
     openFlags = openFlags,
     fdFlags = fdFlags,

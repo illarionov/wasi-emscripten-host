@@ -11,9 +11,10 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class Mkdir(
-    public val path: String,
+    public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 
     @FileMode

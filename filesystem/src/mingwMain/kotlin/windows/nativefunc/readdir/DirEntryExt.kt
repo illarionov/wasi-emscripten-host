@@ -12,6 +12,7 @@ import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.nativefunc.open.useFileForAttributeAccess
 import at.released.weh.filesystem.windows.win32api.ext.fromAttributes
 import at.released.weh.filesystem.windows.win32api.ext.get64bitInode
@@ -29,7 +30,7 @@ internal fun readDirEntry(
     data: WIN32_FIND_DATAW,
 ): Either<ReadDirError, DirEntry> = either {
     val fileName = data.cFileName.toKStringFromUtf16()
-    val (baseHandle: HANDLE?, path: String) = if (fileName != "..") {
+    val (baseHandle: HANDLE?, realPath: RealPath) = if (fileName != "..") {
         rootdir to fileName
     } else {
         val newPath = (Path(rootdirPath).parent ?: rootdirPath).toString() // TODO
@@ -38,7 +39,7 @@ internal fun readDirEntry(
 
     val fileInfo = useFileForAttributeAccess(
         baseHandle = baseHandle,
-        path = path,
+        path = realPath,
         followSymlinks = false,
         errorMapper = { it.toReadDirError() },
     ) { fileHandle -> fileHandle.getFileIdInfo().mapLeft(StatError::toReadDirError) }.bind()

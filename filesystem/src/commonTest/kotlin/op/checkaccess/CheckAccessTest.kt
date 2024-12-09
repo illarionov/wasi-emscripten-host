@@ -16,6 +16,7 @@ import at.released.weh.filesystem.model.FileSystemErrno.NOENT
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.WRITEABLE
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
@@ -40,7 +41,7 @@ class CheckAccessTest : BaseFileSystemIntegrationTest() {
             .forAll { mode, useEffectiveUserId ->
                 createTestFileSystem().use { fs ->
                     val checkaccessRequest = CheckAccess(
-                        path = testFile.name,
+                        path = testFile.name.toVirtualPath(),
                         baseDirectory = tempFolderDirectoryFd,
                         mode = mode,
                         useEffectiveUserId = useEffectiveUserId,
@@ -54,7 +55,7 @@ class CheckAccessTest : BaseFileSystemIntegrationTest() {
     fun checkaccess_on_nonexistent_should_fail() {
         createTestFileSystem().use { fs ->
             val checkaccessRequest = CheckAccess(
-                path = "nonexistent.txt",
+                path = "nonexistent.txt".toVirtualPath(),
                 baseDirectory = tempFolderDirectoryFd,
                 mode = setOf(),
             )
@@ -75,7 +76,7 @@ class CheckAccessTest : BaseFileSystemIntegrationTest() {
         val testFile = tempFolder.createTestFile(size = 100)
         createTestFileSystem().use { fs ->
             val checkaccessRequest = CheckAccess(
-                path = testFile.name,
+                path = testFile.name.toVirtualPath(),
                 baseDirectory = tempFolderDirectoryFd,
                 mode = setOf(EXECUTABLE),
                 useEffectiveUserId = true,

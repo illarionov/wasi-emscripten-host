@@ -9,13 +9,13 @@ package at.released.weh.filesystem.op.checkaccess
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
 public data class CheckAccess(
-    public val path: String,
+    public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
     public val mode: Set<FileAccessibilityCheck>,
     public val useEffectiveUserId: Boolean = false,
-    public val allowEmptyPath: Boolean = false,
     public val followSymlinks: Boolean = true,
 ) {
     public companion object : FileSystemOperation<CheckAccess, CheckAccessError, Unit> {

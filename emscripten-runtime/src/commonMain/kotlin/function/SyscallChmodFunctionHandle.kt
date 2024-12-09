@@ -6,11 +6,13 @@
 
 package at.released.weh.emcripten.runtime.function
 
+import arrow.core.flatMap
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_CHMOD
 import at.released.weh.emcripten.runtime.ext.negativeErrnoCode
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.chmod.Chmod
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
@@ -24,11 +26,9 @@ public class SyscallChmodFunctionHandle(
         memory: ReadOnlyMemory,
         @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         @FileMode mode: Int,
-    ): Int {
-        val path = memory.readNullTerminatedString(pathnamePtr)
-        return host.fileSystem.execute(
-            Chmod,
-            Chmod(path, CurrentWorkingDirectory, mode),
-        ).negativeErrnoCode()
-    }
+    ): Int = VirtualPath.of(memory.readNullTerminatedString(pathnamePtr))
+        .flatMap { virtualPath ->
+            host.fileSystem.execute(Chmod, Chmod(virtualPath, CurrentWorkingDirectory, mode))
+        }
+        .negativeErrnoCode()
 }

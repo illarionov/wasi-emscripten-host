@@ -16,7 +16,7 @@ internal class AppleChown(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
     override fun invoke(input: Chown): Either<ChownError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            appleChown(it, input.path, input.owner, input.group, input.followSymlinks)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+            appleChown(baseDirectory, realPath, input.owner, input.group, input.followSymlinks)
         }
 }

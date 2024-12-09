@@ -39,7 +39,7 @@ class PosixPathConverterTest {
             .row("tmp/", "tmp/")
             .row("tmp/a/../.", "tmp/a/../.")
             .forAll { realPath, expectedVirtualPath ->
-                val virtualPath: VirtualPath = PosixPathConverter.convertRealPathToVirtualPath(realPath)
+                val virtualPath: VirtualPath = PosixPathConverter.convertToVirtualPath(realPath)
                     .getOrElse { fail("Can not create virtual path for `$realPath`") }
                 assertThat(virtualPath.toString()).isEqualTo(expectedVirtualPath)
             }

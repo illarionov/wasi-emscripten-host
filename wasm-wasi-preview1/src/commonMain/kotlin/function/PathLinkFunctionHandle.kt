@@ -12,6 +12,7 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasi.preview1.ext.foldToErrno
@@ -40,8 +41,8 @@ public class PathLinkFunctionHandle(
         val oldPathString = memory.readPathString(oldPath, oldPathSize).bind()
         val newPathString = memory.readPathString(newPath, newPathSize).bind()
 
-        newPathString.trim().let {
-            if (it.endsWith("/") || it.endsWith("\\")) {
+        newPathString.let {
+            if (it.isDirectoryRequest()) {
                 raise(Errno.NOENT)
             }
         }

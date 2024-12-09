@@ -17,7 +17,7 @@ internal class LinuxMkdir(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
-        fsState.executeWithBaseDirectoryResource(input.baseDirectory) {
-            linuxMkdir(it, input.path, input.mode, input.failIfExists)
+        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
+            linuxMkdir(realBaseDirectory, realPath, input.mode, input.failIfExists)
         }
 }

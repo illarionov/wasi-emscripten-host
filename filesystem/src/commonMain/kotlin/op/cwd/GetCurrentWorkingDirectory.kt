@@ -8,7 +8,9 @@ package at.released.weh.filesystem.op.cwd
 
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.op.FileSystemOperation
+import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data object GetCurrentWorkingDirectory : FileSystemOperation<Unit, GetCurrentWorkingDirectoryError, String> {
+public data object GetCurrentWorkingDirectory :
+    FileSystemOperation<Unit, GetCurrentWorkingDirectoryError, VirtualPath> {
     override val tag: String = "getcwd"
 }

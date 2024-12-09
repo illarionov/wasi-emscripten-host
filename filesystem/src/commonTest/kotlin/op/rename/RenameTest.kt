@@ -20,6 +20,7 @@ import at.released.weh.filesystem.op.readwrite.ReadFd
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.TEST_CONTENT
 import at.released.weh.filesystem.testutil.TEST_FILE_NAME
@@ -45,7 +46,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, TEST_FILE_NAME, tempFolderDirectoryFd, "newfile.txt"),
+                Rename(
+                    tempFolderDirectoryFd,
+                    TEST_FILE_NAME.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    "newfile.txt".toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename file: $it") }
         }
 
@@ -62,7 +68,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, testFilePath.name, tempFolderDirectoryFd, testFilePath.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    testFilePath.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    testFilePath.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename file: $it") }
         }
 
@@ -78,7 +89,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcFilePath.name, tempFolderDirectoryFd, dstFilePath.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcFilePath.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstFilePath.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename file: $it") }
         }
 
@@ -96,7 +112,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         val errNo = createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, testFilePath.name, tempFolderDirectoryFd, testDstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    testFilePath.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    testDstDirectory.name.toVirtualPath(),
+                ),
             ).fold(ifLeft = { it.errno }, ifRight = { FileSystemErrno.SUCCESS })
         }
 
@@ -111,12 +132,17 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             val openedTestFile = fileSystem.execute(
                 Open,
-                Open(testFilePath.name, tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, 0),
+                Open(testFilePath.name.toVirtualPath(), tempFolderDirectoryFd, OpenFileFlag.O_RDONLY, 0),
             ).getOrElse { fail("Can not open test file") }
 
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, testFilePath.name, tempFolderDirectoryFd, testDstFile.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    testFilePath.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    testDstFile.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename file: $it") }
 
             val bbuf = FileSystemByteBuffer(ByteArray(100))
@@ -145,7 +171,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstDirectory.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename directory: $it") }
         }
 
@@ -162,7 +193,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstDirectory.name.toVirtualPath(),
+                ),
             )
         }.onLeft { fail("Can not rename non-empty directory: $it") }
 
@@ -179,7 +215,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstDirectory.name.toVirtualPath(),
+                ),
             )
         }.onLeft { fail("Can not rename directory to empty directory directory: $it") }
 
@@ -196,7 +237,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         val errno = createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstDirectory.name.toVirtualPath(),
+                ),
             )
         }.fold(ifLeft = { it.errno }, ifRight = { FileSystemErrno.SUCCESS })
 
@@ -211,7 +257,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         val errno = createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstFile.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstFile.name.toVirtualPath(),
+                ),
             )
         }.fold(ifLeft = { it.errno }, ifRight = { FileSystemErrno.SUCCESS })
 
@@ -227,17 +278,22 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             val openedSrcDirectoryFd = fileSystem.execute(
                 Open,
-                Open(srcDirectory.name, tempFolderDirectoryFd, OpenFileFlag.O_DIRECTORY, 0),
+                Open(srcDirectory.name.toVirtualPath(), tempFolderDirectoryFd, OpenFileFlag.O_DIRECTORY, 0),
             ).getOrElse { fail("Can not open source directory") }
 
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcDirectory.name, tempFolderDirectoryFd, dstDirectory.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcDirectory.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstDirectory.name.toVirtualPath(),
+                ),
             ).getOrElse { fail("Can not rename source directory") }
 
             val testFilestat: StructStat = fileSystem.execute(
                 Stat,
-                Stat("testfile.txt", DirectoryFd(openedSrcDirectoryFd)),
+                Stat("testfile.txt".toVirtualPath(), DirectoryFd(openedSrcDirectoryFd)),
             ).getOrElse { fail("Can not get attributes of test file in source directory") }
 
             assertThat(testFilestat.size).isEqualTo(TEST_CONTENT.encodeToByteArray().size.toLong())
@@ -253,7 +309,12 @@ class RenameTest : BaseFileSystemIntegrationTest() {
         createTestFileSystem().use { fileSystem ->
             fileSystem.execute(
                 Rename,
-                Rename(tempFolderDirectoryFd, srcSymlink.name, tempFolderDirectoryFd, dstSymlink.name),
+                Rename(
+                    tempFolderDirectoryFd,
+                    srcSymlink.name.toVirtualPath(),
+                    tempFolderDirectoryFd,
+                    dstSymlink.name.toVirtualPath(),
+                ),
             ).onLeft { fail("Can not rename directory: $it") }
         }
 

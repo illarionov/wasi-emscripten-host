@@ -22,12 +22,7 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.AbsolutePath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.EmptyPath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.FileDescriptorNotOpen
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.InvalidPath
-import at.released.weh.filesystem.nio.cwd.PathResolver.ResolvePathError.PathOutsideOfRootPath
+import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
 import java.nio.file.LinkOption
@@ -131,12 +126,12 @@ internal object NioFileStat {
     }
 
     internal fun toStatError(pathError: ResolvePathError): StatError = when (pathError) {
-        is EmptyPath -> NoEntry(pathError.message)
-        is FileDescriptorNotOpen -> BadFileDescriptor(pathError.message)
-        is InvalidPath -> BadFileDescriptor(pathError.message)
+        is ResolvePathError.EmptyPath -> NoEntry(pathError.message)
+        is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(pathError.message)
+        is ResolvePathError.InvalidPath -> BadFileDescriptor(pathError.message)
         is ResolvePathError.NotDirectory -> NotDirectory(pathError.message)
-        is AbsolutePath -> BadFileDescriptor(pathError.message)
-        is PathOutsideOfRootPath -> NotCapable(pathError.message)
+        is ResolvePathError.AbsolutePath -> BadFileDescriptor(pathError.message)
+        is ResolvePathError.PathOutsideOfRootPath -> NotCapable(pathError.message)
     }
 
     private fun toStatError(attributesError: ReadAttributesError): StatError = when (attributesError) {
