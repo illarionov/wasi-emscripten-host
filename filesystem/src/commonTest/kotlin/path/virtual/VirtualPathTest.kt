@@ -13,8 +13,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.fail
 import assertk.tableOf
-import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.InvalidCharacters
-import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.PathIsEmpty
+import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import kotlinx.io.bytestring.encodeToByteString
@@ -31,7 +30,7 @@ class VirtualPathTest {
             .row(".")
             .row("..")
             .forAll { pathString ->
-                val virtualPath = VirtualPath.of(pathString).getOrElse {
+                val virtualPath = VirtualPath.create(pathString).getOrElse {
                     fail("Can not create virtual path for `$pathString`")
                 }
                 assertThat(virtualPath.toString()).isEqualTo(pathString)
@@ -40,8 +39,8 @@ class VirtualPathTest {
 
     @Test
     fun create_virtual_path_should_fail_on_empty_path() {
-        val pathError = VirtualPath.of("").leftOrNull()
-        assertThat(pathError).isNotNull().isInstanceOf<PathIsEmpty>()
+        val pathError = VirtualPath.create("").leftOrNull()
+        assertThat(pathError).isNotNull().isInstanceOf<PathError.EmptyPath>()
     }
 
     @Test
@@ -51,8 +50,8 @@ class VirtualPathTest {
             .row("/path1\u0000")
             .row("/path1\u0000/path2")
             .forAll {
-                val pathError = VirtualPath.of(it).leftOrNull()
-                assertThat(pathError).isNotNull().isInstanceOf<InvalidCharacters>()
+                val pathError = VirtualPath.create(it).leftOrNull()
+                assertThat(pathError).isNotNull().isInstanceOf<PathError.InvalidPathFormat>()
             }
     }
 
@@ -63,7 +62,7 @@ class VirtualPathTest {
             .row(".")
             .row("..")
             .forAll { pathString ->
-                val virtualPath = VirtualPath.of(pathString).getOrElse {
+                val virtualPath = VirtualPath.create(pathString).getOrElse {
                     fail("Can not create virtual path for `$pathString`")
                 }
                 assertThat(virtualPath.utf8).isEqualTo(pathString.encodeToByteString())
@@ -79,7 +78,7 @@ class VirtualPathTest {
             .row("/", true)
             .row("/tmp", false)
             .forAll { pathString, isDirectoryRequest ->
-                val virtualPath = VirtualPath.of(pathString).getOrElse {
+                val virtualPath = VirtualPath.create(pathString).getOrElse {
                     fail("Can not create virtual path for `$pathString`")
                 }
                 assertThat(virtualPath.isDirectoryRequest()).isEqualTo(isDirectoryRequest)
@@ -95,7 +94,7 @@ class VirtualPathTest {
             .row("/", true)
             .row("/tmp", true)
             .forAll { pathString, isAbsolute ->
-                val virtualPath = VirtualPath.of(pathString).getOrElse {
+                val virtualPath = VirtualPath.create(pathString).getOrElse {
                     fail("Can not create virtual path for `$pathString`")
                 }
                 assertThat(virtualPath.isAbsolute()).isEqualTo(isAbsolute)

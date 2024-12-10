@@ -30,7 +30,7 @@ public class SyscallMkdiratFunctionHandle(
         @FileMode rawMode: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
-        return VirtualPath.of(path).flatMap { virtualPath ->
+        return VirtualPath.create(path).flatMap { virtualPath ->
             host.fileSystem.execute(
                 operation = Mkdir,
                 input = Mkdir(

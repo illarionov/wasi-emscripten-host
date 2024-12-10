@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
@@ -15,8 +16,9 @@ import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.addressOf
@@ -38,8 +40,8 @@ internal class WindowsGetCurrentWorkingDirectory :
             getcwd(bytes.addressOf(0), PATH_MAX)
         }
         return if (cwd != null) {
-            val realPath = byteArray.decodeToString()
-            WindowsPathConverter.convertToVirtualPath(realPath)
+            WindowsRealPath.create(byteArray.decodeToString())
+                .flatMap { realPath -> WindowsPathConverter.convertToVirtualPath(realPath) }
                 .mapLeft { error -> InvalidArgument(error.message) }
         } else {
             errno.errnoToGetCurrentWorkingDirectoryError().left()

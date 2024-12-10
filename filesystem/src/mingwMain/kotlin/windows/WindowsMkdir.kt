@@ -25,7 +25,7 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
-import at.released.weh.filesystem.windows.path.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult

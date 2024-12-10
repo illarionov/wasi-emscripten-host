@@ -18,8 +18,12 @@ import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadLinkError
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fstatat
@@ -49,8 +53,8 @@ private val MAX_PATH_SIZE = maxOf(1024 * 1024, PATH_MAX)
 @Suppress("ReturnCount")
 internal fun linuxReadLink(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
-): Either<ReadLinkError, String> {
+    path: PosixRealPath,
+): Either<ReadLinkError, PosixRealPath> {
     var bufSize = getInitialBufSize(baseDirectoryFd, path)
         .getOrElse { return it.left() }
     do {
@@ -58,14 +62,15 @@ internal fun linuxReadLink(
         val bytesWritten = buf.usePinned {
             readlinkat(
                 baseDirectoryFd.linuxFd,
-                path,
+                path.kString,
                 it.addressOf(0),
                 bufSize.toULong(),
             )
         }
         when {
             bytesWritten < 0 -> return errno.errnoToReadLinkError().left()
-            bytesWritten < bufSize -> return buf.decodeToString(0, bytesWritten.toInt()).right()
+            bytesWritten < bufSize -> return PosixRealPath.create(buf.decodeToString(0, bytesWritten.toInt()))
+                .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
             bufSize == MAX_PATH_SIZE -> return ENAMETOOLONG.errnoToReadLinkError().left()
             else -> bufSize = (bufSize + PATH_STEP).coerceAtMost(MAX_PATH_SIZE)
         }
@@ -74,12 +79,12 @@ internal fun linuxReadLink(
 
 private fun getInitialBufSize(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
 ): Either<ReadLinkError, Int> = memScoped {
     val statBuf: stat = alloc()
     val exitCode = fstatat(
         baseDirectoryFd.linuxFd,
-        path,
+        path.kString,
         statBuf.ptr,
         AT_EMPTY_PATH or AT_SYMLINK_NOFOLLOW,
     )

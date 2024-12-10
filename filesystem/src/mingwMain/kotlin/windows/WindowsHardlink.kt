@@ -36,6 +36,7 @@ import at.released.weh.filesystem.error.TextFileBusy
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
@@ -66,7 +67,7 @@ internal class WindowsHardlink(
 
     private fun createHardlink(
         oldHandle: HANDLE,
-        newPath: String,
+        newPath: WindowsRealPath,
     ): Either<HardlinkError, Unit> = oldHandle.getFinalPath()
         .mapLeft { it.toResolveRelativePathError() }
         .flatMap { oldPath -> windowsCreateHardLink(newPath, oldPath) }

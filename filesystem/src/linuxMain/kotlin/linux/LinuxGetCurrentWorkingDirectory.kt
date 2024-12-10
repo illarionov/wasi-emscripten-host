@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.linux
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
@@ -15,7 +16,8 @@ import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
-import at.released.weh.filesystem.path.PosixPathConverter
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
@@ -37,8 +39,13 @@ internal class LinuxGetCurrentWorkingDirectory :
             getcwd(bytes.addressOf(0), PATH_MAX.toULong())
         }
         return if (cwd != null) {
-            val realPath = byteArray.decodeToString()
-            PosixPathConverter.convertToVirtualPath(realPath)
+            Either.catch {
+                byteArray.decodeToString(throwOnInvalidSequence = true)
+            }
+                .mapLeft { InvalidArgument("Can not parse real path") }
+                .flatMap { realPathString -> PosixRealPath.create(realPathString) }
+                .flatMap { posixRealPath -> PosixPathConverter.toVirtualPath(posixRealPath) }
+                .mapLeft { InvalidArgument("Can not parse path") }
         } else {
             errno.errnoToGetCurrentWorkingDirectoryError().left()
         }

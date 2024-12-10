@@ -18,9 +18,10 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.fdresource.NioFdResource
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.rename.Rename
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.toCommonError
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.FileAlreadyExistsException
@@ -35,8 +36,8 @@ internal class NioRename(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> = either {
-        val oldPath: Path
-        val newPath: Path
+        val oldPath: NioRealPath
+        val newPath: NioRealPath
         val oldFdResource: NioFdResource?
         val newFdResource: NioFdResource?
 
@@ -71,18 +72,21 @@ internal class NioRename(
     }
 
     private fun rename(
-        oldPath: Path,
-        newPath: Path,
+        oldPath: NioRealPath,
+        newPath: NioRealPath,
     ): Either<RenameError, Path> {
+        val oldNioPath = oldPath.nio
+        val newNioPath = newPath.nio
+
         return when {
-            oldPath.isDirectory() && newPath.exists() && !newPath.isDirectory() ->
+            oldNioPath.isDirectory() && newNioPath.exists() && !newNioPath.isDirectory() ->
                 NotDirectory("Can not rename directory to non-directory").left()
 
-            oldPath.exists() && !oldPath.isDirectory() && newPath.isDirectory() ->
+            oldNioPath.exists() && !oldNioPath.isDirectory() && newNioPath.isDirectory() ->
                 PathIsDirectory("Can not rename non-directory to directory").left()
 
             else -> Either.catch {
-                Files.move(oldPath, newPath, REPLACE_EXISTING)
+                Files.move(oldNioPath, newNioPath, REPLACE_EXISTING)
             }.mapLeft {
                 when (it) {
                     is UnsupportedOperationException -> PermissionDenied("Unsupported copy option")

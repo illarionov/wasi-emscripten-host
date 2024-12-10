@@ -18,6 +18,7 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
@@ -31,7 +32,7 @@ import platform.posix.ENOTDIR
 
 internal expect fun platformFstatat(
     dirfd: Int,
-    path: String,
+    path: PosixRealPath,
     statFlags: Int,
 ): Either<Int, StructStat>
 
@@ -39,7 +40,7 @@ internal expect fun platformFstatFd(fd: Int): Either<Int, StructStat>
 
 internal fun linuxStat(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     followSymlinks: Boolean,
 ): Either<StatError, StructStat> {
     return platformFstatat(

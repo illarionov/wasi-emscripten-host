@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.model.FileMode
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import platform.posix.EACCES
@@ -41,13 +42,13 @@ import platform.posix.fchmodat
 
 internal fun appleChmod(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     @FileMode mode: Int,
     followSymlinks: Boolean,
 ): Either<ChmodError, Unit> {
     val resultCode = fchmodat(
         baseDirectoryFd.posixFd,
-        path,
+        path.kString,
         mode.toUShort(),
         followSymlinksAsAtSymlinkFlags(followSymlinks),
     )
@@ -88,7 +89,7 @@ private fun Int.errnoToChmodFdError(): ChmodError = errnoToChmodError()
 internal fun Int.errnoToChmodError(): ChmodError = when (this) {
     EACCES -> AccessDenied("Access denied")
     EBADF -> BadFileDescriptor("Bad file descriptor")
-    EINTR -> IoError("Execution iterrupted by signal")
+    EINTR -> IoError("Execution interrupted by signal")
     EINVAL -> InvalidArgument("Invalid argument in request")
     EIO -> IoError("I/O error")
     ELOOP -> TooManySymbolicLinks("Too many symlinks while resolving request")

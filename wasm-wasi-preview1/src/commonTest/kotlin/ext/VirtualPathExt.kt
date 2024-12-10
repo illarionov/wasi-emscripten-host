@@ -9,4 +9,4 @@ package at.released.weh.wasi.preview1.ext
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal fun String.toVirtualPath(): VirtualPath =
-    VirtualPath.of(this).getOrNull() ?: error("Can not convert `$this` to virtual path")
+    VirtualPath.create(this).getOrNull() ?: error("Can not convert `$this` to virtual path")

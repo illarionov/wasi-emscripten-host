@@ -33,7 +33,7 @@ public class SyscallFaccessatFunctionHandle(
         amode: Int,
         flags: Int,
     ): Int {
-        return VirtualPath.of(memory.readNullTerminatedString(pathnamePtr))
+        return VirtualPath.create(memory.readNullTerminatedString(pathnamePtr))
             .flatMap { virtualPath ->
                 host.fileSystem.execute(
                     CheckAccess,

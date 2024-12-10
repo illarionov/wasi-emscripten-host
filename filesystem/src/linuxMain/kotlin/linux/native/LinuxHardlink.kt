@@ -24,7 +24,7 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_EMPTY_PATH
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_FOLLOW
 import at.released.weh.filesystem.platform.linux.linkat
@@ -49,9 +49,9 @@ import platform.posix.strerror
 
 internal fun linuxHardlink(
     oldBaseDirectoryFd: NativeDirectoryFd,
-    oldPath: RealPath,
+    oldPath: PosixRealPath,
     newBaseDirectoryFd: NativeDirectoryFd,
-    newPath: RealPath,
+    newPath: PosixRealPath,
     followSymlinks: Boolean = false,
     allowEmptyPath: Boolean = false,
 ): Either<HardlinkError, Unit> {
@@ -66,9 +66,9 @@ internal fun linuxHardlink(
     // TODO: check RESOLVE_BENEATH
     val resultCode = linkat(
         oldBaseDirectoryFd.linuxFd,
-        oldPath,
+        oldPath.kString,
         newBaseDirectoryFd.linuxFd,
-        newPath,
+        newPath.kString,
         flags,
     )
     return if (resultCode == 0) {

@@ -11,10 +11,9 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.chmod.Chmod
-import java.nio.file.Path
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 
 internal class NioChmod(
     private val fsState: NioFileSystemState,
@@ -22,6 +21,6 @@ internal class NioChmod(
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult.mapLeft(ResolvePathError::toCommonError)
-                .flatMap { path: Path -> nioSetPosixFilePermissions(path, input.mode) }
+                .flatMap { path -> nioSetPosixFilePermissions(path.nio, input.mode) }
         }
 }

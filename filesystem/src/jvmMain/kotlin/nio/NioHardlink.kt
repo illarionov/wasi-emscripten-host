@@ -17,9 +17,9 @@ import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
@@ -52,10 +52,10 @@ internal class NioHardlink(
             followSymlinks = false,
         ).mapLeft(ResolvePathError::toCommonError).bind()
 
-        if (!input.followSymlinks && createLinkFollowSymlinks && oldPath.isSymbolicLink()) {
-            copySymlink(oldPath, newPath).bind()
+        if (!input.followSymlinks && createLinkFollowSymlinks && oldPath.nio.isSymbolicLink()) {
+            copySymlink(oldPath.nio, newPath.nio).bind()
         } else {
-            createHardlink(oldPath, newPath).bind()
+            createHardlink(oldPath.nio, newPath.nio).bind()
         }
     }
 

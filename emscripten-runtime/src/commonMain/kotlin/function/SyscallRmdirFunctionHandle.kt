@@ -27,7 +27,7 @@ public class SyscallRmdirFunctionHandle(
         @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
-        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+        val virtualPath = VirtualPath.create(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         return host.fileSystem.execute(
             operation = UnlinkDirectory,

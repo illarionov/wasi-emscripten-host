@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.path
+package at.released.weh.filesystem.path.real.posix
 
 import arrow.core.flatMap
 import arrow.core.getOrElse
@@ -24,10 +24,10 @@ class PosixPathConverterTest {
             .row("tmp/", "tmp/")
             .row("tmp/a/../.", "tmp/a/../.")
             .forAll { path, expectedRealPath ->
-                val realPath = VirtualPath.of(path)
+                val realPath = VirtualPath.create(path)
                     .flatMap { PosixPathConverter.toRealPath(it) }
                     .getOrElse { fail("Can not convert to real path `$path`") }
-                assertThat(realPath).isEqualTo(expectedRealPath)
+                assertThat(realPath.kString).isEqualTo(expectedRealPath)
             }
     }
 
@@ -38,8 +38,12 @@ class PosixPathConverterTest {
             .row("tmp", "tmp")
             .row("tmp/", "tmp/")
             .row("tmp/a/../.", "tmp/a/../.")
-            .forAll { realPath, expectedVirtualPath ->
-                val virtualPath: VirtualPath = PosixPathConverter.convertToVirtualPath(realPath)
+            .forAll { realPathString, expectedVirtualPath ->
+                val realPath = PosixRealPath.create(realPathString).getOrElse {
+                    fail("Can not parse path `$realPathString`")
+                }
+
+                val virtualPath: VirtualPath = PosixPathConverter.toVirtualPath(realPath)
                     .getOrElse { fail("Can not create virtual path for `$realPath`") }
                 assertThat(virtualPath.toString()).isEqualTo(expectedVirtualPath)
             }

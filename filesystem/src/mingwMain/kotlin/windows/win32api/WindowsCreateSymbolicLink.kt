@@ -17,7 +17,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.SymlinkError
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CreateSymbolicLinkW
 import platform.windows.ERROR_ACCESS_DENIED
@@ -31,16 +31,16 @@ import platform.windows.PathFileExistsW
 import platform.windows.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE
 
 internal fun windowsCreateSymbolicLink(
-    oldPath: RealPath,
-    newPath: RealPath,
+    oldPath: WindowsRealPath,
+    newPath: WindowsRealPath,
     type: SymlinkType,
 ): Either<SymlinkError, Unit> {
     val flags = type.mask
-    if (CreateSymbolicLinkW(newPath, oldPath, flags).toInt() == 0) {
+    if (CreateSymbolicLinkW(newPath.kString, oldPath.kString, flags).toInt() == 0) {
         val lastError = Win32ErrorCode.getLast()
         if (lastError.code == ERROR_PRIVILEGE_NOT_HELD.toUInt()) {
             val newFlags = flags or SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE.toUInt()
-            if (CreateSymbolicLinkW(newPath, oldPath, newFlags).toInt() == 0) {
+            if (CreateSymbolicLinkW(newPath.kString, oldPath.kString, newFlags).toInt() == 0) {
                 return getSymlinkError(Win32ErrorCode.getLast(), newPath).left()
             }
         } else {
@@ -52,8 +52,8 @@ internal fun windowsCreateSymbolicLink(
 
 private fun getSymlinkError(
     code: Win32ErrorCode,
-    newPath: String,
-): SymlinkError = if (code.code.toInt() == ERROR_ACCESS_DENIED && PathFileExistsW(newPath) != 0) {
+    newPath: WindowsRealPath,
+): SymlinkError = if (code.code.toInt() == ERROR_ACCESS_DENIED && PathFileExistsW(newPath.kString) != 0) {
     Exists("Path already exists")
 } else {
     code.toSymlinkError()

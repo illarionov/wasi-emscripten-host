@@ -9,7 +9,6 @@ package at.released.weh.filesystem.windows.win32api.deviceiocontrol
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.raise.either
-import arrow.core.right
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
@@ -17,6 +16,8 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.ReadLinkError
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.platform.windows.REPARSE_DATA_BUFFER
 import at.released.weh.filesystem.platform.windows.REPARSE_DATA_BUFFER_SYMLINK_PATH_BUFFER_OFFSET
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
@@ -43,7 +44,7 @@ import platform.windows.MAX_PATH
 import platform.windows.SYMLINK_FLAG_RELATIVE
 import platform.windows.WCHARVar
 
-internal fun HANDLE.getReparsePoint(): Either<ReadLinkError, String> {
+internal fun HANDLE.getReparsePoint(): Either<ReadLinkError, WindowsRealPath> {
     maxSizes().forEach { size ->
         memScoped {
             val outBuffer = alloc(size, alignOf<REPARSE_DATA_BUFFER>())
@@ -75,7 +76,7 @@ internal fun HANDLE.getReparsePoint(): Either<ReadLinkError, String> {
 
 private fun REPARSE_DATA_BUFFER.readSymlink(
     bufferSize: Int,
-): Either<ReadLinkError, String> = either {
+): Either<ReadLinkError, WindowsRealPath> = either {
     if (bufferSize < REPARSE_DATA_BUFFER_SYMLINK_PATH_BUFFER_OFFSET || bufferSize > MAXIMUM_REPARSE_DATA_BUFFER_SIZE) {
         raise(InvalidArgument("Incorrect buffer size $bufferSize"))
     }
@@ -94,18 +95,19 @@ private fun REPARSE_DATA_BUFFER.readSymlink(
         raise(BadFileDescriptor("Symlink should be relative"))
     }
 
-    val substituteName = this@readSymlink.SymbolicLinkReparseBuffer.PathBuffer.readChars(
+    val substituteName: String = this@readSymlink.SymbolicLinkReparseBuffer.PathBuffer.readChars(
         length = lengthBytes / 2,
         fromIndex = offsetBytes / 2,
     ).concatToString()
-    return substituteName.right()
+
+    return WindowsRealPath.create(substituteName).mapLeft { it.toCommonError() }
 }
 
+@Suppress("MagicNumber")
 private fun maxSizes(): Sequence<Int> = sequence {
     var size: Int = MAX_PATH * sizeOf<WCHARVar>().toInt()
     while (size < MAXIMUM_REPARSE_DATA_BUFFER_SIZE) {
         yield(size)
-        @Suppress("MagicNumber")
         size = (size * 1.5).toInt().coerceAtMost(MAXIMUM_REPARSE_DATA_BUFFER_SIZE)
     }
     yield(size)

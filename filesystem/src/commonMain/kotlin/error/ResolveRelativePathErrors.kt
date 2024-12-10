@@ -15,6 +15,7 @@ public sealed interface ResolveRelativePathErrors :
     OpenError,
     ReadLinkError,
     RenameError,
+    StatError,
     SetTimestampError,
     SymlinkError,
     UnlinkError

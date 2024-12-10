@@ -16,9 +16,9 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.fileModeAsFileAttributesIfSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.FileMode
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.mkdir.Mkdir
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
@@ -30,7 +30,7 @@ internal class NioMkdir(
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult.mapLeft(ResolvePathError::toCommonError)
-                .flatMap { mkdir(it, input.mode, input.failIfExists) }
+                .flatMap { mkdir(it.nio, input.mode, input.failIfExists) }
         }
 
     private fun mkdir(

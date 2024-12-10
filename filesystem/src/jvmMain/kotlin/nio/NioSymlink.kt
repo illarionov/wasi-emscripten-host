@@ -11,30 +11,30 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
-import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.symlink.Symlink
-import java.nio.file.Path
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioPathConverter
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.toCommonError
 
 internal class NioSymlink(
     private val fsState: NioFileSystemState,
-    private val pathConverter: JvmNioPathConverter = JvmNioPathConverter(fsState.javaFs),
+    private val pathConverter: NioPathConverter = NioPathConverter(fsState.javaFs),
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> {
         return fsState.executeWithPath(
             input.newPathBaseDirectory,
             input.newPath,
-        ) { resolvedPath: Either<ResolvePathError, Path> ->
-            resolvedPath
-                .mapLeft(ResolvePathError::toCommonError)
-                .flatMap { newRealPath ->
-                    pathConverter.toNioPath(input.oldPath)
+        ) { resolvedPath: Either<ResolvePathError, NioRealPath> ->
+            val result: Either<SymlinkError, Unit> = resolvedPath.mapLeft { it.toCommonError() }
+                .flatMap { newRealPath: NioRealPath ->
+                    pathConverter.toRealPath(input.oldPath)
+                        .mapLeft { it.toCommonError() }
                         .map { oldRealPath -> newRealPath to oldRealPath }
+                }.flatMap { (newPath, oldPath) ->
+                    createSymlink(newPath.nio, oldPath.nio, input.allowAbsoluteOldPath)
                 }
-                .flatMap { (newPath, oldPath) ->
-                    createSymlink(newPath, oldPath, input.allowAbsoluteOldPath)
-                }
+            result
         }
     }
 }

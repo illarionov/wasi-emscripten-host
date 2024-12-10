@@ -59,7 +59,7 @@ internal class AppleFileSystemImpl(
     private val fsState = AppleFileSystemState.create(
         stdio = stdio,
         isRootAccessAllowed = isRootAccessAllowed,
-        currentWorkingDirectory = currentWorkingDirectory ?: "",
+        currentWorkingDirectory = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(

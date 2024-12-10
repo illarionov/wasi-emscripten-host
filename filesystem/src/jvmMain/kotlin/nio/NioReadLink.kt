@@ -12,21 +12,24 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
-import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.readlink.ReadLink
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioPathConverter
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import java.nio.file.Path
 
 internal class NioReadLink(
     private val fsState: NioFileSystemState,
-    private val pathConverter: JvmNioPathConverter = JvmNioPathConverter(fsState.javaFs),
+    private val pathConverter: NioPathConverter = NioPathConverter(fsState.javaFs),
+    private val pathFactory: NioRealPathFactory = NioRealPathFactory(fsState.javaFs),
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult.mapLeft(ResolvePathError::toCommonError)
-                .flatMap { path: Path -> readSymbolicLink(path) }
+                .flatMap { path -> readSymbolicLink(path.nio) }
+                .map<NioRealPath>(pathFactory::create)
                 .flatMap { target ->
                     pathConverter.toVirtualPath(target)
                         .mapLeft { error -> InvalidArgument(error.message) }

@@ -12,6 +12,7 @@ import at.released.weh.filesystem.fdresource.nio.MAX_BUF_SIZE
 import at.released.weh.filesystem.fdresource.nio.NioFileChannel
 import at.released.weh.filesystem.fdresource.nio.truncate
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.FILE_BASE_RIGHTS_BLOCK
+import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
 import kotlinx.atomicfu.locks.ReentrantLock
 import org.junit.Rule
 import org.junit.Test
@@ -93,7 +94,7 @@ class NioTruncateTest {
         }
         channel.position(initialPosition)
         return NioFileChannel(
-            path = path,
+            path = NioRealPathFactory().create(path),
             channel = channel,
             fdFlags = 0,
             rights = FILE_BASE_RIGHTS_BLOCK,

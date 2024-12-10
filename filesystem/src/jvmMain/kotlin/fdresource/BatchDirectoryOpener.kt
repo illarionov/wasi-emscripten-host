@@ -12,92 +12,88 @@ import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
-import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
-import at.released.weh.filesystem.path.real.RealPath
-import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.nio.NioPathConverter
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.real.nio.NioRealPath.Companion.isDirectory
+import at.released.weh.filesystem.path.real.nio.NioRealPath.Companion.resolveAbsolutePath
+import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import java.io.IOError
-import java.nio.file.InvalidPathException
-import java.nio.file.Path
-import kotlin.io.path.isDirectory
 import java.nio.file.FileSystem as NioFileSystem
 
 internal class BatchDirectoryOpener(
     private val fileSystem: NioFileSystem,
+    private val pathFactory: NioRealPathFactory = NioRealPathFactory(fileSystem),
 ) {
     fun preopen(
-        currentWorkingDirectoryPath: RealPath = "",
+        currentWorkingDirectoryPath: String?,
         preopenedDirectories: List<PreopenedDirectory> = listOf(),
     ): Either<BatchDirectoryOpenerError, PreopenedDirectories> {
-        val realCwd: Path = fileSystem.getPath("")
-        val currentWorkingDirectory: Either<OpenError, NioDirectoryFdResource> = preopenDirectory(
-            preopenedDirectory = currentWorkingDirectoryPath,
-            basePath = realCwd,
-        )
+        val realCwd: NioRealPath = pathFactory.create(fileSystem.getPath("."))
 
-        val baseCwdPath: Path = currentWorkingDirectory.fold(
+        val currentWorkingDirectory: Either<OpenError, NioDirectoryFdResource> =
+            if (currentWorkingDirectoryPath != null) {
+                pathFactory.create(currentWorkingDirectoryPath)
+                    .mapLeft { it.toCommonError() }
+                    .flatMap { cwdRealPath ->
+                        preopenDirectory(
+                            preopenedDirectory = cwdRealPath,
+                            basePath = realCwd,
+                        )
+                    }
+            } else {
+                NoEntry("Current working directory not set").left()
+            }
+
+        val baseCwdPath: NioRealPath = currentWorkingDirectory.fold(
             ifLeft = { realCwd },
             ifRight = NioDirectoryFdResource::path,
         )
 
-        val opened: MutableMap<RealPath, NioDirectoryFdResource> = mutableMapOf()
+        val opened: MutableMap<String, NioDirectoryFdResource> = mutableMapOf()
         return either {
             for (directory in preopenedDirectories) {
-                val realpath = directory.realPath
-
-                if (opened.containsKey(realpath)) {
-                    continue
+                val realPathString = directory.realPath
+                opened.getOrPut(realPathString) {
+                    pathFactory.create(realPathString)
+                        .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+                        .flatMap { realPath -> preopenDirectory(realPath, baseCwdPath) }
+                        .mapLeft { BatchDirectoryOpenerError(directory, it) }
+                        .bind()
                 }
-
-                val fdResource = preopenDirectory(realpath, baseCwdPath)
-                    .mapLeft { BatchDirectoryOpenerError(directory, it) }
-                    .bind()
-
-                opened[realpath] = fdResource
             }
-
             PreopenedDirectories(currentWorkingDirectory, opened)
         }
     }
 
     private fun preopenDirectory(
-        preopenedDirectory: RealPath,
-        basePath: Path,
+        preopenedDirectory: NioRealPath,
+        basePath: NioRealPath,
     ): Either<OpenError, NioDirectoryFdResource> {
-        val virtualPath = convertRealPathToVirtualPath(preopenedDirectory)
-            .getOrElse { return it.left() }
+        val virtualPath = NioPathConverter().toVirtualPath(preopenedDirectory)
+            .getOrElse { return it.toCommonError().left() }
 
-        return Either.catch {
-            basePath.resolve(preopenedDirectory).toAbsolutePath()
-        }.mapLeft { ex ->
-            when (ex) {
-                is InvalidPathException -> InvalidArgument("Can not resolve path `$preopenedDirectory`")
-                is IOError -> IoError(ex.message.toString())
-                else -> throw ex
+        return NioRealPath.resolve(preopenedDirectory, basePath)
+            .map { it.resolveAbsolutePath() }
+            .mapLeft { it.toCommonError() }
+            .flatMap { path ->
+                if (!path.isDirectory()) {
+                    NotDirectory("`$path` is not a directory").left()
+                } else {
+                    NioDirectoryFdResource(
+                        path,
+                        virtualPath = virtualPath,
+                        isPreopened = true,
+                        rights = DIRECTORY_BASE_RIGHTS_BLOCK,
+                    ).right()
+                }
             }
-        }.flatMap { path ->
-            if (!path.isDirectory()) {
-                NotDirectory("`$path` is not a directory").left()
-            } else {
-                NioDirectoryFdResource(
-                    path,
-                    virtualPath = virtualPath,
-                    isPreopened = true,
-                    rights = DIRECTORY_BASE_RIGHTS_BLOCK,
-                ).right()
-            }
-        }
-    }
-
-    private fun convertRealPathToVirtualPath(
-        path: RealPath,
-    ): Either<InvalidArgument, VirtualPath> {
-        return VirtualPath.of(path)
-            .mapLeft { InvalidArgument(it.message) }
     }
 
     class PreopenedDirectories(

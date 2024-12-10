@@ -7,7 +7,6 @@
 package at.released.weh.filesystem.dsl
 
 import at.released.weh.common.api.WasiEmscriptenHostDsl
-import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 
 @WasiEmscriptenHostDsl
@@ -21,7 +20,7 @@ public class DirectoryConfigBlock {
     public val preopenedDirectories: List<PreopenedDirectory> get() = _preopenedDirectories
 
     public fun addPreopenedDirectory(
-        realPath: RealPath,
+        realPath: String,
     ): DirectoryConfigBlock = apply {
         _preopenedDirectories.add(PreopenedDirectory(realPath))
     }

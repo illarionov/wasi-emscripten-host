@@ -20,6 +20,7 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -48,16 +49,16 @@ private val MAX_PATH_SIZE = maxOf(1024 * 1024, PATH_MAX)
 @Suppress("ReturnCount")
 internal fun appleReadLink(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
 ): Either<ReadLinkError, String> {
-    var bufSize = getInitialBufSize(baseDirectoryFd, path)
+    var bufSize = getInitialBufSize(baseDirectoryFd, path.kString)
         .getOrElse { return it.left() }
     do {
         val buf = ByteArray(bufSize)
         val bytesWritten = buf.usePinned {
             readlinkat(
                 baseDirectoryFd.posixFd,
-                path,
+                path.kString,
                 it.addressOf(0),
                 bufSize.toULong(),
             )

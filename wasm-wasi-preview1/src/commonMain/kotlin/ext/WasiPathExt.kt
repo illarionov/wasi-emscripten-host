@@ -39,7 +39,7 @@ internal fun ReadOnlyMemory.readPathString(
         else -> Errno.FAULT
     }
 }.flatMap { pathString ->
-    VirtualPath.of(pathString).mapLeft { _ -> Errno.INVAL }
+    VirtualPath.create(pathString).mapLeft { _ -> Errno.INVAL }
 }
 
 /**

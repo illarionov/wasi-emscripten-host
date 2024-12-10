@@ -30,7 +30,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TMPFILE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_WRONLY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
@@ -58,16 +58,15 @@ import platform.windows.HANDLE
 
 internal fun windowsOpenFileOrDirectory(
     baseHandle: HANDLE?,
-    path: RealPath,
+    path: WindowsRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
 ): Either<OpenError, FileDirectoryHandle> = either<OpenError, FileDirectoryHandle> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
     val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
-    val isDirectoryRequest = path.endsWith("/") || path.endsWith("\\")
     val isDirectoryOrPathRequest = flags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY ||
             flags and OpenFileFlag.O_PATH == OpenFileFlag.O_PATH ||
-            isDirectoryRequest
+            path.isDirectoryRequest
     if (isDirectoryOrPathRequest) {
         if (flags and OpenFileFlag.O_CREAT == OpenFileFlag.O_CREAT) {
             return InvalidArgument("O_CREAT cannot be used to create directories").left()
@@ -79,7 +78,7 @@ internal fun windowsOpenFileOrDirectory(
 
     val desiredAccess = getDesiredAccess(flags, isDirectoryOrPathRequest)
     val fileAttributes = getFileAttributes(flags, isDirectoryOrPathRequest)
-    val createDisposition = getCreateDisposition(flags, isDirectoryRequest)
+    val createDisposition = getCreateDisposition(flags, path.isDirectoryRequest)
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
     val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest, followSymlinks)
 
@@ -99,6 +98,7 @@ internal fun windowsOpenFileOrDirectory(
                         handle.close().onLeft { /* ignore error */ }
                         TooManySymbolicLinks("Can not open symlink").left()
                     }
+
                     attrs.fileAttributes.isDirectory -> FileDirectoryHandle.Directory(handle).right()
                     else -> FileDirectoryHandle.File(handle, isInAppendMode).right()
                 }

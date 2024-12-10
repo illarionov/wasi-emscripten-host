@@ -6,8 +6,6 @@
 
 package at.released.weh.filesystem.preopened
 
-import at.released.weh.filesystem.path.real.RealPath
-
 public data class PreopenedDirectory(
-    val realPath: RealPath,
+    val realPath: String,
 )

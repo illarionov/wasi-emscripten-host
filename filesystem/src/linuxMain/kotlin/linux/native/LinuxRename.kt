@@ -26,7 +26,7 @@ import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.renameat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.toKStringFromUtf8
@@ -52,15 +52,15 @@ import platform.posix.strerror
 
 internal fun linuxRename(
     oldPathFd: NativeDirectoryFd,
-    oldPath: RealPath,
+    oldPath: PosixRealPath,
     newPathFd: NativeDirectoryFd,
-    newPath: RealPath,
+    newPath: PosixRealPath,
 ): Either<RenameError, Unit> {
     val resultCode = renameat(
         oldPathFd.linuxFd,
-        oldPath,
+        oldPath.kString,
         newPathFd.linuxFd,
-        newPath,
+        newPath.kString,
     )
     return if (resultCode == 0) {
         Unit.right()

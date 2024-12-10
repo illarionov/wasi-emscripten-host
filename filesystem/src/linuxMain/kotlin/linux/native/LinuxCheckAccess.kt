@@ -12,19 +12,20 @@ import arrow.core.right
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.linux.ext.linuxFd
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_EACCESS
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.SYS_faccessat2
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.nativefunc.CheckAccessMapper.checkAccessErrnoToCheckAccessError
 import at.released.weh.filesystem.posix.nativefunc.CheckAccessMapper.fileAccessibilityCheckToPosixModeFlags
+import kotlinx.cinterop.cstr
 import platform.posix.errno
 import platform.posix.syscall
 
 internal fun linuxCheckAccess(
     baseDirectoryFd: NativeDirectoryFd,
-    path: RealPath,
+    path: PosixRealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean = true,
     followSymlinks: Boolean = false,
@@ -33,7 +34,7 @@ internal fun linuxCheckAccess(
 
 private fun linuxCheckAccess(
     nativeFdOrArCwd: Int,
-    path: RealPath,
+    path: PosixRealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean,
     followSymlinks: Boolean,
@@ -41,7 +42,7 @@ private fun linuxCheckAccess(
     val resultCode = syscall(
         SYS_faccessat2.toLong(),
         nativeFdOrArCwd,
-        path,
+        path.kString.cstr,
         fileAccessibilityCheckToPosixModeFlags(mode),
         getCheckAccessFlags(useEffectiveUserId, followSymlinks),
     )

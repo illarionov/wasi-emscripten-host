@@ -13,12 +13,12 @@ import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
-import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
 import kotlinx.io.IOException
@@ -28,7 +28,6 @@ import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_READ_ATTRIBUTES
 import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.HANDLE
-import platform.windows.PathIsRelativeW
 
 internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
     baseHandle: HANDLE?,
@@ -44,7 +43,7 @@ internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
 
 internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
     baseHandle: HANDLE?,
-    path: RealPath,
+    path: WindowsRealPath,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
@@ -89,11 +88,11 @@ private fun <E : FileSystemOperationError, R : Any> executeBlockSafe(
 
 internal fun windowsOpenForAttributeAccess(
     baseHandle: HANDLE?,
-    path: RealPath,
+    path: WindowsRealPath,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess,
 ): Either<OpenError, HANDLE> = either {
-    val rootHandle = if (baseHandle != null && PathIsRelativeW(path) != 0) {
+    val rootHandle = if (baseHandle != null && !path.isAbsolute) {
         baseHandle
     } else {
         null

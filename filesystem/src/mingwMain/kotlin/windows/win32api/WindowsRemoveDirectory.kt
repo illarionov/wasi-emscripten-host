@@ -15,7 +15,7 @@ import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.UnlinkError
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.ERROR_ACCESS_DENIED
 import platform.windows.ERROR_DIRECTORY
@@ -27,9 +27,9 @@ import platform.windows.ERROR_NOT_EMPTY
 import platform.windows.RemoveDirectoryW
 
 internal fun windowsRemoveDirectory(
-    path: RealPath,
+    path: WindowsRealPath,
 ): Either<UnlinkError, Unit> {
-    return if (RemoveDirectoryW(path) != 0) {
+    return if (RemoveDirectoryW(path.kString) != 0) {
         Unit.right()
     } else {
         Win32ErrorCode.getLast().removeDirectoryErrorToUnlinkError().left()

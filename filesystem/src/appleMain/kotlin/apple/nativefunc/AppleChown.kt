@@ -12,6 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.apple.ext.followSymlinksAsAtSymlinkFlags
 import at.released.weh.filesystem.apple.ext.posixFd
 import at.released.weh.filesystem.error.ChownError
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.op.chown.PosixChownErrorMapper
@@ -21,14 +22,14 @@ import platform.posix.fchownat
 
 internal fun appleChown(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     owner: Int,
     group: Int,
     followSymlinks: Boolean,
 ): Either<ChownError, Unit> {
     val resultCode = fchownat(
         baseDirectoryFd.posixFd,
-        path,
+        path.kString,
         owner.toUInt(),
         group.toUInt(),
         followSymlinksAsAtSymlinkFlags(followSymlinks),

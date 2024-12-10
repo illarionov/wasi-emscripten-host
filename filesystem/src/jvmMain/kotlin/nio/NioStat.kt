@@ -8,11 +8,14 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.fdresource.nio.NioFileStat
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 
 internal class NioStat(
     private val fsState: NioFileSystemState,
@@ -20,7 +23,7 @@ internal class NioStat(
     override fun invoke(input: Stat): Either<StatError, StructStat> =
         fsState.executeWithPath(input.baseDirectory, input.path, input.followSymlinks) { resolvePathResult ->
             resolvePathResult
-                .mapLeft { NioFileStat.toStatError(it) }
+                .mapLeft<ResolveRelativePathErrors>(ResolvePathError::toCommonError)
                 .flatMap { NioFileStat.getStat(it, input.followSymlinks) }
         }
 }

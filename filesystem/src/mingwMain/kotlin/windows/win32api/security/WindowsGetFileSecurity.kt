@@ -9,7 +9,7 @@ package at.released.weh.filesystem.windows.win32api.security
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.NativePlacement
 import kotlinx.cinterop.alignOf
@@ -26,13 +26,13 @@ import platform.windows.SECURITY_DESCRIPTOR
 import platform.windows.SECURITY_INFORMATION
 
 internal fun windowsGetFileSecurity(
-    path: RealPath,
+    path: WindowsRealPath,
     requestedInformation: SECURITY_INFORMATION,
     heap: NativePlacement,
 ): Either<Win32ErrorCode, PSECURITY_DESCRIPTOR> = memScoped {
     val lengthNeeded: DWORDVar = alloc()
 
-    if (GetFileSecurityW(path, requestedInformation, null, 0U, lengthNeeded.ptr) == 0) {
+    if (GetFileSecurityW(path.kString, requestedInformation, null, 0U, lengthNeeded.ptr) == 0) {
         val lastError = Win32ErrorCode.getLast()
         if (lastError.code != ERROR_INSUFFICIENT_BUFFER.toUInt()) {
             return lastError.left()
@@ -43,7 +43,7 @@ internal fun windowsGetFileSecurity(
     val descriptor: SECURITY_DESCRIPTOR = heap.alloc(newLength.toInt(), alignOf<SECURITY_DESCRIPTOR>()).reinterpret()
     return if (
         GetFileSecurityW(
-            lpFileName = path,
+            lpFileName = path.kString,
             RequestedInformation = requestedInformation,
             pSecurityDescriptor = descriptor.ptr,
             nLength = newLength,

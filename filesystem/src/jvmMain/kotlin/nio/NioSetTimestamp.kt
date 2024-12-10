@@ -11,9 +11,9 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 
 internal class NioSetTimestamp(
     private val fsState: NioFileSystemState,
@@ -23,7 +23,7 @@ internal class NioSetTimestamp(
             resolvePathResult
                 .mapLeft(ResolvePathError::toCommonError)
                 .flatMap {
-                    nioSetTimestamp(it, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
+                    nioSetTimestamp(it.nio, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
                 }
         }
 }

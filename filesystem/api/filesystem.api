@@ -469,7 +469,7 @@ public final class at/released/weh/filesystem/error/ReadOnlyFileSystem : at/rele
 public abstract interface class at/released/weh/filesystem/error/RenameError : at/released/weh/filesystem/error/FileSystemOperationError {
 }
 
-public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/UnlinkError {
+public abstract interface class at/released/weh/filesystem/error/ResolveRelativePathErrors : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/UnlinkError {
 }
 
 public abstract interface class at/released/weh/filesystem/error/SeekError : at/released/weh/filesystem/error/FileSystemOperationError {
@@ -1691,25 +1691,73 @@ public final class at/released/weh/filesystem/op/unlink/UnlinkFile$Companion : a
 	public fun getTag ()Ljava/lang/String;
 }
 
-public abstract class at/released/weh/filesystem/path/virtual/ValidateVirtualPathError : at/released/weh/filesystem/error/FileSystemOperationError {
+public abstract interface class at/released/weh/filesystem/path/PathError : at/released/weh/filesystem/error/FileSystemOperationError {
+}
+
+public final class at/released/weh/filesystem/path/PathError$AbsolutePath : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$EmptyPath : at/released/weh/filesystem/path/PathError, at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$FileDescriptorNotOpen : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$InvalidPathFormat : at/released/weh/filesystem/path/PathError, at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$IoError : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$NotDirectory : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$PathOutsideOfRootPath : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/path/virtual/VirtualPath {
 	public static final field Companion Lat/released/weh/filesystem/path/virtual/VirtualPath$Companion;
 	public synthetic fun <init> (Lkotlinx/io/bytestring/ByteString;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun create (Ljava/lang/String;)Larrow/core/Either;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getUtf8 ()Lkotlinx/io/bytestring/ByteString;
 	public final fun getUtf8SizeBytes ()I
 	public fun hashCode ()I
-	public static final fun of (Ljava/lang/String;)Larrow/core/Either;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/filesystem/path/virtual/VirtualPath$Companion {
+	public final fun create (Ljava/lang/String;)Larrow/core/Either;
 	public final fun isAbsolute (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
 	public final fun isDirectoryRequest (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
-	public final fun of (Ljava/lang/String;)Larrow/core/Either;
 }
 
 public final class at/released/weh/filesystem/preopened/PreopenedDirectory {

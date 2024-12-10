@@ -8,8 +8,8 @@ package at.released.weh.filesystem.nio.cwd
 
 import arrow.core.Either
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
-import java.nio.file.Path
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 
 internal fun interface CurrentDirectoryProvider {
-    fun getCurrentWorkingDirectory(): Either<GetCurrentWorkingDirectoryError, Path>
+    fun getCurrentWorkingDirectory(): Either<GetCurrentWorkingDirectoryError, NioRealPath>
 }

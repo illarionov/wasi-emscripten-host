@@ -17,7 +17,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
@@ -74,7 +74,7 @@ internal fun windowsCheckAccessFd(
 }
 
 private fun checkFileAcl(
-    path: RealPath,
+    path: WindowsRealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean,
 ): Either<CheckAccessError, Unit> = either {

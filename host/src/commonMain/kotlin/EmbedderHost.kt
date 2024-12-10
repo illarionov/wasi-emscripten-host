@@ -10,7 +10,6 @@ import at.released.weh.common.api.Logger
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.dsl.DirectoryConfigBlock
-import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.SourceProvider
@@ -67,7 +66,7 @@ public interface EmbedderHost : AutoCloseable {
                 this@Builder.directoriesConfigBlock.isRootAccessAllowed = allowRootAccess
             }
 
-            public fun addDirectory(realPath: RealPath): DirectoriesBuilder {
+            public fun addDirectory(realPath: String): DirectoriesBuilder {
                 this@Builder.directoriesConfigBlock.preopened {
                     add(PreopenedDirectory(realPath))
                 }

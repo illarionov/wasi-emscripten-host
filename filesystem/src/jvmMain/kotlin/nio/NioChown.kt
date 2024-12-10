@@ -11,10 +11,9 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.chown.Chown
-import java.nio.file.Path
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toCommonError
 
 internal class NioChown(
     private val fsState: NioFileSystemState,
@@ -24,6 +23,6 @@ internal class NioChown(
         input.path,
     ) { resolvePathResult ->
         resolvePathResult.mapLeft(ResolvePathError::toCommonError)
-            .flatMap { path: Path -> nioSetPosixUserGroup(path, input.owner, input.group) }
+            .flatMap { path -> nioSetPosixUserGroup(path.nio, input.owner, input.group) }
     }
 }

@@ -10,22 +10,25 @@ import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import java.nio.channels.FileChannel
 import java.util.concurrent.locks.Lock
 import kotlin.concurrent.withLock
 import java.nio.file.Path as NioPath
 
 @InternalWasiEmscriptenHostApi
-public class NioFileChannel(
-    path: NioPath,
+public class NioFileChannel internal constructor(
+    path: NioRealPath,
     public val channel: FileChannel,
     fdFlags: Fdflags,
     public val rights: FdRightsBlock,
     internal val fdresourceLock: Lock,
 ) {
-    private var _path: NioPath = path
-    public val path: NioPath
+    private var _path: NioRealPath = path
+    internal val path: NioRealPath
         get() = fdresourceLock.withLock { _path }
+
+    public val nioPath: NioPath get() = path.nio
 
     private var _fdFlags: Fdflags = fdFlags
     public val fdFlags: Fdflags
@@ -35,7 +38,7 @@ public class NioFileChannel(
         _fdFlags = valueFactory(_fdFlags)
     }
 
-    internal inline fun updatePath(valueFactory: (NioPath) -> NioPath): Unit = fdresourceLock.withLock {
+    internal inline fun updatePath(valueFactory: (NioRealPath) -> NioRealPath): Unit = fdresourceLock.withLock {
         _path = valueFactory(path)
     }
 }

@@ -27,6 +27,10 @@ internal sealed class GetFinalPathError : FileSystemOperationError {
         override val errno: FileSystemErrno = FileSystemErrno.OVERFLOW
     }
 
+    internal data class InvalidPathFormat(override val message: String) : GetFinalPathError() {
+        override val errno: FileSystemErrno = FileSystemErrno.INVAL
+    }
+
     internal data class OtherError(
         val code: Win32ErrorCode,
         override val message: String,

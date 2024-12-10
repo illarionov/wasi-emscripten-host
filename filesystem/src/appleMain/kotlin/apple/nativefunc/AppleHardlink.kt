@@ -25,7 +25,7 @@ import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.AT_SYMLINK_FOLLOW
@@ -52,9 +52,9 @@ import platform.posix.strerror
 
 internal fun appleHardlink(
     oldBaseDirectoryFd: NativeDirectoryFd,
-    oldPath: RealPath,
+    oldPath: PosixRealPath,
     newBaseDirectoryFd: NativeDirectoryFd,
-    newPath: RealPath,
+    newPath: PosixRealPath,
     followSymlinks: Boolean = false,
 ): Either<HardlinkError, Unit> {
     var flags = 0
@@ -64,9 +64,9 @@ internal fun appleHardlink(
 
     val resultCode = linkat(
         oldBaseDirectoryFd.posixFd,
-        oldPath,
+        oldPath.kString,
         newBaseDirectoryFd.posixFd,
-        newPath,
+        newPath.kString,
         flags,
     )
     return if (resultCode == 0) {

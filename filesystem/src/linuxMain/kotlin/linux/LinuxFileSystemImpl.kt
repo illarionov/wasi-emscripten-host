@@ -60,7 +60,7 @@ internal class LinuxFileSystemImpl(
     private val fsState = LinuxFileSystemState.create(
         stdio = stdio,
         isRootAccessAllowed = isRootAccessAllowed,
-        currentWorkingDirectory = currentWorkingDirectory ?: "",
+        currentWorkingDirectory = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(

@@ -15,7 +15,6 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.CurrentDirectoryProvider
 import at.released.weh.filesystem.nio.cwd.JvmCurrentDirectoryProvider
 import at.released.weh.filesystem.nio.op.RunWithChannelFd
-import at.released.weh.filesystem.nio.path.JvmNioPathConverter
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.chmod.Chmod
@@ -50,6 +49,7 @@ import at.released.weh.filesystem.op.sync.SyncFd
 import at.released.weh.filesystem.op.truncate.TruncateFd
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.nio.file.FileSystems
@@ -87,7 +87,7 @@ internal class NioFileSystemImpl(
         Fdrenumber to NioFdrenumber(fsState),
         GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(
             currentDirectoryProvider,
-            JvmNioPathConverter(javaFs),
+            NioPathConverter(javaFs),
         ),
         Hardlink to NioHardlink(fsState),
         Mkdir to NioMkdir(fsState),

@@ -9,11 +9,8 @@ package at.released.weh.filesystem.fdresource.nio
 import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.AccessDenied
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
-import at.released.weh.filesystem.error.NotCapable
-import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.ext.filetype
@@ -22,11 +19,10 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXG
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXO
 import at.released.weh.filesystem.model.FileModeFlag.S_IRWXU
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import java.nio.file.LinkOption
-import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file.attribute.FileTime
 import kotlin.io.path.exists
@@ -52,22 +48,23 @@ internal object NioFileStat {
     ).joinToString(",")
 
     internal fun getStat(
-        path: Path,
+        path: NioRealPath,
         followSymlinks: Boolean,
         blockSize: Long = 512L,
     ): Either<StatError, StructStat> = either {
         val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
 
-        if (!path.exists(options = linkOptions)) {
+        if (!path.nio.exists(options = linkOptions)) {
             raise(NoEntry("No such file: `$path`"))
         }
 
-        val basicFileAttrs: BasicFileAttributes = path.readBasicAttributes(followSymlinks)
+        val basicFileAttrs: BasicFileAttributes = path.nio.readBasicAttributes(followSymlinks)
             .mapLeft<StatError>(::toStatError)
             .bind()
-        val unixAttrs: Map<String, Any?> = path.readAttributeMapIfSupported(UNIX_REQUESTED_ATTRIBUTES, followSymlinks)
-            .mapLeft<StatError>(::toStatError)
-            .bind()
+        val unixAttrs: Map<String, Any?> = path.nio.readAttributeMapIfSupported(
+            UNIX_REQUESTED_ATTRIBUTES,
+            followSymlinks,
+        ).mapLeft<StatError>(::toStatError).bind()
 
         @FileMode
         val mode: Int = getMode(unixAttrs)
@@ -86,7 +83,7 @@ internal object NioFileStat {
         val atim: StructTimespec = basicFileAttrs.lastAccessTime().toTimeSpec()
 
         val dev: Long = (unixAttrs[ATTR_UNI_DEV] as? Long) ?: 1L
-        val ino: Long = path.readOrGenerateInode(basicFileAttrs, unixAttrs)
+        val ino: Long = path.nio.readOrGenerateInode(basicFileAttrs, unixAttrs)
 
         StructStat(
             deviceId = dev,
@@ -125,16 +122,7 @@ internal object NioFileStat {
         )
     }
 
-    internal fun toStatError(pathError: ResolvePathError): StatError = when (pathError) {
-        is ResolvePathError.EmptyPath -> NoEntry(pathError.message)
-        is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(pathError.message)
-        is ResolvePathError.InvalidPath -> BadFileDescriptor(pathError.message)
-        is ResolvePathError.NotDirectory -> NotDirectory(pathError.message)
-        is ResolvePathError.AbsolutePath -> BadFileDescriptor(pathError.message)
-        is ResolvePathError.PathOutsideOfRootPath -> NotCapable(pathError.message)
-    }
-
-    private fun toStatError(attributesError: ReadAttributesError): StatError = when (attributesError) {
+    internal fun toStatError(attributesError: ReadAttributesError): StatError = when (attributesError) {
         is ReadAttributesError.AccessDenied -> AccessDenied(attributesError.message)
         is ReadAttributesError.IoError -> IoError(attributesError.message)
         is ReadAttributesError.NotSupported -> AccessDenied(attributesError.message)

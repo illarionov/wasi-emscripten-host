@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.op.stat.StructTimespec
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -45,13 +46,13 @@ internal expect fun stat.toStructStat(): StructStat
 
 internal fun appleStat(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     followSymlinks: Boolean,
 ): Either<StatError, StructStat> = memScoped {
     val statBuf: stat = alloc()
     val exitCode = fstatat(
         baseDirectoryFd.posixFd,
-        path,
+        path.kString,
         statBuf.ptr,
         followSymlinksAsAtSymlinkFlags(followSymlinks),
     )

@@ -40,7 +40,7 @@ public class SyscallUtimensatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val folowSymlinks: Boolean = (flags and AT_SYMLINK_NOFOLLOW) == 0
         val path = memory.readNullTerminatedString(pathnamePtr)
-        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+        val virtualPath = VirtualPath.create(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         val atimeNs: Long?
         val mtimeNs: Long?

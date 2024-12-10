@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.path
+package at.released.weh.filesystem.path.real.windows
 
 import arrow.core.Either
-import at.released.weh.filesystem.path.real.RealPath
-import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError
+import arrow.core.getOrElse
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.WIN32_NT_KERNEL_DEVICES_PREFIX
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import platform.windows.PathIsRelativeW
 
 internal object WindowsPathConverter {
     /**
@@ -29,39 +29,44 @@ internal object WindowsPathConverter {
     // https://stackoverflow.com/questions/23041983/path-prefixes-and/46019856#46019856
     internal const val WIN32_NT_KERNEL_DEVICES_PREFIX = """\??\"""
 
-    internal fun convertToRealPath(path: VirtualPath): RealPath = convertPathToNtPath(path.toString())
+    // TODO: mingw style path converter
+    internal fun convertToRealPath(path: VirtualPath): WindowsRealPath = convertPathToNtPath(path.toString())
 
-    internal fun convertPathToNtPath(path: RealPath): RealPath {
-        val winPathFull: String = path.replace('/', '\\')
+    // TODO
+    internal fun convertPathToNtPath(windowsPath: WindowsRealPath): WindowsNtRealPath {
+        return windowsPath as? WindowsNtRealPath ?: convertPathToNtPath(windowsPath.kString)
+    }
+
+    internal fun convertPathToNtPath(windowsPath: String): WindowsNtRealPath {
+        val winPathFull: String = windowsPath.replace('/', '\\')
 
         // XXX need own version without limit of MAX_PATH
-        val pathIsRelative = PathIsRelativeW(winPathFull) != 0
+        val pathIsRelative = !WindowsRealPath.windowsPathIsAbsolute(winPathFull)
         val winPath = winPathFull
             .substringAfter(WIN32_LITERAL_FILE_NAMESPACE_PREFIX)
             .substringAfter(WIN32_NORMALIZED_FILE_NAMESPACE_PREFIX)
 
         val ntPath = when {
-            !pathIsRelative && !path.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) ->
+            !pathIsRelative && !windowsPath.startsWith(WIN32_NT_KERNEL_DEVICES_PREFIX) ->
                 WIN32_NT_KERNEL_DEVICES_PREFIX + winPath
 
-            path == "." -> """"""
+            windowsPath == "." -> """"""
             else -> winPath
         }
-        return ntPath
+        return WindowsNtRealPath.create(ntPath).getOrElse { error("Can not convert path") }
     }
 
     internal fun convertToVirtualPath(
-        realPath: RealPath,
-    ): Either<ValidateVirtualPathError, VirtualPath> {
-        val pathStripped = realPath
-            .trim()
+        realPath: WindowsRealPath,
+    ): Either<PathError, VirtualPath> {
+        val pathStripped = realPath.kString
             .substringAfter(WIN32_LITERAL_FILE_NAMESPACE_PREFIX)
             .substringAfter(WIN32_NORMALIZED_FILE_NAMESPACE_PREFIX)
             .substringAfter(WIN32_NT_KERNEL_DEVICES_PREFIX)
             .replaceDriveLetter()
 
         val unixPath = pathStripped.replace('\\', '/')
-        return VirtualPath.of(unixPath)
+        return VirtualPath.create(unixPath)
     }
 
     @Suppress("ComplexCondition")

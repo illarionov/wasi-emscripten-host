@@ -45,4 +45,5 @@ internal fun GetFinalPathError.toReadDirError(): ReadDirError = when (this) {
     is GetFinalPathError.InvalidHandle -> BadFileDescriptor(this.message)
     is GetFinalPathError.MaxAttemptsReached -> IoError(this.message)
     is GetFinalPathError.OtherError -> IoError(this.message)
+    is GetFinalPathError.InvalidPathFormat -> IoError(this.message)
 }

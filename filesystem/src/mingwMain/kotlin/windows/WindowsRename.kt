@@ -42,7 +42,8 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.Directory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.File
@@ -53,7 +54,6 @@ import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenForAttributeAccess
-import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.close
@@ -113,7 +113,7 @@ internal class WindowsRename(
     @Suppress("CyclomaticComplexMethod")
     private fun replaceExistingFile(
         handle: HANDLE,
-        destinationPath: RealPath,
+        destinationPath: WindowsRealPath,
         destinationType: DestinationFileType,
         dstHandle: HANDLE?,
     ): Either<RenameError, Unit> {
@@ -174,7 +174,7 @@ internal class WindowsRename(
         }
     }
 
-    private fun doRename(handle: HANDLE, newPath: RealPath): Either<RenameError, Unit> {
+    private fun doRename(handle: HANDLE, newPath: WindowsRealPath): Either<RenameError, Unit> {
         return handle.setFileRenameInfo(newPath, true).mapLeft(::setFileErrorToRenameError)
     }
 
@@ -231,7 +231,7 @@ internal class WindowsRename(
 
         private fun getPathInfo(
             attributesHandle: HANDLE,
-            finalPath: RealPath,
+            finalPath: WindowsRealPath,
             fileAttributes: FileAttributeTagInfo,
         ): DestinationPathInfo {
             return when {
@@ -242,7 +242,7 @@ internal class WindowsRename(
                 )
 
                 fileAttributes.fileAttributes.isDirectory -> {
-                    val isEmpty = PathIsDirectoryEmptyW(finalPath)
+                    val isEmpty = PathIsDirectoryEmptyW(finalPath.kString)
                     DestinationPathInfo(
                         resolvedRealPath = finalPath,
                         type = Directory(isEmpty = isEmpty != 0),
@@ -268,7 +268,7 @@ internal class WindowsRename(
     }
 
     private data class DestinationPathInfo(
-        val resolvedRealPath: String,
+        val resolvedRealPath: WindowsRealPath,
         val type: DestinationFileType,
         val dstHandle: HANDLE?,
     )

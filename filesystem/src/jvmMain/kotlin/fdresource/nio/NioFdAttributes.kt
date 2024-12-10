@@ -15,14 +15,14 @@ import at.released.weh.filesystem.ext.filetype
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
-import java.nio.file.Path
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import java.nio.file.attribute.BasicFileAttributes
 
 internal object NioFdAttributes {
     fun getFileFdAttributes(
         channel: NioFileChannel,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = channel.path.readBasicAttributes()
+        val fileType = channel.path.nio.readBasicAttributes()
             .map(BasicFileAttributes::filetype)
             .mapLeft(::toFdAttributesError)
             .bind()
@@ -37,10 +37,10 @@ internal object NioFdAttributes {
     }
 
     fun getDirectoryFdAttributes(
-        path: Path,
+        path: NioRealPath,
         rights: FdRightsBlock,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = path.readBasicAttributes()
+        val fileType = path.nio.readBasicAttributes()
             .map(BasicFileAttributes::filetype)
             .mapLeft(::toFdAttributesError)
             .bind()

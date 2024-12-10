@@ -21,6 +21,7 @@ import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.UTIME_OMIT
 import at.released.weh.filesystem.platform.linux.utimensat
@@ -48,7 +49,7 @@ import platform.posix.timespec
 
 internal fun linuxSetTimestamp(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     atimeNanoseconds: Long?,
     mtimeNanoseconds: Long?,
     followSymlinks: Boolean,
@@ -59,7 +60,7 @@ internal fun linuxSetTimestamp(
 
     val resultCode = utimensat(
         baseDirectoryFd.linuxFd,
-        path,
+        path.kString,
         timespec,
         getTimensatFlags(followSymlinks),
     )

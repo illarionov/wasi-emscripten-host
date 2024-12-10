@@ -18,6 +18,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
@@ -25,7 +26,6 @@ import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.Directory
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.File
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenFileOrDirectory
-import at.released.weh.filesystem.windows.path.WindowsPathConverter
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 
 internal class WindowsOpen(

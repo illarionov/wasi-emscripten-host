@@ -76,7 +76,7 @@ public class FdReaddirFunctionHandle(
 
     internal companion object {
         fun DirEntry.toDirEntWithName(): Pair<Dirent, Buffer> {
-            VirtualPath.of("test")
+            VirtualPath.create("test")
             val encodedName = this.name.encodeToBuffer()
             return Dirent(
                 dNext = this.cookie,
