@@ -52,13 +52,11 @@ import at.released.weh.filesystem.stdio.StandardInputOutput
 internal class AppleFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
-    isRootAccessAllowed: Boolean,
     currentWorkingDirectory: String?,
     preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
     private val fsState = AppleFileSystemState.create(
         stdio = stdio,
-        isRootAccessAllowed = isRootAccessAllowed,
         currentWorkingDirectory = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
     )

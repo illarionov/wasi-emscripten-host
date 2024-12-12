@@ -33,7 +33,6 @@ public object AppleFileSystem : FileSystemEngine<Nothing> {
         return AppleFileSystemImpl(
             interceptors = commonConfig.interceptors,
             stdio = stdio,
-            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
             currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
             preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
         )

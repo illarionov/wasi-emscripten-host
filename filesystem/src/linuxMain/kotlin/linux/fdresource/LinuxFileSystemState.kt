@@ -40,16 +40,14 @@ import kotlinx.io.IOException
 
 internal class LinuxFileSystemState private constructor(
     stdio: StandardInputOutput,
-    internal val isRootAccessAllowed: Boolean,
-    preopenedDirectories: PreopenedDirectories,
+    preopenedDirectories: Map<FileDescriptor, FdResource>,
+    currentWorkingDirectory: FileDescriptor,
 ) : AutoCloseable {
     private val fdsLock: ReentrantLock = reentrantLock()
-    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
-    val pathResolver = PathResolver(fileDescriptors, fdsLock)
-
-    init {
-        pathResolver.setupPreopenedDirectories(preopenedDirectories)
-    }
+    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
+        stdio.toFileDescriptorMap() + preopenedDirectories,
+    )
+    val pathResolver = PathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
@@ -79,9 +77,7 @@ internal class LinuxFileSystemState private constructor(
     fun remove(
         @IntFileDescriptor fd: FileDescriptor,
     ): Either<BadFileDescriptor, FdResource> = fdsLock.withLock {
-        return fileDescriptors.release(fd).onRight { resource ->
-                pathResolver.onFileDescriptorRemovedUnsafe(resource)
-            }
+        return fileDescriptors.release(fd)
     }
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithResource(
@@ -148,32 +144,8 @@ internal class LinuxFileSystemState private constructor(
     class PathResolver(
         private val fileDescriptors: FileDescriptorTable<FdResource>,
         private val fsLock: ReentrantLock,
+        private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD,
     ) {
-        // TODO: remove
-        private val openedDirectories: MutableMap<String, FdResource> = mutableMapOf()
-        private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD
-
-        // TODO: move out
-        fun setupPreopenedDirectories(
-            preopened: PreopenedDirectories,
-        ) {
-            require(openedDirectories.isEmpty())
-
-            preopened.preopenedDirectories.entries
-                .forEachIndexed { index, (path: String, resource: LinuxDirectoryFdResource) ->
-                    fileDescriptors[index + WASI_FIRST_PREOPEN_FD] = resource
-                    openedDirectories[path] = resource
-                }
-
-            currentWorkingDirectoryFd = preopened.currentWorkingDirectory.fold(
-                ifLeft = { -1 },
-            ) { resource: LinuxDirectoryFdResource ->
-                val fd = WASI_FIRST_PREOPEN_FD + preopened.preopenedDirectories.size
-                fileDescriptors[fd] = resource
-                fd
-            }
-        }
-
         fun resolveNativeDirectoryFd(
             directory: BaseDirectory,
         ): Either<FileSystemOperationError, NativeDirectoryFd> = when (directory) {
@@ -195,32 +167,36 @@ internal class LinuxFileSystemState private constructor(
                 else -> fdResource.nativeFd.right()
             }
         }
-
-        fun onFileDescriptorRemovedUnsafe(
-            fdResource: FdResource,
-        ) {
-            openedDirectories.values.remove(fdResource)
-        }
     }
 
     companion object {
         @Throws(IOException::class)
         fun create(
             stdio: StandardInputOutput,
-            isRootAccessAllowed: Boolean,
             currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
         ): LinuxFileSystemState {
-            val directories = preopenDirectories(currentWorkingDirectory, preopenedDirectories)
-                .getOrElse { openError ->
-                    throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
+            val (cwdResult, directories) = preopenDirectories(
+                currentWorkingDirectory,
+                preopenedDirectories,
+            ).getOrElse { openError ->
+                throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
+            }
+
+            val preopened: MutableMap<FileDescriptor, LinuxDirectoryFdResource> =
+                directories.indices.associateTo(mutableMapOf()) { index ->
+                    index + WASI_FIRST_PREOPEN_FD to directories[index]
                 }
 
-            return LinuxFileSystemState(
-                stdio,
-                isRootAccessAllowed,
-                directories,
-            )
+            val currentWorkingDirectoryFd: FileDescriptor = cwdResult.fold(
+                ifLeft = { -1 },
+            ) { resource: LinuxDirectoryFdResource ->
+                val fd = WASI_FIRST_PREOPEN_FD + directories.size
+                preopened[fd] = resource
+                fd
+            }
+
+            return LinuxFileSystemState(stdio, preopened, currentWorkingDirectoryFd)
         }
     }
 }

@@ -59,12 +59,11 @@ internal class LinuxFileSystemImpl(
 ) : FileSystem {
     private val fsState = LinuxFileSystemState.create(
         stdio = stdio,
-        isRootAccessAllowed = isRootAccessAllowed,
         currentWorkingDirectory = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
-        Open to LinuxOpen(fsState),
+        Open to LinuxOpen(fsState, isRootAccessAllowed),
         CloseFd to LinuxCloseFd(fsState),
         AddAdvisoryLockFd to LinuxAddAdvisoryLockFd(fsState),
         RemoveAdvisoryLockFd to LinuxRemoveAdvisoryLockFd(fsState),
