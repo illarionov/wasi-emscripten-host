@@ -94,7 +94,7 @@ internal fun appleOpenFileOrDirectory(
         val directoryFlags = flags and (O_NOFOLLOW or O_NOATIME or O_CLOEXEC) or O_DIRECTORY
         return appleOpenRaw(
             baseDirectoryFd = baseDirectoryFd,
-            path = path.kString,
+            path = path,
             flags = directoryFlags,
             fdFlags = fdFlags,
             mode = null,
@@ -148,7 +148,7 @@ private fun getFileType(
     path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
 ): Either<OpenError, Filetype?> {
-    return appleStat(baseDirectoryFd, path.kString, flags and O_NOFOLLOW != O_NOFOLLOW).fold(
+    return appleStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(
         ifRight = {
             it.type.right()
         },

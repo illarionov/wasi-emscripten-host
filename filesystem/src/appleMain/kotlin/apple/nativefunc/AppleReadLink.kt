@@ -20,7 +20,9 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -50,7 +52,7 @@ private val MAX_PATH_SIZE = maxOf(1024 * 1024, PATH_MAX)
 internal fun appleReadLink(
     baseDirectoryFd: NativeDirectoryFd,
     path: PosixRealPath,
-): Either<ReadLinkError, String> {
+): Either<ReadLinkError, PosixRealPath> {
     var bufSize = getInitialBufSize(baseDirectoryFd, path.kString)
         .getOrElse { return it.left() }
     do {
@@ -65,7 +67,9 @@ internal fun appleReadLink(
         }
         when {
             bytesWritten < 0 -> return errno.errnoToReadLinkError().left()
-            bytesWritten < bufSize -> return buf.decodeToString(0, bytesWritten.toInt()).right()
+            bytesWritten < bufSize -> return PosixRealPath.create(buf.decodeToString(0, bytesWritten.toInt()))
+                .mapLeft(PathError::toCommonError)
+
             bufSize == MAX_PATH_SIZE -> return ENAMETOOLONG.errnoToReadLinkError().left()
             else -> bufSize = (bufSize + PATH_STEP).coerceAtMost(MAX_PATH_SIZE)
         }
