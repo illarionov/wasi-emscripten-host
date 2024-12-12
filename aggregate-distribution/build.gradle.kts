@@ -15,7 +15,6 @@ dependencies {
     mavenSnapshotAggregation(projects.commonApi)
     mavenSnapshotAggregation(projects.commonUtil)
     mavenSnapshotAggregation(projects.emscriptenRuntime)
-    mavenSnapshotAggregation(projects.filesystem)
     mavenSnapshotAggregation(projects.filesystemTestFixtures)
     mavenSnapshotAggregation(projects.host)
     mavenSnapshotAggregation(projects.hostTestFixtures)

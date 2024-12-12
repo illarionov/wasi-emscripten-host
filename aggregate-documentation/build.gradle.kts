@@ -32,7 +32,6 @@ dependencies {
     dokkatoo(projects.bindingsChicory)
     dokkatoo(projects.bindingsGraalvm241)
     dokkatoo(projects.commonApi)
-    dokkatoo(projects.filesystem)
     dokkatoo(projects.filesystemTestFixtures)
     dokkatoo(projects.host)
     dokkatoo(projects.hostTestFixtures)

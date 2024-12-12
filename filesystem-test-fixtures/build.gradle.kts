@@ -30,8 +30,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.filesystem)
+            api(projects.host)
             api(libs.kotlinx.io)
+            api(libs.arrow.core)
         }
     }
 }
