@@ -1,13 +1,13 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.Family
-
 /*
  * Copyright 2024, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
+
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     id("at.released.weh.gradle.multiplatform.atomicfu")
@@ -70,7 +70,6 @@ kotlin {
             implementation(projects.commonUtil)
         }
         commonTest.dependencies {
-            implementation(projects.filesystemTestFixtures)
             implementation(projects.hostTestFixtures)
             implementation(projects.testFilesystemAssertions)
             implementation(projects.testIgnoreAnnotations)
