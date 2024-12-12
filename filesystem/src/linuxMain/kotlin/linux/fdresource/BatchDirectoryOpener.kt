@@ -52,21 +52,18 @@ internal fun preopenDirectories(
         CURRENT_WORKING_DIRECTORY
     }
 
-    val opened: MutableMap<String, LinuxDirectoryFdResource> = mutableMapOf()
+    val opened: MutableList<LinuxDirectoryFdResource> = mutableListOf()
     val directories: Either<BatchDirectoryOpenerError, PreopenedDirectories> = either {
-        for (directory in preopenedDirectories) {
-            val realPathString = directory.realPath
-            opened.getOrPut(realPathString) {
-                PosixRealPath.create(realPathString)
-                    .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
-                    .flatMap { realPath -> preopenDirectory(realPath, cwdFd) }
-                    .mapLeft { BatchDirectoryOpenerError(directory, it) }
-                    .bind()
-            }
+        preopenedDirectories.toSet().mapTo(opened) { directory ->
+            PosixRealPath.create(directory.realPath)
+                .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+                .flatMap { realPath -> preopenDirectory(realPath, cwdFd) }
+                .mapLeft { BatchDirectoryOpenerError(directory, it) }
+                .bind()
         }
         PreopenedDirectories(currentWorkingDirectory, opened)
     }.onLeft {
-        opened.values.closeSilent()
+        opened.closeSilent()
     }
     return directories
 }
@@ -93,9 +90,9 @@ private fun preopenDirectory(
     }
 }
 
-internal class PreopenedDirectories(
+internal data class PreopenedDirectories(
     val currentWorkingDirectory: Either<OpenError, LinuxDirectoryFdResource>,
-    val preopenedDirectories: Map<String, LinuxDirectoryFdResource>,
+    val preopenedDirectories: List<LinuxDirectoryFdResource>,
 )
 
 internal data class BatchDirectoryOpenerError(

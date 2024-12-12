@@ -32,6 +32,7 @@ import at.released.weh.filesystem.posix.NativeDirectoryFd
 
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
+    private val isRootAccessAllowed: Boolean = false,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
         checkOpenFlags(input.openFlags, input.rights, input.path.isDirectoryRequest()).onLeft { return it.left() }
@@ -51,7 +52,7 @@ internal class LinuxOpen(
             (fsState.get(baseDirectory.fd) as? LinuxDirectoryFdResource)?.rights
         } ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
-        val resolveFlags = if (fsState.isRootAccessAllowed) {
+        val resolveFlags = if (isRootAccessAllowed) {
             setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS)
         } else {
             setOf(ResolveModeFlag.RESOLVE_NO_MAGICLINKS, ResolveModeFlag.RESOLVE_BENEATH)
