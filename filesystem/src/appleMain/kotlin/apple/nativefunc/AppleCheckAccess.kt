@@ -12,6 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.apple.ext.posixFd
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.nativefunc.CheckAccessMapper.checkAccessErrnoToCheckAccessError
 import at.released.weh.filesystem.posix.nativefunc.CheckAccessMapper.fileAccessibilityCheckToPosixModeFlags
@@ -22,7 +23,7 @@ import platform.posix.faccessat
 
 internal fun appleCheckAccess(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean = false,
     followSymlinks: Boolean = false,
@@ -31,14 +32,14 @@ internal fun appleCheckAccess(
 
 private fun appleCheckAccess(
     nativeFdOrArCwd: Int,
-    path: String,
+    path: PosixRealPath,
     mode: Set<FileAccessibilityCheck>,
     useEffectiveUserId: Boolean,
     followSymlinks: Boolean,
 ): Either<CheckAccessError, Unit> {
     val resultCode = faccessat(
         nativeFdOrArCwd,
-        path,
+        path.kString,
         fileAccessibilityCheckToPosixModeFlags(mode),
         getCheckAccessFlags(useEffectiveUserId, followSymlinks),
     )

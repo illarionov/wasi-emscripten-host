@@ -32,7 +32,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.RESOLVE_BENEATH
 import at.released.weh.filesystem.platform.linux.RESOLVE_CACHED
 import at.released.weh.filesystem.platform.linux.RESOLVE_IN_ROOT
@@ -64,7 +64,7 @@ import platform.posix.syscall
 
 internal fun linuxOpenFileOrDirectory(
     baseDirectoryFd: NativeDirectoryFd,
-    path: RealPath,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
@@ -111,7 +111,7 @@ internal fun linuxOpenFileOrDirectory(
 
 internal fun linuxOpenRaw(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
@@ -127,7 +127,7 @@ internal fun linuxOpenRaw(
         syscall(
             __sysno = SYS_openat2.toLong(),
             baseDirectoryFd.linuxFd,
-            path.cstr,
+            path.kString.cstr,
             openHow.ptr,
             sizeOf<open_how>().toULong(),
         )
@@ -141,7 +141,7 @@ internal fun linuxOpenRaw(
 
 private fun getFileType(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
 ): Either<OpenError, Filetype?> {
     return linuxStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(

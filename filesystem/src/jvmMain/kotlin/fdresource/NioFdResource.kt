@@ -7,13 +7,13 @@
 package at.released.weh.filesystem.fdresource
 
 import at.released.weh.filesystem.internal.fdresource.FdResource
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.util.concurrent.locks.Lock
-import java.nio.file.Path as NioPath
 
 internal interface NioFdResource : FdResource {
     val lock: Lock
-    val path: NioPath
+    val path: NioRealPath
 
-    fun updatePath(realpath: NioPath, virtualPath: VirtualPath)
+    fun updatePath(realPath: NioRealPath, virtualPath: VirtualPath)
 }

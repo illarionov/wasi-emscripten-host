@@ -46,7 +46,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOATIME
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.apple.openat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
@@ -81,7 +81,7 @@ import platform.posix.errno
 
 internal fun appleOpenFileOrDirectory(
     baseDirectoryFd: NativeDirectoryFd,
-    path: RealPath,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
@@ -124,7 +124,7 @@ internal fun appleOpenFileOrDirectory(
 
 internal fun appleOpenRaw(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
     @FileMode mode: Int?,
@@ -132,9 +132,9 @@ internal fun appleOpenRaw(
     val openFlags = getAppleOpenFileFlags(flags, fdFlags).toInt()
     val errorOrFd = if (flags and O_CREAT == O_CREAT) {
         val realMode = mode?.toULong() ?: 0UL
-        openat(baseDirectoryFd.posixFd, path, openFlags, realMode)
+        openat(baseDirectoryFd.posixFd, path.kString, openFlags, realMode)
     } else {
-        openat(baseDirectoryFd.posixFd, path, openFlags)
+        openat(baseDirectoryFd.posixFd, path.kString, openFlags)
     }
     return if (errorOrFd < 0) {
         errno.openat2ErrNoToOpenErrorApple().left()
@@ -145,7 +145,7 @@ internal fun appleOpenRaw(
 
 private fun getFileType(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     @OpenFileFlagsType flags: OpenFileFlags,
 ): Either<OpenError, Filetype?> {
     return appleStat(baseDirectoryFd, path, flags and O_NOFOLLOW != O_NOFOLLOW).fold(

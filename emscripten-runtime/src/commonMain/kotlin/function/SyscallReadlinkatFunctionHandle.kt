@@ -39,7 +39,7 @@ public class SyscallReadlinkatFunctionHandle(
         if (bufSize < 0) {
             return -Errno.INVAL.code
         }
-        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+        val virtualPath = VirtualPath.create(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         return host.fileSystem.execute(
             ReadLink,

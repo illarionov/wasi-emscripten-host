@@ -11,16 +11,19 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CheckAccessError
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.cwd.JvmPathResolver
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.WRITEABLE
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.ResolvePathError
 import kotlin.io.path.exists
 import kotlin.io.path.isExecutable
 import kotlin.io.path.isReadable
@@ -34,6 +37,7 @@ internal class NioCheckAccess(
         val path = pathResolver.resolve(input.path, input.baseDirectory, input.followSymlinks)
             .mapLeft { it.toCheckAccessError() }
             .bind()
+            .nio
         if (!path.exists(options = asLinkOptions(input.followSymlinks))) {
             raise(NoEntry("File `$path` not exists"))
         }
@@ -49,11 +53,12 @@ internal class NioCheckAccess(
     }
 
     private fun ResolvePathError.toCheckAccessError(): CheckAccessError = when (this) {
-        is ResolvePathError.EmptyPath -> NoEntry(message)
-        is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
-        is ResolvePathError.NotDirectory -> BaseNotDirectory(message)
-        is ResolvePathError.InvalidPath -> NoEntry(message)
-        is ResolvePathError.AbsolutePath -> NoEntry(message)
-        is ResolvePathError.PathOutsideOfRootPath -> NotCapable(message)
+        is PathError.EmptyPath -> InvalidArgument(message)
+        is PathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
+        is PathError.NotDirectory -> BaseNotDirectory(message)
+        is PathError.InvalidPathFormat -> InvalidArgument(message)
+        is PathError.AbsolutePath -> NotCapable(message)
+        is PathError.PathOutsideOfRootPath -> NotCapable(message)
+        is PathError.IoError -> IoError(message)
     }
 }

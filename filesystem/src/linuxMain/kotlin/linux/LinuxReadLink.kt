@@ -9,11 +9,15 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import arrow.core.flatMap
 import at.released.weh.filesystem.error.ReadLinkError
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxReadLink
 import at.released.weh.filesystem.op.readlink.ReadLink
-import at.released.weh.filesystem.path.PosixPathConverter.convertToVirtualPath
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class LinuxReadLink(
@@ -22,8 +26,8 @@ internal class LinuxReadLink(
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> {
         return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
             linuxReadLink(realBaseDirectory, realPath)
-        }.flatMap { targetRealPath ->
-            convertToVirtualPath(targetRealPath)
+        }.flatMap { targetRealPath: PosixRealPath ->
+            toVirtualPath(targetRealPath).mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
         }
     }
 }

@@ -11,6 +11,7 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.linux.ext.toStructTimespec
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.ext.posixModeTypeToFilemode
 import at.released.weh.filesystem.posix.ext.posixModeTypeToFiletype
 import kotlinx.cinterop.alloc
@@ -23,11 +24,11 @@ import platform.posix.stat
 
 internal actual fun platformFstatat(
     dirfd: Int,
-    path: String,
+    path: PosixRealPath,
     statFlags: Int,
 ): Either<Int, StructStat> = memScoped {
     val statBuf: stat = alloc()
-    val exitCode = fstatat(dirfd, path, statBuf.ptr, statFlags)
+    val exitCode = fstatat(dirfd, path.kString, statBuf.ptr, statFlags)
     return if (exitCode == 0) {
         statBuf.toStructStat().right()
     } else {

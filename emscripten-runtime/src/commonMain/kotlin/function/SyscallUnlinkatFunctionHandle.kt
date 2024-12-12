@@ -32,7 +32,7 @@ public class SyscallUnlinkatFunctionHandle(
         flags: Int,
     ): Int {
         val path = memory.readNullTerminatedString(pathnamePtr)
-        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+        val virtualPath = VirtualPath.create(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirfd)
         return if (flags and AT_REMOVEDIR == AT_REMOVEDIR) {

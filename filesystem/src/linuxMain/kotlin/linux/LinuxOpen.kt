@@ -25,7 +25,7 @@ import at.released.weh.filesystem.linux.native.linuxOpenFileOrDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -45,7 +45,7 @@ internal class LinuxOpen(
         input: Open,
         nativeBaseDirectoryFd: NativeDirectoryFd,
         virtualPath: VirtualPath,
-        realPath: RealPath,
+        realPath: PosixRealPath,
     ): Either<OpenError, FileDescriptor> {
         val baseDirectoryRights = (input.baseDirectory as? DirectoryFd)?.let { baseDirectory ->
             (fsState.get(baseDirectory.fd) as? LinuxDirectoryFdResource)?.rights

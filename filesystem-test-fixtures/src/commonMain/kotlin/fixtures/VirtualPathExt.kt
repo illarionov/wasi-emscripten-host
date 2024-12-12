@@ -11,4 +11,4 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 
 @InternalWasiEmscriptenHostApi
 public fun String.toVirtualPath(): VirtualPath =
-    VirtualPath.of(this).getOrNull() ?: error("Can not convert `$this` to virtual path")
+    VirtualPath.create(this).getOrNull() ?: error("Can not convert `$this` to virtual path")

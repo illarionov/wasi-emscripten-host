@@ -8,11 +8,12 @@ package at.released.weh.filesystem.windows.win32api.filepath
 
 import arrow.core.Either
 import arrow.core.left
-import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.readChars
 import at.released.weh.filesystem.windows.win32api.filepath.WindowsVolumeNameType.DOS
@@ -31,7 +32,7 @@ private const val MAX_ATTEMPTS = 10
 internal fun HANDLE.getFinalPath(
     volumeNameType: WindowsVolumeNameType = DOS,
     normalized: Boolean = true,
-): Either<GetFinalPathError, String> {
+): Either<GetFinalPathError, WindowsRealPath> {
     val flags = getPathFlags(volumeNameType, normalized)
     var requiredBuffer: Int = MAX_PATH
     repeat(MAX_ATTEMPTS) {
@@ -40,7 +41,12 @@ internal fun HANDLE.getFinalPath(
             val result = GetFinalPathNameByHandleW(this@getFinalPath, buf, requiredBuffer.toUInt(), flags)
             when {
                 result == 0U -> return GetFinalPathError.create(Win32ErrorCode.getLast()).left()
-                result.toInt() < requiredBuffer -> return buf.readChars(result.toInt()).concatToString().right()
+                result.toInt() < requiredBuffer -> {
+                    val pathString = buf.readChars(result.toInt()).concatToString()
+                    return WindowsRealPath.create(pathString)
+                        .mapLeft { GetFinalPathError.InvalidPathFormat(it.message) }
+                }
+
                 else -> requiredBuffer = result.toInt()
             }
         }
@@ -49,10 +55,11 @@ internal fun HANDLE.getFinalPath(
 }
 
 internal fun GetFinalPathError.toResolveRelativePathError(): ResolveRelativePathErrors = when (this) {
-    is GetFinalPathError.AccessDenied -> at.released.weh.filesystem.error.NotCapable(this.message)
+    is GetFinalPathError.AccessDenied -> NotCapable(this.message)
     is GetFinalPathError.InvalidHandle -> BadFileDescriptor(this.message)
     is GetFinalPathError.MaxAttemptsReached -> NameTooLong(this.message)
     is GetFinalPathError.OtherError -> InvalidArgument(this.message)
+    is GetFinalPathError.InvalidPathFormat -> InvalidArgument(this.message)
 }
 
 private fun getPathFlags(

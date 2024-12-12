@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.nio.cwd
+package at.released.weh.filesystem.path
 
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
@@ -15,48 +15,61 @@ import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import at.released.weh.filesystem.model.FileSystemErrno.INVAL
-import at.released.weh.filesystem.model.FileSystemErrno.NOENT
+import at.released.weh.filesystem.model.FileSystemErrno.IO
 import at.released.weh.filesystem.model.FileSystemErrno.NOTCAPABLE
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
 import at.released.weh.filesystem.model.FileSystemErrno.PERM
 
-internal sealed interface ResolvePathError : FileSystemOperationError {
-    class AbsolutePath(
+public sealed interface PathError : FileSystemOperationError {
+    public class EmptyPath(
+        override val message: String,
+        override val errno: FileSystemErrno = INVAL,
+    ) : PathError, ResolvePathError
+
+    public class InvalidPathFormat(
+        override val message: String,
+        override val errno: FileSystemErrno = INVAL,
+    ) : PathError, ResolvePathError
+
+    public class AbsolutePath(
         override val message: String,
         override val errno: FileSystemErrno = PERM,
     ) : ResolvePathError
 
-    class InvalidPath(
-        override val message: String,
-        override val errno: FileSystemErrno = INVAL,
-    ) : ResolvePathError
-
-    class NotDirectory(
+    public class NotDirectory(
         override val message: String,
         override val errno: FileSystemErrno = NOTDIR,
     ) : ResolvePathError
 
-    class FileDescriptorNotOpen(
+    public class FileDescriptorNotOpen(
         override val message: String,
         override val errno: FileSystemErrno = BADF,
     ) : ResolvePathError
 
-    class EmptyPath(
+    public class IoError(
         override val message: String,
-        override val errno: FileSystemErrno = NOENT,
+        override val errno: FileSystemErrno = IO,
     ) : ResolvePathError
 
-    class PathOutsideOfRootPath(
+    public class PathOutsideOfRootPath(
         override val message: String,
         override val errno: FileSystemErrno = NOTCAPABLE,
     ) : ResolvePathError
 }
 
+internal sealed interface ResolvePathError : FileSystemOperationError
+
+internal fun PathError.toCommonError(): ResolveRelativePathErrors = when (this) {
+    is PathError.EmptyPath -> InvalidArgument(this.message)
+    is PathError.InvalidPathFormat -> InvalidArgument(this.message)
+}
+
 internal fun ResolvePathError.toCommonError(): ResolveRelativePathErrors = when (this) {
-    is ResolvePathError.EmptyPath -> InvalidArgument(message)
-    is ResolvePathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
-    is ResolvePathError.InvalidPath -> InvalidArgument(message)
-    is ResolvePathError.NotDirectory -> NotDirectory(message)
-    is ResolvePathError.AbsolutePath -> NotCapable(message)
-    is ResolvePathError.PathOutsideOfRootPath -> NotCapable(message)
+    is PathError.EmptyPath -> InvalidArgument(message)
+    is PathError.InvalidPathFormat -> InvalidArgument(message)
+    is PathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
+    is PathError.NotDirectory -> NotDirectory(message)
+    is PathError.AbsolutePath -> NotCapable(message)
+    is PathError.PathOutsideOfRootPath -> NotCapable(message)
+    is PathError.IoError -> BadFileDescriptor(message)
 }

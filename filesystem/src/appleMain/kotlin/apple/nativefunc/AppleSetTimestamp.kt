@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CPointer
@@ -47,7 +48,7 @@ import platform.posix.utimensat
 
 internal fun appleSetTimestamp(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     atimeNanoseconds: Long?,
     mtimeNanoseconds: Long?,
     followSymlinks: Boolean,
@@ -58,7 +59,7 @@ internal fun appleSetTimestamp(
 
     val resultCode = utimensat(
         baseDirectoryFd.posixFd,
-        path,
+        path.kString,
         timespec,
         followSymlinksAsAtSymlinkFlags(followSymlinks),
     )

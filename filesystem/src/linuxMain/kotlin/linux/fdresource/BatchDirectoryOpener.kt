@@ -7,48 +7,63 @@
 package at.released.weh.filesystem.linux.fdresource
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
-import at.released.weh.filesystem.path.PosixPathConverter.convertToVirtualPath
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 
 internal fun preopenDirectories(
-    currentWorkingDirectoryPath: RealPath = "",
+    currentWorkingDirectoryPath: String?,
     preopenedDirectories: List<PreopenedDirectory> = listOf(),
 ): Either<BatchDirectoryOpenerError, PreopenedDirectories> {
-    val currentWorkingDirectory: Either<OpenError, LinuxDirectoryFdResource> = preopenDirectory(
-        path = currentWorkingDirectoryPath,
-        baseDirectoryFd = CURRENT_WORKING_DIRECTORY,
-    )
-
-    val cwdFd = currentWorkingDirectory.fold(
-        ifLeft = { NativeDirectoryFd(-1) },
-        ifRight = LinuxDirectoryFdResource::nativeFd,
-    )
-    val opened: MutableMap<RealPath, LinuxDirectoryFdResource> = mutableMapOf()
-    val directories: Either<BatchDirectoryOpenerError, PreopenedDirectories> = either {
-        for (directory in preopenedDirectories) {
-            val realpath = directory.realPath
-
-            if (opened.containsKey(realpath)) {
-                continue
-            }
-
-            val fdResource = preopenDirectory(realpath, cwdFd)
-                .mapLeft { BatchDirectoryOpenerError(directory, it) }
-                .bind()
-
-            opened[realpath] = fdResource
+    val currentWorkingDirectory: Either<OpenError, LinuxDirectoryFdResource> =
+        if (currentWorkingDirectoryPath != null) {
+            PosixRealPath.create(currentWorkingDirectoryPath)
+                .mapLeft { it.toCommonError() }
+                .flatMap { cwdRealPath ->
+                    preopenDirectory(
+                        path = cwdRealPath,
+                        baseDirectoryFd = CURRENT_WORKING_DIRECTORY,
+                    )
+                }
+        } else {
+            NoEntry("Current working directory not set").left()
         }
 
+    val cwdFd = if (currentWorkingDirectoryPath != null) {
+        currentWorkingDirectory.fold(
+            ifLeft = { NativeDirectoryFd(-1) },
+            ifRight = LinuxDirectoryFdResource::nativeFd,
+        )
+    } else {
+        CURRENT_WORKING_DIRECTORY
+    }
+
+    val opened: MutableMap<String, LinuxDirectoryFdResource> = mutableMapOf()
+    val directories: Either<BatchDirectoryOpenerError, PreopenedDirectories> = either {
+        for (directory in preopenedDirectories) {
+            val realPathString = directory.realPath
+            opened.getOrPut(realPathString) {
+                PosixRealPath.create(realPathString)
+                    .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+                    .flatMap { realPath -> preopenDirectory(realPath, cwdFd) }
+                    .mapLeft { BatchDirectoryOpenerError(directory, it) }
+                    .bind()
+            }
+        }
         PreopenedDirectories(currentWorkingDirectory, opened)
     }.onLeft {
         opened.values.closeSilent()
@@ -57,10 +72,10 @@ internal fun preopenDirectories(
 }
 
 private fun preopenDirectory(
-    path: RealPath,
+    path: PosixRealPath,
     baseDirectoryFd: NativeDirectoryFd,
 ): Either<OpenError, LinuxDirectoryFdResource> {
-    val virtualPath = convertToVirtualPath(path).getOrElse { return it.left() }
+    val virtualPath = toVirtualPath(path).getOrElse { return it.toCommonError().left() }
 
     return linuxOpenRaw(
         baseDirectoryFd = baseDirectoryFd,

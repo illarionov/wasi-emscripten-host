@@ -34,7 +34,7 @@ internal class NioReadDirFd(
                 return@executeWithResource BadFileDescriptor("${input.fd} is not a directory").left()
             }
             val rootPath = resource.path
-            val stream = Either.catch { Files.newDirectoryStream(rootPath) }
+            val stream = Either.catch { Files.newDirectoryStream(rootPath.nio) }
                 .mapLeft { it.toReadDirError() }
                 .getOrElse {
                     return@executeWithResource it.left()
@@ -45,7 +45,7 @@ internal class NioReadDirFd(
                 is Cookie -> position.cookie
             }
 
-            NioDirEntrySequence(rootPath, stream, cookie).right()
+            NioDirEntrySequence(rootPath.nio, stream, cookie).right()
         }
     }
 

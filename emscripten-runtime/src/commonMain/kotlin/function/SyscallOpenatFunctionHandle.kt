@@ -38,7 +38,7 @@ public class SyscallOpenatFunctionHandle(
         val baseDirectory = BaseDirectory.fromRawDirFd(rawDirFd)
         val path = memory.readNullTerminatedString(pathnamePtr)
 
-        val virtualPath = VirtualPath.of(path).getOrElse { _ -> return -Errno.INVAL.code }
+        val virtualPath = VirtualPath.create(path).getOrElse { _ -> return -Errno.INVAL.code }
 
         val fsOperation = Open(
             path = virtualPath,

@@ -7,16 +7,21 @@
 package at.released.weh.filesystem.windows.fdresource
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.OpenError
+import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.fdrights.FdRightsBlock
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.convertToVirtualPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
-import at.released.weh.filesystem.windows.path.WindowsPathConverter.convertToVirtualPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import platform.windows.FILE_LIST_DIRECTORY
@@ -25,32 +30,36 @@ import platform.windows.FILE_TRAVERSE
 import platform.windows.FILE_WRITE_ATTRIBUTES
 
 internal fun preopenDirectories(
-    currentWorkingDirectoryPath: RealPath = ".",
+    currentWorkingDirectoryPath: String?,
     preopenedDirectories: List<PreopenedDirectory> = listOf(),
 ): Either<BatchDirectoryOpenerError, PreopenedDirectories> {
-    val currentWorkingDirectory: Either<OpenError, WindowsDirectoryChannel> = preopenDirectory(
-        realPath = currentWorkingDirectoryPath,
-        baseDirectoryChannel = null,
-    )
+    val currentWorkingDirectory: Either<OpenError, WindowsDirectoryChannel> = if (currentWorkingDirectoryPath != null) {
+        WindowsRealPath.create(currentWorkingDirectoryPath)
+            .mapLeft { it.toCommonError() }
+            .flatMap { cwdRealPath ->
+                preopenDirectory(
+                    realPath = cwdRealPath,
+                    baseDirectoryChannel = null,
+                )
+            }
+    } else {
+        NoEntry("Current working directory not set").left()
+    }
 
     val cwdChannel: WindowsDirectoryChannel? = currentWorkingDirectory.getOrNull()
 
-    val opened: MutableMap<RealPath, WindowsDirectoryChannel> = mutableMapOf()
+    val opened: MutableMap<String, WindowsDirectoryChannel> = mutableMapOf()
     val directories: Either<BatchDirectoryOpenerError, PreopenedDirectories> = either {
         for (directory in preopenedDirectories) {
-            val realPath = directory.realPath
-
-            if (opened.containsKey(realPath)) {
-                continue
+            val realPathString = directory.realPath
+            opened.getOrPut(realPathString) {
+                WindowsRealPath.create(realPathString)
+                    .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+                    .flatMap { realPath -> preopenDirectory(realPath, cwdChannel) }
+                    .mapLeft { BatchDirectoryOpenerError(directory, it) }
+                    .bind()
             }
-
-            val fdChannel = preopenDirectory(realPath, cwdChannel)
-                .mapLeft { BatchDirectoryOpenerError(directory, it) }
-                .bind()
-
-            opened[realPath] = fdChannel
         }
-
         PreopenedDirectories(currentWorkingDirectory, opened)
     }.onLeft {
         opened.values.closeSilent()
@@ -59,11 +68,11 @@ internal fun preopenDirectories(
 }
 
 private fun preopenDirectory(
-    realPath: RealPath,
+    realPath: WindowsRealPath,
     baseDirectoryChannel: WindowsDirectoryChannel?,
 ): Either<OpenError, WindowsDirectoryChannel> {
-    val virtualPath = convertToVirtualPath(realPath).mapLeft { InvalidArgument(it.message) }
-        .getOrElse { return it.left() }
+    val virtualPath = convertToVirtualPath(realPath)
+        .getOrElse { return InvalidArgument(it.message).left() }
 
     return windowsNtOpenDirectory(
         path = realPath,

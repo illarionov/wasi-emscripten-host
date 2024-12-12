@@ -15,7 +15,7 @@ import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotDirectory
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import platform.windows.CreateHardLinkW
 import platform.windows.ERROR_ACCESS_DENIED
@@ -26,10 +26,10 @@ import platform.windows.ERROR_INVALID_HANDLE
 import platform.windows.ERROR_INVALID_PARAMETER
 
 internal fun windowsCreateHardLink(
-    newPath: RealPath,
-    oldPath: RealPath,
+    newPath: WindowsRealPath,
+    oldPath: WindowsRealPath,
 ): Either<HardlinkError, Unit> {
-    return if (CreateHardLinkW(newPath, oldPath, null) != 0) {
+    return if (CreateHardLinkW(newPath.kString, oldPath.kString, null) != 0) {
         Unit.right()
     } else {
         Win32ErrorCode.getLast().toHardLinkError().left()

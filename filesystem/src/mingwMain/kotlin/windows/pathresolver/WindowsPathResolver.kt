@@ -18,7 +18,6 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.windows.fdresource.PreopenedDirectories
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
@@ -37,7 +36,7 @@ internal class WindowsPathResolver(
         preopened
             .preopenedDirectories
             .entries
-            .forEachIndexed { index, (_: RealPath, ch: WindowsDirectoryChannel) ->
+            .forEachIndexed { index, (_: String, ch: WindowsDirectoryChannel) ->
                 val resource = WindowsDirectoryFdResource(ch)
                 fileDescriptors[index + FileDescriptorTable.WASI_FIRST_PREOPEN_FD] = resource
             }

@@ -10,84 +10,87 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.nio.NioFileSystemState
-import at.released.weh.filesystem.nio.cwd.ResolvePathError.AbsolutePath
-import at.released.weh.filesystem.nio.cwd.ResolvePathError.FileDescriptorNotOpen
-import at.released.weh.filesystem.nio.cwd.ResolvePathError.NotDirectory
-import at.released.weh.filesystem.nio.cwd.ResolvePathError.PathOutsideOfRootPath
-import at.released.weh.filesystem.nio.path.JvmNioPathConverter
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
+import at.released.weh.filesystem.path.PathError.NotDirectory
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioPathConverter
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
-import java.nio.file.Path
 import kotlin.io.path.isDirectory
 
-@Suppress("ReturnCount")
 internal class JvmPathResolver(
     private val javaFs: java.nio.file.FileSystem,
     private val fsState: NioFileSystemState,
-    private val pathConverter: JvmNioPathConverter = JvmNioPathConverter(javaFs),
+    private val pathConverter: NioPathConverter = NioPathConverter(javaFs),
+    private val pathFactory: NioRealPathFactory = NioRealPathFactory(javaFs),
 ) {
     fun resolve(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
         followSymlinks: Boolean,
-    ): Either<ResolvePathError, Path> {
-        val pathIsAbsolute = path.isAbsolute()
-
-        val baseDirectoryPath: Either<ResolvePathError, Path> = when (baseDirectory) {
-            CurrentWorkingDirectory -> javaFs.getPath("").right()
+    ): Either<ResolvePathError, NioRealPath> {
+        val baseDirectoryPath: Either<ResolvePathError, NioRealPath> = when (baseDirectory) {
+            CurrentWorkingDirectory -> pathFactory.create(javaFs.getPath(".")).right()
             is DirectoryFd -> when (val fdResource = fsState.get(baseDirectory.fd)) {
                 null -> FileDescriptorNotOpen("Directory File descriptor ${baseDirectory.fd} is not open").left()
                 !is NioDirectoryFdResource -> NotDirectory("Base path `$path` is not a directory").left()
                 else -> fdResource.path.right()
             }
-        }.flatMap { basePath ->
-            if (basePath.isDirectory(options = asLinkOptions(followSymlinks))) {
+        }.flatMap { basePath: NioRealPath ->
+            if (basePath.nio.isDirectory(options = asLinkOptions(followSymlinks))) {
                 basePath.right()
             } else {
                 NotDirectory("Base path `$path` is not a directory").left()
             }
         }
 
-        val nioPath: Either<ResolvePathError, Path> = pathConverter.toNioPath(path)
-            .mapLeft { error: InvalidArgument -> ResolvePathError.InvalidPath(error.message) }
+        val nioPath: Either<ResolvePathError, NioRealPath> = pathConverter.toRealPath(path).mapLeft { error ->
+            error as ResolvePathError
+        }
 
         return Either.zipOrAccumulate(
             { baseDirectoryPathError, nioPathError -> nioPathError },
             baseDirectoryPath,
             nioPath,
-        ) { baseDirectoryPath, nioPath -> baseDirectoryPath to nioPath }
-            .flatMap { (baseDirectoryPath, nioPath) ->
+        ) { base, subPath -> base to subPath }
+            .flatMap { (base, subPath) ->
                 if (fsState.isRootAccessAllowed) {
-                    baseDirectoryPath.resolve(nioPath).normalize().right()
+                    val finalPath = base.nio.resolve(subPath.nio).normalize()
+                    pathFactory.create(finalPath).right()
                 } else {
-                    baseDirectoryPath.resolveBeneath(nioPath, pathIsAbsolute)
+                    base.resolveBeneath(subPath, path.isAbsolute())
                 }
             }
     }
 
-    private companion object {
-        private fun Path.resolveBeneath(other: Path, otherSourceIsAbsolute: Boolean): Either<ResolvePathError, Path> {
-            if (otherSourceIsAbsolute || other.isAbsolute) {
-                return AbsolutePath("Opening file relative to directory with absolute path").left()
-            }
-            var path = this
-            other.forEach { subpath ->
-                path = path.resolve(subpath).normalize()
-                if (!path.startsWith(this)) {
-                    return PathOutsideOfRootPath(
-                        "Path contains .. component leading to directory outside of base path",
-                    ).left()
-                }
-            }
-            require(path == path.normalize()) { "`$path` != `${path.normalize()}`" }
-            return path.right()
+    private fun NioRealPath.resolveBeneath(
+        other: NioRealPath,
+        otherSourceIsAbsolute: Boolean,
+    ): Either<ResolvePathError, NioRealPath> {
+        if (otherSourceIsAbsolute || other.isAbsolute) {
+            return PathError.AbsolutePath("Opening file relative to directory with absolute path").left()
         }
+        val thisNioPath = this.nio
+
+        var path = this.nio
+        other.nio.forEach { subpath ->
+            path = path.resolve(subpath).normalize()
+            if (!path.startsWith(thisNioPath)) {
+                return PathError.PathOutsideOfRootPath(
+                    "Path contains .. component leading to directory outside of base path",
+                ).left()
+            }
+        }
+        require(path == path.normalize()) { "`$path` != `${path.normalize()}`" }
+        return pathFactory.create(path).right()
     }
 }

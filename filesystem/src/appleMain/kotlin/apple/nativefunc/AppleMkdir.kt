@@ -24,6 +24,7 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
 import platform.posix.EBADF
@@ -44,11 +45,11 @@ import platform.posix.mkdirat
 
 internal fun appleMkdir(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     mode: Int,
     failIfExists: Boolean,
 ): Either<MkdirError, Unit> {
-    val resultCode = mkdirat(baseDirectoryFd.posixFd, path, mode.toUShort())
+    val resultCode = mkdirat(baseDirectoryFd.posixFd, path.kString, mode.toUShort())
     return when {
         resultCode == 0 -> Unit.right()
         !failIfExists && errno == EEXIST -> Unit.right()

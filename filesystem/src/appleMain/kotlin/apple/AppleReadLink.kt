@@ -12,7 +12,8 @@ import at.released.weh.filesystem.apple.nativefunc.appleReadLink
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
-import at.released.weh.filesystem.path.PosixPathConverter.convertToVirtualPath
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class AppleReadLink(
@@ -22,6 +23,6 @@ internal class AppleReadLink(
         fsState.executeWithPath(input.path, input.baseDirectory) { basePath, baseDirectory ->
             appleReadLink(baseDirectory, basePath)
         }.flatMap { targetRealPath ->
-            convertToVirtualPath(targetRealPath)
+            toVirtualPath(targetRealPath).mapLeft { it.toCommonError() }
         }
 }

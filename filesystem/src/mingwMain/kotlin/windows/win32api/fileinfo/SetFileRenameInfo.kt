@@ -9,7 +9,7 @@ package at.released.weh.filesystem.windows.win32api.fileinfo
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import kotlinx.cinterop.CValues
 import kotlinx.cinterop.UShortVar
@@ -25,10 +25,10 @@ import platform.windows.HANDLE
 import platform.windows.SetFileInformationByHandle
 
 internal fun HANDLE.setFileRenameInfo(
-    newName: RealPath,
+    newName: WindowsRealPath,
     replaceIfExists: Boolean = false,
 ): Either<Win32ErrorCode, Unit> = memScoped {
-    val nameBytes: CValues<UShortVar> = newName.utf16
+    val nameBytes: CValues<UShortVar> = newName.kString.utf16
     val fullSize = sizeOf<FILE_RENAME_INFO>() + nameBytes.size
     val renameBuffer = alloc(fullSize, alignOf<FILE_RENAME_INFO>())
 

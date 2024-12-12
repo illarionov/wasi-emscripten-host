@@ -22,6 +22,7 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.AT_REMOVEDIR
 import platform.posix.EACCES
@@ -41,9 +42,9 @@ import platform.posix.unlinkat
 
 internal fun appleUnlinkDirectory(
     directoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
 ): Either<UnlinkError, Unit> {
-    val resultCode = unlinkat(directoryFd.posixFd, path, AT_REMOVEDIR)
+    val resultCode = unlinkat(directoryFd.posixFd, path.kString, AT_REMOVEDIR)
     return if (resultCode == 0) {
         Unit.right()
     } else {

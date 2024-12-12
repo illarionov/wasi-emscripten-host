@@ -29,18 +29,18 @@ import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
-import at.released.weh.filesystem.nio.cwd.toCommonError
 import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import com.sun.nio.file.ExtendedOpenOption
 import java.nio.file.LinkOption
 import java.nio.file.OpenOption
-import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
 import kotlin.io.path.exists
@@ -51,7 +51,7 @@ internal class NioOpen(
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> = either {
         val followSymlinks = input.openFlags and OpenFileFlag.O_NOFOLLOW != OpenFileFlag.O_NOFOLLOW
-        val path: Path = fsState.pathResolver.resolve(
+        val path: NioRealPath = fsState.pathResolver.resolve(
             input.path,
             input.baseDirectory,
             followSymlinks = followSymlinks,
@@ -68,7 +68,7 @@ internal class NioOpen(
             )
         }
         val fileModeAttributes: Array<FileAttribute<*>> = input.mode?.let {
-            path.fileSystem.fileModeAsFileAttributesIfSupported(it)
+            path.nio.fileSystem.fileModeAsFileAttributesIfSupported(it)
         } ?: emptyArray()
 
         val isDirectoryRequested = input.path.isDirectoryRequest()
@@ -80,7 +80,7 @@ internal class NioOpen(
             null
         } ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
-        if (path.isDirectory(options = asLinkOptions(followSymlinks))) {
+        if (path.nio.isDirectory(options = asLinkOptions(followSymlinks))) {
             return openDirectory(
                 fsState = fsState,
                 path = path,
@@ -90,7 +90,7 @@ internal class NioOpen(
         }
 
         if (isDirectoryRequested || input.openFlags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY) {
-            if (path.exists(options = asLinkOptions(followSymlinks))) {
+            if (path.nio.exists(options = asLinkOptions(followSymlinks))) {
                 raise(NotDirectory("Path is not a directory"))
             } else {
                 raise(NoEntry("Path not exists"))
@@ -110,7 +110,7 @@ internal class NioOpen(
 
 private fun openCreateFile(
     fsState: NioFileSystemState,
-    path: Path,
+    path: NioRealPath,
     options: Set<OpenOption>,
     fileAttributes: Array<FileAttribute<*>>,
     @FdflagsType originalFdflags: Fdflags,
@@ -119,20 +119,18 @@ private fun openCreateFile(
     path,
     fdflags = originalFdflags,
     rights = rights,
-) { _ ->
-    nioOpenFile(path, options, fileAttributes)
-}.map { it.first }
+) { _ -> nioOpenFile(path.nio, options, fileAttributes) }.map { it.first }
 
 private fun openDirectory(
     fsState: NioFileSystemState,
-    path: Path,
+    path: NioRealPath,
     virtualPath: VirtualPath,
     rights: FdRightsBlock,
     followSymlinks: Boolean = true,
 ): Either<OpenError, FileDescriptor> = fsState.addDirectory(virtualPath, rights) { _ ->
     val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     @Suppress("SpreadOperator")
-    if (path.isDirectory(*linkOptions)) {
+    if (path.nio.isDirectory(*linkOptions)) {
         path.right()
     } else {
         NotDirectory("$virtualPath is not a directory").left()

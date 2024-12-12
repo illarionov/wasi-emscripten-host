@@ -8,12 +8,13 @@ package at.released.weh.filesystem.windows.nativefunc.readdir
 
 import arrow.core.getOrElse
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.real.windows.buildPathSearchPattern
 import at.released.weh.filesystem.posix.readdir.ReadDirResult
 import at.released.weh.filesystem.posix.readdir.ReadDirResult.Companion.readDirResult
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
-import at.released.weh.filesystem.windows.win32api.ext.combinePath
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.free
@@ -33,11 +34,13 @@ internal interface WindowsNextEntryProvider : AutoCloseable {
     fun readNextDir(): ReadDirResult
 
     companion object {
+        private val currentDirectoryPath = WindowsRealPath.create(".").getOrNull() ?: error("Can not create path")
+
         @Suppress("ReturnCount")
         fun create(
             rootHandle: HANDLE,
         ): FirstFileResult {
-            val dirHandle: HANDLE = windowsNtOpenDirectory("", rootHandle).getOrElse { openError ->
+            val dirHandle: HANDLE = windowsNtOpenDirectory(currentDirectoryPath, rootHandle).getOrElse { openError ->
                 val readDirError = openError.toReadDirError()
                 return FirstFileResult.error(readDirError)
             }
@@ -48,7 +51,7 @@ internal interface WindowsNextEntryProvider : AutoCloseable {
                 return FirstFileResult.error(readDirError)
             }
 
-            val childPattern = combinePath(rootPath, "*")
+            val childPattern = buildPathSearchPattern(rootPath, "*")
 
             return memScoped {
                 val firstItemData: WIN32_FIND_DATAW = alloc()
@@ -81,7 +84,7 @@ internal interface WindowsNextEntryProvider : AutoCloseable {
 
 private class RealWindowsNextFileProvider(
     private val rootPath: HANDLE,
-    private val rootAbsolutePath: String,
+    private val rootAbsolutePath: WindowsRealPath,
     private val childItemsHandle: HANDLE,
 ) : WindowsNextEntryProvider {
     private var isClosed: Boolean = false
@@ -133,5 +136,6 @@ internal object ClosedNextDirProvider : WindowsNextEntryProvider {
     override fun readNextDir(): ReadDirResult {
         error("Provider Closed")
     }
+
     override fun close() = Unit
 }

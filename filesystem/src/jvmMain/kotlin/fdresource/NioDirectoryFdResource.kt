@@ -40,26 +40,26 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 internal class NioDirectoryFdResource(
-    realPath: Path,
+    realPath: NioRealPath,
     virtualPath: VirtualPath,
     val isPreopened: Boolean,
     val rights: FdRightsBlock,
 ) : NioFdResource {
     override val lock: Lock = ReentrantLock()
-    private var _realpath: Path = realPath
+    private var _realpath: NioRealPath = realPath
     private var _virtualPath: VirtualPath = virtualPath
-    public override val path: Path get() = lock.withLock { _realpath }
+    public override val path: NioRealPath get() = lock.withLock { _realpath }
     public val virtualPath: VirtualPath get() = lock.withLock { _virtualPath }
 
-    override fun updatePath(realpath: Path, virtualPath: VirtualPath) = lock.withLock {
-        _realpath = realpath
+    override fun updatePath(realPath: NioRealPath, virtualPath: VirtualPath) = lock.withLock {
+        _realpath = realPath
         _virtualPath = virtualPath
     }
 
@@ -100,15 +100,15 @@ internal class NioDirectoryFdResource(
     }
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {
-        return nioSetPosixFilePermissions(path, mode)
+        return nioSetPosixFilePermissions(path.nio, mode)
     }
 
     override fun chown(owner: Int, group: Int): Either<ChownError, Unit> {
-        return nioSetPosixUserGroup(path, owner, group)
+        return nioSetPosixUserGroup(path.nio, owner, group)
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        return nioSetTimestamp(path, false, atimeNanoseconds, mtimeNanoseconds)
+        return nioSetTimestamp(path.nio, false, atimeNanoseconds, mtimeNanoseconds)
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {

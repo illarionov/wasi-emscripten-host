@@ -19,14 +19,14 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.convertPathToNtPath
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.platform.windows.IO_STATUS_BLOCK
 import at.released.weh.filesystem.platform.windows.NtCreateFile
 import at.released.weh.filesystem.platform.windows.OBJECT_ATTRIBUTES
 import at.released.weh.filesystem.platform.windows.OBJ_CASE_INSENSITIVE
 import at.released.weh.filesystem.platform.windows.RtlInitUnicodeString
 import at.released.weh.filesystem.platform.windows.UNICODE_STRING
-import at.released.weh.filesystem.windows.path.WindowsPathConverter.convertPathToNtPath
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.NtStatusCode
 import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
@@ -63,7 +63,7 @@ import platform.windows.PathIsRelativeW
 import platform.windows.STATUS_INVALID_PARAMETER
 
 internal fun windowsNtOpenDirectory(
-    path: RealPath,
+    path: WindowsRealPath,
     rootHandle: HANDLE? = null,
     desiredAccess: Int = FILE_LIST_DIRECTORY or FILE_READ_ATTRIBUTES or FILE_TRAVERSE,
     followSymlinks: Boolean = true,
@@ -87,7 +87,7 @@ internal fun windowsNtOpenDirectory(
 
 internal fun windowsNtCreateFileEx(
     rootHandle: HANDLE?,
-    path: RealPath,
+    path: WindowsRealPath,
     desiredAccess: Int = FILE_GENERIC_WRITE,
     fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
     shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
@@ -109,7 +109,7 @@ internal fun windowsNtCreateFileEx(
 
 internal fun windowsNtCreateFile(
     rootHandle: HANDLE?,
-    path: RealPath,
+    path: WindowsRealPath,
     desiredAccess: Int = FILE_GENERIC_WRITE,
     fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
     shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
@@ -117,7 +117,7 @@ internal fun windowsNtCreateFile(
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
     caseSensitive: Boolean = true,
 ): Either<NtCreateFileResult, HANDLE> = memScoped {
-    val pathIsRelative = PathIsRelativeW(path) != 0 // XXX need own version without limit of MAX_PATH
+    val pathIsRelative = PathIsRelativeW(path.kString) != 0 // XXX need own version without limit of MAX_PATH
 
     if (!pathIsRelative && rootHandle != null) {
         return NtCreateFileResult(NtStatus(STATUS_INVALID_PARAMETER), 0UL).left()
@@ -132,7 +132,7 @@ internal fun windowsNtCreateFile(
         this.QuadPart = 0
     }
     val ioStatusBlock: IO_STATUS_BLOCK = alloc()
-    val pathUtf16: CValues<UShortVar> = ntPath.utf16
+    val pathUtf16: CValues<UShortVar> = ntPath.kString.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
     val objectName: UNICODE_STRING = alloc<UNICODE_STRING>()

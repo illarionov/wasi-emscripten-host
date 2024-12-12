@@ -31,8 +31,8 @@ import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
-import at.released.weh.filesystem.path.PosixPathConverter
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
@@ -101,7 +101,7 @@ internal class AppleFileSystemState private constructor(
     inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
-        crossinline block: (path: RealPath, baseDirectory: NativeDirectoryFd) -> Either<E, R>,
+        crossinline block: (path: PosixRealPath, baseDirectory: NativeDirectoryFd) -> Either<E, R>,
     ): Either<E, R> {
         val realPath = PosixPathConverter.toRealPath(path)
             .getOrElse { bfe ->
@@ -164,7 +164,7 @@ internal class AppleFileSystemState private constructor(
             require(openedDirectories.isEmpty())
 
             preopened.preopenedDirectories.entries
-                .forEachIndexed { index, (path: RealPath, resource: AppleDirectoryFdResource) ->
+                .forEachIndexed { index, (path: String, resource: AppleDirectoryFdResource) ->
                     fileDescriptors[index + WASI_FIRST_PREOPEN_FD] = resource
                     openedDirectories[path] = resource
                 }
@@ -212,7 +212,7 @@ internal class AppleFileSystemState private constructor(
         fun create(
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
-            currentWorkingDirectory: String,
+            currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
         ): AppleFileSystemState {
             val directories = preopenDirectories(currentWorkingDirectory, preopenedDirectories)

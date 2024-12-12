@@ -26,7 +26,7 @@ import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
-import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.toKStringFromUtf8
 import platform.posix.EACCES
@@ -55,15 +55,15 @@ import platform.posix.strerror
 
 internal fun appleRename(
     oldPathFd: NativeDirectoryFd,
-    oldPath: RealPath,
+    oldPath: PosixRealPath,
     newPathFd: NativeDirectoryFd,
-    newPath: RealPath,
+    newPath: PosixRealPath,
 ): Either<RenameError, Unit> {
     val resultCode = renameat(
         oldPathFd.posixFd,
-        oldPath,
+        oldPath.kString,
         newPathFd.posixFd,
-        newPath,
+        newPath.kString,
     )
     return if (resultCode == 0) {
         Unit.right()

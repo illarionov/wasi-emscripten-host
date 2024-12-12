@@ -24,6 +24,7 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.ReadOnlyFileSystem
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.mkdirat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
@@ -44,13 +45,13 @@ import platform.posix.errno
 
 internal fun linuxMkdir(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     mode: Int,
     failIfExists: Boolean,
 ): Either<MkdirError, Unit> {
     val resultCode = mkdirat(
         baseDirectoryFd.linuxFd,
-        path,
+        path.kString,
         mode.toUInt(),
     )
     return when {

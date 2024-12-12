@@ -23,6 +23,7 @@ import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_REMOVEDIR
 import at.released.weh.filesystem.platform.linux.unlinkat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -44,9 +45,9 @@ import platform.posix.errno
 
 internal fun linuxUnlinkDirectory(
     directoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
 ): Either<UnlinkError, Unit> {
-    val resultCode = unlinkat(directoryFd.linuxFd, path, AT_REMOVEDIR)
+    val resultCode = unlinkat(directoryFd.linuxFd, path.kString, AT_REMOVEDIR)
     return if (resultCode == 0) {
         Unit.right()
     } else {

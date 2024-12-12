@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.win32api.ext
+package at.released.weh.filesystem.path.real.windows
 
-// TODO: normalize path?
-internal fun combinePath(root: String, child: String): String {
-    val rootNormalized = root.replace('/', '\\')
+// TODO: normalize path, remove?
+internal fun buildPathSearchPattern(root: WindowsRealPath, child: String): String {
+    val rootNormalized = root.kString.replace('/', '\\')
     if (child.isEmpty()) {
         return rootNormalized
     }

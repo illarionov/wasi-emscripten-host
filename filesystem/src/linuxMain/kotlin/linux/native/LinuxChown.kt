@@ -11,6 +11,7 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.linux.ext.linuxFd
+import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.platform.linux.AT_SYMLINK_NOFOLLOW
 import at.released.weh.filesystem.platform.linux.fchownat
 import at.released.weh.filesystem.posix.NativeDirectoryFd
@@ -21,14 +22,14 @@ import platform.posix.fchown
 
 internal fun linuxChown(
     baseDirectoryFd: NativeDirectoryFd,
-    path: String,
+    path: PosixRealPath,
     owner: Int,
     group: Int,
     followSymlinks: Boolean,
 ): Either<ChownError, Unit> {
     val resultCode = fchownat(
         baseDirectoryFd.linuxFd,
-        path,
+        path.kString,
         owner,
         group,
         getChownFlags(followSymlinks),

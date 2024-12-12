@@ -50,17 +50,16 @@ import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import kotlinx.io.IOException
 import java.nio.channels.FileChannel
 import java.nio.channels.FileLock
-import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
-import java.nio.file.Path as NioPath
 
 internal class NioFileFdResource(
-    path: NioPath,
+    path: NioRealPath,
     channel: FileChannel,
     fdflags: Fdflags,
     rights: FdRightsBlock,
@@ -68,10 +67,10 @@ internal class NioFileFdResource(
     override val lock: Lock = ReentrantLock()
     val fileLocks: MutableMap<FileLockKey, FileLock> = mutableMapOf()
     val channel = NioFileChannel(path, channel, fdflags, rights, lock)
-    override val path: Path get() = channel.path
+    override val path: NioRealPath get() = channel.path
 
-    override fun updatePath(realpath: NioPath, virtualPath: VirtualPath) {
-        channel.updatePath { realpath }
+    override fun updatePath(realPath: NioRealPath, virtualPath: VirtualPath) {
+        channel.updatePath { realPath }
     }
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
@@ -109,15 +108,15 @@ internal class NioFileFdResource(
     override fun truncate(length: Long): Either<TruncateError, Unit> = channel.truncate(length)
 
     override fun chmod(mode: Int): Either<ChmodError, Unit> {
-        return nioSetPosixFilePermissions(channel.path, mode)
+        return nioSetPosixFilePermissions(channel.path.nio, mode)
     }
 
     override fun chown(owner: Int, group: Int): Either<ChownError, Unit> {
-        return nioSetPosixUserGroup(channel.path, owner, group)
+        return nioSetPosixUserGroup(channel.path.nio, owner, group)
     }
 
     override fun setTimestamp(atimeNanoseconds: Long?, mtimeNanoseconds: Long?): Either<SetTimestampError, Unit> {
-        return nioSetTimestamp(channel.path, false, atimeNanoseconds, mtimeNanoseconds)
+        return nioSetTimestamp(channel.path.nio, false, atimeNanoseconds, mtimeNanoseconds)
     }
 
     override fun setFdFlags(flags: Fdflags): Either<SetFdFlagsError, Unit> {

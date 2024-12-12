@@ -9,6 +9,8 @@
 package at.released.weh.filesystem.path.virtual
 
 import arrow.core.Either
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.real.posix.PosixPathValidator
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.bytestring.encodeToByteString
@@ -24,6 +26,9 @@ import kotlin.jvm.JvmStatic
  *
  * The directory separator is always the forward-slash (`/`).
  *
+ * This class provides only basic validity and structural correctness of the path's byte representation (similar to
+ * validating a query string). It does not guarantee that the path exists on a specific file system, nor that querying
+ * the file system using this path will success.
  */
 public class VirtualPath private constructor(
     /**
@@ -65,10 +70,15 @@ public class VirtualPath private constructor(
 
     public companion object {
         @JvmStatic
-        public fun of(string: String): Either<ValidateVirtualPathError, VirtualPath> {
-            val utf8ByteString = string.encodeToByteString()
-            return VirtualPathValidator.validate(utf8ByteString).map {
-                VirtualPath(utf8ByteString)
+        public fun create(string: String): Either<PathError, VirtualPath> {
+            return PosixPathValidator.validate(string).map {
+                VirtualPath(string.encodeToByteString())
+            }
+        }
+
+        internal fun create(bytes: ByteString): Either<PathError, VirtualPath> {
+            return PosixPathValidator.validate(bytes).map {
+                VirtualPath(bytes)
             }
         }
 

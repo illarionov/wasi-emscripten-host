@@ -27,18 +27,15 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.nio.cwd.JvmPathResolver
-import at.released.weh.filesystem.nio.cwd.ResolvePathError
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
-import at.released.weh.filesystem.path.real.RealPath
-import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.InvalidCharacters
-import at.released.weh.filesystem.path.virtual.ValidateVirtualPathError.PathIsEmpty
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import java.io.IOException
 import java.nio.channels.FileChannel
 import java.nio.file.FileSystems
-import java.nio.file.Path
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -55,7 +52,7 @@ internal class NioFileSystemState private constructor(
     val pathResolver: JvmPathResolver = JvmPathResolver(javaFs, this)
 
     fun <E : FileSystemOperationError> addFile(
-        path: Path,
+        path: NioRealPath,
         fdflags: Fdflags,
         rights: FdRightsBlock,
         channelFactory: (FileDescriptor) -> Either<E, FileChannel>,
@@ -75,7 +72,7 @@ internal class NioFileSystemState private constructor(
     fun <E : FileSystemOperationError> addDirectory(
         virtualPath: VirtualPath,
         rights: FdRightsBlock,
-        directoryFactory: (FileDescriptor) -> Either<E, Path>,
+        directoryFactory: (FileDescriptor) -> Either<E, NioRealPath>,
     ): Either<E, Pair<FileDescriptor, NioDirectoryFdResource>> = fdsLock.withLock {
         fileDescriptors.allocate { fd: FileDescriptor ->
             directoryFactory(fd).map { realPath ->
@@ -102,7 +99,7 @@ internal class NioFileSystemState private constructor(
     }
 
     fun findUnsafe(
-        path: Path,
+        path: NioRealPath,
     ): NioFdResource? {
         val resource = fileDescriptors.firstOrNull { it is NioFdResource && it.path == path }
         return resource?.let { it as NioFdResource }
@@ -146,17 +143,11 @@ internal class NioFileSystemState private constructor(
         baseDirectory: BaseDirectory,
         relativePath: String,
         followSymlinks: Boolean = false,
-        crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
+        crossinline block: (path: Either<ResolvePathError, NioRealPath>) -> Either<E, R>,
     ): Either<E, R> {
-        val path: Either<ResolvePathError, Path> = VirtualPath.of(relativePath)
-            .mapLeft {
-                when (it) {
-                    is InvalidCharacters -> ResolvePathError.InvalidPath(it.message)
-                    is PathIsEmpty -> ResolvePathError.EmptyPath(it.message)
-                }
-            }.flatMap {
-                pathResolver.resolve(it, baseDirectory, followSymlinks)
-            }
+        val path: Either<ResolvePathError, NioRealPath> = VirtualPath.create(relativePath)
+            .mapLeft { it as ResolvePathError }
+            .flatMap { pathResolver.resolve(it, baseDirectory, followSymlinks) }
         return block(path)
     }
 
@@ -164,7 +155,7 @@ internal class NioFileSystemState private constructor(
         baseDirectory: BaseDirectory,
         path: VirtualPath,
         followSymlinks: Boolean = false,
-        crossinline block: (path: Either<ResolvePathError, Path>) -> Either<E, R>,
+        crossinline block: (path: Either<ResolvePathError, NioRealPath>) -> Either<E, R>,
     ): Either<E, R> {
         return block(pathResolver.resolve(path, baseDirectory, followSymlinks))
     }
@@ -197,7 +188,7 @@ internal class NioFileSystemState private constructor(
                 }
 
             val preopenedMap: MutableMap<FileDescriptor, FdResource> = stdio.toFileDescriptorMap().toMutableMap()
-            preopened.preopenedDirectories.entries.forEachIndexed { index, (_: RealPath, resource: FdResource) ->
+            preopened.preopenedDirectories.entries.forEachIndexed { index, (_, resource: FdResource) ->
                 preopenedMap[index + WASI_FIRST_PREOPEN_FD] = resource
             }
 

@@ -26,7 +26,7 @@ public class SyscallChmodFunctionHandle(
         memory: ReadOnlyMemory,
         @IntWasmPtr(Byte::class) pathnamePtr: WasmPtr,
         @FileMode mode: Int,
-    ): Int = VirtualPath.of(memory.readNullTerminatedString(pathnamePtr))
+    ): Int = VirtualPath.create(memory.readNullTerminatedString(pathnamePtr))
         .flatMap { virtualPath ->
             host.fileSystem.execute(Chmod, Chmod(virtualPath, CurrentWorkingDirectory, mode))
         }
