@@ -36,10 +36,10 @@ kotlin {
         commonMain.dependencies {
             api(libs.android.annotation)
             api(projects.commonApi)
-            api(projects.filesystem)
             api(projects.host)
             api(projects.wasmCore)
             api(projects.wasmWasiPreview1Core)
+            implementation(libs.arrow.core)
             implementation(projects.commonUtil)
         }
         commonTest.dependencies {
