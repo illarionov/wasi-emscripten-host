@@ -32,6 +32,7 @@
          <trusted-key id="475F3B8E59E6E63AA78067482C7B12F2A511E325" group="org.slf4j"/>
          <trusted-key id="4797B4F5DCC46CEA61059071A1AE06236CA2BA62" group="^com[.]diffplug($|([.].*))" regex="true"/>
          <trusted-key id="5719E50EAC5A4B1DD390B72C2A742740E08E7F8D" group="org.antlr"/>
+         <trusted-key id="5CBA19E56141E78D54BF716F08A4A4958D61FC3D" group="io.kotest"/>
          <trusted-key id="5F6C2148AD4911FE308110E5F0D0AE433308B042" group="io.gitlab.arturbosch.detekt"/>
          <trusted-key id="694621A7227D8D5289699830ABE9F3126BB741C1" group="^com[.]google($|([.].*))" regex="true"/>
          <trusted-key id="696B6199A2A9D8C29CE78CC0D041CAD2E452550F" group="com.google.protobuf"/>
@@ -78,6 +79,11 @@
       <component group="com.fasterxml.jackson.core" name="jackson-databind" version="2.12.7.1">
          <artifact name="jackson-databind-2.12.7.1.jar">
             <pgp value="28118C070CB22A0175A2E8D43D12CA2AC19F3181"/>
+         </artifact>
+      </component>
+      <component group="com.github.curious-odd-man" name="rgxgen" version="1.4">
+         <artifact name="rgxgen-1.4.jar">
+            <pgp value="90493B3B543CB717F9DD6EEE10C81B79DBFF09EA"/>
          </artifact>
       </component>
       <component group="com.github.node-gradle" name="gradle-node-plugin" version="7.0.2">

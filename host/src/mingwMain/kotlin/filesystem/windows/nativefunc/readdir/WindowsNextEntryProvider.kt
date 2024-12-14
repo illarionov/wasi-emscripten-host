@@ -9,9 +9,10 @@ package at.released.weh.filesystem.windows.nativefunc.readdir
 import arrow.core.getOrElse
 import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.real.windows.buildPathSearchPattern
+import at.released.weh.filesystem.path.real.windows.normalizeWindowsPath
 import at.released.weh.filesystem.posix.readdir.ReadDirResult
 import at.released.weh.filesystem.posix.readdir.ReadDirResult.Companion.readDirResult
+import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
@@ -34,13 +35,11 @@ internal interface WindowsNextEntryProvider : AutoCloseable {
     fun readNextDir(): ReadDirResult
 
     companion object {
-        private val currentDirectoryPath = WindowsRealPath.create(".").getOrNull() ?: error("Can not create path")
-
         @Suppress("ReturnCount")
         fun create(
             rootHandle: HANDLE,
         ): FirstFileResult {
-            val dirHandle: HANDLE = windowsNtOpenDirectory(currentDirectoryPath, rootHandle).getOrElse { openError ->
+            val dirHandle: HANDLE = windowsNtOpenDirectory(NtPath.Relative(rootHandle)).getOrElse { openError ->
                 val readDirError = openError.toReadDirError()
                 return FirstFileResult.error(readDirError)
             }
@@ -78,6 +77,11 @@ internal interface WindowsNextEntryProvider : AutoCloseable {
                 val provider = RealWindowsNextFileProvider(dirHandle, rootPath, childItemsHandle)
                 FirstFileResult(firstEntry.readDirResult(), provider)
             }
+        }
+
+        private fun buildPathSearchPattern(root: WindowsRealPath, child: String): String {
+            val pathString = "${root.kString}\\$child"
+            return normalizeWindowsPath(pathString).getOrElse { pathString }
         }
     }
 }

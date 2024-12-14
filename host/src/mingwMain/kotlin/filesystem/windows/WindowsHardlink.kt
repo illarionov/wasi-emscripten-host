@@ -41,7 +41,6 @@ import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
 import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
 import at.released.weh.filesystem.windows.win32api.windowsCreateHardLink

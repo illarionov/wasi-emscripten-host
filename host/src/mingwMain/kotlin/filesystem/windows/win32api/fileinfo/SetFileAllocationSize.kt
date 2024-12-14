@@ -45,6 +45,6 @@ internal fun HANDLE.setFileAllocationSize(size: Long): Either<FallocateError, Un
 private fun Win32ErrorCode.toFallocateError(): FallocateError = when (this.code.toInt()) {
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     ERROR_INVALID_PARAMETER -> InvalidArgument("Incorrect file pointer position")
-    // TODO: find error codes for ENOSPC, EFBIG.
+    // X: find error codes for ENOSPC, EFBIG.
     else -> InvalidArgument("Other error: `$this`")
 }

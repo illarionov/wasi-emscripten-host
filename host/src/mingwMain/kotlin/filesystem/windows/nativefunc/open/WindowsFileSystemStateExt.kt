@@ -7,13 +7,12 @@
 package at.released.weh.filesystem.windows.nativefunc.open
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.left
+import arrow.core.flatMap
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.model.BaseDirectory
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import platform.windows.HANDLE
@@ -25,18 +24,14 @@ internal fun <E : FileSystemOperationError, R : Any> WindowsFileSystemState.exec
     access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
-): Either<E, R> {
-    val directoryFd: WindowsDirectoryChannel? = pathResolver.resolveBaseDirectory(baseDirectory)
-        .mapLeft { errorMapper(it as OpenError) }
-        .getOrElse {
-            return it.left()
-        }
-    return useFileForAttributeAccess(
-        baseHandle = directoryFd?.handle,
-        path = path,
-        followSymlinks = followSymlinks,
-        access = access,
-        errorMapper = errorMapper,
-        block = block,
-    )
-}
+): Either<E, R> = pathResolver.resolveNtPath(baseDirectory, path)
+    .mapLeft { errorMapper(it.toCommonError()) }
+    .flatMap { ntPath ->
+        useFileForAttributeAccess(
+            path = ntPath,
+            followSymlinks = followSymlinks,
+            access = access,
+            errorMapper = errorMapper,
+            block = block,
+        )
+    }

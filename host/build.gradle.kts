@@ -78,6 +78,7 @@ kotlin {
             implementation(projects.testTempfolder)
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.kotest.property)
         }
     }
 }
@@ -107,6 +108,13 @@ private fun KotlinNativeTarget.setupWindowsInterops() {
         cinterops {
             create("windows") {
                 packageName("at.released.weh.host.platform.windows")
+            }
+        }
+    }
+    compilations.named("test") {
+        cinterops {
+            create("windowstest") {
+                packageName("at.released.weh.host.platform.windows.test")
             }
         }
     }
