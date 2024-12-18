@@ -150,7 +150,7 @@ internal class WindowsUnlinkFile(
 
         internal fun fileDispositionErrorToUnlinkError(win32Code: Win32ErrorCode): UnlinkError =
             when (win32Code.code.toInt()) {
-                // TODO: find error codes
+                // XXX: find error codes
                 ERROR_ACCESS_DENIED -> AccessDenied("Cannot delete file, access denied")
                 ERROR_FILE_NOT_FOUND -> NoEntry("File not found")
                 ERROR_INVALID_PARAMETER -> InvalidArgument("Incorrect path")

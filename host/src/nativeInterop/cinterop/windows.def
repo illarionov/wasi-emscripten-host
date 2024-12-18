@@ -32,6 +32,13 @@ extern NTSTATUS NtCreateFile(
   ULONG EaLength
 );
 
+extern NTSTATUS RtlDosPathNameToNtPathName_U_WithStatus(
+    PCWSTR DosFileName,
+    PUNICODE_STRING NtFileName,
+    PWSTR *FilePart,
+    PVOID Reserved
+);
+
 // winbase.h
 typedef struct _FILE_STORAGE_INFO {
   ULONG LogicalBytesPerSector;

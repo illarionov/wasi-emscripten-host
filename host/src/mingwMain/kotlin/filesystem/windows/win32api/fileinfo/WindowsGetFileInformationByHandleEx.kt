@@ -50,7 +50,7 @@ internal inline fun <R : Any, reified T : CStructVar> readListOfItemsByNextEntry
 }
 
 internal fun Win32ErrorCode.getFileInfoErrorToStatError(): StatError = when (this.code.toInt()) {
-    // TODO: error codes
+    // XXX: error codes
     ERROR_ACCESS_DENIED -> AccessDenied("Can not read attributes: access denied")
     ERROR_FILE_NOT_FOUND -> NoEntry("File not found")
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file hande")

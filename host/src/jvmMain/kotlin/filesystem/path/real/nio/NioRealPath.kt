@@ -67,7 +67,6 @@ internal class NioRealPath private constructor(
         }
 
         override fun create(path: String): Either<PathError, NioRealPath> {
-            // TODO: validate path
             return NioRealPath(fileSystem.getPath(path)).right()
         }
 

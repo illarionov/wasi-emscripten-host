@@ -38,14 +38,15 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.symlink.Symlink
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.real.windows.normalizeWindowsSlashes
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.SymlinkType
 import at.released.weh.filesystem.windows.win32api.SymlinkType.SYMLINK_TO_FILE
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
@@ -57,10 +58,14 @@ internal class WindowsSymlink(
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> = either {
         validateSymlinkTarget(input.oldPath, input.allowAbsoluteOldPath).bind()
+        val oldRealPath = WindowsRealPath.create(normalizeWindowsSlashes(input.oldPath.toString()))
+            .mapLeft { it.toCommonError() }
+            .bind()
         val newRealPath = pathResolver.resolveRealPath(input.newPathBaseDirectory, input.newPath).bind()
         val symlinkType = getSymlinkTypeByTargetType(input.newPathBaseDirectory, input.oldPath).bind()
+
         return windowsCreateSymbolicLink(
-            WindowsPathConverter.convertToRealPath(input.oldPath),
+            oldRealPath,
             newRealPath,
             symlinkType,
         )

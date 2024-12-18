@@ -25,7 +25,7 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
@@ -44,9 +44,8 @@ internal class WindowsMkdir(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> = either {
-        val realPath = WindowsPathConverter.convertToRealPath(input.path)
-        val directoryChannel = pathResolver.resolveBaseDirectory(input.baseDirectory)
-            .getOrElse { return it.left() }
+        val ntPath = pathResolver.resolveNtPath(input.baseDirectory, input.path)
+            .getOrElse { return it.toCommonError().left() }
 
         val createDisposition = if (input.failIfExists) {
             FILE_CREATE
@@ -55,8 +54,7 @@ internal class WindowsMkdir(
         }
 
         return windowsNtCreateFile(
-            rootHandle = directoryChannel?.handle,
-            path = realPath,
+            ntPath = ntPath,
             desiredAccess = FILE_LIST_DIRECTORY or
                     FILE_READ_ATTRIBUTES or
                     FILE_TRAVERSE or
@@ -72,7 +70,7 @@ internal class WindowsMkdir(
     }
 
     private fun ntCreateFileResultToMkdirError(result: NtCreateFileResult): MkdirError = when (result.status.raw) {
-        // TODO: find more possible error codes
+        // XXX: find more possible error codes
         NtStatus.STATUS_INVALID_PARAMETER -> InvalidArgument("NtCreateFile failed: invalid argument")
         NtStatus.STATUS_UNSUCCESSFUL -> IoError("Other error ${result.status}")
         NtStatus.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")

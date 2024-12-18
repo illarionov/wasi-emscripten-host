@@ -29,6 +29,6 @@ internal fun HANDLE.setEndOfFile(): Either<TruncateError, Unit> {
 private fun Win32ErrorCode.toTruncateError(): TruncateError = when (this.code.toInt()) {
     ERROR_INVALID_HANDLE -> BadFileDescriptor("Bad file handle")
     ERROR_INVALID_PARAMETER -> InvalidArgument("Incorrect file pointer position")
-    // TODO: find error codes for ENOSPC, EFBIG.
+    // XXX: find error codes for ENOSPC, EFBIG.
     else -> InvalidArgument("Other error: `$this`")
 }

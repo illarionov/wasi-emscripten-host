@@ -1,0 +1,20 @@
+headerFilter = winternl.h pathcch.h
+
+---
+
+#include <winternl.h>
+#include <pathcch.h>
+
+enum RTL_PATH_TYPE {
+  RtlPathTypeUnknown,
+  RtlPathTypeUncAbsolute,
+  RtlPathTypeDriveAbsolute,
+  RtlPathTypeDriveRelative,
+  RtlPathTypeRooted,
+  RtlPathTypeRelative,
+  RtlPathTypeLocalDevice,
+  RtlPathTypeRootLocalDevice
+};
+
+// Undocumented ntdll function
+enum RTL_PATH_TYPE NTAPI RtlDetermineDosPathNameType_U(PCWSTR Path);

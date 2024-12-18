@@ -19,8 +19,7 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.convertPathToNtPath
-import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.NtStatusCode
 import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
@@ -59,12 +58,9 @@ import platform.windows.HANDLE
 import platform.windows.HANDLEVar
 import platform.windows.INVALID_HANDLE_VALUE
 import platform.windows.LARGE_INTEGER
-import platform.windows.PathIsRelativeW
-import platform.windows.STATUS_INVALID_PARAMETER
 
 internal fun windowsNtOpenDirectory(
-    path: WindowsRealPath,
-    rootHandle: HANDLE? = null,
+    ntPath: NtPath,
     desiredAccess: Int = FILE_LIST_DIRECTORY or FILE_READ_ATTRIBUTES or FILE_TRAVERSE,
     followSymlinks: Boolean = true,
 ): Either<OpenError, HANDLE> {
@@ -74,42 +70,18 @@ internal fun windowsNtOpenDirectory(
         FILE_DIRECTORY_FILE or FILE_OPEN_REPARSE_POINT
     }
 
-    return windowsNtCreateFileEx(
-        rootHandle = rootHandle,
-        path = path,
+    return windowsNtCreateFile(
+        ntPath = ntPath,
         desiredAccess = desiredAccess,
         fileAttributes = FILE_ATTRIBUTE_DIRECTORY,
         createDisposition = FILE_OPEN,
         createOptions = createOptions,
         caseSensitive = true,
-    )
-}
-
-internal fun windowsNtCreateFileEx(
-    rootHandle: HANDLE?,
-    path: WindowsRealPath,
-    desiredAccess: Int = FILE_GENERIC_WRITE,
-    fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
-    shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
-    createDisposition: Int = FILE_OPEN,
-    createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
-    caseSensitive: Boolean = true,
-): Either<OpenError, HANDLE> {
-    return windowsNtCreateFile(
-        rootHandle = rootHandle,
-        path = path,
-        desiredAccess = desiredAccess,
-        fileAttributes = fileAttributes,
-        shareAccess = shareAccess,
-        createDisposition = createDisposition,
-        createOptions = createOptions,
-        caseSensitive = caseSensitive,
     ).mapLeft(NtCreateFileResult::toOpenError)
 }
 
 internal fun windowsNtCreateFile(
-    rootHandle: HANDLE?,
-    path: WindowsRealPath,
+    ntPath: NtPath,
     desiredAccess: Int = FILE_GENERIC_WRITE,
     fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
     shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
@@ -117,14 +89,28 @@ internal fun windowsNtCreateFile(
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
     caseSensitive: Boolean = true,
 ): Either<NtCreateFileResult, HANDLE> = memScoped {
-    val pathIsRelative = PathIsRelativeW(path.kString) != 0 // XXX need own version without limit of MAX_PATH
+    return windowsNtCreateFileRaw(
+        ntPath.handle,
+        ntPath.pathString,
+        desiredAccess,
+        fileAttributes,
+        shareAccess,
+        createDisposition,
+        createOptions,
+        caseSensitive,
+    )
+}
 
-    if (!pathIsRelative && rootHandle != null) {
-        return NtCreateFileResult(NtStatus(STATUS_INVALID_PARAMETER), 0UL).left()
-    }
-
-    val ntPath = convertPathToNtPath(path)
-
+internal fun windowsNtCreateFileRaw(
+    rootHandle: HANDLE?,
+    ntPath: String,
+    desiredAccess: Int = FILE_GENERIC_WRITE,
+    fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
+    shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
+    createDisposition: Int = FILE_OPEN,
+    createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
+    caseSensitive: Boolean = true,
+): Either<NtCreateFileResult, HANDLE> = memScoped {
     val handle: HANDLEVar = alloc<HANDLEVar>().apply {
         this.value = INVALID_HANDLE_VALUE
     }
@@ -132,7 +118,7 @@ internal fun windowsNtCreateFile(
         this.QuadPart = 0
     }
     val ioStatusBlock: IO_STATUS_BLOCK = alloc()
-    val pathUtf16: CValues<UShortVar> = ntPath.kString.utf16
+    val pathUtf16: CValues<UShortVar> = ntPath.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
     val objectName: UNICODE_STRING = alloc<UNICODE_STRING>()
@@ -146,17 +132,6 @@ internal fun windowsNtCreateFile(
         SecurityDescriptor = null
         SecurityQualityOfService = null
     }
-
-    // TODO: remove
-//    WindowsNtCreateFileDebug.ntCreateFileArgsToString(
-//        path = ntPath,
-//        objectAttributes = objectAttributes,
-//        desiredAccess = desiredAccess,
-//        fileAttributes = fileAttributes,
-//        shareAccess = shareAccess,
-//        createDisposition = createDisposition,
-//        createOptions = createOptions
-//    ).also { println("NtCreateFile($it`)") }
 
     val status: NtStatus = NtCreateFile(
         FileHandle = handle.ptr,
@@ -198,14 +173,14 @@ internal data class NtCreateFileResult(
 )
 
 @Suppress("CyclomaticComplexMethod")
-private fun NtCreateFileResult.toOpenError(): OpenError {
+internal fun NtCreateFileResult.toOpenError(): OpenError {
     when (ioStatusBlockInformation.toUInt()) {
         IoStatusBlockInformation.FILE_EXISTS -> return Exists("File exists")
         IoStatusBlockInformation.FILE_DOES_NOT_EXIST -> return NoEntry("File not exists")
     }
 
     return when (status.raw) {
-        // TODO: find more possible error codes
+        // XXX: find more possible error codes
         NtStatus.STATUS_INVALID_PARAMETER -> InvalidArgument("NtCreateFile failed: invalid argument")
         NtStatus.STATUS_UNSUCCESSFUL -> IoError("Other error $status")
         NtStatusCode.STATUS_ACCESS_DENIED -> AccessDenied("Access denied")

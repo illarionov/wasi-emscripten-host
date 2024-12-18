@@ -42,8 +42,8 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.rename.Rename
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.Directory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.File
@@ -55,7 +55,6 @@ import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess
 import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenForAttributeAccess
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
@@ -184,15 +183,11 @@ internal class WindowsRename(
         private val newPath: VirtualPath,
     ) {
         fun read(): Either<RenameError, DestinationPathInfo> {
-            val newDirectoryHandle = pathResolver.resolveBaseDirectory(newBaseDirectory)
-                .map { it?.handle }
-                .getOrElse { return it.left() }
-
-            val newRealPath = WindowsPathConverter.convertToRealPath(newPath)
+            val newNtPath = pathResolver.resolveNtPath(newBaseDirectory, newPath)
+                .getOrElse { return it.toCommonError().left() }
 
             val newPathAttributesHandle = windowsOpenForAttributeAccess(
-                baseHandle = newDirectoryHandle,
-                path = newRealPath,
+                path = newNtPath,
                 followSymlinks = false,
                 access = READ_WRITE_DELETE,
             ).getOrElse {

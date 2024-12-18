@@ -8,97 +8,91 @@ package at.released.weh.filesystem.path.real.windows
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.RealPath
+import at.released.weh.filesystem.path.real.windows.WindowsPathType.LOCAL_DEVICE_LITERAL
+import at.released.weh.filesystem.path.real.windows.WindowsPathType.ROOT_LOCAL_DEVICE
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
-import kotlinx.io.files.Path
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
-internal expect val hasNativeWindowsPathFunctions: Boolean
-
-internal expect fun nativeWindowsPathIsRelative(path: String): Boolean
-
-internal sealed class WindowsRealPath protected constructor(
-    protected val utf16Chars: CharArray,
+/**
+ * Represents a Windows path.
+ */
+internal class WindowsRealPath private constructor(
+    internal val kString: String,
 ) : RealPath {
-    internal val kString: String by lazy(PUBLICATION) {
-        utf16Chars.concatToString()
-    }
-    override val utf8Bytes: ByteString by lazy(PUBLICATION) {
-        kString.encodeToByteString()
-    }
-    open val isAbsolute: Boolean by lazy(PUBLICATION) {
-        windowsPathIsAbsolute(kString)
-    }
-    open val isDirectoryRequest: Boolean = kString.lastOrNull().let {
-        it == '\\' || it == '/'
-    }
+    val type: WindowsPathType = getWindowsPathType(kString)
+    override val utf8Bytes: ByteString by lazy(PUBLICATION) { kString.encodeToByteString() }
+    val isDirectoryRequest: Boolean = kString.lastOrNull()?.let(::isPathSeparator) == true
 
     /**
      * Returns parent directory or `null` if there is no parent directory for this path
      */
     public val parent: WindowsRealPath?
-        // TODO
-        get() = Path(kString).parent?.let { create(it.toString()).getOrNull() }
+        get() {
+            if (kString.length <= 1) {
+                return null
+            }
+            val lastSlash =
+                (kString.lastIndex - 1 downTo this.type.prefixLength - 1).find { isPathSeparator(kString[it]) }
+            return lastSlash?.let { endSlashPosition -> WindowsRealPath(kString.substring(0, endSlashPosition + 1)) }
+        }
 
-    override fun decodeToString(): Either<PathError.InvalidPathFormat, String> {
-        return kString.right()
+    override fun decodeToString(): Either<PathError.InvalidPathFormat, String> = kString.right()
+
+    internal fun isPathSeparator(char: Char): Boolean = when (type) {
+        LOCAL_DEVICE_LITERAL, ROOT_LOCAL_DEVICE -> char == '\\'
+        else -> char == '\\' || char == '/'
     }
 
+    fun normalize(): Either<PathError, WindowsRealPath> = normalizeWindowsPath(kString).map(::WindowsRealPath)
+
+    fun append(
+        part: String,
+        normalizePath: Boolean = true,
+    ): Either<PathError, WindowsRealPath> {
+        return "$kString\\$part".let {
+            if (normalizePath) {
+                normalizeWindowsPath(it)
+            } else {
+                it.right()
+            }
+        }.flatMap { pathString -> create(pathString) }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || this::class != other::class) {
+            return false
+        }
+
+        other as WindowsRealPath
+
+        return kString == other.kString
+    }
+
+    override fun hashCode(): Int {
+        return kString.hashCode()
+    }
+
+    override fun toString(): String = kString
+
     public companion object : RealPath.Factory<WindowsRealPath> {
+        internal val WindowsRealPath.pathPrefix: String get() = this.kString.substring(0, this.type.prefixLength)
+        internal val WindowsRealPath.pathNoPrefix: String get() = this.kString.substring(this.type.prefixLength)
+
         override fun create(bytes: ByteString): Either<PathError, WindowsRealPath> {
             return Either.catch { bytes.toByteArray().decodeToString(throwOnInvalidSequence = true) }
                 .mapLeft { PathError.InvalidPathFormat("Path is not a valid Unicode string") }
                 .flatMap<PathError, String, WindowsRealPath>(::create)
         }
 
-        internal fun create(base: WindowsRealPath, vararg parts: WindowsRealPath): Either<PathError, WindowsRealPath> {
-            if (parts.any { windowsPathIsAbsolute(it.kString) }) {
-                return PathError.InvalidPathFormat("Can not concatenate absolute path part").left()
-            }
-            return create(
-                base = base,
-                parts = Array<String>(parts.size) { index -> parts[index].kString },
-            )
-        }
-
-        internal fun create(base: WindowsRealPath, vararg parts: String): Either<PathError, WindowsRealPath> {
-            val path = buildString {
-                append(base.kString)
-                if (this.last() != '\\' && this.last() != '/') {
-                    append('\\')
-                }
-                parts
-                    .map { it.removePrefix("\\").removePrefix("/") }
-                    .filter(String::isNotEmpty)
-                    .joinTo(this, separator = "\\", prefix = "") { it }
-            }
-            return create(path)
-        }
-
         override fun create(path: String): Either<PathError, WindowsRealPath> {
-            // TODO
-            return WindowsPathValidator.validate(path)
-                .map {
-                    WindowsCommonRealPath.createRawUnsafe(path.toCharArray())
-                }
-        }
-
-        internal fun windowsPathIsAbsolute(path: String): Boolean {
-            return if (hasNativeWindowsPathFunctions) {
-                !nativeWindowsPathIsRelative(path)
-            } else {
-                commonWindowsPathIsRelative(path)
-            }
-        }
-
-        @Suppress("FunctionOnlyReturningConstant", "UnusedParameter")
-        private fun commonWindowsPathIsRelative(path: String): Boolean {
-            // TODO
-            return true
+            return WindowsRealPath(path).right()
         }
     }
 }

@@ -14,7 +14,6 @@ import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chmod.Chmod
 import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
-import at.released.weh.filesystem.windows.pathresolver.resolveRealPath
 
 internal class WindowsChmod(
     private val pathResolver: WindowsPathResolver,

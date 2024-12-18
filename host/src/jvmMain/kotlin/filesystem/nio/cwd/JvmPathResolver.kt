@@ -58,7 +58,7 @@ internal class JvmPathResolver(
         }
 
         return Either.zipOrAccumulate(
-            { baseDirectoryPathError, nioPathError -> nioPathError },
+            { _, nioPathError -> nioPathError },
             baseDirectoryPath,
             nioPath,
         ) { base, subPath -> base to subPath }

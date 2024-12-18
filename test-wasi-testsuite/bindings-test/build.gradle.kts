@@ -49,7 +49,7 @@ wasiTestsuiteTestGen {
         TestIgnore("unlink_file_trailing_slashes", setOf(MINGW)),
 
         // resolveBeneath is not yet implemented
-        TestIgnore("interesting_paths", setOf(APPLE, MINGW)),
+        TestIgnore("interesting_paths", setOf(APPLE)),
 
         // Fails on JVM for Windows because hardlinks to file must have the same inode,
         // Fails on MinGW because the test does not close all file descriptors before removing the directory

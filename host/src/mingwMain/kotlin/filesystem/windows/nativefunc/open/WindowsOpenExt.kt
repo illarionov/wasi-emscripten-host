@@ -13,14 +13,14 @@ import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
-import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
+import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.close
-import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFileEx
+import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
+import at.released.weh.filesystem.windows.win32api.createfile.toOpenError
+import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
 import kotlinx.io.IOException
 import platform.windows.DELETE
 import platform.windows.FILE_OPEN
@@ -30,26 +30,13 @@ import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.HANDLE
 
 internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
-    baseHandle: HANDLE?,
-    path: VirtualPath,
+    path: NtPath,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
 ): Either<E, R> {
-    val realPath = WindowsPathConverter.convertToRealPath(path)
-    return useFileForAttributeAccess(baseHandle, realPath, followSymlinks, access, errorMapper, block)
-}
-
-internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
-    baseHandle: HANDLE?,
-    path: WindowsRealPath,
-    followSymlinks: Boolean = true,
-    access: AttributeDesiredAccess = READ_ONLY,
-    errorMapper: (OpenError) -> E,
-    block: (HANDLE) -> Either<E, R>,
-): Either<E, R> {
-    val handle: HANDLE = windowsOpenForAttributeAccess(baseHandle, path, followSymlinks, access)
+    val handle: HANDLE = windowsOpenForAttributeAccess(path, followSymlinks, access)
         .mapLeft(errorMapper)
         .getOrElse { return it.left() }
 
@@ -87,30 +74,23 @@ private fun <E : FileSystemOperationError, R : Any> executeBlockSafe(
 }
 
 internal fun windowsOpenForAttributeAccess(
-    baseHandle: HANDLE?,
-    path: WindowsRealPath,
+    path: NtPath,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess,
 ): Either<OpenError, HANDLE> = either {
-    val rootHandle = if (baseHandle != null && !path.isAbsolute) {
-        baseHandle
-    } else {
-        null
-    }
     val createOptions = if (followSymlinks) {
         0
     } else {
         FILE_OPEN_REPARSE_POINT
     }
 
-    return windowsNtCreateFileEx(
-        rootHandle = rootHandle,
-        path = path,
+    return windowsNtCreateFile(
+        ntPath = path,
         desiredAccess = access.ntOpenDesiredAccess,
         fileAttributes = 0,
         createDisposition = FILE_OPEN,
         createOptions = createOptions,
-    )
+    ).mapLeft(NtCreateFileResult::toOpenError)
 }
 
 internal enum class AttributeDesiredAccess {
