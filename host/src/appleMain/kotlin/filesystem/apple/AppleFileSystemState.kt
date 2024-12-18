@@ -11,9 +11,9 @@ import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
+import at.released.weh.filesystem.apple.fdresource.AppleDirectoryPreopener
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource.NativeFileChannel
-import at.released.weh.filesystem.apple.fdresource.preopenDirectories
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
@@ -180,7 +180,10 @@ internal class AppleFileSystemState private constructor(
             currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
         ): AppleFileSystemState {
-            val (cwdResult, directories) = preopenDirectories(currentWorkingDirectory, preopenedDirectories)
+            val (cwdResult, directories) = AppleDirectoryPreopener.preopen(
+                currentWorkingDirectory,
+                preopenedDirectories,
+            )
                 .getOrElse { openError ->
                     throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
                 }

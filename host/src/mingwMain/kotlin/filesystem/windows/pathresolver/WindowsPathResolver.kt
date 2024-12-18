@@ -28,7 +28,6 @@ import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
 import at.released.weh.filesystem.path.toCommonError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
-import at.released.weh.filesystem.windows.fdresource.PreopenedDirectories
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.path.NtPath
@@ -40,31 +39,9 @@ import platform.windows.HANDLE
 internal class WindowsPathResolver(
     private val fileDescriptors: FileDescriptorTable<FdResource>,
     private val fsLock: ReentrantLock,
+    private var currentWorkingDirectoryFd: FileDescriptor = FileDescriptorTable.INVALID_FD,
     private val allowRootAccess: Boolean = false,
 ) {
-    private var currentWorkingDirectoryFd: FileDescriptor = FileDescriptorTable.INVALID_FD
-
-    // TODO: move
-    fun setupPreopenedDirectories(
-        preopened: PreopenedDirectories,
-    ) {
-        preopened
-            .preopenedDirectories
-            .entries
-            .forEachIndexed { index, (_: String, ch: WindowsDirectoryChannel) ->
-                val resource = WindowsDirectoryFdResource(ch)
-                fileDescriptors[index + FileDescriptorTable.WASI_FIRST_PREOPEN_FD] = resource
-            }
-
-        currentWorkingDirectoryFd = preopened.currentWorkingDirectory.fold(
-            ifLeft = { -1 },
-        ) { channel: WindowsDirectoryChannel ->
-            val fd = FileDescriptorTable.WASI_FIRST_PREOPEN_FD + preopened.preopenedDirectories.size
-            fileDescriptors[fd] = WindowsDirectoryFdResource(channel)
-            fd
-        }
-    }
-
     fun resolveNtPath(
         directory: BaseDirectory,
         path: VirtualPath,

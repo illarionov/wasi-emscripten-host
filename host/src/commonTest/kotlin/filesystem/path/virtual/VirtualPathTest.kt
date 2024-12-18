@@ -65,7 +65,7 @@ class VirtualPathTest {
                 val virtualPath = VirtualPath.create(pathString).getOrElse {
                     fail("Can not create virtual path for `$pathString`")
                 }
-                assertThat(virtualPath.utf8).isEqualTo(pathString.encodeToByteString())
+                assertThat(virtualPath.utf8Bytes).isEqualTo(pathString.encodeToByteString())
             }
     }
 

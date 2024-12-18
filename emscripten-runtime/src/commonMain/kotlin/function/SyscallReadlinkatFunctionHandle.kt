@@ -50,7 +50,7 @@ public class SyscallReadlinkatFunctionHandle(
         ).fold(
             ifLeft = { -it.errno.wasiPreview1Code },
         ) { linkPath: VirtualPath ->
-            val linkpathBytes: ByteString = linkPath.utf8
+            val linkpathBytes: ByteString = linkPath.utf8Bytes
             val len = linkpathBytes.size.toInt().coerceAtMost(bufSize)
 
             memory.sinkWithMaxSize(buf, len).buffered().use {

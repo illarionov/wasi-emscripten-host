@@ -176,7 +176,7 @@ internal class LinuxFileSystemState private constructor(
             currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
         ): LinuxFileSystemState {
-            val (cwdResult, directories) = preopenDirectories(
+            val (cwdResult, directories) = LinuxDirectoryPreopener.preopen(
                 currentWorkingDirectory,
                 preopenedDirectories,
             ).getOrElse { openError ->

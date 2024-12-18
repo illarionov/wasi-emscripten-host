@@ -14,7 +14,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
-import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.convertToVirtualPath
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.toVirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
@@ -34,7 +34,7 @@ internal class WindowsReadLink(
         ) { handle ->
             handle.getReparsePoint()
         }.flatMap { linkRealPath ->
-            convertToVirtualPath(linkRealPath)
+            toVirtualPath(linkRealPath)
                 .mapLeft { InvalidArgument(it.message) }
         }
     }

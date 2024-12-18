@@ -12,7 +12,7 @@ import at.released.weh.filesystem.path.real.windows.WindowsRealPath.Companion.pa
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal object WindowsPathConverter {
-    internal fun convertToVirtualPath(
+    internal fun toVirtualPath(
         realPath: WindowsRealPath,
     ): Either<PathError, VirtualPath> {
         val unixPath = realPath.pathNoPrefix.replace('\\', '/')

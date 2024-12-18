@@ -49,7 +49,7 @@ internal fun ReadOnlyMemory.readPathString(
 internal fun VirtualPath.encodedLength(): Size = this.utf8SizeBytes
 
 internal fun VirtualPath.encodeToBuffer(): Buffer = Buffer().also { buffer ->
-    buffer.write(this.utf8)
+    buffer.write(this.utf8Bytes)
 }
 
 internal fun String.encodeToBuffer(): Buffer = Buffer().also { buffer ->
