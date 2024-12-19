@@ -6,10 +6,12 @@
 
 package at.released.weh.host
 
+import arrow.core.getOrElse
 import at.released.weh.common.api.Logger
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.dsl.DirectoryConfigBlock
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.SourceProvider
@@ -66,9 +68,15 @@ public interface EmbedderHost : AutoCloseable {
                 this@Builder.directoriesConfigBlock.isRootAccessAllowed = allowRootAccess
             }
 
-            public fun addDirectory(realPath: String): DirectoriesBuilder {
+            public fun addPreopenedDirectory(
+                realPath: String,
+                virtualPath: String,
+            ): DirectoriesBuilder {
+                val virtPath = VirtualPath.create(virtualPath).getOrElse {
+                    error("Invalid virtual path. The path `$virtualPath` must be a Unix-like path")
+                }
                 this@Builder.directoriesConfigBlock.preopened {
-                    add(PreopenedDirectory(realPath))
+                    add(PreopenedDirectory(realPath, virtPath))
                 }
                 return this
             }

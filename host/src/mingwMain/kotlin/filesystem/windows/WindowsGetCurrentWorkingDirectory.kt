@@ -41,7 +41,7 @@ internal class WindowsGetCurrentWorkingDirectory :
         }
         return if (cwd != null) {
             WindowsRealPath.create(byteArray.decodeToString())
-                .flatMap { realPath -> WindowsPathConverter.convertToVirtualPath(realPath) }
+                .flatMap { realPath -> WindowsPathConverter.toVirtualPath(realPath) }
                 .mapLeft { error -> InvalidArgument(error.message) }
         } else {
             errno.errnoToGetCurrentWorkingDirectoryError().left()

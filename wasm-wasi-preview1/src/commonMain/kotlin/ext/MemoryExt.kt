@@ -20,7 +20,7 @@ internal fun Memory.writeFilesystemPath(
 ): Int {
     val newPathBinarySize = path.utf8SizeBytes
     sinkWithMaxSize(addr, newPathBinarySize).buffered().use {
-        it.write(path.utf8)
+        it.write(path.utf8Bytes)
     }
     return newPathBinarySize
 }

@@ -12,7 +12,7 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal object PosixPathConverter {
     fun toRealPath(virtualPath: VirtualPath): Either<PathError, PosixRealPath> {
-        return PosixRealPath.create(virtualPath.utf8)
+        return PosixRealPath.create(virtualPath.utf8Bytes)
     }
 
     fun toVirtualPath(path: PosixRealPath): Either<PathError, VirtualPath> {

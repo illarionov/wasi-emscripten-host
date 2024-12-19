@@ -9,13 +9,14 @@
 package at.released.weh.filesystem.path.virtual
 
 import arrow.core.Either
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.posix.PosixPathValidator
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.bytestring.encodeToByteString
 import kotlinx.io.bytestring.isNotEmpty
-import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.jvm.JvmStatic
 
 /**
@@ -34,19 +35,19 @@ public class VirtualPath private constructor(
     /**
      * UTF-8 representation of path. Not null terminated.
      */
-    public val utf8: ByteString,
+    public val utf8Bytes: ByteString,
 ) {
-    private val utf8String: String by lazy(NONE) {
-        utf8.decodeToString()
+    private val utf8String: String by lazy(PUBLICATION) {
+        utf8Bytes.decodeToString()
     }
 
     /**
      * Number of bytes to represent the path in UTF8. Not null terminated
      */
-    public val utf8SizeBytes: Int = utf8.size
+    public val utf8SizeBytes: Int = utf8Bytes.size
 
     init {
-        check(utf8.isNotEmpty())
+        check(utf8Bytes.isNotEmpty())
     }
 
     override fun equals(other: Any?): Boolean {
@@ -59,13 +60,13 @@ public class VirtualPath private constructor(
 
         other as VirtualPath
 
-        return utf8 == other.utf8
+        return utf8Bytes == other.utf8Bytes
     }
 
     override fun toString(): String = utf8String
 
     override fun hashCode(): Int {
-        return utf8.hashCode()
+        return utf8Bytes.hashCode()
     }
 
     public companion object {
@@ -82,6 +83,7 @@ public class VirtualPath private constructor(
             }
         }
 
+        @InternalWasiEmscriptenHostApi
         public fun VirtualPath.isDirectoryRequest(): Boolean = utf8String.last() == '/'
         public fun VirtualPath.isAbsolute(): Boolean = utf8String.first() == '/'
     }

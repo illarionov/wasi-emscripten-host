@@ -32,15 +32,14 @@ import kotlinx.io.IOException
 internal class WindowsFileSystemState private constructor(
     stdio: StandardInputOutput,
     internal val isRootAccessAllowed: Boolean,
-    preopenedDirectories: PreopenedDirectories,
+    preopenedDirectories: Map<FileDescriptor, WindowsDirectoryFdResource>,
+    currentWorkingDirectory: FileDescriptor,
 ) : AutoCloseable {
     internal val fdsLock: ReentrantLock = reentrantLock()
-    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(stdio.toFileDescriptorMap())
-    val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock)
-
-    init {
-        pathResolver.setupPreopenedDirectories(preopenedDirectories)
-    }
+    private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
+        stdio.toFileDescriptorMap() + preopenedDirectories,
+    )
+    val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
@@ -117,19 +116,29 @@ internal class WindowsFileSystemState private constructor(
         fun create(
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
-            currentWorkingDirectory: String,
+            cwd: String,
             preopenedDirectories: List<PreopenedDirectory>,
         ): WindowsFileSystemState {
-            val directories = preopenDirectories(currentWorkingDirectory, preopenedDirectories)
+            val (cwdResult, directories) = WindowsBatchDirectoryOpener.preopen(cwd, preopenedDirectories)
                 .getOrElse { openError ->
                     throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
                 }
 
-            return WindowsFileSystemState(
-                stdio,
-                isRootAccessAllowed,
-                directories,
-            )
+            val preopens: MutableMap<Int, WindowsDirectoryFdResource> =
+                directories.indices.associateTo(mutableMapOf()) { index ->
+                    val channel = directories[index]
+                    index + FileDescriptorTable.WASI_FIRST_PREOPEN_FD to WindowsDirectoryFdResource(channel)
+                }
+
+            val currentWorkingDirectoryFd = cwdResult.fold(
+                ifLeft = { -1 },
+            ) { channel: WindowsDirectoryChannel ->
+                val fd = FileDescriptorTable.WASI_FIRST_PREOPEN_FD + directories.size
+                preopens[fd] = WindowsDirectoryFdResource(channel)
+                fd
+            }
+
+            return WindowsFileSystemState(stdio, isRootAccessAllowed, preopens, currentWorkingDirectoryFd)
         }
     }
 }

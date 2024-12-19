@@ -49,7 +49,7 @@ class SyscallReadlinkatFunctionHandleTest {
     @Test
     fun readlinkAt_test_success_case() {
         val expectedLinkTarget = "usr/sbin".toVirtualPath()
-        val expectedLinkTargetBytes = expectedLinkTarget.utf8.toByteArray()
+        val expectedLinkTargetBytes = expectedLinkTarget.utf8Bytes.toByteArray()
 
         fileSystem.onOperation(ReadLink) { operation ->
             assertThat(operation.path).isEqualTo("/sbin".toVirtualPath())

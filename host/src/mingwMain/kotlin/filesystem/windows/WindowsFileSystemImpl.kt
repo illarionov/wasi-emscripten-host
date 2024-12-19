@@ -60,7 +60,7 @@ internal class WindowsFileSystemImpl(
     private val fsState = WindowsFileSystemState.create(
         stdio = stdio,
         isRootAccessAllowed = isRootAccessAllowed,
-        currentWorkingDirectory = currentWorkingDirectory ?: "",
+        cwd = currentWorkingDirectory ?: "",
         preopenedDirectories = preopenedDirectories,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(

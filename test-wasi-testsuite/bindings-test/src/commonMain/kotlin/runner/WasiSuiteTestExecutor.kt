@@ -106,10 +106,12 @@ public class WasiSuiteTestExecutor(
             stderrProvider = testStderr
             directories()
                 .setAllowRootAccess(false)
-                .setCurrentWorkingDirectory(tempRoot.toString())
                 .apply {
                     for (subdirectory in arguments.dirs) {
-                        addDirectory(subdirectory)
+                        addPreopenedDirectory(
+                            realPath = Path(tempRoot, subdirectory).toString(),
+                            virtualPath = subdirectory,
+                        )
                     }
                 }
         }.build()

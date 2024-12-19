@@ -6,7 +6,9 @@
 
 package at.released.weh.filesystem.dsl
 
+import arrow.core.getOrElse
 import at.released.weh.common.api.WasiEmscriptenHostDsl
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 
 @WasiEmscriptenHostDsl
@@ -21,8 +23,12 @@ public class DirectoryConfigBlock {
 
     public fun addPreopenedDirectory(
         realPath: String,
+        virtualPath: String,
     ): DirectoryConfigBlock = apply {
-        _preopenedDirectories.add(PreopenedDirectory(realPath))
+        val virtPath = VirtualPath.create(virtualPath).getOrElse {
+            error("Invalid virtual path. The path `$virtualPath` must be a Unix-like path")
+        }
+        _preopenedDirectories.add(PreopenedDirectory(realPath, virtPath))
     }
 
     public fun preopened(

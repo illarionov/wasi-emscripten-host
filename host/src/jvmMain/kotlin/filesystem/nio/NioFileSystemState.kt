@@ -13,8 +13,8 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.fdresource.BatchDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
+import at.released.weh.filesystem.fdresource.NioDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioFdResource
 import at.released.weh.filesystem.fdresource.NioFileFdResource
 import at.released.weh.filesystem.fdrights.FdRightsBlock
@@ -182,13 +182,13 @@ internal class NioFileSystemState private constructor(
             preopenedDirectories: List<PreopenedDirectory>,
             javaFs: NioFileSystem = FileSystems.getDefault(),
         ): NioFileSystemState {
-            val preopened = BatchDirectoryOpener(javaFs).preopen(currentWorkingDirectory, preopenedDirectories)
+            val preopened = NioDirectoryOpener(javaFs).preopen(currentWorkingDirectory, preopenedDirectories)
                 .getOrElse { openError ->
                     throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
                 }
 
             val preopenedMap: MutableMap<FileDescriptor, FdResource> = stdio.toFileDescriptorMap().toMutableMap()
-            preopened.preopenedDirectories.entries.forEachIndexed { index, (_, resource: FdResource) ->
+            preopened.preopenedDirectories.forEachIndexed { index, resource: FdResource ->
                 preopenedMap[index + WASI_FIRST_PREOPEN_FD] = resource
             }
 

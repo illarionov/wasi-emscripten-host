@@ -23,7 +23,7 @@ public final class at/released/weh/filesystem/FileSystemKt {
 
 public final class at/released/weh/filesystem/dsl/DirectoryConfigBlock {
 	public fun <init> ()V
-	public final fun addPreopenedDirectory (Ljava/lang/String;)Lat/released/weh/filesystem/dsl/DirectoryConfigBlock;
+	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)Lat/released/weh/filesystem/dsl/DirectoryConfigBlock;
 	public final fun getCurrentWorkingDirectory ()Ljava/lang/String;
 	public final fun getPreopenedDirectories ()Ljava/util/List;
 	public final fun isRootAccessAllowed ()Z
@@ -1798,7 +1798,7 @@ public final class at/released/weh/filesystem/path/virtual/VirtualPath {
 	public synthetic fun <init> (Lkotlinx/io/bytestring/ByteString;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun create (Ljava/lang/String;)Larrow/core/Either;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getUtf8 ()Lkotlinx/io/bytestring/ByteString;
+	public final fun getUtf8Bytes ()Lkotlinx/io/bytestring/ByteString;
 	public final fun getUtf8SizeBytes ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1807,16 +1807,17 @@ public final class at/released/weh/filesystem/path/virtual/VirtualPath {
 public final class at/released/weh/filesystem/path/virtual/VirtualPath$Companion {
 	public final fun create (Ljava/lang/String;)Larrow/core/Either;
 	public final fun isAbsolute (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
-	public final fun isDirectoryRequest (Lat/released/weh/filesystem/path/virtual/VirtualPath;)Z
 }
 
 public final class at/released/weh/filesystem/preopened/PreopenedDirectory {
-	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/path/virtual/VirtualPath;)V
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
-	public static synthetic fun copy$default (Lat/released/weh/filesystem/preopened/PreopenedDirectory;Ljava/lang/String;ILjava/lang/Object;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
+	public final fun component2 ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/path/virtual/VirtualPath;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/preopened/PreopenedDirectory;Ljava/lang/String;Lat/released/weh/filesystem/path/virtual/VirtualPath;ILjava/lang/Object;)Lat/released/weh/filesystem/preopened/PreopenedDirectory;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getRealPath ()Ljava/lang/String;
+	public final fun getVirtualPath ()Lat/released/weh/filesystem/path/virtual/VirtualPath;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1895,7 +1896,7 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 }
 
 public final class at/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder {
-	public final fun addDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
+	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
 	public final fun done ()Lat/released/weh/host/EmbedderHost$Builder;
 	public final fun setAllowRootAccess (Z)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
 	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;

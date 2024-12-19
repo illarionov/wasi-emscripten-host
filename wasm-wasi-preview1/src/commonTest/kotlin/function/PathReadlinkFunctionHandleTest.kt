@@ -68,7 +68,7 @@ class PathReadlinkFunctionHandleTest {
         )
         assertThat(errNo).isEqualTo(SUCCESS)
         assertThat(memory.readI32(sizeAddr)).isEqualTo(targetValue.utf8SizeBytes)
-        assertThat(memory).hasBytesAt(bufAddr, targetValue.utf8.toByteArray())
+        assertThat(memory).hasBytesAt(bufAddr, targetValue.utf8Bytes.toByteArray())
         assertThat(memory).byteAt(bufAddr + targetValue.utf8SizeBytes).isEqualTo(MEMORY_FILL_BYTE)
     }
 
