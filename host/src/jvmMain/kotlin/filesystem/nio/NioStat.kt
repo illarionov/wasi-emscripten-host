@@ -15,7 +15,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioStat(
     private val fsState: NioFileSystemState,
@@ -23,7 +23,7 @@ internal class NioStat(
     override fun invoke(input: Stat): Either<StatError, StructStat> =
         fsState.executeWithPath(input.baseDirectory, input.path, input.followSymlinks) { resolvePathResult ->
             resolvePathResult
-                .mapLeft<ResolveRelativePathErrors>(ResolvePathError::toCommonError)
+                .mapLeft<ResolveRelativePathErrors>(ResolvePathError::toResolveRelativePathErrors)
                 .flatMap { NioFileStat.getStat(it, input.followSymlinks) }
         }
 }

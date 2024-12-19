@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.path
 
+import arrow.core.Either
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.InvalidArgument
@@ -60,14 +61,26 @@ internal sealed interface ResolvePathError : FileSystemOperationError
 
 internal fun PathError.toResolvePathError(): ResolvePathError = this as ResolvePathError
 
-internal fun PathError.toCommonError(): ResolveRelativePathErrors = when (this) {
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun <T> Either<PathError, T>.withResolvePathError(): Either<ResolvePathError, T> =
+    mapLeft(PathError::toResolvePathError)
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun <T> Either<PathError, T>.withPathErrorAsCommonError(): Either<ResolveRelativePathErrors, T> =
+    mapLeft(PathError::toResolveRelativePathErrors)
+
+@Suppress("NOTHING_TO_INLINE", "MaxLineLength")
+internal inline fun <T> Either<ResolvePathError, T>.withResolvePathErrorAsCommonError(): Either<ResolveRelativePathErrors, T> =
+    mapLeft(ResolvePathError::toResolveRelativePathErrors)
+
+internal fun PathError.toResolveRelativePathErrors(): ResolveRelativePathErrors = when (this) {
     is PathError.EmptyPath -> InvalidArgument(this.message)
     is PathError.InvalidPathFormat -> InvalidArgument(this.message)
     is PathError.AbsolutePath -> InvalidArgument(this.message)
     is PathError.PathOutsideOfRootPath -> NotCapable(this.message)
 }
 
-internal fun ResolvePathError.toCommonError(): ResolveRelativePathErrors = when (this) {
+internal fun ResolvePathError.toResolveRelativePathErrors(): ResolveRelativePathErrors = when (this) {
     is PathError.EmptyPath -> InvalidArgument(message)
     is PathError.InvalidPathFormat -> InvalidArgument(message)
     is PathError.FileDescriptorNotOpen -> BadFileDescriptor(message)

@@ -25,8 +25,7 @@ import at.released.weh.filesystem.error.NoSpace
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.mkdir.Mkdir
-import at.released.weh.filesystem.path.toCommonError
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
@@ -44,8 +43,8 @@ internal class WindowsMkdir(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> = either {
-        val ntPath = pathResolver.resolveNtPath(input.baseDirectory, input.path)
-            .getOrElse { return it.toCommonError().left() }
+        val ntPath = pathResolver.getNtPath(input.baseDirectory, input.path)
+            .getOrElse { return it.toResolveRelativePathErrors().left() }
 
         val createDisposition = if (input.failIfExists) {
             FILE_CREATE

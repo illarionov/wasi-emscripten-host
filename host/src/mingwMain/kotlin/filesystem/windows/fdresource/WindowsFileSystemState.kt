@@ -21,9 +21,9 @@ import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.windows.WindowsPathResolver
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
@@ -31,7 +31,7 @@ import kotlinx.io.IOException
 
 internal class WindowsFileSystemState private constructor(
     stdio: StandardInputOutput,
-    internal val isRootAccessAllowed: Boolean,
+    withRootAccess: Boolean,
     preopenedDirectories: Map<FileDescriptor, WindowsDirectoryFdResource>,
     currentWorkingDirectory: FileDescriptor,
 ) : AutoCloseable {
@@ -39,7 +39,7 @@ internal class WindowsFileSystemState private constructor(
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )
-    val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
+    val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory, withRootAccess)
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,

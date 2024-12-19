@@ -13,7 +13,7 @@ import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioSetTimestamp(
     private val fsState: NioFileSystemState,
@@ -21,7 +21,7 @@ internal class NioSetTimestamp(
     override fun invoke(input: SetTimestamp): Either<SetTimestampError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult
-                .mapLeft(ResolvePathError::toCommonError)
+                .mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .flatMap {
                     nioSetTimestamp(it.nio, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
                 }

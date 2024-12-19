@@ -18,7 +18,7 @@ import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.Companion.isDirectory
 import at.released.weh.filesystem.path.real.nio.NioRealPath.Companion.resolveAbsolutePath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.BatchDirectoryOpener
 import java.nio.file.FileSystem as NioFileSystem
@@ -37,7 +37,7 @@ internal class NioDirectoryOpener(
 
         return NioRealPath.resolve(path, baseCwdPath)
             .map { it.resolveAbsolutePath() }
-            .mapLeft { it.toCommonError() }
+            .mapLeft { it.toResolveRelativePathErrors() }
             .flatMap { path ->
                 if (!path.isDirectory()) {
                     NotDirectory("`$path` is not a directory").left()

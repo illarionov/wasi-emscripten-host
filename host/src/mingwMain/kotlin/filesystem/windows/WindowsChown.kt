@@ -13,13 +13,12 @@ import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chown.Chown
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 
 internal class WindowsChown(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Chown, ChownError, Unit> {
     override fun invoke(input: Chown): Either<ChownError, Unit> {
-        return pathResolver.resolveRealPath(input.baseDirectory, input.path)
+        return pathResolver.getWindowsPath(input.baseDirectory, input.path)
             .flatMap { NotSupported("Not supported by file system").left() }
     }
 }

@@ -22,7 +22,7 @@ import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -68,7 +68,7 @@ internal fun appleReadLink(
         when {
             bytesWritten < 0 -> return errno.errnoToReadLinkError().left()
             bytesWritten < bufSize -> return PosixRealPath.create(buf.decodeToString(0, bytesWritten.toInt()))
-                .mapLeft(PathError::toCommonError)
+                .mapLeft(PathError::toResolveRelativePathErrors)
 
             bufSize == MAX_PATH_SIZE -> return ENAMETOOLONG.errnoToReadLinkError().left()
             else -> bufSize = (bufSize + PATH_STEP).coerceAtMost(MAX_PATH_SIZE)

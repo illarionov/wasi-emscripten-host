@@ -15,7 +15,7 @@ import at.released.weh.filesystem.op.symlink.Symlink
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioSymlink(
     private val fsState: NioFileSystemState,
@@ -26,10 +26,10 @@ internal class NioSymlink(
             input.newPathBaseDirectory,
             input.newPath,
         ) { resolvedPath: Either<ResolvePathError, NioRealPath> ->
-            val result: Either<SymlinkError, Unit> = resolvedPath.mapLeft { it.toCommonError() }
+            val result: Either<SymlinkError, Unit> = resolvedPath.mapLeft { it.toResolveRelativePathErrors() }
                 .flatMap { newRealPath: NioRealPath ->
                     pathConverter.toRealPath(input.oldPath)
-                        .mapLeft { it.toCommonError() }
+                        .mapLeft { it.toResolveRelativePathErrors() }
                         .map { oldRealPath -> newRealPath to oldRealPath }
                 }.flatMap { (newPath, oldPath) ->
                     createSymlink(newPath.nio, oldPath.nio, input.allowAbsoluteOldPath)

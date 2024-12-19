@@ -13,7 +13,7 @@ import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chown.Chown
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioChown(
     private val fsState: NioFileSystemState,
@@ -22,7 +22,7 @@ internal class NioChown(
         input.baseDirectory,
         input.path,
     ) { resolvePathResult ->
-        resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+        resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
             .flatMap { path -> nioSetPosixUserGroup(path.nio, input.owner, input.group) }
     }
 }

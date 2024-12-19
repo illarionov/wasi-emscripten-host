@@ -17,7 +17,7 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.RealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
@@ -33,7 +33,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
         val cwdResource: Either<OpenError, D> =
             if (currentWorkingDirectoryPath != null) {
                 pathFactory.create(currentWorkingDirectoryPath)
-                    .mapLeft { it.toCommonError() }
+                    .mapLeft { it.toResolveRelativePathErrors() }
                     .flatMap { cwdRealPath ->
                         preopenDirectory(
                             path = cwdRealPath,
@@ -60,7 +60,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
     private fun PreopenedDirectory.preopen(
         cwd: D?,
     ): Either<DirectoryOpenError, D> = pathFactory.create(realPath)
-        .mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+        .mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
         .flatMap { realPath -> preopenDirectory(realPath, virtualPath, cwd) }
         .mapLeft { DirectoryOpenError(this, it) }
 

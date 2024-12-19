@@ -80,7 +80,7 @@ internal fun windowsOpenFileOrDirectory(
 
     val desiredAccess = getDesiredAccess(flags, isDirectoryOrPathRequest)
     val fileAttributes = getFileAttributes(flags, isDirectoryOrPathRequest)
-    val createDisposition = getCreateDisposition(flags, pathIsDirectoryRequest)
+    val createDisposition = getCreateDisposition(flags, isDirectoryOrPathRequest)
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
     val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest, followSymlinks)
 

@@ -16,16 +16,14 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.toVirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.win32api.deviceiocontrol.getReparsePoint
 
 internal class WindowsReadLink(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> {
-        return fsState.executeWithOpenFileHandle(
+        return pathResolver.executeWithOpenFileHandle(
             baseDirectory = input.baseDirectory,
             path = input.path,
             followSymlinks = false,
