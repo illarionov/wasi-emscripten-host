@@ -17,7 +17,7 @@ import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class LinuxReadLink(
@@ -27,7 +27,7 @@ internal class LinuxReadLink(
         return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
             linuxReadLink(realBaseDirectory, realPath)
         }.flatMap { targetRealPath: PosixRealPath ->
-            toVirtualPath(targetRealPath).mapLeft<ResolveRelativePathErrors>(PathError::toCommonError)
+            toVirtualPath(targetRealPath).mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
         }
     }
 }

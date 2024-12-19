@@ -43,18 +43,15 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.Directory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.File
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.NotExists
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.SymlinkToDirectory
 import at.released.weh.filesystem.windows.WindowsRename.DestinationFileType.SymlinkToFile
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenForAttributeAccess
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.close
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
@@ -76,11 +73,10 @@ import platform.windows.HANDLE
 import platform.windows.PathIsDirectoryEmptyW
 
 internal class WindowsRename(
-    private val fsState: WindowsFileSystemState,
-    private val pathResolver: WindowsPathResolver = fsState.pathResolver,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> = either {
-        return fsState.executeWithOpenFileHandle(
+        return pathResolver.executeWithOpenFileHandle(
             baseDirectory = input.oldBaseDirectory,
             path = input.oldPath,
             followSymlinks = false,
@@ -183,8 +179,8 @@ internal class WindowsRename(
         private val newPath: VirtualPath,
     ) {
         fun read(): Either<RenameError, DestinationPathInfo> {
-            val newNtPath = pathResolver.resolveNtPath(newBaseDirectory, newPath)
-                .getOrElse { return it.toCommonError().left() }
+            val newNtPath = pathResolver.getNtPath(newBaseDirectory, newPath)
+                .getOrElse { return it.toResolveRelativePathErrors().left() }
 
             val newPathAttributesHandle = windowsOpenForAttributeAccess(
                 path = newNtPath,
@@ -200,11 +196,11 @@ internal class WindowsRename(
         private fun getInfoOnOpenError(
             dstOpenError: OpenError,
         ): Either<RenameError, DestinationPathInfo> = if (dstOpenError is NoEntry) {
-            pathResolver.resolveRealPath(newBaseDirectory, newPath)
+            pathResolver.getWindowsPath(newBaseDirectory, newPath)
                 .map {
                     DestinationPathInfo(
                         resolvedRealPath = it,
-                        type = DestinationFileType.NotExists,
+                        type = NotExists,
                         dstHandle = null,
                     )
                 }

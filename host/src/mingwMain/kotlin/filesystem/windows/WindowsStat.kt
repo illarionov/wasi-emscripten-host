@@ -35,15 +35,13 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.stat.Stat
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.stat.windowsStatFd
 
 internal class WindowsStat(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Stat, StatError, StructStat> {
-    override fun invoke(input: Stat): Either<StatError, StructStat> = fsState.executeWithOpenFileHandle(
+    override fun invoke(input: Stat): Either<StatError, StructStat> = pathResolver.executeWithOpenFileHandle(
         baseDirectory = input.baseDirectory,
         path = input.path,
         followSymlinks = input.followSymlinks,

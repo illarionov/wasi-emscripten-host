@@ -18,7 +18,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
@@ -29,7 +29,7 @@ internal class NioMkdir(
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
-            resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+            resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .flatMap { mkdir(it.nio, input.mode, input.failIfExists) }
         }
 

@@ -39,9 +39,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkFile
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
@@ -57,10 +55,10 @@ import platform.windows.FILE_ATTRIBUTE_READONLY
 import platform.windows.HANDLE
 
 internal class WindowsUnlinkFile(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
-        return fsState.executeWithOpenFileHandle(
+        return pathResolver.executeWithOpenFileHandle(
             baseDirectory = input.baseDirectory,
             path = input.path,
             followSymlinks = false,

@@ -13,14 +13,14 @@ import at.released.weh.filesystem.fdresource.nio.nioSetPosixFilePermissions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chmod.Chmod
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioChmod(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
-            resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+            resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .flatMap { path -> nioSetPosixFilePermissions(path.nio, input.mode) }
         }
 }

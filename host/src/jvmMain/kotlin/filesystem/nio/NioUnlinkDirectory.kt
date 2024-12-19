@@ -15,7 +15,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.NioUnlinkFile.Companion.toUnlinkError
 import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import java.nio.file.Files
 import java.nio.file.LinkOption.NOFOLLOW_LINKS
 import java.nio.file.Path
@@ -29,7 +29,7 @@ internal class NioUnlinkDirectory(
     @Suppress("ReturnCount")
     override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> {
         val path: Path = pathResolver.resolve(input.path, input.baseDirectory, false)
-            .mapLeft { it.toCommonError() }
+            .mapLeft { it.toResolveRelativePathErrors() }
             .getOrElse { return it.left() }
             .nio
 

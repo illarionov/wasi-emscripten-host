@@ -18,7 +18,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
@@ -26,7 +26,6 @@ import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.Directory
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.File
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenFileOrDirectory
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 
 internal class WindowsOpen(
     private val fsState: WindowsFileSystemState,
@@ -38,12 +37,12 @@ internal class WindowsOpen(
             .getOrElse { return it.left() }
 
         val directoryChannel: WindowsDirectoryChannel? = pathResolver.getBaseDirectory(input.baseDirectory)
-            .getOrElse { return it.toCommonError().left() }
+            .getOrElse { return it.toResolveRelativePathErrors().left() }
 
         val baseDirectoryRights = directoryChannel?.rights ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
-        val ntPath = pathResolver.resolveNtPath(input.baseDirectory, input.path)
-            .getOrElse { return it.toCommonError().left() }
+        val ntPath = pathResolver.getNtPath(input.baseDirectory, input.path)
+            .getOrElse { return it.toResolveRelativePathErrors().left() }
 
         return windowsOpenFileOrDirectory(
             ntPath = ntPath,

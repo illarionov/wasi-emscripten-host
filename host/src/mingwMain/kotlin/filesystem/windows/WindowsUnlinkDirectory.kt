@@ -11,13 +11,12 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.windowsRemoveDirectory
 
 internal class WindowsUnlinkDirectory(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
     override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> {
-        return pathResolver.resolveRealPath(input.baseDirectory, input.path).flatMap(::windowsRemoveDirectory)
+        return pathResolver.getWindowsPath(input.baseDirectory, input.path).flatMap(::windowsRemoveDirectory)
     }
 }

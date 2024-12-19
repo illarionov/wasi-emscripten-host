@@ -13,13 +13,12 @@ import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chmod.Chmod
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 
 internal class WindowsChmod(
     private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> {
-        return pathResolver.resolveRealPath(input.baseDirectory, input.path)
+        return pathResolver.getWindowsPath(input.baseDirectory, input.path)
             .flatMap { NotSupported("Not supported by file system").left() }
     }
 }

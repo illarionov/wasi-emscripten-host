@@ -15,7 +15,7 @@ import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.path.real.windows.WindowsPathType
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.BatchDirectoryOpener
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
@@ -46,7 +46,7 @@ internal object WindowsBatchDirectoryOpener : BatchDirectoryOpener<WindowsRealPa
             }
 
             else -> windowsDosPathNameToNtPathName(path.kString).map { NtPath.Absolute(it) }
-        }.getOrElse { return it.toCommonError().left() }
+        }.getOrElse { return it.toResolveRelativePathErrors().left() }
 
         return windowsNtOpenDirectory(
             ntPath = ntPath,

@@ -21,7 +21,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.FileAlreadyExistsException
@@ -47,7 +47,7 @@ internal class NioRename(
                 baseDirectory = input.oldBaseDirectory,
                 followSymlinks = false,
             )
-                .mapLeft(ResolvePathError::toCommonError)
+                .mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .bind()
 
             newPath = fsState.pathResolver.resolve(
@@ -55,7 +55,7 @@ internal class NioRename(
                 baseDirectory = input.newBaseDirectory,
                 followSymlinks = false,
             )
-                .mapLeft(ResolvePathError::toCommonError)
+                .mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .bind()
 
             oldFdResource = fsState.findUnsafe(oldPath)

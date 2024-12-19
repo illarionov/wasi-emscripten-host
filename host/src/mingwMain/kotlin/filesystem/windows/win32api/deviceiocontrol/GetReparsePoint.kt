@@ -17,7 +17,7 @@ import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.ext.readChars
 import at.released.weh.host.platform.windows.REPARSE_DATA_BUFFER
@@ -100,7 +100,7 @@ private fun REPARSE_DATA_BUFFER.readSymlink(
         fromIndex = offsetBytes / 2,
     ).concatToString()
 
-    return WindowsRealPath.create(substituteName).mapLeft { it.toCommonError() }
+    return WindowsRealPath.create(substituteName).mapLeft { it.toResolveRelativePathErrors() }
 }
 
 @Suppress("MagicNumber")

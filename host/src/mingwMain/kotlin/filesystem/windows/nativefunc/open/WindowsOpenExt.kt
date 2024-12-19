@@ -73,6 +73,7 @@ private fun <E : FileSystemOperationError, R : Any> executeBlockSafe(
     ex.left().left()
 }
 
+// TODO: this is vulnerable to sandbox escaping using a symlink
 internal fun windowsOpenForAttributeAccess(
     path: NtPath,
     followSymlinks: Boolean = true,

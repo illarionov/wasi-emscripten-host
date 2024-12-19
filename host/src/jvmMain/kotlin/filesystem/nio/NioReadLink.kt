@@ -17,7 +17,7 @@ import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class NioReadLink(
@@ -27,7 +27,7 @@ internal class NioReadLink(
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
-            resolvePathResult.mapLeft(ResolvePathError::toCommonError)
+            resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
                 .flatMap { path -> readSymbolicLink(path.nio) }
                 .map<NioRealPath>(pathFactory::create)
                 .flatMap { target ->

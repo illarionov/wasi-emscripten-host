@@ -37,23 +37,18 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
-import at.released.weh.filesystem.windows.pathresolver.WindowsPathResolver
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
 import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
 import at.released.weh.filesystem.windows.win32api.windowsCreateHardLink
 import platform.windows.HANDLE
 
 internal class WindowsHardlink(
-    private val fsState: WindowsFileSystemState,
-    private val pathResolver: WindowsPathResolver = fsState.pathResolver,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> = either {
-        val newPath = pathResolver.resolveRealPath(input.newBaseDirectory, input.newPath).bind()
-
-        return fsState.executeWithOpenFileHandle(
+        val newPath = pathResolver.getWindowsPath(input.newBaseDirectory, input.newPath).bind()
+        return pathResolver.executeWithOpenFileHandle(
             baseDirectory = input.oldBaseDirectory,
             path = input.oldPath,
             followSymlinks = input.followSymlinks,

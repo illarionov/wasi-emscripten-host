@@ -19,7 +19,7 @@ import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toCommonError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
@@ -44,13 +44,13 @@ internal class NioHardlink(
             path = input.oldPath,
             baseDirectory = input.oldBaseDirectory,
             followSymlinks = input.followSymlinks,
-        ).mapLeft(ResolvePathError::toCommonError).bind()
+        ).mapLeft(ResolvePathError::toResolveRelativePathErrors).bind()
 
         val newPath = fsState.pathResolver.resolve(
             path = input.newPath,
             baseDirectory = input.newBaseDirectory,
             followSymlinks = false,
-        ).mapLeft(ResolvePathError::toCommonError).bind()
+        ).mapLeft(ResolvePathError::toResolveRelativePathErrors).bind()
 
         if (!input.followSymlinks && createLinkFollowSymlinks && oldPath.nio.isSymbolicLink()) {
             copySymlink(oldPath.nio, newPath.nio).bind()

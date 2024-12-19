@@ -12,17 +12,15 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
-import at.released.weh.filesystem.windows.nativefunc.open.executeWithOpenFileHandle
 import at.released.weh.filesystem.windows.nativefunc.windowsCheckAccessFd
 import platform.windows.HANDLE
 
 internal class WindowsCheckAccess(
-    private val fsState: WindowsFileSystemState,
+    private val pathResolver: WindowsPathResolver,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> {
-        return fsState.executeWithOpenFileHandle(
+        return pathResolver.executeWithOpenFileHandle(
             baseDirectory = input.baseDirectory,
             path = input.path,
             followSymlinks = input.followSymlinks,
