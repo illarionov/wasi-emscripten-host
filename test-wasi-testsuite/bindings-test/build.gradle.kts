@@ -45,9 +45,6 @@ wasiTestsuiteTestGen {
         // legacy, not used anywhere
         TestIgnore("fd_fdstat_set_rights"),
 
-        // TODO: fix
-        TestIgnore("unlink_file_trailing_slashes", setOf(MINGW)),
-
         // resolveBeneath is not yet implemented
         TestIgnore("interesting_paths", setOf(APPLE)),
 
