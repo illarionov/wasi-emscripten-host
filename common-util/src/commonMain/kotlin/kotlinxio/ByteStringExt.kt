@@ -6,7 +6,7 @@
 
 @file:Suppress("MagicNumber")
 
-package at.released.weh.common.ext
+package at.released.weh.common.kotlinxio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import kotlinx.io.bytestring.ByteString
