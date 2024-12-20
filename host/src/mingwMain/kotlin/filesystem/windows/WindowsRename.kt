@@ -299,7 +299,7 @@ internal class WindowsRename(
         }
 
         private fun setFileErrorToRenameError(code: Win32ErrorCode): RenameError = when (code.code.toInt()) {
-            // TODO: find error codes
+            // XXX: find error codes
             ERROR_ACCESS_DENIED -> AccessDenied("Cannot rename file or directory, access denied")
             ERROR_FILE_NOT_FOUND -> NoEntry("File not found")
             ERROR_ALREADY_EXISTS -> Exists("File or directory already exists")

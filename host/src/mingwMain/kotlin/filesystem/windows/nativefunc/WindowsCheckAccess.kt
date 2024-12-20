@@ -69,7 +69,7 @@ internal fun windowsCheckAccessFd(
         .mapLeft(GetFinalPathError::toResolveRelativePathError)
         .bind()
 
-    // TODO ACL should be checked on handle using GetSecurityInfo?
+    // XXX ACL should be checked on handle using GetSecurityInfo?
     checkFileAcl(path, mode, useEffectiveUserId).bind()
 }
 

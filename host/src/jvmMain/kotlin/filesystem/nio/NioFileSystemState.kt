@@ -7,7 +7,6 @@
 package at.released.weh.filesystem.nio
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
@@ -136,19 +135,6 @@ internal class NioFileSystemState private constructor(
         @Suppress("UNCHECKED_CAST")
         val resource: FdResource = get(fd) ?: return (BadFileDescriptor(fileDescriptorNotOpenMessage(fd)) as E).left()
         return block(resource)
-    }
-
-    // TODO: remove
-    inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
-        baseDirectory: BaseDirectory,
-        relativePath: String,
-        followSymlinks: Boolean = false,
-        crossinline block: (path: Either<ResolvePathError, NioRealPath>) -> Either<E, R>,
-    ): Either<E, R> {
-        val path: Either<ResolvePathError, NioRealPath> = VirtualPath.create(relativePath)
-            .mapLeft { it as ResolvePathError }
-            .flatMap { pathResolver.resolve(it, baseDirectory, followSymlinks) }
-        return block(path)
     }
 
     inline fun <E : FileSystemOperationError, R : Any> executeWithPath(

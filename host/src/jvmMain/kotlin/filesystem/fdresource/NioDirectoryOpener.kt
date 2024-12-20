@@ -38,12 +38,12 @@ internal class NioDirectoryOpener(
         return NioRealPath.resolve(path, baseCwdPath)
             .map { it.resolveAbsolutePath() }
             .mapLeft { it.toResolveRelativePathErrors() }
-            .flatMap { path ->
-                if (!path.isDirectory()) {
-                    NotDirectory("`$path` is not a directory").left()
+            .flatMap { absolutePath: NioRealPath ->
+                if (!absolutePath.isDirectory()) {
+                    NotDirectory("`$absolutePath` is not a directory").left()
                 } else {
                     NioDirectoryFdResource(
-                        path,
+                        absolutePath,
                         virtualPath = virtualPath,
                         isPreopened = true,
                         rights = DIRECTORY_BASE_RIGHTS_BLOCK,
