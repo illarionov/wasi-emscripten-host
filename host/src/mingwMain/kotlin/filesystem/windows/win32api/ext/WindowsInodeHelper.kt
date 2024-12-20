@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.windows.win32api.ext
 
-import at.released.weh.common.ext.readU64Le
+import at.released.weh.common.kotlinxio.readU64Le
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileIdInfo
 import kotlinx.io.bytestring.ByteString
 

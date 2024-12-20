@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.windows.win32api.ext
 
-import at.released.weh.common.ext.invoke
+import at.released.weh.common.kotlinxio.invoke
 import kotlinx.cinterop.get
 import kotlinx.io.bytestring.ByteString
 import platform.windows.FILE_ID_128
