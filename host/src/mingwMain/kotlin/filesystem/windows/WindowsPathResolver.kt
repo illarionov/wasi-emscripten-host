@@ -21,9 +21,9 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.real.windows.WindowsPathType
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.real.windows.normalizeWindowsPath
+import at.released.weh.filesystem.path.real.windows.normalizeWindowsSlashes
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtObjectManagerPath
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
 import at.released.weh.filesystem.path.toResolvePathError
@@ -85,7 +85,7 @@ internal class WindowsPathResolver(
             ?.handle
 
         return when (baseDirectoryHandle) {
-            null -> path.asCurrentDriveRelativeWindowsPath().withPathErrorAsCommonError()
+            null -> path.asNonRelativeWindowsPath().withPathErrorAsCommonError()
             else -> {
                 if (!withRootAccess) {
                     // Validate that the path is not outside the base directory
@@ -124,8 +124,7 @@ internal class WindowsPathResolver(
             raise(PathError.InvalidPathFormat("Path is not absolute"))
         }
 
-        // Resolve as relative path for now
-        return path.asCurrentDriveRelativeWindowsPath()
+        return path.asNonRelativeWindowsPath()
             .withResolvePathError()
             .flatMap(WindowsRealPath::toNtPath)
             .map(NtPath::Absolute)
@@ -151,6 +150,18 @@ internal class WindowsPathResolver(
             .mapLeft { it.toResolvePathError() }
     }
 
+    /**
+     * Guess Windows real path from [VirtualPath].
+     *
+     * Examples:
+     * * Virtual path: `/Windows/System32`, Windows Real Path: `\Windows\System32`
+     * * Virtual path: `D:/Users/Public`, Windows real path: `D:\Users\Public`
+     */
+    private fun VirtualPath.asNonRelativeWindowsPath(): Either<PathError, WindowsRealPath> {
+        return WindowsRealPath.create(normalizeWindowsSlashes(this.toString()))
+            .flatMap(WindowsRealPath::normalize)
+    }
+
     fun getBaseDirectory(
         directory: BaseDirectory,
     ): Either<ResolvePathError, WindowsDirectoryChannel?> = when (directory) {
@@ -172,22 +183,6 @@ internal class WindowsPathResolver(
             }
         }
     }
-}
-
-/**
- * Converts [VirtualPath] as [CURRENT_DRIVE_RELATIVE][WindowsPathType.CURRENT_DRIVE_RELATIVE] Windows path
- *
- * Examples:
- * * Virtual path: `/Windows/System32`, Windows Real Path: `\Windows\System32`
- * * Virtual path: `Users/Public`, Windows real path: `\Users\Public`
- */
-private fun VirtualPath.asCurrentDriveRelativeWindowsPath(): Either<PathError, WindowsRealPath> {
-    val pathString = if (this.isAbsolute()) {
-        toString()
-    } else {
-        """\${toString()}"""
-    }
-    return normalizeWindowsPath(pathString).flatMap(WindowsRealPath::create)
 }
 
 internal fun WindowsRealPath.toNtPath(): Either<ResolvePathError, WindowsNtObjectManagerPath> {
