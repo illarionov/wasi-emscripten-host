@@ -218,6 +218,13 @@ jobs:
           junit_files: '**/build/*test-results/**/*.xml'
           check_name: "Windows test results"
 
+      - name: Bundle the test reports and outputs
+        if: failure()
+        run: >
+          tar -c --zstd --options zstd:compression-level=20 -f test-reports-windows.tar.zst
+          --exclude "configuration-cache"
+          @(Get-ChildItem -Path . -Include "reports" -Directory -Name -Recurse)
+
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         if: failure()

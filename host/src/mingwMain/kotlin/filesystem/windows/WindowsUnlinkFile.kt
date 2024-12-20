@@ -39,6 +39,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.fileinfo.FileAttributeTagInfo
@@ -63,7 +64,7 @@ internal class WindowsUnlinkFile(
             path = input.path,
             followSymlinks = false,
             access = READ_WRITE_DELETE,
-            errorMapper = ::openErrorToUnlinkError,
+            errorMapper = { openErrorToUnlinkError(input, it) },
             block = ::deleteFileByHandle,
         )
     }
@@ -120,30 +121,43 @@ internal class WindowsUnlinkFile(
         }
 
         @Suppress("CyclomaticComplexMethod")
-        internal fun openErrorToUnlinkError(error: OpenError): UnlinkError = when (error) {
-            is AccessDenied -> error
-            is Again -> IoError(error.message)
-            is BadFileDescriptor -> error
-            is DiskQuota -> IoError(error.message)
-            is Exists -> IoError(error.message)
-            is Interrupted -> IoError(error.message)
-            is InvalidArgument -> error
-            is IoError -> error
-            is Mfile -> IoError(error.message)
-            is Mlink -> IoError(error.message)
-            is NameTooLong -> error
-            is Nfile -> IoError(error.message)
-            is NoEntry -> error
-            is NoSpace -> error
-            is NotCapable -> error
-            is NotDirectory -> error
-            is NotSupported -> IoError(error.message)
-            is Nxio -> IoError(error.message)
-            is PathIsDirectory -> error
-            is PermissionDenied -> error
-            is ReadOnlyFileSystem -> error
-            is TextFileBusy -> error
-            is TooManySymbolicLinks -> error
+        private fun openErrorToUnlinkError(
+            input: UnlinkFile,
+            error: OpenError,
+        ): UnlinkError {
+            return when (error) {
+                is AccessDenied -> error
+                is Again -> IoError(error.message)
+                is BadFileDescriptor -> error
+                is DiskQuota -> IoError(error.message)
+                is Exists -> IoError(error.message)
+                is Interrupted -> IoError(error.message)
+                is InvalidArgument -> {
+                    // In some cases error 0xC0000033U (STATUS_OBJECT_NAME_INVALID) is returned.
+                    if (input.path.isDirectoryRequest()) {
+                        NotDirectory("Path with trailing slash")
+                    } else {
+                        error
+                    }
+                }
+
+                is IoError -> error
+                is Mfile -> IoError(error.message)
+                is Mlink -> IoError(error.message)
+                is NameTooLong -> error
+                is Nfile -> IoError(error.message)
+                is NoEntry -> error
+                is NoSpace -> error
+                is NotCapable -> error
+                is NotDirectory -> error
+                is NotSupported -> IoError(error.message)
+                is Nxio -> IoError(error.message)
+                is PathIsDirectory -> error
+                is PermissionDenied -> error
+                is ReadOnlyFileSystem -> error
+                is TextFileBusy -> error
+                is TooManySymbolicLinks -> error
+            }
         }
 
         internal fun fileDispositionErrorToUnlinkError(win32Code: Win32ErrorCode): UnlinkError =
