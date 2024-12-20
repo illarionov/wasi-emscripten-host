@@ -38,8 +38,8 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.symlink.Symlink
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.normalizeWindowsSlashes
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.real.windows.normalizeWindowsSlashes
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute

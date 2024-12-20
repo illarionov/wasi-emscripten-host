@@ -25,6 +25,7 @@ import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
+import at.released.weh.filesystem.path.withResolvePathError
 import kotlin.io.path.isDirectory
 
 internal class JvmPathResolver(
@@ -53,9 +54,7 @@ internal class JvmPathResolver(
             }
         }
 
-        val nioPath: Either<ResolvePathError, NioRealPath> = pathConverter.toRealPath(path).mapLeft { error ->
-            error as ResolvePathError
-        }
+        val nioPath: Either<ResolvePathError, NioRealPath> = pathConverter.toRealPath(path).withResolvePathError()
 
         return Either.zipOrAccumulate(
             { _, nioPathError -> nioPathError },

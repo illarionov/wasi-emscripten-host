@@ -9,9 +9,11 @@ package at.released.weh.filesystem.path.real.nio
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.ext.Os
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.PathError.InvalidPathFormat
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
+import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
@@ -32,6 +34,12 @@ internal class NioPathConverter(
     internal fun toVirtualPath(
         path: NioRealPath,
     ): Either<PathError, VirtualPath> {
-        return VirtualPath.create(path.kString).mapLeft { InvalidPathFormat(it.message) }
+        val virtualPathString = if (Os.isWindows) {
+            WindowsPathConverter.normalizeVirtualPathSlashes(path.kString)
+        } else {
+            path.kString
+        }
+
+        return VirtualPath.create(virtualPathString).mapLeft { InvalidPathFormat(it.message) }
     }
 }

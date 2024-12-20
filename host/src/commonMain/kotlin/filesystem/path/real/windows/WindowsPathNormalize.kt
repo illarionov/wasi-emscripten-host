@@ -11,10 +11,6 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.path.PathError
 
-internal fun normalizeWindowsSlashes(
-    path: String,
-): String = path.replace('/', '\\')
-
 internal fun normalizeWindowsPath(
     path: String,
     failOnOutsideOfRoot: Boolean = true,
