@@ -23,10 +23,7 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
     private val pathFactory: RealPath.Factory<P>,
 ) {
-    private val currentDirectoryVirtualPath =
-        VirtualPath.create(".").getOrElse { error("Can not create virtual path for CWD") }
-
-    internal fun preopen(
+    internal open fun preopen(
         currentWorkingDirectoryPath: String?,
         preopenedDirectories: List<PreopenedDirectory> = listOf(),
     ): Either<DirectoryOpenError, PreopenedDirectories<D>> {
@@ -37,7 +34,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
                     .flatMap { cwdRealPath ->
                         preopenDirectory(
                             path = cwdRealPath,
-                            virtualPath = currentDirectoryVirtualPath,
+                            virtualPath = CURRENT_DIRECTORY_VIRTUAL_PATH,
                             baseDirectoryFd = null,
                         )
                     }
@@ -87,4 +84,10 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
         val directory: PreopenedDirectory,
         val error: OpenError,
     )
+
+    internal companion object {
+        val CURRENT_DIRECTORY_VIRTUAL_PATH = VirtualPath.create(".").getOrElse {
+            error("Can not create virtual path for CWD")
+        }
+    }
 }

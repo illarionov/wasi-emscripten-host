@@ -11,15 +11,22 @@ import at.released.weh.filesystem.apple.nativefunc.appleCheckAccess
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class AppleCheckAccess(
-    private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
+        fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, baseDirectory ->
             appleCheckAccess(
                 path = realPath,
-                baseDirectoryFd = baseDirectory,
+                baseDirectoryFd = baseDirectory.nativeFd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
                 followSymlinks = input.followSymlinks,

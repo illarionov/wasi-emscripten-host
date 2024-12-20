@@ -9,16 +9,22 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxUnlinkFile
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxUnlinkFile(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<UnlinkFile, UnlinkError, Unit> {
     override fun invoke(input: UnlinkFile): Either<UnlinkError, Unit> {
-        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
-            linuxUnlinkFile(realBaseDirectory, realPath)
+        return fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, realBaseDirectory ->
+            linuxUnlinkFile(realBaseDirectory.nativeFd, realPath)
         }
     }
 }

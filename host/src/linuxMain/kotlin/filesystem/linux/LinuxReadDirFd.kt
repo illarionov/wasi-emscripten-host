@@ -12,11 +12,11 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.linux.ext.linuxFd
-import at.released.weh.filesystem.linux.fdresource.LinuxDirectoryFdResource
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
 import at.released.weh.filesystem.posix.nativefunc.PosixDupfdMapper.dupErrorToReadDirError
 import at.released.weh.filesystem.posix.readdir.PosixDirEntrySequence
 import at.released.weh.filesystem.posix.readdir.posixOpenDir
@@ -28,18 +28,18 @@ internal class LinuxReadDirFd(
 ) : FileSystemOperationHandler<ReadDirFd, ReadDirError, DirEntrySequence> {
     override fun invoke(input: ReadDirFd): Either<ReadDirError, DirEntrySequence> {
         return fsState.executeWithResource(input.fd) { resource ->
-            if (resource !is LinuxDirectoryFdResource) {
+            if (resource !is PosixDirectoryFdResource) {
                 return@executeWithResource BadFileDescriptor("${input.fd} is not a directory").left()
             }
 
             // need a dup since closedir() closes the underlying file descriptor
-            val dirFdDup = dup(resource.nativeFd.linuxFd)
+            val dirFdDup = dup(resource.channel.nativeFd.linuxFd)
             if (dirFdDup == -1) {
                 return@executeWithResource dupErrorToReadDirError(errno).left()
             }
 
             posixOpenDir(NativeDirectoryFd(dirFdDup)).map { dirPointer ->
-                PosixDirEntrySequence(resource.virtualPath, dirPointer, input.startPosition)
+                PosixDirEntrySequence(resource.channel.virtualPath, dirPointer, input.startPosition)
             }
         }
     }

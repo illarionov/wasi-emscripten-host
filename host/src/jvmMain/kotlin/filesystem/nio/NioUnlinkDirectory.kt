@@ -13,7 +13,6 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.nio.NioUnlinkFile.Companion.toUnlinkError
-import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import java.nio.file.Files

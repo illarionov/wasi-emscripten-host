@@ -12,19 +12,26 @@ import at.released.weh.filesystem.apple.nativefunc.appleSymlink
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.symlink.Symlink
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toRealPath
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.withPathErrorAsCommonError
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 import at.released.weh.filesystem.posix.validateSymlinkTarget
 
 internal class AppleSymlink(
-    private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Symlink, SymlinkError, Unit> {
     override fun invoke(input: Symlink): Either<SymlinkError, Unit> {
         return validateSymlinkTarget(input.oldPath, input.allowAbsoluteOldPath)
             .flatMap { toRealPath(input.oldPath).withPathErrorAsCommonError() }
             .flatMap { oldRealpath ->
-                fsState.executeWithPath(input.newPath, input.newPathBaseDirectory) { newRealPath, directoryFd ->
-                    appleSymlink(oldRealpath, newRealPath, directoryFd)
+                fsExecutor.executeWithPath(
+                    input.newPath,
+                    input.newPathBaseDirectory,
+                    ResolvePathError::toResolveRelativePathErrors,
+                ) { newRealPath, directoryFd ->
+                    appleSymlink(oldRealpath, newRealPath, directoryFd.nativeFd)
                 }
             }
     }

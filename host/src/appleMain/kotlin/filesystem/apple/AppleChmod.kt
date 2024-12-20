@@ -11,12 +11,19 @@ import at.released.weh.filesystem.apple.nativefunc.appleChmod
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chmod.Chmod
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class AppleChmod(
-    private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
-        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
-            appleChmod(baseDirectory, realPath, input.mode, input.followSymlinks)
+        fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, baseDirectory ->
+            appleChmod(baseDirectory.nativeFd, realPath, input.mode, input.followSymlinks)
         }
 }

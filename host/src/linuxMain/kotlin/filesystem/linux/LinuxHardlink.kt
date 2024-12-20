@@ -9,20 +9,30 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxHardlink
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxHardlink(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> {
-        return fsState.executeWithPath(input.oldPath, input.oldBaseDirectory) { oldRealPath, oldRealBaseDirectory ->
-            fsState.executeWithPath(input.newPath, input.newBaseDirectory) { newRealPath, newRealBaseDirectory ->
+        return fsExecutor.executeWithPath(
+            input.oldPath,
+            input.oldBaseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { oldRealPath, oldRealBaseDirectory ->
+            fsExecutor.executeWithPath(
+                input.newPath,
+                input.newBaseDirectory,
+                ResolvePathError::toResolveRelativePathErrors,
+            ) { newRealPath, newRealBaseDirectory ->
                 linuxHardlink(
-                    oldRealBaseDirectory,
+                    oldRealBaseDirectory.nativeFd,
                     oldRealPath,
-                    newRealBaseDirectory,
+                    newRealBaseDirectory.nativeFd,
                     newRealPath,
                     input.followSymlinks,
                 )
