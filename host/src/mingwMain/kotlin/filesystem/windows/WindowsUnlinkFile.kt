@@ -7,9 +7,9 @@
 package at.released.weh.filesystem.windows
 
 import arrow.core.Either
-import arrow.core.flatMap
+import arrow.core.left
 import arrow.core.raise.either
-import arrow.core.right
+import at.released.weh.ext.flatMapLeft
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.Again
 import at.released.weh.filesystem.error.BadFileDescriptor
@@ -77,21 +77,19 @@ internal class WindowsUnlinkFile(
                 .mapLeft(::statErrorToUnlinkError)
                 .bind()
 
-            // UnlinkFile can be used for both files and symlinks of any type
+            // UnlinkFile should work for both regular files and symlinks of any type
             if (info.fileAttributes.isDirectory && !info.fileAttributes.isSymlinkOrReparsePoint) {
                 raise(PathIsDirectory("Path is a directory"))
             }
 
             return handle.setFileDispositionInfoEx(true)
-                .swap()
-                .flatMap { dispositionInfoExError ->
+                .flatMapLeft { dispositionInfoExError ->
                     if (dispositionInfoExError.code.toInt() == ERROR_INVALID_PARAMETER) {
-                        deleteWithSetFileDispositionInfo(handle, info).swap()
+                        deleteWithSetFileDispositionInfo(handle, info)
                     } else {
-                        fileDispositionErrorToUnlinkError(dispositionInfoExError).right()
+                        fileDispositionErrorToUnlinkError(dispositionInfoExError).left()
                     }
                 }
-                .swap()
         }
 
         private fun deleteWithSetFileDispositionInfo(
