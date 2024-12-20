@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.SymlinkError
+import at.released.weh.filesystem.ext.Os
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -24,7 +25,6 @@ import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
 import java.nio.file.Files
-import kotlin.LazyThreadSafetyMode.PUBLICATION
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isSymbolicLink
 import java.nio.file.Path as NioPath
@@ -32,12 +32,9 @@ import java.nio.file.Path as NioPath
 internal class NioHardlink(
     private val fsState: NioFileSystemState,
 ) : FileSystemOperationHandler<Hardlink, HardlinkError, Unit> {
-    private val createLinkFollowSymlinks: Boolean by lazy(PUBLICATION) {
-        val osName = System.getProperty("os.name") ?: "generic"
-        val isLinux = osName.findAnyOf(listOf("nix", "nux", "aix"), ignoreCase = true) != null
-        val isWindows = osName.contains("win", true)
-        !isLinux && !isWindows
-    }
+    // Workaround for inconsistent behavior of Files.createLink across operating systems.
+    // See [JDK-8343823](https://bugs.openjdk.org/browse/JDK-8344633).
+    private val createLinkFollowSymlinks: Boolean = with(Os) { !isLinux && !isWindows }
 
     override fun invoke(input: Hardlink): Either<HardlinkError, Unit> = either {
         val oldPath = fsState.pathResolver.resolve(

@@ -8,7 +8,7 @@ package at.released.weh.filesystem.op.readlink
 
 import arrow.core.getOrElse
 import assertk.assertThat
-import assertk.assertions.isIn
+import assertk.assertions.isEqualTo
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.path.virtual.VirtualPath
@@ -37,10 +37,7 @@ class ReadLinkTest : BaseFileSystemIntegrationTest() {
                 error("Read symlink error: $it")
             }
 
-            assertThat(symlinkTarget).isIn(
-                "../target".toVirtualPath(),
-                "..\\target".toVirtualPath(), // TODO: fix on jvm windows, should be converted to /
-            )
+            assertThat(symlinkTarget.toString()).isEqualTo("../target")
         }
     }
 }
