@@ -19,6 +19,7 @@ import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.toKString
 import kotlinx.cinterop.usePinned
 import platform.posix.EACCES
 import platform.posix.EINVAL
@@ -36,7 +37,7 @@ internal fun posixGetcwd(): Either<GetCurrentWorkingDirectoryError, PosixRealPat
     }
     return if (cwd != null) {
         Either.catch {
-            byteArray.decodeToString(throwOnInvalidSequence = true)
+            byteArray.toKString(throwOnInvalidSequence = true)
         }
             .mapLeft { InvalidArgument("Can not parse real path") }
             .flatMap { realPathString ->

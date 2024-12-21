@@ -11,7 +11,6 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
@@ -22,7 +21,7 @@ internal fun getCurrentWorkingDirectoryVirtualPath(): Either<OpenError, VirtualP
         .mapLeft { it.toOpenError() }
         .flatMap { absolutePath ->
             toVirtualPath(absolutePath)
-                .mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
+                .mapLeft(PathError::toResolveRelativePathErrors)
         }
 }
 

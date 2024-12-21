@@ -18,11 +18,12 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
+import at.released.weh.filesystem.path.real.posix.PosixPathConverter
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.NativeDirectoryFd.Companion.CURRENT_WORKING_DIRECTORY
-import at.released.weh.filesystem.posix.nativefunc.getCurrentWorkingDirectoryVirtualPath
 import at.released.weh.filesystem.posix.nativefunc.posixClose
 import at.released.weh.filesystem.preopened.BatchDirectoryOpener
 import at.released.weh.filesystem.preopened.PreopenedDirectory
@@ -50,7 +51,7 @@ internal class PosixDirectoryPreopener(
         val absoluteVirtualPath: VirtualPath = if (virtualPath != CURRENT_DIRECTORY_VIRTUAL_PATH) {
             virtualPath
         } else {
-            getCurrentWorkingDirectoryVirtualPath().getOrElse { return it.left() }
+            PosixPathConverter.toVirtualPath(path).getOrElse { return it.toResolveRelativePathErrors().left() }
         }
 
         return posixOpen(

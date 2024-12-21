@@ -14,7 +14,6 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
@@ -57,7 +56,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
     private fun PreopenedDirectory.preopen(
         cwd: D?,
     ): Either<DirectoryOpenError, D> = pathFactory.create(realPath)
-        .mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
+        .mapLeft(PathError::toResolveRelativePathErrors)
         .flatMap { realPath -> preopenDirectory(realPath, virtualPath, cwd) }
         .mapLeft { DirectoryOpenError(this, it) }
 
