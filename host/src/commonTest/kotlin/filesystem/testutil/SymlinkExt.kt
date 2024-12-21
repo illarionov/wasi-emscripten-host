@@ -8,6 +8,8 @@ package at.released.weh.filesystem.testutil
 
 import kotlinx.io.files.Path
 
+internal expect fun normalizeTargetPath(path: String): String
+
 internal expect fun createSymlink(
     oldPath: String,
     newPath: Path,

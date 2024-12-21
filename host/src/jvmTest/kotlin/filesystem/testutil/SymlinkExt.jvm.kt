@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.testutil
 
+import at.released.weh.filesystem.ext.Os
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.test.ignore.annotations.dynamic.DynamicIgnoreTarget
 import at.released.weh.test.ignore.annotations.dynamic.isCurrentSystem
@@ -47,5 +48,13 @@ private fun createDirectoryLinkOnWindows(
         } finally {
             tempDirectory.deleteIfExists()
         }
+    }
+}
+
+actual fun normalizeTargetPath(path: String): String {
+    return if (Os.isWindows) {
+        return path.replace('/', '\\')
+    } else {
+        return path
     }
 }

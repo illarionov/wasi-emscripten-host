@@ -9,6 +9,8 @@ package at.released.weh.filesystem.testutil
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.test.utils.TempFolder
+import at.released.weh.test.utils.absolutePath
+import kotlinx.io.files.Path
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
@@ -26,11 +28,13 @@ public abstract class BaseFileSystemIntegrationTest {
         tempFolder.delete()
     }
 
-    open fun createTestFileSystem(): FileSystem = DefaultTestFileSystem(
+    open fun createTestFileSystem(
+        root: Path = tempFolder.absolutePath(),
+    ): FileSystem = DefaultTestFileSystem(
         engine = getDefaultTestEngine(),
     ) {
         this.directories {
-            currentWorkingDirectory = tempFolder.path
+            currentWorkingDirectory = root.toString()
         }
     }
 }

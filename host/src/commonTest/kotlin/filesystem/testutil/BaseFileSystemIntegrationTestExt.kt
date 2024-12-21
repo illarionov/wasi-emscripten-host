@@ -22,9 +22,6 @@ internal const val TEST_FILE_NAME = "testfile.txt"
 internal const val TEST_CONTENT = "Test Content"
 internal const val TEST_LINK = "testlink"
 
-internal val BaseFileSystemIntegrationTest.root: Path
-    get() = tempFolder.absolutePath()
-
 internal val BaseFileSystemIntegrationTest.tempFolderDirectoryFd: DirectoryFd
     get() = DirectoryFd(WASI_FIRST_PREOPEN_FD)
 
@@ -68,7 +65,7 @@ internal fun TempFolder.createTestSymlink(
     type: SymlinkType = SymlinkType.NOT_SPECIFIED,
 ): Path {
     val newAbsolutePath = path(newPath)
-    createSymlink(oldPath, newAbsolutePath, type)
+    createSymlink(normalizeTargetPath(oldPath), newAbsolutePath, type)
     return newAbsolutePath
 }
 

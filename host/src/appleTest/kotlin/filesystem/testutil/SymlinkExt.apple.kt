@@ -20,3 +20,5 @@ internal actual fun createSymlink(oldPath: String, newPath: Path, type: SymlinkT
         )
     }
 }
+
+actual fun normalizeTargetPath(path: String): String = path
