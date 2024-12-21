@@ -11,17 +11,20 @@ import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
+import at.released.weh.ext.flatMapLeft
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.internal.FileDescriptorTable
+import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
+import at.released.weh.filesystem.path.real.windows.WindowsPathType
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.real.windows.normalizeWindowsPath
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtObjectManagerPath
@@ -106,28 +109,44 @@ internal class WindowsPathResolver(
         if (!withRootAccess && path.isAbsolute()) {
             raise(PathError.AbsolutePath("Can not open absolute path"))
         }
-        val baseDirectoryHandle = getBaseDirectory(directory).bind()?.handle
-        return if (baseDirectoryHandle == null) {
-            resolveAbsoluteNtPath(path)
-        } else {
-            resolveRelativeNtPath(baseDirectoryHandle, path)
+
+        return when (directory) {
+            BaseDirectory.CurrentWorkingDirectory -> {
+                val channel: WindowsDirectoryChannel? = if (currentWorkingDirectoryFd != INVALID_FD) {
+                    getDirectoryChannel(currentWorkingDirectoryFd).flatMapLeft { error: ResolvePathError ->
+                        when (error) {
+                            is PathError.FileDescriptorNotOpen -> null.right()
+                            else -> error.left()
+                        }
+                    }
+                        .bind()
+                } else {
+                    null
+                }
+
+                resolveAbsoluteNtPath(path, channel?.handle)
+            }
+
+            is BaseDirectory.DirectoryFd -> getDirectoryChannel(directory.fd)
+                .flatMap { channel -> resolveRelativeNtPath(channel.handle, path) }
         }
     }
 
     private fun resolveAbsoluteNtPath(
         path: VirtualPath,
+        currentWorkingDirectory: HANDLE?,
     ): Either<ResolvePathError, NtPath> = either {
-        if (!withRootAccess) {
-            raise(PathError.FileDescriptorNotOpen("Can not open base directory"))
+        val windowsRealPath = WindowsPathConverter.fromVirtualPath(path).withResolvePathError().bind()
+        return if (currentWorkingDirectory != null && windowsRealPath.type == WindowsPathType.RELATIVE) {
+            WindowsNtRelativePath.create(windowsRealPath.kString)
+                .map { NtPath.Relative(currentWorkingDirectory, it) }
+                .withResolvePathError()
+        } else {
+            if (!withRootAccess) {
+                raise(PathError.AbsolutePath("Can not open absolute path"))
+            }
+            windowsRealPath.toNtPath().map(NtPath::Absolute)
         }
-        if (!path.isAbsolute()) {
-            raise(PathError.InvalidPathFormat("Path is not absolute"))
-        }
-
-        return WindowsPathConverter.fromVirtualPath(path)
-            .withResolvePathError()
-            .flatMap(WindowsRealPath::toNtPath)
-            .map(NtPath::Absolute)
     }
 
     private fun resolveRelativeNtPath(
@@ -153,7 +172,7 @@ internal class WindowsPathResolver(
     fun getBaseDirectory(
         directory: BaseDirectory,
     ): Either<ResolvePathError, WindowsDirectoryChannel?> = when (directory) {
-        BaseDirectory.CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != FileDescriptorTable.INVALID_FD) {
+        BaseDirectory.CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
             getDirectoryChannel(currentWorkingDirectoryFd)
         } else {
             null.right()
