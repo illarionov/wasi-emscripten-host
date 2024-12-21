@@ -19,6 +19,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.error.StatError
+import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
@@ -27,7 +28,7 @@ import at.released.weh.filesystem.posix.nativefunc.posixClose
 
 internal class AppleDirectoryFdResource(
     channel: PosixDirectoryChannel,
-) : PosixDirectoryFdResource(channel) {
+) : PosixDirectoryFdResource(channel), FdResource {
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return appleFdAttributes(channel.nativeFd, channel.rights)
     }
