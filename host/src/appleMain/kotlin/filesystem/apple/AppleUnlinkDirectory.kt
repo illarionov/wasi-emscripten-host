@@ -11,12 +11,19 @@ import at.released.weh.filesystem.apple.nativefunc.appleUnlinkDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkDirectory
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class AppleUnlinkDirectory(
-    private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<UnlinkDirectory, UnlinkError, Unit> {
     override fun invoke(input: UnlinkDirectory): Either<UnlinkError, Unit> =
-        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
-            appleUnlinkDirectory(baseDirectory, realPath)
+        fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, baseDirectory ->
+            appleUnlinkDirectory(baseDirectory.nativeFd, realPath)
         }
 }

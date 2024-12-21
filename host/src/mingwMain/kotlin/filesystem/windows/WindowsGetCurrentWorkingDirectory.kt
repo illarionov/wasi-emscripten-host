@@ -15,44 +15,42 @@ import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
+import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
-import at.released.weh.filesystem.path.real.windows.WindowsRealPath
+import at.released.weh.filesystem.path.toGetCwdError
+import at.released.weh.filesystem.path.toResolvePathError
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import kotlinx.cinterop.ByteVarOf
-import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.usePinned
-import platform.posix.EACCES
-import platform.posix.EINVAL
-import platform.posix.ENAMETOOLONG
-import platform.posix.ENOENT
-import platform.posix.PATH_MAX
-import platform.posix.errno
-import platform.posix.getcwd
+import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
+import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
+import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
 
-internal class WindowsGetCurrentWorkingDirectory :
-    FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, VirtualPath> {
+internal class WindowsGetCurrentWorkingDirectory(
+    private val pathResolver: WindowsPathResolver,
+) : FileSystemOperationHandler<GetCurrentWorkingDirectory, GetCurrentWorkingDirectoryError, VirtualPath> {
     override fun invoke(input: GetCurrentWorkingDirectory): Either<GetCurrentWorkingDirectoryError, VirtualPath> {
-        val byteArray = ByteArray(PATH_MAX)
-        // TODO: change
-        val cwd: CPointer<ByteVarOf<Byte>>? = byteArray.usePinned { bytes ->
-            getcwd(bytes.addressOf(0), PATH_MAX)
-        }
-        return if (cwd != null) {
-            WindowsRealPath.create(byteArray.decodeToString())
-                .flatMap { realPath -> WindowsPathConverter.toVirtualPath(realPath) }
-                .mapLeft { error -> InvalidArgument(error.message) }
-        } else {
-            errno.errnoToGetCurrentWorkingDirectoryError().left()
-        }
-    }
+        return pathResolver.getBaseDirectory(CurrentWorkingDirectory)
+            .mapLeft<GetCurrentWorkingDirectoryError>(ResolvePathError::toGetCwdError)
+            .flatMap { cwdChannel: WindowsDirectoryChannel? ->
+                when {
+                    cwdChannel != null -> cwdChannel.handle.getFinalPath()
+                        .mapLeft<GetCurrentWorkingDirectoryError>(GetFinalPathError::toGetCwdError)
+                        .flatMap { windowsRealPath ->
+                            WindowsPathConverter.toVirtualPath(windowsRealPath)
+                                .mapLeft { it.toResolvePathError().toGetCwdError() }
+                        }
 
-    private fun Int.errnoToGetCurrentWorkingDirectoryError(): GetCurrentWorkingDirectoryError = when (this) {
-        EACCES -> AccessDenied("Access denied")
-        EINVAL -> InvalidArgument("Invalid argument")
-        ENAMETOOLONG -> NameTooLong("Current working directory name too long")
-        ENOENT -> NoEntry("Current working directory has been unlinked")
-        else -> InvalidArgument("Unexpected error `$this`")
+                    else -> NoEntry("Current directory not set").left()
+                }
+            }
     }
+}
+
+private fun GetFinalPathError.toGetCwdError(): GetCurrentWorkingDirectoryError = when (this) {
+    is GetFinalPathError.AccessDenied -> AccessDenied("Access denied")
+    is GetFinalPathError.InvalidHandle -> AccessDenied("Invalid handle")
+    is GetFinalPathError.InvalidPathFormat -> InvalidArgument("Invalid argument")
+    is GetFinalPathError.MaxAttemptsReached -> NameTooLong("Current working directory name too long")
+    is GetFinalPathError.OtherError -> InvalidArgument("Error `${this.message}`")
 }

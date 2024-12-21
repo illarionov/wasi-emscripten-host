@@ -17,7 +17,6 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE

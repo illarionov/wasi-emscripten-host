@@ -12,16 +12,16 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.PrestatError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxDirectoryFdResource
 import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.prestat.PrestatResult
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
 
 internal class LinuxPrestatFd(
     private val fsState: LinuxFileSystemState,
 ) : FileSystemOperationHandler<PrestatFd, PrestatError, PrestatResult> {
     override fun invoke(input: PrestatFd): Either<PrestatError, PrestatResult> {
-        val resource = fsState.get(input.fd) as? LinuxDirectoryFdResource
+        val resource = (fsState.get(input.fd) as? PosixDirectoryFdResource)?.channel
         val path = if (resource?.isPreopened == true) {
             resource.virtualPath
         } else {

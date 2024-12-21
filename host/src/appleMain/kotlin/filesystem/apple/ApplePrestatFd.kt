@@ -9,20 +9,20 @@ package at.released.weh.filesystem.apple
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.PrestatError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.prestat.PrestatResult
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
 
 internal class ApplePrestatFd(
     private val fsState: AppleFileSystemState,
 ) : FileSystemOperationHandler<PrestatFd, PrestatError, PrestatResult> {
     override fun invoke(input: PrestatFd): Either<PrestatError, PrestatResult> {
-        val resource = fsState.get(input.fd) as? AppleDirectoryFdResource
-        val path = if (resource?.isPreopened == true) {
-            resource.virtualPath
+        val resource = fsState.get(input.fd) as? PosixDirectoryFdResource
+        val path = if (resource?.channel?.isPreopened == true) {
+            resource.channel.virtualPath
         } else {
             null
         }

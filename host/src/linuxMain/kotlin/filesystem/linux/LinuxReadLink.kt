@@ -11,21 +11,26 @@ import arrow.core.flatMap
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxReadLink
 import at.released.weh.filesystem.op.readlink.ReadLink
 import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.posix.PosixPathConverter.toVirtualPath
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxReadLink(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> {
-        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
-            linuxReadLink(realBaseDirectory, realPath)
+        return fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, realBaseDirectory ->
+            linuxReadLink(realBaseDirectory.nativeFd, realPath)
         }.flatMap { targetRealPath: PosixRealPath ->
             toVirtualPath(targetRealPath).mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
         }

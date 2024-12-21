@@ -7,8 +7,10 @@
 package at.released.weh.filesystem.path
 
 import arrow.core.Either
+import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
+import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
@@ -88,4 +90,14 @@ internal fun ResolvePathError.toResolveRelativePathErrors(): ResolveRelativePath
     is PathError.AbsolutePath -> NotCapable(message)
     is PathError.PathOutsideOfRootPath -> NotCapable(message)
     is PathError.IoError -> BadFileDescriptor(message)
+}
+
+internal fun ResolvePathError.toGetCwdError(): GetCurrentWorkingDirectoryError = when (this) {
+    is PathError.AbsolutePath -> InvalidArgument("Path is absolute")
+    is PathError.EmptyPath -> InvalidArgument("Path is empty")
+    is PathError.InvalidPathFormat -> InvalidArgument("Invalid path format")
+    is PathError.PathOutsideOfRootPath -> AccessDenied("Path outside of root")
+    is PathError.FileDescriptorNotOpen -> AccessDenied("Invalid handle")
+    is PathError.IoError -> InvalidArgument("Can not read current directory")
+    is PathError.NotDirectory -> AccessDenied("Not a directory")
 }

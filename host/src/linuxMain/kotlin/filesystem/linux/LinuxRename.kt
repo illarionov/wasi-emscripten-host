@@ -9,17 +9,27 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxRename
 import at.released.weh.filesystem.op.rename.Rename
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxRename(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Rename, RenameError, Unit> {
     override fun invoke(input: Rename): Either<RenameError, Unit> {
-        return fsState.executeWithPath(input.oldPath, input.oldBaseDirectory) { oldRealPath, oldBaseDirectory ->
-            fsState.executeWithPath(input.newPath, input.newBaseDirectory) { newRealPath, newBaseDirectory ->
-                linuxRename(oldBaseDirectory, oldRealPath, newBaseDirectory, newRealPath)
+        return fsExecutor.executeWithPath(
+            input.oldPath,
+            input.oldBaseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { oldRealPath, oldBaseDirectory ->
+            fsExecutor.executeWithPath(
+                input.newPath,
+                input.newBaseDirectory,
+                ResolvePathError::toResolveRelativePathErrors,
+            ) { newRealPath, newBaseDirectory ->
+                linuxRename(oldBaseDirectory.nativeFd, oldRealPath, newBaseDirectory.nativeFd, newRealPath)
             }
         }
     }

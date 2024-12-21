@@ -9,15 +9,21 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.MkdirError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxMkdir
 import at.released.weh.filesystem.op.mkdir.Mkdir
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxMkdir(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
-        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
-            linuxMkdir(realBaseDirectory, realPath, input.mode, input.failIfExists)
+        fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, realBaseDirectory ->
+            linuxMkdir(realBaseDirectory.nativeFd, realPath, input.mode, input.failIfExists)
         }
 }

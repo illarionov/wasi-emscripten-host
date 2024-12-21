@@ -25,7 +25,6 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
-import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioRealPath
@@ -43,12 +42,12 @@ import java.nio.file.FileSystem as NioFileSystem
 internal class NioFileSystemState private constructor(
     val isRootAccessAllowed: Boolean,
     preopenedDescriptors: Map<FileDescriptor, FdResource>,
-    val currentDirectoryFd: FileDescriptor,
+    currentDirectoryFd: FileDescriptor,
     val javaFs: NioFileSystem = FileSystems.getDefault(),
 ) : AutoCloseable {
     val fdsLock: Lock = ReentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(preopenedDescriptors)
-    val pathResolver: JvmPathResolver = JvmPathResolver(javaFs, this)
+    val pathResolver: JvmPathResolver = JvmPathResolver(javaFs, currentDirectoryFd, this)
 
     fun <E : FileSystemOperationError> addFile(
         path: NioRealPath,

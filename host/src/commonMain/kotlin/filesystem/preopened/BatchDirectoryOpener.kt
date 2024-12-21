@@ -14,7 +14,6 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.real.RealPath
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
@@ -23,10 +22,7 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
     private val pathFactory: RealPath.Factory<P>,
 ) {
-    private val currentDirectoryVirtualPath =
-        VirtualPath.create(".").getOrElse { error("Can not create virtual path for CWD") }
-
-    internal fun preopen(
+    internal open fun preopen(
         currentWorkingDirectoryPath: String?,
         preopenedDirectories: List<PreopenedDirectory> = listOf(),
     ): Either<DirectoryOpenError, PreopenedDirectories<D>> {
@@ -37,7 +33,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
                     .flatMap { cwdRealPath ->
                         preopenDirectory(
                             path = cwdRealPath,
-                            virtualPath = currentDirectoryVirtualPath,
+                            virtualPath = CURRENT_DIRECTORY_VIRTUAL_PATH,
                             baseDirectoryFd = null,
                         )
                     }
@@ -60,7 +56,7 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
     private fun PreopenedDirectory.preopen(
         cwd: D?,
     ): Either<DirectoryOpenError, D> = pathFactory.create(realPath)
-        .mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)
+        .mapLeft(PathError::toResolveRelativePathErrors)
         .flatMap { realPath -> preopenDirectory(realPath, virtualPath, cwd) }
         .mapLeft { DirectoryOpenError(this, it) }
 
@@ -87,4 +83,10 @@ internal abstract class BatchDirectoryOpener<P : RealPath, D : Any>(
         val directory: PreopenedDirectory,
         val error: OpenError,
     )
+
+    internal companion object {
+        val CURRENT_DIRECTORY_VIRTUAL_PATH = VirtualPath.create(".").getOrElse {
+            error("Can not create virtual path for CWD")
+        }
+    }
 }

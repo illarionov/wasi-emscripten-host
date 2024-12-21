@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.nio.cwd
+package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
@@ -15,10 +15,9 @@ import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
-import at.released.weh.filesystem.nio.NioFileSystemState
+import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
-import at.released.weh.filesystem.path.PathError.NotDirectory
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
@@ -30,6 +29,7 @@ import kotlin.io.path.isDirectory
 
 internal class JvmPathResolver(
     private val javaFs: java.nio.file.FileSystem,
+    private var currentWorkingDirectoryFd: FileDescriptor,
     private val fsState: NioFileSystemState,
     private val pathConverter: NioPathConverter = NioPathConverter(javaFs),
     private val pathFactory: NioRealPathFactory = NioRealPathFactory(javaFs),
@@ -40,17 +40,15 @@ internal class JvmPathResolver(
         followSymlinks: Boolean,
     ): Either<ResolvePathError, NioRealPath> {
         val baseDirectoryPath: Either<ResolvePathError, NioRealPath> = when (baseDirectory) {
-            CurrentWorkingDirectory -> pathFactory.create(javaFs.getPath(".")).right()
-            is DirectoryFd -> when (val fdResource = fsState.get(baseDirectory.fd)) {
-                null -> FileDescriptorNotOpen("Directory File descriptor ${baseDirectory.fd} is not open").left()
-                !is NioDirectoryFdResource -> NotDirectory("Base path `$path` is not a directory").left()
-                else -> fdResource.path.right()
-            }
-        }.flatMap { basePath: NioRealPath ->
+            CurrentWorkingDirectory -> getDirectoryChannel(currentWorkingDirectoryFd)
+            is DirectoryFd -> getDirectoryChannel(baseDirectory.fd)
+        }.flatMap { directoryChannel: NioDirectoryFdResource ->
+            val basePath = directoryChannel.path
+            // check existence
             if (basePath.nio.isDirectory(options = asLinkOptions(followSymlinks))) {
                 basePath.right()
             } else {
-                NotDirectory("Base path `$path` is not a directory").left()
+                PathError.NotDirectory("Base path `$path` is not a directory").left()
             }
         }
 
@@ -69,6 +67,14 @@ internal class JvmPathResolver(
                     base.resolveBeneath(subPath, path.isAbsolute())
                 }
             }
+    }
+
+    private fun getDirectoryChannel(fd: FileDescriptor): Either<ResolvePathError, NioDirectoryFdResource> {
+        return when (val fdResource = fsState.get(fd)) {
+            null -> FileDescriptorNotOpen("Directory File descriptor $fd is not open").left()
+            !is NioDirectoryFdResource -> PathError.NotDirectory("Not a directory").left()
+            else -> fdResource.right()
+        }
     }
 
     private fun NioRealPath.resolveBeneath(

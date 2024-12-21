@@ -9,21 +9,24 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxCheckAccess
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxCheckAccess(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsState.executeWithPath(
+        fsExecutor.executeWithPath<CheckAccessError, Unit>(
             input.path,
             input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
         ) { realPath, realBaseDirectory ->
             linuxCheckAccess(
                 path = realPath,
-                baseDirectoryFd = realBaseDirectory,
+                baseDirectoryFd = realBaseDirectory.nativeFd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
                 followSymlinks = input.followSymlinks,

@@ -15,7 +15,6 @@ import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.nio.cwd.JvmPathResolver
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.toResolveRelativePathErrors

@@ -9,15 +9,21 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.linux.fdresource.LinuxFileSystemState
 import at.released.weh.filesystem.linux.native.linuxChmod
 import at.released.weh.filesystem.op.chmod.Chmod
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class LinuxChmod(
-    private val fsState: LinuxFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<Chmod, ChmodError, Unit> {
     override fun invoke(input: Chmod): Either<ChmodError, Unit> =
-        fsState.executeWithPath(input.path, input.baseDirectory) { realPath, realBaseDirectory ->
-            linuxChmod(realBaseDirectory, realPath, input.mode, input.followSymlinks)
+        fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, realBaseDirectory ->
+            linuxChmod(realBaseDirectory.nativeFd, realPath, input.mode, input.followSymlinks)
         }
 }

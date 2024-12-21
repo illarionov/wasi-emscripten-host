@@ -13,24 +13,19 @@ import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
-import at.released.weh.filesystem.error.NotDirectory
-import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.FileDescriptorTable
-import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
 import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
-import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
-import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
+import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
-import at.released.weh.filesystem.path.real.posix.PosixPathConverter
-import at.released.weh.filesystem.path.real.posix.PosixRealPath
-import at.released.weh.filesystem.path.virtual.VirtualPath
-import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryPreopener
+import at.released.weh.filesystem.posix.fdresource.PosixPathResolver
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import kotlinx.atomicfu.locks.ReentrantLock
@@ -47,7 +42,7 @@ internal class LinuxFileSystemState private constructor(
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )
-    val pathResolver = PathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
+    val pathResolver = PosixPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
@@ -64,13 +59,10 @@ internal class LinuxFileSystemState private constructor(
     }
 
     fun addDirectory(
-        nativeFd: NativeDirectoryFd,
-        virtualPath: VirtualPath,
-        isPreopened: Boolean = false,
-        rights: FdRightsBlock,
-    ): Either<Nfile, Pair<FileDescriptor, LinuxDirectoryFdResource>> = fdsLock.withLock {
+        channel: PosixDirectoryChannel,
+    ): Either<Nfile, Pair<FileDescriptor, PosixDirectoryFdResource>> = fdsLock.withLock {
         fileDescriptors.allocate { _ ->
-            LinuxDirectoryFdResource(nativeFd, isPreopened, virtualPath, rights).right()
+            LinuxDirectoryFdResource(channel).right()
         }
     }
 
@@ -87,25 +79,6 @@ internal class LinuxFileSystemState private constructor(
         @Suppress("UNCHECKED_CAST")
         val resource: FdResource = get(fd) ?: return (BadFileDescriptor(fileDescriptorNotOpenMessage(fd)) as E).left()
         return block(resource)
-    }
-
-    inline fun <E : FileSystemOperationError, R : Any> executeWithPath(
-        path: VirtualPath,
-        baseDirectory: BaseDirectory,
-        crossinline block: (path: PosixRealPath, directoryNativeFdOrCwd: NativeDirectoryFd) -> Either<E, R>,
-    ): Either<E, R> {
-        val realPath = PosixPathConverter.toRealPath(path)
-            .getOrElse { bfe ->
-                @Suppress("UNCHECKED_CAST")
-                return (bfe as E).left()
-            }
-
-        val nativeFd: NativeDirectoryFd = pathResolver.resolveNativeDirectoryFd(baseDirectory)
-            .getOrElse { bfe ->
-                @Suppress("UNCHECKED_CAST")
-                return (bfe as E).left()
-            }
-        return block(realPath, nativeFd)
     }
 
     fun renumber(
@@ -141,34 +114,6 @@ internal class LinuxFileSystemState private constructor(
         }
     }
 
-    class PathResolver(
-        private val fileDescriptors: FileDescriptorTable<FdResource>,
-        private val fsLock: ReentrantLock,
-        private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD,
-    ) {
-        fun resolveNativeDirectoryFd(
-            directory: BaseDirectory,
-        ): Either<FileSystemOperationError, NativeDirectoryFd> = when (directory) {
-            CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
-                getDirectoryNativeFd(currentWorkingDirectoryFd)
-            } else {
-                BadFileDescriptor("Current directory not opened").left()
-            }
-
-            is DirectoryFd -> getDirectoryNativeFd(directory.fd)
-        }
-
-        private fun getDirectoryNativeFd(
-            fd: FileDescriptor,
-        ): Either<FileSystemOperationError, NativeDirectoryFd> = fsLock.withLock {
-            when (val fdResource = fileDescriptors[fd]) {
-                null -> BadFileDescriptor("Directory File descriptor $fd is not open").left()
-                !is LinuxDirectoryFdResource -> NotDirectory("FD $fd is not a directory").left()
-                else -> fdResource.nativeFd.right()
-            }
-        }
-    }
-
     companion object {
         @Throws(IOException::class)
         fun create(
@@ -176,23 +121,23 @@ internal class LinuxFileSystemState private constructor(
             currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
         ): LinuxFileSystemState {
-            val (cwdResult, directories) = LinuxDirectoryPreopener.preopen(
+            val (cwdResult, directories) = PosixDirectoryPreopener(::linuxOpenRaw).preopen(
                 currentWorkingDirectory,
                 preopenedDirectories,
             ).getOrElse { openError ->
                 throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
             }
 
-            val preopened: MutableMap<FileDescriptor, LinuxDirectoryFdResource> =
+            val preopened: MutableMap<FileDescriptor, PosixDirectoryFdResource> =
                 directories.indices.associateTo(mutableMapOf()) { index ->
-                    index + WASI_FIRST_PREOPEN_FD to directories[index]
+                    index + WASI_FIRST_PREOPEN_FD to LinuxDirectoryFdResource(directories[index])
                 }
 
             val currentWorkingDirectoryFd: FileDescriptor = cwdResult.fold(
                 ifLeft = { -1 },
-            ) { resource: LinuxDirectoryFdResource ->
+            ) { channel ->
                 val fd = WASI_FIRST_PREOPEN_FD + directories.size
-                preopened[fd] = resource
+                preopened[fd] = LinuxDirectoryFdResource(channel)
                 fd
             }
 

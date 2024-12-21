@@ -16,6 +16,6 @@ internal object PosixPathConverter {
     }
 
     fun toVirtualPath(path: PosixRealPath): Either<PathError, VirtualPath> {
-        return VirtualPath.Companion.create(path.utf8Bytes)
+        return VirtualPath.create(path.utf8Bytes)
     }
 }

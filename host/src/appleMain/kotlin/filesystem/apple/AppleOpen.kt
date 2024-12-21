@@ -9,52 +9,58 @@ package at.released.weh.filesystem.apple
 import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
-import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.apple.nativefunc.FileDirectoryFd
 import at.released.weh.filesystem.apple.nativefunc.appleOpenFileOrDirectory
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.fdrights.FdRightsBlock.Companion.DIRECTORY_BASE_RIGHTS_BLOCK
 import at.released.weh.filesystem.fdrights.getChildDirectoryRights
 import at.released.weh.filesystem.fdrights.getChildFileRights
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.internal.op.checkOpenFlags
-import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
+import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 
 internal class AppleOpen(
     private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor = fsState.pathResolver,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
         checkOpenFlags(input.openFlags, input.rights, input.path.isDirectoryRequest()).onLeft { return it.left() }
-
-        return fsState.executeWithPath(input.path, input.baseDirectory) { realPath, baseDirectory ->
-            val baseDirectoryRights = (input.baseDirectory as? DirectoryFd)?.let { baseDirectoryFd ->
-                (fsState.get(baseDirectoryFd.fd) as? AppleDirectoryFdResource)?.rights
-            } ?: DIRECTORY_BASE_RIGHTS_BLOCK
-
+        return fsExecutor.executeWithPath(
+            input.path,
+            input.baseDirectory,
+            ResolvePathError::toResolveRelativePathErrors,
+        ) { realPath, baseDirectory: PosixDirectoryChannel ->
+            val baseDirectoryRights = baseDirectory.rights
             appleOpenFileOrDirectory(
-                baseDirectoryFd = baseDirectory,
+                baseDirectoryFd = baseDirectory.nativeFd,
                 path = realPath,
                 flags = input.openFlags,
                 fdFlags = input.fdFlags,
                 mode = input.mode,
-            ).flatMap { nativeChannel: FileDirectoryFd ->
-                when (nativeChannel) {
+            ).flatMap { fileOrDirectory: FileDirectoryFd ->
+                when (fileOrDirectory) {
                     is FileDirectoryFd.File -> fsState.addFile(
                         NativeFileChannel(
-                            fd = nativeChannel.fd,
+                            fd = fileOrDirectory.fd,
                             rights = baseDirectoryRights.getChildFileRights(input.rights),
                         ),
                     )
 
-                    is FileDirectoryFd.Directory -> fsState.addDirectory(
-                        nativeFd = nativeChannel.fd,
-                        virtualPath = input.path,
-                        rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
-                    )
+                    is FileDirectoryFd.Directory -> {
+                        val channel = PosixDirectoryChannel(
+                            nativeFd = fileOrDirectory.fd,
+                            isPreopened = false,
+                            virtualPath = input.path,
+                            rights = baseDirectoryRights.getChildDirectoryRights(input.rights),
+                        )
+                        fsState.addDirectory(channel)
+                    }
                 }
             }.map { (fd: FileDescriptor, _) -> fd }
         }

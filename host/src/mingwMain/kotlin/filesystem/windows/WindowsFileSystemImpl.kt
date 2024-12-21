@@ -77,7 +77,7 @@ internal class WindowsFileSystemImpl(
         FallocateFd to WindowsFallocate(fsState),
         FdAttributes to WindowsFdAttributes(fsState),
         Fdrenumber to WindowsFdrenumber(fsState),
-        GetCurrentWorkingDirectory to WindowsGetCurrentWorkingDirectory(),
+        GetCurrentWorkingDirectory to WindowsGetCurrentWorkingDirectory(fsState.pathResolver),
         Hardlink to WindowsHardlink(fsState.pathResolver),
         Mkdir to WindowsMkdir(fsState.pathResolver),
         PrestatFd to WindowsPrestatFd(fsState),

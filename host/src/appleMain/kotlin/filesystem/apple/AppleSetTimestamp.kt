@@ -11,16 +11,26 @@ import at.released.weh.filesystem.apple.nativefunc.appleSetTimestamp
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
+import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
 
 internal class AppleSetTimestamp(
-    private val fsState: AppleFileSystemState,
+    private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<SetTimestamp, SetTimestampError, Unit> {
     override fun invoke(
         input: SetTimestamp,
-    ): Either<SetTimestampError, Unit> = fsState.executeWithPath(
+    ): Either<SetTimestampError, Unit> = fsExecutor.executeWithPath(
         input.path,
         input.baseDirectory,
+        ResolvePathError::toResolveRelativePathErrors,
     ) { realPath, baseDirectory ->
-        appleSetTimestamp(baseDirectory, realPath, input.atimeNanoseconds, input.mtimeNanoseconds, input.followSymlinks)
+        appleSetTimestamp(
+            baseDirectory.nativeFd,
+            realPath,
+            input.atimeNanoseconds,
+            input.mtimeNanoseconds,
+            input.followSymlinks,
+        )
     }
 }
