@@ -15,6 +15,7 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createSymlink
+import at.released.weh.filesystem.testutil.normalizeTargetPath
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.files.Path
 import kotlin.test.Test
@@ -25,7 +26,7 @@ class ReadLinkTest : BaseFileSystemIntegrationTest() {
         val root: Path = tempFolder.absolutePath()
         val tempfolderFd = WASI_FIRST_PREOPEN_FD
 
-        createSymlink("../target", Path(root, "testlink"))
+        createSymlink(normalizeTargetPath("../target"), Path(root, "testlink"))
         createTestFileSystem().use { fileSystem ->
             val symlinkTarget: VirtualPath = fileSystem.execute(
                 ReadLink,

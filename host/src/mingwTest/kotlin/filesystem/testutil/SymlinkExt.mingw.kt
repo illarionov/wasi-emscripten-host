@@ -16,6 +16,8 @@ import platform.windows.GetLastError
 import platform.windows.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE
 import platform.windows.SYMBOLIC_LINK_FLAG_DIRECTORY
 
+actual fun normalizeTargetPath(path: String): String = path.replace('/', '\\')
+
 internal actual fun createSymlink(oldPath: String, newPath: Path, type: SymlinkType) {
     val flags = type.mask or SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE.toUInt()
 

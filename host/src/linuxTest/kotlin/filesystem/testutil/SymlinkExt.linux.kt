@@ -13,6 +13,8 @@ import platform.posix.errno
 import platform.posix.strerror
 import platform.posix.symlink
 
+actual fun normalizeTargetPath(path: String): String = path
+
 internal actual fun createSymlink(oldPath: String, newPath: Path, type: SymlinkType) {
     if (symlink(oldPath, newPath.toString()) < 0) {
         throw IOException(
