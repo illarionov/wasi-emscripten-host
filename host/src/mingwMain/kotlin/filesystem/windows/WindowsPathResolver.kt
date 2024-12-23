@@ -28,8 +28,6 @@ import at.released.weh.filesystem.path.real.windows.WindowsPathType
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.real.windows.normalizeWindowsPath
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtObjectManagerPath
-import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
-import at.released.weh.filesystem.path.toResolvePathError
 import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
@@ -40,7 +38,7 @@ import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess
 import at.released.weh.filesystem.windows.nativefunc.open.useFileForAttributeAccess
-import at.released.weh.filesystem.windows.path.NtPath
+import at.released.weh.filesystem.windows.path.ResolverPath
 import at.released.weh.filesystem.windows.win32api.filepath.GetFinalPathError
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath
 import at.released.weh.filesystem.windows.win32api.filepath.toResolveRelativePathError
@@ -53,7 +51,7 @@ internal class WindowsPathResolver(
     private val fileDescriptors: FileDescriptorTable<FdResource>,
     private val fdsLock: ReentrantLock,
     private var currentWorkingDirectoryFd: FileDescriptor,
-    private val withRootAccess: Boolean,
+    internal val withRootAccess: Boolean,
 ) {
     fun <E : FileSystemOperationError, R : Any> executeWithOpenFileHandle(
         baseDirectory: BaseDirectory,
@@ -62,17 +60,19 @@ internal class WindowsPathResolver(
         access: AttributeDesiredAccess = AttributeDesiredAccess.READ_ONLY,
         errorMapper: (OpenError) -> E,
         block: (HANDLE) -> Either<E, R>,
-    ): Either<E, R> = getNtPath(baseDirectory, path)
-        .mapLeft { errorMapper(it.toResolveRelativePathErrors()) }
-        .flatMap { ntPath ->
-            useFileForAttributeAccess(
-                path = ntPath,
-                followSymlinks = followSymlinks,
-                access = access,
-                errorMapper = errorMapper,
-                block = block,
-            )
-        }
+    ): Either<E, R> {
+        return getPath(baseDirectory, path)
+            .mapLeft { errorMapper(it.toResolveRelativePathErrors()) }
+            .flatMap { resolverPath: ResolverPath ->
+                useFileForAttributeAccess(
+                    path = resolverPath,
+                    followSymlinks = followSymlinks,
+                    access = access,
+                    errorMapper = errorMapper,
+                    block = block,
+                )
+            }
+    }
 
     fun getWindowsPath(
         directory: BaseDirectory,
@@ -102,10 +102,10 @@ internal class WindowsPathResolver(
         }
     }
 
-    fun getNtPath(
+    fun getPath(
         directory: BaseDirectory,
         path: VirtualPath,
-    ): Either<ResolvePathError, NtPath> = either {
+    ): Either<ResolvePathError, ResolverPath> = either {
         if (!withRootAccess && path.isAbsolute()) {
             raise(PathError.AbsolutePath("Can not open absolute path"))
         }
@@ -124,49 +124,38 @@ internal class WindowsPathResolver(
                     null
                 }
 
-                resolveAbsoluteNtPath(path, channel?.handle)
+                resolveAbsolutePath(path, channel?.handle)
             }
 
             is BaseDirectory.DirectoryFd -> getDirectoryChannel(directory.fd)
-                .flatMap { channel -> resolveRelativeNtPath(channel.handle, path) }
+                .flatMap { channel ->
+                    if (path.isAbsolute()) {
+                        PathError.AbsolutePath("Path should not be absolute").left()
+                    } else {
+                        ResolverPath.RelativePath(channel.handle, path).right()
+                    }
+                }
         }
     }
 
-    private fun resolveAbsoluteNtPath(
+    private fun resolveAbsolutePath(
         path: VirtualPath,
         currentWorkingDirectory: HANDLE?,
-    ): Either<ResolvePathError, NtPath> = either {
-        val windowsRealPath = WindowsPathConverter.fromVirtualPath(path).withResolvePathError().bind()
-        return if (currentWorkingDirectory != null && windowsRealPath.type == WindowsPathType.RELATIVE) {
-            WindowsNtRelativePath.create(windowsRealPath.kString)
-                .map { NtPath.Relative(currentWorkingDirectory, it) }
-                .withResolvePathError()
-        } else {
-            if (!withRootAccess) {
-                raise(PathError.AbsolutePath("Can not open absolute path"))
+    ): Either<ResolvePathError, ResolverPath> = either {
+        val windowsRealPath: WindowsRealPath = WindowsPathConverter.fromVirtualPath(path).withResolvePathError().bind()
+        when {
+            currentWorkingDirectory != null && windowsRealPath.type == WindowsPathType.RELATIVE ->
+                ResolverPath.RelativePath(currentWorkingDirectory, path)
+
+            else -> {
+                if (!withRootAccess) {
+                    raise(PathError.AbsolutePath("Can not open absolute path"))
+                }
+                windowsRealPath.toNtPath()
+                    .map(ResolverPath::AbsoluteNtPath)
+                    .bind()
             }
-            windowsRealPath.toNtPath().map(NtPath::Absolute)
         }
-    }
-
-    private fun resolveRelativeNtPath(
-        baseHandle: HANDLE,
-        path: VirtualPath,
-    ): Either<ResolvePathError, NtPath> = either {
-        if (path.isAbsolute()) {
-            raise(PathError.AbsolutePath("Path should not absolute"))
-        }
-        val ntRelativePath: WindowsNtRelativePath = path.toRelativeNtPath().bind()
-        NtPath.Relative(baseHandle, ntRelativePath)
-    }
-
-    private fun VirtualPath.toRelativeNtPath(): Either<ResolvePathError, WindowsNtRelativePath> {
-        if (isAbsolute()) {
-            return PathError.AbsolutePath("Path should not be absolute").left()
-        }
-        return normalizeWindowsPath(toString())
-            .flatMap { canonizedPath -> WindowsNtRelativePath.create(canonizedPath) }
-            .mapLeft { it.toResolvePathError() }
     }
 
     fun getBaseDirectory(

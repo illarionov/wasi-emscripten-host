@@ -33,7 +33,7 @@ internal enum class WindowsPathType {
 
     /**
      * Path that is resolved relative to the drive of the current directory: `\Windows\System32`,
-     * `\Documents And Settings`, ...
+     * `\Documents And Settings`, etc
      */
     CURRENT_DRIVE_RELATIVE,
 

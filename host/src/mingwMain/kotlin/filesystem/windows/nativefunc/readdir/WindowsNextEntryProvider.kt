@@ -12,8 +12,8 @@ import at.released.weh.filesystem.path.real.windows.WindowsRealPath
 import at.released.weh.filesystem.path.real.windows.normalizeWindowsPath
 import at.released.weh.filesystem.posix.readdir.ReadDirResult
 import at.released.weh.filesystem.posix.readdir.ReadDirResult.Companion.readDirResult
-import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.close
+import at.released.weh.filesystem.windows.win32api.createfile.NtPath
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
 import at.released.weh.filesystem.windows.win32api.filepath.getFinalPath

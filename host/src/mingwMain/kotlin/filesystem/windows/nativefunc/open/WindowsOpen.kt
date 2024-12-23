@@ -30,11 +30,9 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_TMPFILE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_WRONLY
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.windows.path.NtPath
+import at.released.weh.filesystem.windows.path.ResolverPath
+import at.released.weh.filesystem.windows.path.isDirectoryRequest
 import at.released.weh.filesystem.windows.win32api.close
-import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
-import at.released.weh.filesystem.windows.win32api.createfile.toOpenError
-import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileAttributeTagInfo
 import platform.windows.FILE_ATTRIBUTE_DIRECTORY
 import platform.windows.FILE_ATTRIBUTE_NORMAL
@@ -59,13 +57,14 @@ import platform.windows.FILE_WRITE_THROUGH
 import platform.windows.HANDLE
 
 internal fun windowsOpenFileOrDirectory(
-    ntPath: NtPath,
+    path: ResolverPath,
+    withRootAccess: Boolean,
     @OpenFileFlagsType flags: OpenFileFlags,
     @FdflagsType fdFlags: Fdflags,
 ): Either<OpenError, FileDirectoryHandle> = either<OpenError, FileDirectoryHandle> {
     val isInAppendMode = fdFlags and FD_APPEND == FD_APPEND
     val fdFlagsNoAppend = fdFlags and FD_APPEND.inv()
-    val pathIsDirectoryRequest = ntPath.pathString.endsWith("\\")
+    val pathIsDirectoryRequest = path.isDirectoryRequest()
     val isDirectoryOrPathRequest = flags and OpenFileFlag.O_DIRECTORY == OpenFileFlag.O_DIRECTORY ||
             flags and OpenFileFlag.O_PATH == OpenFileFlag.O_PATH ||
             pathIsDirectoryRequest
@@ -84,29 +83,28 @@ internal fun windowsOpenFileOrDirectory(
     val followSymlinks = flags and O_NOFOLLOW != O_NOFOLLOW
     val createOptions = getCreateOptions(fdFlagsNoAppend, isDirectoryOrPathRequest, followSymlinks)
 
-    return windowsNtCreateFile(
-        ntPath = ntPath,
+    return windowsNtCreateFileEx(
+        path = path,
+        withRootAccess = withRootAccess,
         desiredAccess = desiredAccess,
         fileAttributes = fileAttributes,
         createDisposition = createDisposition,
         createOptions = createOptions,
-    )
-        .mapLeft(NtCreateFileResult::toOpenError)
-        .flatMap { handle: HANDLE ->
-            handle.getFileAttributeTagInfo()
-                .mapLeft(StatError::toOpenError)
-                .flatMap { attrs ->
-                    when {
-                        attrs.fileAttributes.isSymlinkOrReparsePoint -> {
-                            handle.close().onLeft { /* ignore error */ }
-                            TooManySymbolicLinks("Can not open symlink").left()
-                        }
-
-                        attrs.fileAttributes.isDirectory -> FileDirectoryHandle.Directory(handle).right()
-                        else -> FileDirectoryHandle.File(handle, isInAppendMode).right()
+    ).flatMap { handle: HANDLE ->
+        handle.getFileAttributeTagInfo()
+            .mapLeft(StatError::toOpenError)
+            .flatMap { attrs ->
+                when {
+                    attrs.fileAttributes.isSymlinkOrReparsePoint -> {
+                        handle.close().onLeft { /* ignore error */ }
+                        TooManySymbolicLinks("Can not open symlink").left()
                     }
+
+                    attrs.fileAttributes.isDirectory -> FileDirectoryHandle.Directory(handle).right()
+                    else -> FileDirectoryHandle.File(handle, isInAppendMode).right()
                 }
-        }
+            }
+    }
 }
 
 private fun getCreateDisposition(
@@ -196,7 +194,7 @@ private fun getCreateOptions(
     return flags
 }
 
-private fun StatError.toOpenError(): OpenError = if (this is OpenError) {
+internal fun StatError.toOpenError(): OpenError = if (this is OpenError) {
     this
 } else {
     IoError("Can not get stat of file handle: $this")

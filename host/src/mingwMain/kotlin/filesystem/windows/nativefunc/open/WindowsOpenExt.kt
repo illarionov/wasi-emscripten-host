@@ -16,27 +16,28 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_ONLY
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
-import at.released.weh.filesystem.windows.path.NtPath
+import at.released.weh.filesystem.windows.path.ResolverPath
 import at.released.weh.filesystem.windows.win32api.close
-import at.released.weh.filesystem.windows.win32api.createfile.NtCreateFileResult
-import at.released.weh.filesystem.windows.win32api.createfile.toOpenError
-import at.released.weh.filesystem.windows.win32api.createfile.windowsNtCreateFile
 import kotlinx.io.IOException
 import platform.windows.DELETE
 import platform.windows.FILE_OPEN
 import platform.windows.FILE_OPEN_REPARSE_POINT
 import platform.windows.FILE_READ_ATTRIBUTES
+import platform.windows.FILE_SHARE_DELETE
+import platform.windows.FILE_SHARE_READ
+import platform.windows.FILE_SHARE_WRITE
 import platform.windows.FILE_WRITE_ATTRIBUTES
 import platform.windows.HANDLE
 
 internal fun <E : FileSystemOperationError, R : Any> useFileForAttributeAccess(
-    path: NtPath,
+    path: ResolverPath,
+    withRootAccess: Boolean = false,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess = READ_ONLY,
     errorMapper: (OpenError) -> E,
     block: (HANDLE) -> Either<E, R>,
 ): Either<E, R> {
-    val handle: HANDLE = windowsOpenForAttributeAccess(path, followSymlinks, access)
+    val handle: HANDLE = windowsOpenForAttributeAccess(path, withRootAccess, followSymlinks, access)
         .mapLeft(errorMapper)
         .getOrElse { return it.left() }
 
@@ -73,9 +74,9 @@ private fun <E : FileSystemOperationError, R : Any> executeBlockSafe(
     ex.left().left()
 }
 
-// TODO: this is vulnerable to sandbox escaping using a symlink
 internal fun windowsOpenForAttributeAccess(
-    path: NtPath,
+    path: ResolverPath,
+    withRootAccess: Boolean = false,
     followSymlinks: Boolean = true,
     access: AttributeDesiredAccess,
 ): Either<OpenError, HANDLE> = either {
@@ -84,14 +85,15 @@ internal fun windowsOpenForAttributeAccess(
     } else {
         FILE_OPEN_REPARSE_POINT
     }
-
-    return windowsNtCreateFile(
-        ntPath = path,
+    return windowsNtCreateFileEx(
+        path = path,
+        withRootAccess = withRootAccess,
         desiredAccess = access.ntOpenDesiredAccess,
         fileAttributes = 0,
+        shareAccess = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
         createDisposition = FILE_OPEN,
         createOptions = createOptions,
-    ).mapLeft(NtCreateFileResult::toOpenError)
+    )
 }
 
 internal enum class AttributeDesiredAccess {

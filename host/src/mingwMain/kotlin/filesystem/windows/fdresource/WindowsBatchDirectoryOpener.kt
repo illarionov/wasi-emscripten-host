@@ -19,8 +19,8 @@ import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.BatchDirectoryOpener
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
-import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.close
+import at.released.weh.filesystem.windows.win32api.createfile.NtPath
 import at.released.weh.filesystem.windows.win32api.createfile.windowsNtOpenDirectory
 import at.released.weh.filesystem.windows.win32api.windowsDosPathNameToNtPathName
 import platform.windows.FILE_LIST_DIRECTORY
