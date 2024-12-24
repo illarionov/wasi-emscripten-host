@@ -9,15 +9,15 @@ package at.released.weh.filesystem.nio
 import arrow.core.Either
 import arrow.core.flatMap
 import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.readlink.ReadLink
-import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
-import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
 internal class NioReadLink(
@@ -27,7 +27,7 @@ internal class NioReadLink(
 ) : FileSystemOperationHandler<ReadLink, ReadLinkError, VirtualPath> {
     override fun invoke(input: ReadLink): Either<ReadLinkError, VirtualPath> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
-            resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
+            resolvePathResult.mapLeft(OpenError::toReadlinkError)
                 .flatMap { path -> readSymbolicLink(path.nio) }
                 .map<NioRealPath>(pathFactory::create)
                 .flatMap { target ->
@@ -35,4 +35,9 @@ internal class NioReadLink(
                         .mapLeft { error -> InvalidArgument(error.message) }
                 }
         }
+}
+
+private fun OpenError.toReadlinkError(): ReadLinkError = when (this) {
+    is ReadLinkError -> this
+    else -> IoError(this.message)
 }

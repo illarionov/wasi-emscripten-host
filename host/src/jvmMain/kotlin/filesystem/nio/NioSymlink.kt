@@ -8,14 +8,15 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.symlink.Symlink
-import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.toResolveRelativePathErrors
+import at.released.weh.filesystem.path.withPathErrorAsCommonError
 
 internal class NioSymlink(
     private val fsState: NioFileSystemState,
@@ -25,16 +26,22 @@ internal class NioSymlink(
         return fsState.executeWithPath(
             input.newPathBaseDirectory,
             input.newPath,
-        ) { resolvedPath: Either<ResolvePathError, NioRealPath> ->
-            val result: Either<SymlinkError, Unit> = resolvedPath.mapLeft { it.toResolveRelativePathErrors() }
-                .flatMap { newRealPath: NioRealPath ->
+        ) { resolvedPath: Either<OpenError, NioRealPath> ->
+            val result = resolvedPath.flatMap { newRealPath: NioRealPath ->
                     pathConverter.toRealPath(input.oldPath)
-                        .mapLeft { it.toResolveRelativePathErrors() }
+                        .withPathErrorAsCommonError()
                         .map { oldRealPath -> newRealPath to oldRealPath }
-                }.flatMap { (newPath, oldPath) ->
+                }
+                .mapLeft(OpenError::toSymlinkError)
+                .flatMap { (newPath: NioRealPath, oldPath: NioRealPath) ->
                     createSymlink(newPath.nio, oldPath.nio, input.allowAbsoluteOldPath)
                 }
             result
         }
     }
+}
+
+private fun OpenError.toSymlinkError(): SymlinkError = when (this) {
+    is SymlinkError -> this
+    else -> IoError(this.message)
 }

@@ -34,12 +34,15 @@ internal class NioPathConverter(
     internal fun toVirtualPath(
         path: NioRealPath,
     ): Either<PathError, VirtualPath> {
-        val virtualPathString = if (Os.isWindows) {
-            WindowsPathConverter.normalizeVirtualPathSlashes(path.kString)
-        } else {
-            path.kString
-        }
-
+        val virtualPathString = normalizeSlashes(path.kString)
         return VirtualPath.create(virtualPathString).mapLeft { InvalidPathFormat(it.message) }
+    }
+
+    internal companion object {
+        internal fun normalizeSlashes(src: String): String = if (Os.isWindows) {
+            WindowsPathConverter.normalizeVirtualPathSlashes(src)
+        } else {
+            src
+        }
     }
 }

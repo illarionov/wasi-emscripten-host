@@ -33,9 +33,7 @@ import at.released.weh.filesystem.op.opencreate.Open
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
-import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import com.sun.nio.file.ExtendedOpenOption
@@ -55,9 +53,7 @@ internal class NioOpen(
             input.path,
             input.baseDirectory,
             followSymlinks = followSymlinks,
-        )
-            .mapLeft(ResolvePathError::toResolveRelativePathErrors)
-            .bind()
+        ).bind()
 
         val openOptionsResult = getOpenOptions(input.openFlags, input.fdFlags)
         if (openOptionsResult.notImplementedFlags != 0U) {

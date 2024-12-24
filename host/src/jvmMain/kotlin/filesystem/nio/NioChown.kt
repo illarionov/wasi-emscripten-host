@@ -9,11 +9,11 @@ package at.released.weh.filesystem.nio
 import arrow.core.Either
 import arrow.core.flatMap
 import at.released.weh.filesystem.error.ChownError
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdresource.nio.nioSetPosixUserGroup
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.chown.Chown
-import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.toResolveRelativePathErrors
 
 internal class NioChown(
     private val fsState: NioFileSystemState,
@@ -22,7 +22,12 @@ internal class NioChown(
         input.baseDirectory,
         input.path,
     ) { resolvePathResult ->
-        resolvePathResult.mapLeft(ResolvePathError::toResolveRelativePathErrors)
+        resolvePathResult.mapLeft(OpenError::toChownError)
             .flatMap { path -> nioSetPosixUserGroup(path.nio, input.owner, input.group) }
     }
+}
+
+private fun OpenError.toChownError(): ChownError = when (this) {
+    is ChownError -> this
+    else -> IoError(this.message)
 }

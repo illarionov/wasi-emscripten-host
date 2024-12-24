@@ -64,7 +64,7 @@ internal class NioFileSystemImpl(
     private val fsState = NioFileSystemState.create(
         stdio,
         isRootAccessAllowed,
-        currentWorkingDirectory ?: ".",
+        currentWorkingDirectory,
         preopenedDirectories,
         javaFs,
     )

@@ -8,8 +8,14 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.error.AccessDenied
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.model.BaseDirectory
@@ -19,13 +25,25 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
 import at.released.weh.filesystem.path.ResolvePathError
+import at.released.weh.filesystem.path.SymlinkResolver
+import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent
+import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent.Directory
+import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent.Symlink
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
+import at.released.weh.filesystem.path.real.nio.NioPathConverter.Companion.normalizeSlashes
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
 import at.released.weh.filesystem.path.virtual.VirtualPath
-import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isAbsolute
 import at.released.weh.filesystem.path.withResolvePathError
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
+import java.io.IOException
+import java.nio.file.LinkOption.NOFOLLOW_LINKS
+import java.nio.file.NotLinkException
+import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isSymbolicLink
+import kotlin.io.path.readSymbolicLink
 
 internal class JvmPathResolver(
     private val javaFs: java.nio.file.FileSystem,
@@ -38,7 +56,7 @@ internal class JvmPathResolver(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
         followSymlinks: Boolean,
-    ): Either<ResolvePathError, NioRealPath> {
+    ): Either<OpenError, NioRealPath> {
         val baseDirectoryPath: Either<ResolvePathError, NioRealPath> = when (baseDirectory) {
             CurrentWorkingDirectory -> getDirectoryChannel(currentWorkingDirectoryFd)
             is DirectoryFd -> getDirectoryChannel(baseDirectory.fd)
@@ -52,21 +70,24 @@ internal class JvmPathResolver(
             }
         }
 
-        val nioPath: Either<ResolvePathError, NioRealPath> = pathConverter.toRealPath(path).withResolvePathError()
-
-        return Either.zipOrAccumulate(
-            { _, nioPathError -> nioPathError },
-            baseDirectoryPath,
-            nioPath,
-        ) { base, subPath -> base to subPath }
-            .flatMap { (base, subPath) ->
-                if (fsState.isRootAccessAllowed) {
+        return if (fsState.isRootAccessAllowed) {
+            Either.zipOrAccumulate(
+                { _, nioPathError -> nioPathError },
+                baseDirectoryPath,
+                pathConverter.toRealPath(path).withResolvePathError(),
+            ) { base, subPath -> base to subPath }
+                .flatMap { (base, subPath) ->
                     val finalPath = base.nio.resolve(subPath.nio).normalize()
                     pathFactory.create(finalPath).right()
-                } else {
-                    base.resolveBeneath(subPath, path.isAbsolute())
                 }
-            }
+                .withResolvePathErrorAsCommonError()
+        } else {
+            baseDirectoryPath
+                .withResolvePathErrorAsCommonError()
+                .flatMap { base: NioRealPath ->
+                    NioSymlinkResolver(base, path, followSymlinks, pathConverter, pathFactory).resolve()
+                }
+        }
     }
 
     private fun getDirectoryChannel(fd: FileDescriptor): Either<ResolvePathError, NioDirectoryFdResource> {
@@ -77,25 +98,61 @@ internal class JvmPathResolver(
         }
     }
 
-    private fun NioRealPath.resolveBeneath(
-        other: NioRealPath,
-        otherSourceIsAbsolute: Boolean,
-    ): Either<ResolvePathError, NioRealPath> {
-        if (otherSourceIsAbsolute || other.isAbsolute) {
-            return PathError.AbsolutePath("Opening file relative to directory with absolute path").left()
-        }
-        val thisNioPath = this.nio
+    private class NioSymlinkResolver(
+        base: NioRealPath,
+        path: VirtualPath,
+        followBasenameSymlink: Boolean = false,
+        private val pathConverter: NioPathConverter,
+        private val pathFactory: NioRealPathFactory,
+    ) {
+        private val resolver: SymlinkResolver<NioRealPath> = SymlinkResolver(
+            base = Directory(base),
+            path = path,
+            followBasenameSymlink = followBasenameSymlink,
+            openFunction = ::nioOpen,
+            closeFunction = { Unit.right() },
+        )
 
-        var path = this.nio
-        other.nio.forEach { subpath ->
-            path = path.resolve(subpath).normalize()
-            if (!path.startsWith(thisNioPath)) {
-                return PathError.PathOutsideOfRootPath(
-                    "Path contains .. component leading to directory outside of base path",
-                ).left()
-            }
+        fun resolve(): Either<OpenError, NioRealPath> {
+            return resolver.resolve().map { it.handle }
         }
-        require(path == path.normalize()) { "`$path` != `${path.normalize()}`" }
-        return pathFactory.create(path).right()
+
+        private fun nioOpen(
+            base: Directory<NioRealPath>,
+            component: String,
+            isBasename: Boolean,
+        ): Either<OpenError, Subcomponent<NioRealPath>> = Either.catch {
+            val newPathNio = if (component == ".") {
+                base.handle.nio
+            } else {
+                base.handle.nio.resolve(normalizeSlashes(component))
+            }
+            when {
+                newPathNio.isSymbolicLink() -> {
+                    val target: Path = newPathNio.readSymbolicLink()
+                    val targetRealPath = pathFactory.create(target)
+                    val targetVirtualPath = pathConverter.toVirtualPath(targetRealPath).getOrElse {
+                        throw OpenErrorException(InvalidArgument("Can not convert symlink to virtual path"))
+                    }
+                    Symlink(pathFactory.create(newPathNio), targetVirtualPath)
+                }
+
+                newPathNio.isDirectory(NOFOLLOW_LINKS) -> Directory(pathFactory.create(newPathNio))
+                !isBasename && !newPathNio.exists(NOFOLLOW_LINKS) -> throw OpenErrorException(NoEntry("File not found"))
+                else -> Subcomponent.Other(pathFactory.create(newPathNio))
+            }
+        }.mapLeft { throwable ->
+            val error: OpenError = when (throwable) {
+                is OpenErrorException -> throwable.openError
+                is UnsupportedOperationException -> InvalidArgument("Operation not supported")
+                is NotLinkException -> InvalidArgument("Not a symlink")
+                is IOException -> IoError("I/o error while read path")
+                is SecurityException -> AccessDenied("Permission denied")
+                else -> throw IllegalStateException("Unexpected error", throwable)
+            }
+            error
+        }
     }
+
+    private class OpenErrorException(val openError: OpenError) : IOException(openError.message)
 }

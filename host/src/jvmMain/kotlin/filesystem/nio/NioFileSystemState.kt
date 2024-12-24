@@ -12,6 +12,7 @@ import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
 import at.released.weh.filesystem.fdresource.NioDirectoryOpener
 import at.released.weh.filesystem.fdresource.NioFdResource
@@ -26,7 +27,6 @@ import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
-import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
@@ -140,7 +140,7 @@ internal class NioFileSystemState private constructor(
         baseDirectory: BaseDirectory,
         path: VirtualPath,
         followSymlinks: Boolean = false,
-        crossinline block: (path: Either<ResolvePathError, NioRealPath>) -> Either<E, R>,
+        crossinline block: (path: Either<OpenError, NioRealPath>) -> Either<E, R>,
     ): Either<E, R> {
         return block(pathResolver.resolve(path, baseDirectory, followSymlinks))
     }
@@ -163,7 +163,7 @@ internal class NioFileSystemState private constructor(
         fun create(
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
-            currentWorkingDirectory: String,
+            currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
             javaFs: NioFileSystem = FileSystems.getDefault(),
         ): NioFileSystemState {

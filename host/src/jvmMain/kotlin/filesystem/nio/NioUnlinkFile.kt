@@ -12,12 +12,12 @@ import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.toResolveRelativePathErrors
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
@@ -36,7 +36,7 @@ internal class NioUnlinkFile(
             input.baseDirectory,
             followSymlinks = false,
         )
-            .mapLeft { it.toResolveRelativePathErrors() }
+            .mapLeft(OpenError::toUnlinkError)
             .bind()
 
         if (path.nio.isDirectory(NOFOLLOW_LINKS)) {
@@ -51,13 +51,16 @@ internal class NioUnlinkFile(
             it.toUnlinkError(path.nio)
         }
     }
+}
 
-    companion object {
-        internal fun Throwable.toUnlinkError(path: Path): UnlinkError = when (this) {
-            is NoSuchFileException -> NoEntry("No file `$path`")
-            is DirectoryNotEmptyException -> DirectoryNotEmpty("Directory not empty")
-            is IOException -> IoError("I/O Error: $message")
-            else -> throw IllegalStateException("Unexpected error", this)
-        }
-    }
+private fun OpenError.toUnlinkError(): UnlinkError = when (this) {
+    is UnlinkError -> this
+    else -> IoError(this.message)
+}
+
+internal fun Throwable.toUnlinkError(path: Path): UnlinkError = when (this) {
+    is NoSuchFileException -> NoEntry("No file `$path`")
+    is DirectoryNotEmptyException -> DirectoryNotEmpty("Directory not empty")
+    is IOException -> IoError("I/O Error: $message")
+    else -> throw IllegalStateException("Unexpected error", this)
 }
