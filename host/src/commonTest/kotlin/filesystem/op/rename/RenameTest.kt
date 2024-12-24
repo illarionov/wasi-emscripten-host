@@ -57,7 +57,6 @@ class RenameTest : BaseFileSystemIntegrationTest() {
                 ),
             ).onLeft { fail("Can not rename file: $it") }
         }
-
         val newFileContent = tempFolder.readFileContentToString("newfile.txt")
 
         assertThat(newFileContent).isEqualTo(TEST_CONTENT)

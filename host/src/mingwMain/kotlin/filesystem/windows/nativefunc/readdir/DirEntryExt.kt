@@ -7,20 +7,18 @@
 package at.released.weh.filesystem.windows.nativefunc.readdir
 
 import arrow.core.Either
-import arrow.core.flatMap
-import arrow.core.getOrElse
-import arrow.core.left
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.windows.WindowsRealPath
-import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
-import at.released.weh.filesystem.path.toResolvePathError
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.windows.nativefunc.open.useFileForAttributeAccess
-import at.released.weh.filesystem.windows.path.NtPath
+import at.released.weh.filesystem.windows.path.ResolverPath
 import at.released.weh.filesystem.windows.win32api.ext.fromAttributes
 import at.released.weh.filesystem.windows.win32api.ext.get64bitInode
 import at.released.weh.filesystem.windows.win32api.fileinfo.getFileIdInfo
@@ -37,18 +35,26 @@ internal fun readDirEntry(
     data: WIN32_FIND_DATAW,
 ): Either<ReadDirError, DirEntry> = either {
     val fileName = data.cFileName.toKStringFromUtf16()
-    val ntPath: NtPath = if (fileName != "..") {
-        WindowsRealPath.create(data.cFileName.toKStringFromUtf16())
-            .mapLeft { it.toResolvePathError() }
-            .flatMap { WindowsNtRelativePath.createFromRelativeWindowsPath(it) }
-            .map { NtPath.Relative(rootdir, it) }
+    val resolverPath: ResolverPath
+    val needRootAccess: Boolean
+    if (fileName != "..") {
+        resolverPath = VirtualPath.create(fileName)
+            .mapLeft { error: PathError -> AccessDenied("Can not create path: $error") }
+            .map { ResolverPath.RelativePath(rootdir, it) }
+            .bind()
+        needRootAccess = false
     } else {
         val newPath: WindowsRealPath = rootdirPath.parent ?: rootdirPath
-        windowsDosPathNameToNtPathName(newPath.kString).map { NtPath.Absolute(it) }
-    }.getOrElse { error -> return AccessDenied("Can not create path: $error").left() }
+        resolverPath = windowsDosPathNameToNtPathName(newPath.kString)
+            .mapLeft { error: ResolvePathError -> AccessDenied("Can not resolve path: $error") }
+            .map { ResolverPath.AbsoluteNtPath(it) }
+            .bind()
+        needRootAccess = true // TODO: remove
+    }
 
     val fileInfo = useFileForAttributeAccess(
-        path = ntPath,
+        path = resolverPath,
+        withRootAccess = needRootAccess,
         followSymlinks = false,
         errorMapper = { it.toReadDirError() },
     ) { fileHandle -> fileHandle.getFileIdInfo().mapLeft(StatError::toReadDirError) }.bind()

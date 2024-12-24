@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows.path
+package at.released.weh.filesystem.windows.win32api.createfile
 
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtObjectManagerPath
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath

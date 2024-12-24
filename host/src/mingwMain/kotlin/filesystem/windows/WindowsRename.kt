@@ -82,7 +82,9 @@ internal class WindowsRename(
             followSymlinks = false,
             access = READ_WRITE_DELETE,
             errorMapper = ::openErrorToRenameError,
-        ) { oldHandle -> renameByFileHandle(oldHandle, input.newBaseDirectory, input.newPath) }
+        ) { oldHandle ->
+            renameByFileHandle(oldHandle, input.newBaseDirectory, input.newPath)
+        }
     }
 
     private fun renameByFileHandle(
@@ -179,11 +181,11 @@ internal class WindowsRename(
         private val newPath: VirtualPath,
     ) {
         fun read(): Either<RenameError, DestinationPathInfo> {
-            val newNtPath = pathResolver.getNtPath(newBaseDirectory, newPath)
+            val newPath = pathResolver.getPath(newBaseDirectory, this@DestinationInfoReader.newPath)
                 .getOrElse { return it.toResolveRelativePathErrors().left() }
 
             val newPathAttributesHandle = windowsOpenForAttributeAccess(
-                path = newNtPath,
+                path = newPath,
                 followSymlinks = false,
                 access = READ_WRITE_DELETE,
             ).getOrElse {

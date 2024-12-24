@@ -19,7 +19,6 @@ import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.OpenError
-import at.released.weh.filesystem.windows.path.NtPath
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus
 import at.released.weh.filesystem.windows.win32api.errorcode.NtStatus.NtStatusCode
 import at.released.weh.filesystem.windows.win32api.errorcode.isSuccess
@@ -89,28 +88,6 @@ internal fun windowsNtCreateFile(
     createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
     caseSensitive: Boolean = true,
 ): Either<NtCreateFileResult, HANDLE> = memScoped {
-    return windowsNtCreateFileRaw(
-        ntPath.handle,
-        ntPath.pathString,
-        desiredAccess,
-        fileAttributes,
-        shareAccess,
-        createDisposition,
-        createOptions,
-        caseSensitive,
-    )
-}
-
-internal fun windowsNtCreateFileRaw(
-    rootHandle: HANDLE?,
-    ntPath: String,
-    desiredAccess: Int = FILE_GENERIC_WRITE,
-    fileAttributes: Int = FILE_ATTRIBUTE_NORMAL,
-    shareAccess: Int = FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
-    createDisposition: Int = FILE_OPEN,
-    createOptions: Int = FILE_RANDOM_ACCESS or FILE_SYNCHRONOUS_IO_ALERT,
-    caseSensitive: Boolean = true,
-): Either<NtCreateFileResult, HANDLE> = memScoped {
     val handle: HANDLEVar = alloc<HANDLEVar>().apply {
         this.value = INVALID_HANDLE_VALUE
     }
@@ -118,7 +95,7 @@ internal fun windowsNtCreateFileRaw(
         this.QuadPart = 0
     }
     val ioStatusBlock: IO_STATUS_BLOCK = alloc()
-    val pathUtf16: CValues<UShortVar> = ntPath.utf16
+    val pathUtf16: CValues<UShortVar> = ntPath.pathString.utf16
     val pathBuffer: CPointer<UShortVar> = pathUtf16.placeTo(this@memScoped)
 
     val objectName: UNICODE_STRING = alloc<UNICODE_STRING>()
@@ -126,7 +103,7 @@ internal fun windowsNtCreateFileRaw(
 
     val objectAttributes = alloc<OBJECT_ATTRIBUTES>().apply {
         Length = sizeOf<OBJECT_ATTRIBUTES>().toUInt()
-        RootDirectory = rootHandle
+        RootDirectory = ntPath.handle
         ObjectName = objectName.ptr
         Attributes = getObjectAttributes(caseSensitive)
         SecurityDescriptor = null

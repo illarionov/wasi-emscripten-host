@@ -23,6 +23,7 @@ import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectory
 import at.released.weh.filesystem.windows.fdresource.WindowsDirectoryFdResource.WindowsDirectoryChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileFdResource.WindowsFileChannel
 import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.Directory
 import at.released.weh.filesystem.windows.nativefunc.open.FileDirectoryHandle.File
 import at.released.weh.filesystem.windows.nativefunc.open.windowsOpenFileOrDirectory
@@ -41,14 +42,15 @@ internal class WindowsOpen(
 
         val baseDirectoryRights = directoryChannel?.rights ?: DIRECTORY_BASE_RIGHTS_BLOCK
 
-        val ntPath = pathResolver.getNtPath(input.baseDirectory, input.path)
+        val path = pathResolver.getPath(input.baseDirectory, input.path)
             .getOrElse { return it.toResolveRelativePathErrors().left() }
 
         return windowsOpenFileOrDirectory(
-            ntPath = ntPath,
+            path = path,
+            withRootAccess = pathResolver.withRootAccess,
             flags = input.openFlags,
             fdFlags = input.fdFlags,
-        ).flatMap { nativeChannel ->
+        ).flatMap { nativeChannel: FileDirectoryHandle ->
             when (nativeChannel) {
                 is File -> fsState.addFile(
                     WindowsFileChannel(

@@ -92,7 +92,7 @@ private fun REPARSE_DATA_BUFFER.readSymlink(
 
     val requiredSize = REPARSE_DATA_BUFFER_SYMLINK_PATH_BUFFER_OFFSET + offsetBytes + lengthBytes
     if (bufferSize < requiredSize) {
-        raise(BadFileDescriptor("Symlink should be relative"))
+        raise(BadFileDescriptor("can not read symlink meta info"))
     }
 
     val substituteName: String = this@readSymlink.SymbolicLinkReparseBuffer.PathBuffer.readChars(
