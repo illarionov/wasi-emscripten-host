@@ -10,6 +10,8 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.getOrElse
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.cwd.GetCurrentWorkingDirectory
@@ -32,5 +34,10 @@ internal class NioGetCurrentWorkingDirectory(
             .flatMap { nioRealPath ->
                 pathConverter.toVirtualPath(nioRealPath).mapLeft { it.toResolvePathError().toGetCwdError() }
             }
+    }
+
+    private fun OpenError.toGetCwdError(): GetCurrentWorkingDirectoryError = when (this) {
+        is GetCurrentWorkingDirectoryError -> this
+        else -> InvalidArgument("Error `${this.message}`")
     }
 }
