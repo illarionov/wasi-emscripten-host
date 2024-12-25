@@ -23,6 +23,7 @@ public data class BadFileDescriptor(
     FdrenumberError,
     HardlinkError,
     MkdirError,
+    NonblockingPollError,
     OpenError,
     PrestatError,
     ReadDirError,

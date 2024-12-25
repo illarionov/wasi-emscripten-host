@@ -6,14 +6,4 @@
 
 package at.released.weh.filesystem.error
 
-import at.released.weh.filesystem.model.FileSystemErrno
-
-public data class Again(
-    override val message: String,
-) : FileSystemOperationError,
-    OpenError,
-    AdvisoryLockError,
-    NonblockingPollError,
-    WriteError {
-    override val errno: FileSystemErrno = FileSystemErrno.AGAIN
-}
+public sealed interface NonblockingPollError : FileSystemOperationError

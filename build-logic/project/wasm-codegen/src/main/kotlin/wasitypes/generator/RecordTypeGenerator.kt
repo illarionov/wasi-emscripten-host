@@ -22,6 +22,7 @@ import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.RecordType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.RecordType.RecordFieldType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.RecordType.RecordFieldType.IdentifierField
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.RecordType.RecordFieldType.Pointer
+import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiType.UnionType
 import at.released.weh.gradle.wasm.codegen.witx.parser.model.WasiTypename
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -29,6 +30,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier.DATA
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
@@ -42,7 +44,7 @@ internal class RecordTypeGenerator(
     private val typenameRaw: String,
     private val typenamesPackage: String,
     private val typenames: Map<String, WasiTypename>,
-    implementMembers: Set<Identifier>,
+    private val implementMembers: Set<Identifier>,
 ) {
     private val className = ClassName(typenamesPackage, identifier.toUpperCamelCaseClassName())
     private val superInterfaces = implementMembers.map {
@@ -57,11 +59,26 @@ internal class RecordTypeGenerator(
         val paramsDescription = typedef.fields.map {
             it.identifier.toCamelCasePropertyName() to it.comment
         }
+
+        val overrideProperties: List<PropertySpec> = implementMembers.mapNotNull { implementId ->
+            val typename = typenames[implementId]
+            if (typename != null && typename.typedef is UnionType) {
+                PropertySpec.builder("tag", typename.typedef.tag.className(typenamesPackage))
+                    .addModifiers(PUBLIC, OVERRIDE)
+                    .initializer("tag")
+                    .build()
+            } else {
+                null
+            }
+        }
+
         val constructor = FunSpec.constructorBuilder().apply {
+            overrideProperties.forEach { addParameter(it.name, it.type) }
             typedef.fields.forEach { record: RecordField ->
                 addParameter(record.identifier.toCamelCasePropertyName(), record.type.getTypeName())
             }
         }.build()
+
         val properties: List<PropertySpec> = typedef.fields.map { (fieldIdentifier, fieldType, _) ->
             val propertyName = fieldIdentifier.toCamelCasePropertyName()
             val builder = PropertySpec.builder(propertyName, fieldType.getTypeName())
@@ -82,6 +99,7 @@ internal class RecordTypeGenerator(
             .addModifiers(PUBLIC, DATA)
             .primaryConstructor(constructor)
             .addKdoc(formatWasiPreview1RecordTypeKdoc(identifier, comment, paramsDescription, typenameRaw))
+            .addProperties(overrideProperties)
             .addProperties(properties)
             .addSuperinterfaces(superInterfaces)
             .build()

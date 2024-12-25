@@ -17,6 +17,7 @@ public data class Interrupted(
     FallocateError,
     FdAttributesError,
     OpenError,
+    PollError,
     ReadError,
     SyncError,
     WriteError {

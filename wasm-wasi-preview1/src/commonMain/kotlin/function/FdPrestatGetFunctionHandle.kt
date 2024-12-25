@@ -17,6 +17,7 @@ import at.released.weh.wasi.preview1.ext.encodedLength
 import at.released.weh.wasi.preview1.ext.foldToErrno
 import at.released.weh.wasi.preview1.ext.packTo
 import at.released.weh.wasi.preview1.type.Errno
+import at.released.weh.wasi.preview1.type.Preopentype
 import at.released.weh.wasi.preview1.type.Prestat
 import at.released.weh.wasi.preview1.type.PrestatDir
 import at.released.weh.wasm.core.IntWasmPtr
@@ -36,7 +37,10 @@ public class FdPrestatGetFunctionHandle(
         return host.fileSystem.execute(PrestatFd, PrestatFd(fd))
             .onRight { prestatResult: PrestatResult ->
                 memory.sinkWithMaxSize(dstAddr, PRESTAT_PACKED_SIZE).buffered().use {
-                    PrestatDir(prNameLen = prestatResult.path.encodedLength()).packTo(it)
+                    PrestatDir(
+                        tag = Preopentype.DIR,
+                        prNameLen = prestatResult.path.encodedLength(),
+                    ).packTo(it)
                 }
             }.foldToErrno()
     }

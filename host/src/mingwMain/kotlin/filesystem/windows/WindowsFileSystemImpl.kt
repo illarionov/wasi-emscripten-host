@@ -29,6 +29,7 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
@@ -80,6 +81,7 @@ internal class WindowsFileSystemImpl(
         GetCurrentWorkingDirectory to WindowsGetCurrentWorkingDirectory(fsState.pathResolver),
         Hardlink to WindowsHardlink(fsState.pathResolver),
         Mkdir to WindowsMkdir(fsState.pathResolver),
+        Poll to WindowsPoll(fsState),
         PrestatFd to WindowsPrestatFd(fsState),
         Symlink to WindowsSymlink(fsState.pathResolver),
         ReadFd to WindowsReadFd(fsState),
