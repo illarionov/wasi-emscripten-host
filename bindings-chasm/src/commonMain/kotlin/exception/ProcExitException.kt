@@ -8,6 +8,8 @@ package at.released.weh.bindings.chasm.exception
 
 /**
  * Thrown when application calls "proc_exit" WASI function.
+ *
+ * Used on Chasm < 0.9.3
  */
 public class ProcExitException(
     public val exitCode: Int,
