@@ -44,9 +44,7 @@ public final class at/released/weh/bindings/chasm/exception/ProcExitException : 
 
 public final class at/released/weh/bindings/chasm/memory/ChasmMemoryAdapter : at/released/weh/wasm/core/memory/Memory {
 	public fun <init> (Lio/github/charlietap/chasm/embedding/shapes/Store;Lkotlin/jvm/functions/Function1;)V
-	public final fun getLimits ()Lio/github/charlietap/chasm/embedding/shapes/Limits;
 	public final fun getMemoryInstance ()Lio/github/charlietap/chasm/embedding/shapes/Memory;
-	public final fun grow (I)I
 	public fun readI32 (I)I
 	public fun readI64 (I)J
 	public fun readI8 (I)B
