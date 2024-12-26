@@ -31,6 +31,7 @@ internal fun createCustomWasiPreview1HostFunctions(
 
 private val procExitHostFunction: ChasmHostFunction = { args ->
     val exitCode = args[0].asInt()
-    // XXX: Need a way to stop a virtual machine from within a function. Using exception For now.
+    // TODO: throw HostFunctionException on Chasm 0.9.3+
+    // throw HostFunctionException(exitCode.toString())
     throw ProcExitException(exitCode)
 }

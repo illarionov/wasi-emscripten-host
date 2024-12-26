@@ -23,6 +23,8 @@ import io.github.charlietap.chasm.embedding.store
 import kotlinx.io.files.Path
 
 object ChasmWasmTestRuntime : WasmTestRuntime {
+    private val HOST_FUNCTION_ERROR_PATTERN = """HostFunctionError\(error=(\d+)\)""".toRegex()
+
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -32,12 +34,13 @@ object ChasmWasmTestRuntime : WasmTestRuntime {
         val store: Store = store()
         val instance = setupInstance(store, wasmFile, host)
 
-        val exitCode = try {
+        val exitCode: Int = try {
             invoke(store, instance, "_start").fold(
                 onSuccess = { 0 },
-                onError = {
-                    // XXX read exit code
-                    -1
+                onError = { executionError ->
+                    HOST_FUNCTION_ERROR_PATTERN.matchEntire(executionError.error)?.let { match ->
+                        match.groups[1]!!.value.toIntOrNull()
+                    } ?: -1
                 },
             )
         } catch (pre: ProcExitException) {
