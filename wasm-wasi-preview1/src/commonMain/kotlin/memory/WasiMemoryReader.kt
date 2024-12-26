@@ -21,6 +21,14 @@ import at.released.weh.wasm.core.memory.Memory
 import at.released.weh.wasm.core.memory.sinkWithMaxSize
 import kotlinx.io.buffered
 
+/**
+ * Interface to implement optimized reading of large data blocks from the file system to the WASM virtual memory.
+ *
+ * The `read` function reads data from the file descriptor `fd` into WASM memory at addresses specified in the `iovecs`.
+ *
+ * Implementations may leverage direct access to the source memory to avoid unnecessary data copying
+ * into intermediate buffers whenever possible.
+ */
 public fun interface WasiMemoryReader {
     public fun read(
         @IntFileDescriptor fd: FileDescriptor,

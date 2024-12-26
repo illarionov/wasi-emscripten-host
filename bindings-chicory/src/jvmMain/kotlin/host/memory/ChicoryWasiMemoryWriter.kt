@@ -65,7 +65,7 @@ internal class ChicoryWasiMemoryWriter private constructor(
             fileSystem: FileSystem,
         ): ChicoryWasiMemoryWriter? {
             try {
-                val bufferField = Memory::class.java.getDeclaredField("buffer")
+                val bufferField = memory.javaClass.getDeclaredField("buffer")
                 if (!bufferField.trySetAccessibleCompat()) {
                     return null
                 }
@@ -73,7 +73,7 @@ internal class ChicoryWasiMemoryWriter private constructor(
                     return null
                 }
                 return ChicoryWasiMemoryWriter(memory, fileSystem, bufferField)
-            } catch (nsfe: NoSuchFileException) {
+            } catch (nsfe: NoSuchFieldException) {
                 return null
             } catch (se: SecurityException) {
                 return null

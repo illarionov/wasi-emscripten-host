@@ -20,6 +20,16 @@ import at.released.weh.wasm.core.memory.sourceWithMaxSize
 import kotlinx.io.buffered
 import kotlinx.io.readByteArray
 
+/**
+ * Interface to implement optimized writing of large data blocks from the WASM virtual memory to the
+ * file system.
+ *
+ * The `write` function copies data from WASM memory at addresses specified in the `ciovecs` to the
+ * file descriptor `fd`.
+ *
+ * Implementations may leverage direct access to the source memory to avoid unnecessary data copying
+ * into intermediate buffers whenever possible.
+ */
 public fun interface WasiMemoryWriter {
     public fun write(
         @IntFileDescriptor fd: FileDescriptor,
