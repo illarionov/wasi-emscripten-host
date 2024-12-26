@@ -8,6 +8,7 @@ package at.released.weh.filesystem.windows.fdresource
 
 import arrow.core.Either
 import arrow.core.left
+import arrow.core.right
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.ChmodError
@@ -16,6 +17,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.error.NotSupported
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.ReadError
@@ -29,10 +31,13 @@ import at.released.weh.filesystem.error.WriteError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
+import at.released.weh.filesystem.op.poll.Event.FileDescriptorEvent
+import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
@@ -117,6 +122,19 @@ internal class WindowsDirectoryFdResource(
     }
 
     override fun close(): Either<CloseError, Unit> = channel.handle.close()
+
+    override fun pollNonblocking(
+        subscription: FileDescriptorSubscription,
+    ): Either<NonblockingPollError, FileDescriptorEvent> {
+        return FileDescriptorEvent(
+            errno = FileSystemErrno.INVAL,
+            userdata = subscription.userdata,
+            fileDescriptor = subscription.fileDescriptor,
+            type = subscription.type,
+            bytesAvailable = 0,
+            isHangup = false,
+        ).right()
+    }
 
     internal data class WindowsDirectoryChannel(
         val handle: HANDLE,

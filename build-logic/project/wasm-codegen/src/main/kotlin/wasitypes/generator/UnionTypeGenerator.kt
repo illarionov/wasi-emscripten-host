@@ -13,6 +13,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.KModifier.SEALED
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 internal class UnionTypeGenerator(
@@ -30,7 +31,12 @@ internal class UnionTypeGenerator(
 
     private fun generateSealedInterface(): TypeSpec = TypeSpec.interfaceBuilder(className)
         .addModifiers(PUBLIC, SEALED)
+        .addProperty(generateTagProperty())
         .addWasiPrevie1UnionTypeKdoc()
+        .build()
+
+    private fun generateTagProperty() = PropertySpec.builder("tag", typedef.tag.className(typenamesPackage))
+        .addModifiers(PUBLIC)
         .build()
 
     private fun TypeSpec.Builder.addWasiPrevie1UnionTypeKdoc(): TypeSpec.Builder {

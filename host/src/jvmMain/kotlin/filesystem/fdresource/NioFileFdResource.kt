@@ -17,6 +17,7 @@ import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.IoError
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetFdFlagsError
@@ -42,11 +43,14 @@ import at.released.weh.filesystem.fdresource.nio.truncate
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.Fdflags
+import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.nio.NioSeekFd.Companion.toSeekError
 import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
+import at.released.weh.filesystem.op.poll.Event.FileDescriptorEvent
+import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
@@ -140,4 +144,17 @@ internal class NioFileFdResource(
 
     override fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit> =
         nioRemoveAdvisoryLock(flock)
+
+    override fun pollNonblocking(
+        subscription: FileDescriptorSubscription,
+    ): Either<NonblockingPollError, FileDescriptorEvent> {
+        return FileDescriptorEvent(
+            errno = FileSystemErrno.SUCCESS,
+            userdata = subscription.userdata,
+            fileDescriptor = subscription.fileDescriptor,
+            type = subscription.type,
+            bytesAvailable = 0,
+            isHangup = false,
+        ).right()
+    }
 }

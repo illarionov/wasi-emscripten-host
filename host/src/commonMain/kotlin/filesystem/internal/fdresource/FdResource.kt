@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.FdAttributesError
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.error.SeekError
 import at.released.weh.filesystem.error.SetFdFlagsError
@@ -29,6 +30,8 @@ import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
+import at.released.weh.filesystem.op.poll.Event.FileDescriptorEvent
+import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
@@ -65,4 +68,8 @@ internal interface FdResource {
     fun removeAdvisoryLock(flock: Advisorylock): Either<AdvisoryLockError, Unit>
 
     fun close(): Either<CloseError, Unit>
+
+    fun pollNonblocking(
+        subscription: FileDescriptorSubscription,
+    ): Either<NonblockingPollError, FileDescriptorEvent>
 }

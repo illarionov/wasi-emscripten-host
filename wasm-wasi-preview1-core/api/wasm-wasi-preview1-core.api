@@ -445,15 +445,18 @@ public final class at/released/weh/wasi/preview1/type/Preopentype$Companion {
 }
 
 public abstract interface class at/released/weh/wasi/preview1/type/Prestat {
+	public abstract fun getTag ()Lat/released/weh/wasi/preview1/type/Preopentype;
 }
 
 public final class at/released/weh/wasi/preview1/type/PrestatDir : at/released/weh/wasi/preview1/type/Prestat {
-	public fun <init> (I)V
-	public final fun component1 ()I
-	public final fun copy (I)Lat/released/weh/wasi/preview1/type/PrestatDir;
-	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/PrestatDir;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/PrestatDir;
+	public fun <init> (Lat/released/weh/wasi/preview1/type/Preopentype;I)V
+	public final fun component1 ()Lat/released/weh/wasi/preview1/type/Preopentype;
+	public final fun component2 ()I
+	public final fun copy (Lat/released/weh/wasi/preview1/type/Preopentype;I)Lat/released/weh/wasi/preview1/type/PrestatDir;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/PrestatDir;Lat/released/weh/wasi/preview1/type/Preopentype;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/PrestatDir;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPrNameLen ()I
+	public fun getTag ()Lat/released/weh/wasi/preview1/type/Preopentype;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -593,34 +596,39 @@ public final class at/released/weh/wasi/preview1/type/Subscription {
 }
 
 public final class at/released/weh/wasi/preview1/type/SubscriptionClock : at/released/weh/wasi/preview1/type/SubscriptionU {
-	public fun <init> (Lat/released/weh/wasi/preview1/type/Clockid;JJS)V
-	public final fun component1 ()Lat/released/weh/wasi/preview1/type/Clockid;
-	public final fun component2 ()J
+	public fun <init> (Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/Clockid;JJS)V
+	public final fun component1 ()Lat/released/weh/wasi/preview1/type/Eventtype;
+	public final fun component2 ()Lat/released/weh/wasi/preview1/type/Clockid;
 	public final fun component3 ()J
-	public final fun component4 ()S
-	public final fun copy (Lat/released/weh/wasi/preview1/type/Clockid;JJS)Lat/released/weh/wasi/preview1/type/SubscriptionClock;
-	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/SubscriptionClock;Lat/released/weh/wasi/preview1/type/Clockid;JJSILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/SubscriptionClock;
+	public final fun component4 ()J
+	public final fun component5 ()S
+	public final fun copy (Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/Clockid;JJS)Lat/released/weh/wasi/preview1/type/SubscriptionClock;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/SubscriptionClock;Lat/released/weh/wasi/preview1/type/Eventtype;Lat/released/weh/wasi/preview1/type/Clockid;JJSILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/SubscriptionClock;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFlags ()S
 	public final fun getId ()Lat/released/weh/wasi/preview1/type/Clockid;
 	public final fun getPrecision ()J
+	public fun getTag ()Lat/released/weh/wasi/preview1/type/Eventtype;
 	public final fun getTimeout ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class at/released/weh/wasi/preview1/type/SubscriptionFdReadwrite : at/released/weh/wasi/preview1/type/SubscriptionU {
-	public fun <init> (I)V
-	public final fun component1 ()I
-	public final fun copy (I)Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;
-	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;
+	public fun <init> (Lat/released/weh/wasi/preview1/type/Eventtype;I)V
+	public final fun component1 ()Lat/released/weh/wasi/preview1/type/Eventtype;
+	public final fun component2 ()I
+	public final fun copy (Lat/released/weh/wasi/preview1/type/Eventtype;I)Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;
+	public static synthetic fun copy$default (Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;Lat/released/weh/wasi/preview1/type/Eventtype;IILjava/lang/Object;)Lat/released/weh/wasi/preview1/type/SubscriptionFdReadwrite;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFileDescriptor ()I
+	public fun getTag ()Lat/released/weh/wasi/preview1/type/Eventtype;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class at/released/weh/wasi/preview1/type/SubscriptionU {
+	public abstract fun getTag ()Lat/released/weh/wasi/preview1/type/Eventtype;
 }
 
 public abstract interface annotation class at/released/weh/wasi/preview1/type/TimestampType : java/lang/annotation/Annotation {

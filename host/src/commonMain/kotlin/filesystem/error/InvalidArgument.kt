@@ -22,6 +22,7 @@ public data class InvalidArgument(
     GetCurrentWorkingDirectoryError,
     MkdirError,
     OpenError,
+    PollError,
     ReadError,
     ReadLinkError,
     ResolveRelativePathErrors,
