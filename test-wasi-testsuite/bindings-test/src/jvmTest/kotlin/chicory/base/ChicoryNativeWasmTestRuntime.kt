@@ -50,35 +50,39 @@ object ChicoryNativeWasmTestRuntime : WasmTestRuntime {
             }
             .build()
 
-        WasiPreview1(logger, options).use { wasi ->
-            val store = Store().apply {
-                wasi.toHostFunctions().forEach { hostFunction -> addFunction(hostFunction) }
+        WasiPreview1.builder()
+            .withLogger(logger)
+            .withOptions(options)
+            .build()
+            .use { wasi ->
+                val store = Store().apply {
+                    wasi.toHostFunctions().forEach { hostFunction -> addFunction(hostFunction) }
+                }
+
+                val wasmModule = Parser.parse(wasmFile)
+
+                // Instantiate the WebAssembly module
+                val instance = Instance.builder(wasmModule)
+                    .withInitialize(true)
+                    .withStart(false)
+                    .withImportValues(store.toImportValues())
+                    .build()
+
+                val exitCode = try {
+                    instance.export("_start").apply()
+                    0
+                } catch (exit: WasiExitException) {
+                    exit.exitCode()
+                } catch (machineException: WasmRuntimeException) {
+                    (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
+                } catch (prce: ProcExitException) {
+                    prce.exitCode
+                }
+
+                assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)
+                assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(arguments.stderr)
+                return exitCode
             }
-
-            val wasmModule = Parser.parse(wasmFile)
-
-            // Instantiate the WebAssembly module
-            val instance = Instance.builder(wasmModule)
-                .withInitialize(true)
-                .withStart(false)
-                .withImportValues(store.toImportValues())
-                .build()
-
-            val exitCode = try {
-                instance.export("_start").apply()
-                0
-            } catch (exit: WasiExitException) {
-                exit.exitCode()
-            } catch (machineException: WasmRuntimeException) {
-                (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
-            } catch (prce: ProcExitException) {
-                prce.exitCode
-            }
-
-            assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)
-            assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(arguments.stderr)
-            return exitCode
-        }
     }
 
     class Factory : WasmTestRuntime.Factory {

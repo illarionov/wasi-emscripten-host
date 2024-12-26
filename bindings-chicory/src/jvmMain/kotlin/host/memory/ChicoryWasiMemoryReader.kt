@@ -66,7 +66,7 @@ internal class ChicoryWasiMemoryReader(
             fileSystem: FileSystem,
         ): ChicoryWasiMemoryReader? {
             try {
-                val bufferField: Field = Memory::class.java.getDeclaredField("buffer")
+                val bufferField: Field = memory.javaClass.getDeclaredField("buffer")
                 if (!bufferField.trySetAccessibleCompat()) {
                     return null
                 }
