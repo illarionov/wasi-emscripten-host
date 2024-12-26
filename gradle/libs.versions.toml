@@ -2,10 +2,10 @@
 androidMinSdk = "26"
 androidCompileSdk = "34"
 
-agp = "8.7.2"
+agp = "8.7.3"
 antlr4 = "4.13.2"
 atomicfu = "0.26.1"
-arrow = "2.0.0-rc.1"
+arrow = "2.0.0"
 android-annotation = "1.9.0-alpha03"
 assertk = "0.28.1"
 chasm = "0.9.2"
