@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("EXTENSION_FUNCTION_SAME_SIGNATURE")
+@file:Suppress("EXTENSION_FUNCTION_SAME_SIGNATURE", "COMMENTED_OUT_CODE")
 
 package at.released.weh.bindings.chasm.module.emscripten.function
 
@@ -17,25 +17,31 @@ import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.type.Errno.NOMEM
 import at.released.weh.wasm.core.memory.Pages
 import at.released.weh.wasm.core.memory.WASM_MEMORY_32_MAX_PAGES
+import at.released.weh.wasm.core.memory.WASM_MEMORY_PAGE_SIZE
+import io.github.charlietap.chasm.embedding.memory.sizeMemory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
+import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32
+import io.github.charlietap.chasm.embedding.shapes.getOrNull
 
 internal class EmscriptenResizeHeap(
     host: EmbedderHost,
     private val memory: ChasmMemoryAdapter,
 ) : HostFunctionProvider {
     private val logger: Logger = host.rootLogger.withTag("wasm-func:emscripten_resize_heap")
-    override val function: HostFunction = { resizeHeap(it) }
+    override val function: HostFunction = { resizeHeap(this.store, it) }
 
     private fun resizeHeap(
+        store: Store,
         args: List<Value>,
     ): List<Value> {
         val requestedSize = args[0].asInt().toLong()
 
-        val chasmMemoryLimits = memory.limits
-        val oldPages = Pages(chasmMemoryLimits.min.toLong())
-        val maxPages = chasmMemoryLimits.max?.toLong()?.let(::Pages) ?: WASM_MEMORY_32_MAX_PAGES
+        val chasmMemorySize = sizeMemory(store, memory.memoryInstance).getOrNull() ?: return listOf(I32(-NOMEM.code))
+
+        val oldPages = Pages(chasmMemorySize / WASM_MEMORY_PAGE_SIZE)
+        val maxPages = WASM_MEMORY_32_MAX_PAGES
         val newSizePages = calculateNewSizePages(requestedSize, oldPages, maxPages)
 
         logger.v {
@@ -43,7 +49,9 @@ internal class EmscriptenResizeHeap(
                     "Requested: ${newSizePages.inBytes} bytes ($newSizePages pages)"
         }
 
-        val prevPages = memory.grow((newSizePages.count - oldPages.count).toInt())
+        // TODO: broken, need to be fixed
+        // val prevPages = memory.grow((newSizePages.count - oldPages.count).toInt())
+        val prevPages = -1
         if (prevPages < 0) {
             logger.e {
                 "Cannot enlarge memory, requested $newSizePages pages, but the limit is " +
