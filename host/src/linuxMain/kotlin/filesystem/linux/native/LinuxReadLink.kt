@@ -50,13 +50,27 @@ import platform.posix.stat
 private const val PATH_STEP = 1024
 private val MAX_PATH_SIZE = maxOf(1024 * 1024, PATH_MAX)
 
-@Suppress("ReturnCount")
 internal fun linuxReadLink(
     baseDirectoryFd: NativeDirectoryFd,
     path: PosixRealPath,
 ): Either<ReadLinkError, PosixRealPath> {
-    var bufSize = getInitialBufSize(baseDirectoryFd, path)
+    val bufSize = getInitialBufSize(baseDirectoryFd, path)
         .getOrElse { return it.left() }
+    return linuxReadLink(baseDirectoryFd, path, bufSize)
+}
+
+@Suppress("ReturnCount")
+internal fun linuxReadLink(
+    baseDirectoryFd: NativeDirectoryFd,
+    path: PosixRealPath,
+    initialBufferSize: Int = 0
+): Either<ReadLinkError, PosixRealPath> {
+    var bufSize = if (initialBufferSize != 0) {
+        initialBufferSize
+    } else {
+        PATH_MAX
+    }
+
     do {
         val buf = ByteArray(bufSize)
         val bytesWritten = buf.usePinned {

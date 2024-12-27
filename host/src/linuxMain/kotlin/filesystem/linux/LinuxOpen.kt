@@ -33,7 +33,7 @@ import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 
 internal class LinuxOpen(
     private val fsState: LinuxFileSystemState,
-    private val fsExecutor: FileSystemActionExecutor = fsState.pathResolver,
+    private val fsExecutor: FileSystemActionExecutor = fsState.fsExecutor,
     private val isRootAccessAllowed: Boolean = false,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {

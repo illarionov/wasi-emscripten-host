@@ -53,8 +53,22 @@ internal fun appleReadLink(
     baseDirectoryFd: NativeDirectoryFd,
     path: PosixRealPath,
 ): Either<ReadLinkError, PosixRealPath> {
-    var bufSize = getInitialBufSize(baseDirectoryFd, path.kString)
+    val bufSize = getInitialBufSize(baseDirectoryFd, path.kString)
         .getOrElse { return it.left() }
+    return appleReadLink(baseDirectoryFd, path, bufSize)
+}
+
+internal fun appleReadLink(
+    baseDirectoryFd: NativeDirectoryFd,
+    path: PosixRealPath,
+    initialBufferSize: Int = 0
+): Either<ReadLinkError, PosixRealPath> {
+    var bufSize = if (initialBufferSize != 0) {
+        initialBufferSize
+    } else {
+        PATH_MAX
+    }
+
     do {
         val buf = ByteArray(bufSize)
         val bytesWritten = buf.usePinned {

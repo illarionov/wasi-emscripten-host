@@ -32,37 +32,20 @@ internal class PosixPathResolver(
     private val fileDescriptors: FileDescriptorTable<FdResource>,
     private val fsLock: ReentrantLock,
     private var currentWorkingDirectoryFd: FileDescriptor = INVALID_FD,
-) : FileSystemActionExecutor {
-    override fun <E : FileSystemOperationError, R : Any> executeWithPath(
-        path: VirtualPath,
-        baseDirectory: BaseDirectory,
-        errorMapper: (ResolvePathError) -> E,
-        block: (path: PosixRealPath, baseDirectory: PosixDirectoryChannel) -> Either<E, R>,
-    ): Either<E, R> {
-        return PosixPathConverter.toRealPath(path)
-            .mapLeft { errorMapper(it.toResolvePathError()) }
-            .flatMap { realPath ->
-                getBaseDirectory(baseDirectory)
-                    .mapLeft { errorMapper(it) }
-                    .flatMap { nativeFd ->
-                        block(realPath, nativeFd)
-                    }
-            }
-    }
-
+) {
     fun getBaseDirectory(
         directory: BaseDirectory,
     ): Either<ResolvePathError, PosixDirectoryChannel> = when (directory) {
         CurrentWorkingDirectory -> if (currentWorkingDirectoryFd != INVALID_FD) {
-            getDirectoryNativeFd(currentWorkingDirectoryFd)
+            getDirectoryChannel(currentWorkingDirectoryFd)
         } else {
-            FileDescriptorNotOpen("Current directory not opened").left()
+            FileDescriptorNotOpen("Current directory not open").left()
         }
 
-        is DirectoryFd -> getDirectoryNativeFd(directory.fd)
+        is DirectoryFd -> getDirectoryChannel(directory.fd)
     }
 
-    private fun getDirectoryNativeFd(
+    private fun getDirectoryChannel(
         fd: FileDescriptor,
     ): Either<ResolvePathError, PosixDirectoryChannel> = fsLock.withLock {
         when (val fdResource = fileDescriptors[fd]) {

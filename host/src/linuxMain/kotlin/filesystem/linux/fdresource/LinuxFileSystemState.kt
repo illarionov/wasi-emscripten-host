@@ -22,6 +22,7 @@ import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.posix.fdresource.DirectFileSystemActionExecutor
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryPreopener
@@ -43,6 +44,7 @@ internal class LinuxFileSystemState private constructor(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )
     val pathResolver = PosixPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory)
+    val fsExecutor = DirectFileSystemActionExecutor(pathResolver)
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
