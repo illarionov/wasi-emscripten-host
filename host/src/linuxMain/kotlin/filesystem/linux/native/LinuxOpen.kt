@@ -57,6 +57,7 @@ import platform.posix.EEXIST
 import platform.posix.EINVAL
 import platform.posix.ELOOP
 import platform.posix.ENOENT
+import platform.posix.ENOTDIR
 import platform.posix.EXDEV
 import platform.posix.errno
 import platform.posix.memset
@@ -173,6 +174,7 @@ private fun Int.openat2ErrNoToOpenError(): OpenError = when (this) {
     ELOOP -> TooManySymbolicLinks("Too many symbolic or magic links")
     EXDEV -> NotCapable("Escape from the root detected")
     ENOENT -> NoEntry("No such file or directory")
+    ENOTDIR -> NotDirectory("Path is not a directory")
     else -> InvalidArgument("Unknown errno $this")
 }
 

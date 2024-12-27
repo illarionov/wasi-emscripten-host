@@ -22,13 +22,15 @@ internal class AppleRename(
         return fsExecutor.executeWithPath(
             input.oldPath,
             input.oldBaseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { oldRealPath, oldBaseDirectory ->
+        ) { oldRealPath, oldBaseDirectory, _ ->
             fsExecutor.executeWithPath(
                 input.newPath,
                 input.newBaseDirectory,
+                false,
                 ResolvePathError::toResolveRelativePathErrors,
-            ) { newRealPath, newBaseDirectory ->
+            ) { newRealPath, newBaseDirectory, _ ->
                 appleRename(oldBaseDirectory.nativeFd, oldRealPath, newBaseDirectory.nativeFd, newRealPath)
             }
         }

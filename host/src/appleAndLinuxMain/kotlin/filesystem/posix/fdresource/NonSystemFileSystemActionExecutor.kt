@@ -4,25 +4,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LAMBDA_IS_NOT_LAST_PARAMETER")
+
 package at.released.weh.filesystem.posix.fdresource
 
 import arrow.core.Either
 import arrow.core.flatMap
+import arrow.core.getOrElse
 import arrow.core.left
-import arrow.core.right
 import arrow.core.raise.either
+import arrow.core.right
 import at.released.weh.ext.flatMapLeft
+import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FileSystemOperationError
+import at.released.weh.filesystem.error.InvalidArgument
+import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.Mfile
 import at.released.weh.filesystem.error.NoEntry
+import at.released.weh.filesystem.error.NotCapable
+import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.BaseDirectory
-import at.released.weh.filesystem.model.Filetype
+import at.released.weh.filesystem.model.Filetype.DIRECTORY
+import at.released.weh.filesystem.model.Filetype.SYMBOLIC_LINK
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.path.PathError.OtherOpenError
+import at.released.weh.filesystem.path.PathError
+import at.released.weh.filesystem.path.PathError.PathOutsideOfRootPath
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.SymlinkResolver
 import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent
@@ -32,9 +42,10 @@ import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.withPathErrorAsCommonError
 import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor.ExecutionBlock
 import at.released.weh.filesystem.posix.nativefunc.posixClose
-import at.released.weh.filesystem.error.IoError as FileSystemIoError
 import platform.posix.dup
+import at.released.weh.filesystem.error.IoError as FileSystemIoError
 
 /**
  * Implementation of FileSystemActionExecutor that uses manual path resolution with symlink expansion for environments
@@ -49,62 +60,72 @@ internal class NonSystemFileSystemActionExecutor(
         path: PosixRealPath,
         isBasename: Boolean,
     ) -> Either<OpenError, NativeDirectoryFd>,
-    private val statFunction: (
-        base: NativeDirectoryFd,
-        path: PosixRealPath,
-    ) -> Either<StatError, StructStat>,
+    private val statFunction: (base: NativeDirectoryFd, path: PosixRealPath) -> Either<StatError, StructStat>,
     private val readLinkFunction: (
         base: NativeDirectoryFd,
         path: PosixRealPath,
-        initialBuf: Int,
+        initialBufSize: Int,
     ) -> Either<ReadLinkError, PosixRealPath>,
 ) : FileSystemActionExecutor {
     override fun <E : FileSystemOperationError, R : Any> executeWithPath(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
+        followBaseSymlink: Boolean,
         errorMapper: (ResolvePathError) -> E,
-        block: (path: PosixRealPath, baseDirectory: PosixDirectoryChannel) -> Either<E, R>,
+        block: ExecutionBlock<E, R>,
     ): Either<E, R> {
         return pathResolver.getBaseDirectory(baseDirectory)
             .mapLeft { errorMapper(it) }
-            .flatMap { nativeChannel: PosixDirectoryChannel ->
-                executeWithPath(path, nativeChannel, errorMapper, block)
+            .flatMap { directory: PosixDirectoryChannel ->
+                executeWithPath(
+                    path,
+                    directory,
+                    followBaseSymlink,
+                    errorMapper,
+                    block,
+                )
             }
     }
 
     private fun <E : FileSystemOperationError, R : Any> executeWithPath(
         path: VirtualPath,
         baseDirectoryChannel: PosixDirectoryChannel,
+        followBaseSymlink: Boolean,
         errorMapper: (ResolvePathError) -> E,
-        block: (path: PosixRealPath, baseDirectory: PosixDirectoryChannel) -> Either<E, R>,
+        block: ExecutionBlock<E, R>,
     ): Either<E, R> {
         val initialHandle = OpenComponent(baseDirectoryChannel.nativeFd, null)
 
-        val directoryResolver: SymlinkResolver<OpenComponent> = SymlinkResolver(
+        val symlinkResolver: SymlinkResolver<OpenComponent> = SymlinkResolver(
             base = Directory(initialHandle),
             path = path,
-            followBasenameSymlink = true,
-            openFunction = ::openComponent,
+            followBasenameSymlink = followBaseSymlink,
+            openFunction = { base, component, isBasename ->
+                openComponent(
+                    base,
+                    component,
+                    isBasename,
+                    followBaseSymlink,
+                )
+            },
             closeFunction = ::close,
         )
 
-        return directoryResolver.resolve()
-            .mapLeft { errorMapper(OtherOpenError(it)) } // TODO: remove
+        return symlinkResolver.resolve()
+            .mapLeft { errorMapper(it.toResolvePathError()) } // TODO: remove
             .flatMap { resolvedPath: Subcomponent<OpenComponent> ->
                 try {
                     val newHandle = resolvedPath.handle
-                    if (newHandle.basename == null) {
-                        error("Unexpected new basename")
-                    }
-                    val newChannel = baseDirectoryChannel.copy(nativeFd = newHandle.descriptor)
-                    block(newHandle.basename, newChannel)
+                    val newBasename = newHandle.fileBasename ?: POSIX_PATH_CURRENT_DIR
+
+                    val newChannel: PosixDirectoryChannel = baseDirectoryChannel.copy(
+                        nativeFd = newHandle.descriptor,
+                    )
+                    block(newBasename, newChannel, false)
                 } finally {
-                    resolvedPath.handle.descriptor.let {
-                        if (it != baseDirectoryChannel.nativeFd && it != null) {
-                            posixClose(it).onLeft {
-                                /* ignore */
-                                // TODO: do not ignore
-                            }
+                    resolvedPath.handle.descriptor.let { pathDescriptor ->
+                        if (pathDescriptor != baseDirectoryChannel.nativeFd) {
+                            posixClose(pathDescriptor).onLeft { /* ignore */ }
                         }
                     }
                 }
@@ -115,44 +136,91 @@ internal class NonSystemFileSystemActionExecutor(
         base: Directory<OpenComponent>,
         component: String,
         isBasename: Boolean,
-    ): Either<OpenError, Subcomponent<OpenComponent>> = either {
-        val componentAsPath = PosixRealPath.create(component).withPathErrorAsCommonError().bind()
+        followBaseSymlink: Boolean,
+    ): Either<OpenError, Subcomponent<OpenComponent>> {
         val baseFd: NativeDirectoryFd = base.handle.descriptor
+        val componentAsPath = PosixRealPath.create(component).withPathErrorAsCommonError().getOrElse {
+            return it.left()
+        }
 
-        val stat: StructStat? = statFunction(baseFd, componentAsPath)
-            .flatMapLeft<StatError, StructStat?, StatError> { statError: StatError ->
-                if (isBasename && statError is NoEntry) {
-                    null.right()
-                } else {
-                    statError.left()
+        return if (!isBasename) {
+            openNonBasenameComponent(baseFd, componentAsPath)
+        } else {
+            openBasenameComponent(baseFd, componentAsPath, followBaseSymlink)
+        }
+    }
+
+    private fun openNonBasenameComponent(
+        base: NativeDirectoryFd,
+        componentAsPath: PosixRealPath,
+    ): Either<OpenError, Subcomponent<OpenComponent>> {
+        return openDirectoryFunction(base, componentAsPath, false)
+            .map { newDirectoryFd -> Directory(OpenComponent(newDirectoryFd, null)) }
+            .flatMapLeft { directoryOpenError: OpenError ->
+                when {
+                    directoryOpenError is NotDirectory -> readSubcomponentNonDirectory(base, componentAsPath)
+                    else -> directoryOpenError.left()
                 }
             }
-            .mapLeft { it.toOpenError() }
-            .bind()
+    }
 
-        when (stat?.type) {
-            Filetype.DIRECTORY -> {
-                val newDirectoryFd: NativeDirectoryFd =
-                    openDirectoryFunction(baseFd, componentAsPath, isBasename)
-                        .bind()
-                Subcomponent.Directory(OpenComponent(newDirectoryFd, componentAsPath))
-            }
-
-            Filetype.SYMBOLIC_LINK -> {
-                val target: VirtualPath = readLinkFunction(baseFd, componentAsPath, stat.size.toInt())
-                    .mapLeft<OpenError>(ReadLinkError::toOpenError)
-                    .flatMap { targetPath: PosixRealPath -> toVirtualPath(targetPath).withPathErrorAsCommonError() }
-                    .bind()
-                val newfd = dupfd(baseFd).bind()
-                Subcomponent.Symlink(OpenComponent(newfd, componentAsPath), target)
-            }
-
-            else -> {
-                val newfd = dupfd(baseFd).bind()
-
-                Subcomponent.Other(OpenComponent(base.handle.descriptor, componentAsPath))
+    private fun readSubcomponentNonDirectory(
+        base: NativeDirectoryFd,
+        path: PosixRealPath,
+    ): Either<OpenError, Subcomponent<OpenComponent>> = statFunction(base, path)
+        .mapLeft { it.toOpenError() }
+        .flatMap { stat ->
+            when (stat.type) {
+                DIRECTORY -> IoError("File type changed during resolving").left()
+                SYMBOLIC_LINK -> openSymbolicLinkSubcomponent(base, path, stat.size.toInt())
+                else -> dupfd(base).map { Subcomponent.Other(OpenComponent(it, path)) }
             }
         }
+
+    private fun openBasenameComponent(
+        base: NativeDirectoryFd,
+        componentAsPath: PosixRealPath,
+        followBaseSymlink: Boolean,
+    ): Either<OpenError, Subcomponent<OpenComponent>> = if (!followBaseSymlink) {
+        openOtherSubcomponent(base, componentAsPath)
+    } else {
+        statFunction(base, componentAsPath)
+            .fold(
+                ifLeft = { statError ->
+                    if (statError is NoEntry) {
+                        openOtherSubcomponent(base, componentAsPath)
+                    } else {
+                        statError.toOpenError().left()
+                    }
+                },
+                ifRight = { stat ->
+                    if (stat.type == SYMBOLIC_LINK) {
+                        openSymbolicLinkSubcomponent(base, componentAsPath, stat.size.toInt())
+                    } else {
+                        openOtherSubcomponent(base, componentAsPath)
+                    }
+                },
+            )
+    }
+
+    private fun openSymbolicLinkSubcomponent(
+        base: NativeDirectoryFd,
+        componentAsPath: PosixRealPath,
+        initialBufferSize: Int,
+    ): Either<OpenError, Subcomponent.Symlink<OpenComponent>> = either {
+        val target: VirtualPath = readLinkFunction(base, componentAsPath, initialBufferSize)
+            .mapLeft<OpenError>(ReadLinkError::toOpenError)
+            .flatMap { targetPath: PosixRealPath -> toVirtualPath(targetPath).withPathErrorAsCommonError() }
+            .bind()
+        val newfd = dupfd(base).bind()
+        Subcomponent.Symlink(OpenComponent(newfd, componentAsPath), target)
+    }
+
+    private fun openOtherSubcomponent(
+        base: NativeDirectoryFd,
+        componentAsPath: PosixRealPath,
+    ): Either<OpenError, Subcomponent.Other<OpenComponent>> = dupfd(base).map { newfd: NativeDirectoryFd ->
+        Subcomponent.Other(OpenComponent(newfd, componentAsPath))
     }
 
     private fun close(
@@ -167,12 +235,14 @@ internal class NonSystemFileSystemActionExecutor(
             Mfile("Can not dup fd").left()
         }
     }
-
-    private class OpenComponent(
-        val descriptor: NativeDirectoryFd,
-        val basename: PosixRealPath?,
-    )
 }
+
+private data class OpenComponent(
+    val descriptor: NativeDirectoryFd,
+    val fileBasename: PosixRealPath?,
+)
+
+private val POSIX_PATH_CURRENT_DIR = PosixRealPath.create(".").getOrElse { error("Can not create path") }
 
 private fun StatError.toOpenError(): OpenError = if (this is OpenError) {
     this
@@ -184,4 +254,12 @@ private fun ReadLinkError.toOpenError(): OpenError = if (this is OpenError) {
     this
 } else {
     FileSystemIoError(this.message)
+}
+
+private fun OpenError.toResolvePathError(): ResolvePathError = when (this) {
+    is NotCapable -> PathOutsideOfRootPath(this.message)
+    is NotDirectory -> PathError.NotDirectory(this.message)
+    is BadFileDescriptor -> PathError.FileDescriptorNotOpen(this.message)
+    is InvalidArgument -> PathError.InvalidPathFormat(this.message)
+    else -> PathError.OtherOpenError(this)
 }

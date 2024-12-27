@@ -30,8 +30,9 @@ internal class LinuxSymlink(
                 fsExecutor.executeWithPath(
                     input.newPath,
                     input.newPathBaseDirectory,
+                    false,
                     ResolvePathError::toResolveRelativePathErrors,
-                ) { newRealPath, directoryFd ->
+                ) { newRealPath, directoryFd, _ ->
                     linuxSymlink(oldRealpath, newRealPath, directoryFd.nativeFd)
                 }
             }

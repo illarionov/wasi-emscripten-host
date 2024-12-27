@@ -23,9 +23,10 @@ internal class AppleStat(
         return fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
-            appleStat(baseDirectory.nativeFd, realPath, input.followSymlinks)
+        ) { realPath, baseDirectory, nativeFollowSymlinks ->
+            appleStat(baseDirectory.nativeFd, realPath, nativeFollowSymlinks)
         }
     }
 }

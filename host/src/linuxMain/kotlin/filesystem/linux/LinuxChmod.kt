@@ -22,8 +22,9 @@ internal class LinuxChmod(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
-            linuxChmod(realBaseDirectory.nativeFd, realPath, input.mode, input.followSymlinks)
+        ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
+            linuxChmod(realBaseDirectory.nativeFd, realPath, input.mode, nativeFollowSymlinks)
         }
 }

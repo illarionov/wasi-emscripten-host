@@ -23,9 +23,10 @@ internal class LinuxStat(
         return fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
-            linuxStat(realBaseDirectory.nativeFd, realPath, input.followSymlinks)
+        ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
+            linuxStat(realBaseDirectory.nativeFd, realPath, nativeFollowSymlinks)
         }
     }
 }

@@ -29,8 +29,9 @@ internal class AppleSymlink(
                 fsExecutor.executeWithPath(
                     input.newPath,
                     input.newPathBaseDirectory,
+                    false,
                     ResolvePathError::toResolveRelativePathErrors,
-                ) { newRealPath, directoryFd ->
+                ) { newRealPath, directoryFd, _ ->
                     appleSymlink(oldRealpath, newRealPath, directoryFd.nativeFd)
                 }
             }

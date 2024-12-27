@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LAMBDA_IS_NOT_LAST_PARAMETER")
+
 package at.released.weh.filesystem.posix.fdresource
 
 import arrow.core.Either
@@ -17,7 +19,16 @@ internal interface FileSystemActionExecutor {
     fun <E : FileSystemOperationError, R : Any> executeWithPath(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
+        followBaseSymlink: Boolean = true,
         errorMapper: (ResolvePathError) -> E,
-        block: (path: PosixRealPath, baseDirectory: PosixDirectoryChannel) -> Either<E, R>,
+        block: ExecutionBlock<E, R>,
     ): Either<E, R>
+
+    fun interface ExecutionBlock<E : FileSystemOperationError, R : Any> {
+        operator fun invoke(
+            path: PosixRealPath,
+            baseDirectory: PosixDirectoryChannel,
+            nativeFollowBaselink: Boolean,
+        ): Either<E, R>
+    }
 }

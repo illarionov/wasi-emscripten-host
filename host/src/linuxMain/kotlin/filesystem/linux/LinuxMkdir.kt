@@ -22,8 +22,9 @@ internal class LinuxMkdir(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
+        ) { realPath, realBaseDirectory, _ ->
             linuxMkdir(realBaseDirectory.nativeFd, realPath, input.mode, input.failIfExists)
         }
 }

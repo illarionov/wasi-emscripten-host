@@ -16,6 +16,7 @@ import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_READ
 import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_WRITE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.op.opencreate.OpenFileFlags
 import at.released.weh.filesystem.op.opencreate.OpenFileFlagsType
 
@@ -40,4 +41,17 @@ internal fun checkOpenFlags(
     if (openFlags and createDirectoryMask == createDirectoryMask) {
         raise(InvalidArgument("O_CREAT cannot be used to create directories "))
     }
+}
+
+internal fun openFileFlagsWithFollowSymlinks(
+    mask: OpenFileFlags,
+    followSymlinks: Boolean,
+): OpenFileFlags {
+    val nativeFollowLinksMask = if (followSymlinks) {
+        0
+    } else {
+        O_NOFOLLOW
+    }
+
+    return (mask and O_NOFOLLOW.inv()) or nativeFollowLinksMask
 }

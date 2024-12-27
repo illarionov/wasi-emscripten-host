@@ -22,14 +22,15 @@ internal class LinuxCheckAccess(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
+        ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
             linuxCheckAccess(
                 path = realPath,
                 baseDirectoryFd = realBaseDirectory.nativeFd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
-                followSymlinks = input.followSymlinks,
+                followSymlinks = nativeFollowSymlinks,
             )
         }
 }

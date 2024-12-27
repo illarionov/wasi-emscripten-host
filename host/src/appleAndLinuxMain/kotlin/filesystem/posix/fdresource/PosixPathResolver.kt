@@ -7,10 +7,8 @@
 package at.released.weh.filesystem.posix.fdresource
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.INVALID_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
@@ -21,10 +19,6 @@ import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.path.PathError
 import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
 import at.released.weh.filesystem.path.ResolvePathError
-import at.released.weh.filesystem.path.real.posix.PosixPathConverter
-import at.released.weh.filesystem.path.real.posix.PosixRealPath
-import at.released.weh.filesystem.path.toResolvePathError
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.withLock
 

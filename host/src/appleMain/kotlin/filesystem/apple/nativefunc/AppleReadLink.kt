@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("WRONG_OVERLOADING_FUNCTION_ARGUMENTS")
+
 package at.released.weh.filesystem.apple.nativefunc
 
 import arrow.core.Either
@@ -61,7 +63,7 @@ internal fun appleReadLink(
 internal fun appleReadLink(
     baseDirectoryFd: NativeDirectoryFd,
     path: PosixRealPath,
-    initialBufferSize: Int = 0
+    initialBufferSize: Int,
 ): Either<ReadLinkError, PosixRealPath> {
     var bufSize = if (initialBufferSize != 0) {
         initialBufferSize

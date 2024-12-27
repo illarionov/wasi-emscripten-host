@@ -22,14 +22,15 @@ internal class AppleCheckAccess(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
+        ) { realPath, baseDirectory, nativeFollowSymlinks ->
             appleCheckAccess(
                 path = realPath,
                 baseDirectoryFd = baseDirectory.nativeFd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
-                followSymlinks = input.followSymlinks,
+                followSymlinks = nativeFollowSymlinks,
             )
         }
 }

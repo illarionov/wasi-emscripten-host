@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("WRONG_OVERLOADING_FUNCTION_ARGUMENTS")
+
 package at.released.weh.filesystem.linux.native
 
 import arrow.core.Either
@@ -63,7 +65,7 @@ internal fun linuxReadLink(
 internal fun linuxReadLink(
     baseDirectoryFd: NativeDirectoryFd,
     path: PosixRealPath,
-    initialBufferSize: Int = 0
+    initialBufferSize: Int,
 ): Either<ReadLinkError, PosixRealPath> {
     var bufSize = if (initialBufferSize != 0) {
         initialBufferSize
