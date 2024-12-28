@@ -35,6 +35,7 @@ public object AppleFileSystem : FileSystemEngine<Nothing> {
             stdio = stdio,
             currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
             preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
+            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
         )
     }
 }

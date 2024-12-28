@@ -14,6 +14,8 @@ import at.released.weh.filesystem.apple.fdresource.AppleDirectoryFdResource
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource
 import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.apple.nativefunc.appleOpenRaw
+import at.released.weh.filesystem.apple.nativefunc.appleReadLink
+import at.released.weh.filesystem.apple.nativefunc.appleStat
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
@@ -24,6 +26,12 @@ import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Compan
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_DIRECTORY
+import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
+import at.released.weh.filesystem.posix.NativeDirectoryFd
+import at.released.weh.filesystem.posix.fdresource.DirectFileSystemActionExecutor
+import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
+import at.released.weh.filesystem.posix.fdresource.NonSystemFileSystemActionExecutor
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryPreopener
@@ -39,12 +47,25 @@ internal class AppleFileSystemState private constructor(
     stdio: StandardInputOutput,
     preopenedDirectories: Map<FileDescriptor, FdResource>,
     currentWorkingDirectoryFd: FileDescriptor,
+    isRootAccessAllowed: Boolean,
 ) : AutoCloseable {
     private val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )
     val pathResolver = PosixPathResolver(fileDescriptors, fdsLock, currentWorkingDirectoryFd)
+    val fsExecutor: FileSystemActionExecutor = if (isRootAccessAllowed) {
+        DirectFileSystemActionExecutor(pathResolver)
+    } else {
+        NonSystemFileSystemActionExecutor(
+            pathResolver = pathResolver,
+            openDirectoryFunction = { base, path, _ ->
+                appleOpenRaw(base, path, O_DIRECTORY or O_NOFOLLOW, 0, null).map(::NativeDirectoryFd)
+            },
+            statFunction = { base, path -> appleStat(base, path, false) },
+            readLinkFunction = ::appleReadLink,
+        )
+    }
 
     fun get(
         @IntFileDescriptor fd: FileDescriptor,
@@ -122,6 +143,7 @@ internal class AppleFileSystemState private constructor(
             stdio: StandardInputOutput,
             currentWorkingDirectory: String?,
             preopenedDirectories: List<PreopenedDirectory>,
+            isRootAccessAllowed: Boolean,
         ): AppleFileSystemState {
             val (cwdResult, directories) = PosixDirectoryPreopener(::appleOpenRaw).preopen(
                 currentWorkingDirectory,
@@ -142,7 +164,7 @@ internal class AppleFileSystemState private constructor(
                 fd
             }
 
-            return AppleFileSystemState(stdio, preopened, currentWorkingDirectoryFd)
+            return AppleFileSystemState(stdio, preopened, currentWorkingDirectoryFd, isRootAccessAllowed)
         }
     }
 }

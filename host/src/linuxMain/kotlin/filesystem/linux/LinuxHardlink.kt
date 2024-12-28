@@ -22,19 +22,21 @@ internal class LinuxHardlink(
         return fsExecutor.executeWithPath(
             input.oldPath,
             input.oldBaseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { oldRealPath, oldRealBaseDirectory ->
+        ) { oldRealPath, oldRealBaseDirectory, _ ->
             fsExecutor.executeWithPath(
                 input.newPath,
                 input.newBaseDirectory,
+                false,
                 ResolvePathError::toResolveRelativePathErrors,
-            ) { newRealPath, newRealBaseDirectory ->
+            ) { newRealPath, newRealBaseDirectory, nativeFollowSymlinks ->
                 linuxHardlink(
                     oldRealBaseDirectory.nativeFd,
                     oldRealPath,
                     newRealBaseDirectory.nativeFd,
                     newRealPath,
-                    input.followSymlinks,
+                    nativeFollowSymlinks,
                 )
             }
         }

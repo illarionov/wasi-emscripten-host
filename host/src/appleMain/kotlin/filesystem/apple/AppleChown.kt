@@ -22,8 +22,9 @@ internal class AppleChown(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
-            appleChown(baseDirectory.nativeFd, realPath, input.owner, input.group, input.followSymlinks)
+        ) { realPath, baseDirectory, nativeFollowSymlinks ->
+            appleChown(baseDirectory.nativeFd, realPath, input.owner, input.group, nativeFollowSymlinks)
         }
 }

@@ -22,19 +22,21 @@ internal class AppleHardlink(
         return fsExecutor.executeWithPath(
             input.oldPath,
             input.oldBaseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { oldRealPath, oldBaseDirectory ->
+        ) { oldRealPath, oldBaseDirectory, oldNativeFollowSymlinks ->
             fsExecutor.executeWithPath(
                 input.newPath,
                 input.newBaseDirectory,
+                false,
                 ResolvePathError::toResolveRelativePathErrors,
-            ) { newRealPath, newBaseDirectory ->
+            ) { newRealPath, newBaseDirectory, nativeFollowSymlinks ->
                 appleHardlink(
                     oldBaseDirectory.nativeFd,
                     oldRealPath,
                     newBaseDirectory.nativeFd,
                     newRealPath,
-                    input.followSymlinks,
+                    nativeFollowSymlinks,
                 )
             }
         }

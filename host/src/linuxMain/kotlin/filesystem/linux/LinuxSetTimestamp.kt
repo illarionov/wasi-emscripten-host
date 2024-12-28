@@ -23,14 +23,15 @@ internal class LinuxSetTimestamp(
     ): Either<SetTimestampError, Unit> = fsExecutor.executeWithPath(
         input.path,
         input.baseDirectory,
+        input.followSymlinks,
         ResolvePathError::toResolveRelativePathErrors,
-    ) { realPath, realBaseDirectory ->
+    ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
         linuxSetTimestamp(
             realBaseDirectory.nativeFd,
             realPath,
             input.atimeNanoseconds,
             input.mtimeNanoseconds,
-            input.followSymlinks,
+            nativeFollowSymlinks,
         )
     }
 }

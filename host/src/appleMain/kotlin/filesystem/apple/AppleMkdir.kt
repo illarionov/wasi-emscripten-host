@@ -22,8 +22,9 @@ internal class AppleMkdir(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
+        ) { realPath, baseDirectory, _ ->
             appleMkdir(baseDirectory.nativeFd, realPath, input.mode, input.failIfExists)
         }
 }

@@ -25,8 +25,9 @@ internal class AppleReadLink(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { basePath, baseDirectory ->
+        ) { basePath, baseDirectory, _ ->
             appleReadLink(baseDirectory.nativeFd, basePath)
         }.flatMap { targetRealPath ->
             toVirtualPath(targetRealPath).mapLeft { it.toResolveRelativePathErrors() }

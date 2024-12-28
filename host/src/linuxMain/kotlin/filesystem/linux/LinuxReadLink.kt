@@ -28,8 +28,9 @@ internal class LinuxReadLink(
         return fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
+        ) { realPath, realBaseDirectory, _ ->
             linuxReadLink(realBaseDirectory.nativeFd, realPath)
         }.flatMap { targetRealPath: PosixRealPath ->
             toVirtualPath(targetRealPath).mapLeft<ResolveRelativePathErrors>(PathError::toResolveRelativePathErrors)

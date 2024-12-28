@@ -23,14 +23,15 @@ internal class AppleSetTimestamp(
     ): Either<SetTimestampError, Unit> = fsExecutor.executeWithPath(
         input.path,
         input.baseDirectory,
+        input.followSymlinks,
         ResolvePathError::toResolveRelativePathErrors,
-    ) { realPath, baseDirectory ->
+    ) { realPath, baseDirectory, nativeFollowSymlinks ->
         appleSetTimestamp(
             baseDirectory.nativeFd,
             realPath,
             input.atimeNanoseconds,
             input.mtimeNanoseconds,
-            input.followSymlinks,
+            nativeFollowSymlinks,
         )
     }
 }

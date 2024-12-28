@@ -22,8 +22,9 @@ internal class AppleChmod(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
-            appleChmod(baseDirectory.nativeFd, realPath, input.mode, input.followSymlinks)
+        ) { realPath, baseDirectory, nativeFollowSymlinks ->
+            appleChmod(baseDirectory.nativeFd, realPath, input.mode, nativeFollowSymlinks)
         }
 }

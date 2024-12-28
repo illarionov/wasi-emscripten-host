@@ -19,17 +19,18 @@ internal class LinuxCheckAccess(
     private val fsExecutor: FileSystemActionExecutor,
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> =
-        fsExecutor.executeWithPath<CheckAccessError, Unit>(
+        fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
+        ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
             linuxCheckAccess(
                 path = realPath,
                 baseDirectoryFd = realBaseDirectory.nativeFd,
                 mode = input.mode,
                 useEffectiveUserId = input.useEffectiveUserId,
-                followSymlinks = input.followSymlinks,
+                followSymlinks = nativeFollowSymlinks,
             )
         }
 }

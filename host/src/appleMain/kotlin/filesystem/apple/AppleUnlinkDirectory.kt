@@ -22,8 +22,9 @@ internal class AppleUnlinkDirectory(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, baseDirectory ->
+        ) { realPath, baseDirectory, _ ->
             appleUnlinkDirectory(baseDirectory.nativeFd, realPath)
         }
 }

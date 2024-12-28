@@ -22,13 +22,11 @@ import at.released.weh.filesystem.testutil.SymlinkType
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.createTestSymlink
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import kotlinx.io.files.Path
 import kotlin.test.Test
 
 class PathTraversalTest : BaseFileSystemIntegrationTest() {
     @Test
-    @IgnoreApple // TODO: implement
     fun relative_path_should_not_escape_sandbox() {
         val fsRoot = tempFolder.createTestDirectory("fs")
         tempFolder.apply {
@@ -42,7 +40,6 @@ class PathTraversalTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreApple // TODO: implement
     fun symlink_to_file_should_not_escape_sandbox() {
         val fsRoot = tempFolder.createTestDirectory("fs")
         tempFolder.apply {
@@ -59,7 +56,6 @@ class PathTraversalTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreApple // TODO: implement
     fun symlink_to_directory_should_not_escape_sandbox() {
         val fsRoot = tempFolder.createTestDirectory("fs")
         tempFolder.apply {
@@ -76,7 +72,6 @@ class PathTraversalTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreApple // TODO: implement
     fun symlink_to_middle_directory_should_not_escape_sandbox() {
         val fsRoot = tempFolder.createTestDirectory("fs")
         tempFolder.apply {

@@ -22,8 +22,9 @@ internal class LinuxUnlinkFile(
         return fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            false,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
+        ) { realPath, realBaseDirectory, _ ->
             linuxUnlinkFile(realBaseDirectory.nativeFd, realPath)
         }
     }

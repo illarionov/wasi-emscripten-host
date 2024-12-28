@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package at.released.weh.filesystem.path
 
 import arrow.core.Either
@@ -14,6 +16,7 @@ import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
+import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
@@ -21,6 +24,13 @@ import at.released.weh.filesystem.model.FileSystemErrno.INVAL
 import at.released.weh.filesystem.model.FileSystemErrno.IO
 import at.released.weh.filesystem.model.FileSystemErrno.NOTCAPABLE
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
+import at.released.weh.filesystem.path.PathError.AbsolutePath
+import at.released.weh.filesystem.path.PathError.EmptyPath
+import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
+import at.released.weh.filesystem.path.PathError.InvalidPathFormat
+import at.released.weh.filesystem.path.PathError.IoError
+import at.released.weh.filesystem.path.PathError.OtherOpenError
+import at.released.weh.filesystem.path.PathError.PathOutsideOfRootPath
 
 public sealed interface PathError : FileSystemOperationError {
     public data class EmptyPath(
@@ -57,21 +67,25 @@ public sealed interface PathError : FileSystemOperationError {
         override val message: String,
         override val errno: FileSystemErrno = IO,
     ) : ResolvePathError
+
+    public data class OtherOpenError(
+        val openError: OpenError,
+        override val message: String = openError.message,
+        override val errno: FileSystemErrno = openError.errno,
+    ) : ResolvePathError
 }
 
 internal sealed interface ResolvePathError : FileSystemOperationError
 
 internal fun PathError.toResolvePathError(): ResolvePathError = this as ResolvePathError
 
-@Suppress("NOTHING_TO_INLINE")
 internal inline fun <T> Either<PathError, T>.withResolvePathError(): Either<ResolvePathError, T> =
     mapLeft(PathError::toResolvePathError)
 
-@Suppress("NOTHING_TO_INLINE")
 internal inline fun <T> Either<PathError, T>.withPathErrorAsCommonError(): Either<ResolveRelativePathErrors, T> =
     mapLeft(PathError::toResolveRelativePathErrors)
 
-@Suppress("NOTHING_TO_INLINE", "MaxLineLength")
+@Suppress("MaxLineLength")
 internal inline fun <T> Either<ResolvePathError, T>.withResolvePathErrorAsCommonError(): Either<ResolveRelativePathErrors, T> =
     mapLeft(ResolvePathError::toResolveRelativePathErrors)
 
@@ -83,21 +97,23 @@ internal fun PathError.toResolveRelativePathErrors(): ResolveRelativePathErrors 
 }
 
 internal fun ResolvePathError.toResolveRelativePathErrors(): ResolveRelativePathErrors = when (this) {
-    is PathError.EmptyPath -> InvalidArgument(message)
-    is PathError.InvalidPathFormat -> InvalidArgument(message)
-    is PathError.FileDescriptorNotOpen -> BadFileDescriptor(message)
+    is EmptyPath -> InvalidArgument(message)
+    is InvalidPathFormat -> InvalidArgument(message)
+    is FileDescriptorNotOpen -> BadFileDescriptor(message)
     is PathError.NotDirectory -> NotDirectory(message)
-    is PathError.AbsolutePath -> NotCapable(message)
-    is PathError.PathOutsideOfRootPath -> NotCapable(message)
-    is PathError.IoError -> BadFileDescriptor(message)
+    is AbsolutePath -> NotCapable(message)
+    is PathOutsideOfRootPath -> NotCapable(message)
+    is IoError -> BadFileDescriptor(message)
+    is OtherOpenError -> BadFileDescriptor(message)
 }
 
 internal fun ResolvePathError.toGetCwdError(): GetCurrentWorkingDirectoryError = when (this) {
-    is PathError.AbsolutePath -> InvalidArgument("Path is absolute")
-    is PathError.EmptyPath -> InvalidArgument("Path is empty")
-    is PathError.InvalidPathFormat -> InvalidArgument("Invalid path format")
-    is PathError.PathOutsideOfRootPath -> AccessDenied("Path outside of root")
-    is PathError.FileDescriptorNotOpen -> AccessDenied("Invalid handle")
-    is PathError.IoError -> InvalidArgument("Can not read current directory")
+    is AbsolutePath -> InvalidArgument("Path is absolute")
+    is EmptyPath -> InvalidArgument("Path is empty")
+    is InvalidPathFormat -> InvalidArgument("Invalid path format")
+    is PathOutsideOfRootPath -> AccessDenied("Path outside of root")
+    is FileDescriptorNotOpen -> AccessDenied("Invalid handle")
+    is IoError -> InvalidArgument("Can not read current directory")
+    is OtherOpenError -> AccessDenied("Failed to resolve path")
     is PathError.NotDirectory -> AccessDenied("Not a directory")
 }

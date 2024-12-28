@@ -22,8 +22,9 @@ internal class LinuxChown(
         fsExecutor.executeWithPath(
             input.path,
             input.baseDirectory,
+            input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { realPath, realBaseDirectory ->
-            linuxChown(realBaseDirectory.nativeFd, realPath, input.owner, input.group, input.followSymlinks)
+        ) { realPath, realBaseDirectory, nativeFollowSymlinks ->
+            linuxChown(realBaseDirectory.nativeFd, realPath, input.owner, input.group, nativeFollowSymlinks)
         }
 }

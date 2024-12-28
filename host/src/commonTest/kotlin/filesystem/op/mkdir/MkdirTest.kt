@@ -14,6 +14,8 @@ import at.released.weh.filesystem.model.FileSystemErrno.EXIST
 import at.released.weh.filesystem.test.fixtures.toVirtualPath
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestDirectory
+import at.released.weh.filesystem.testutil.createTestFile
+import at.released.weh.filesystem.testutil.createTestSymlink
 import at.released.weh.filesystem.testutil.path
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
 import at.released.weh.test.filesystem.assertions.isDirectory
@@ -54,6 +56,38 @@ class MkdirTest : BaseFileSystemIntegrationTest() {
             )
             fs.execute(Mkdir, request).getOrElse { fail("mkdir failed: $it") }
         }
+    }
+
+    @Test
+    fun mkdir_should_fail_if_exists_file() {
+        val testDir = tempFolder.createTestFile()
+        val error = createTestFileSystem().use { fs ->
+            val request = Mkdir(
+                path = testDir.name.toVirtualPath(),
+                baseDirectory = tempFolderDirectoryFd,
+                mode = FileModeFlag.S_IRWXU,
+                failIfExists = true,
+            )
+            fs.execute(Mkdir, request).leftOrNull()
+        }
+        assertThat(error?.errno).isEqualTo(EXIST)
+    }
+
+    @Test
+    fun mkdir_should_fail_if_exists_symlink() {
+        tempFolder.createTestDirectory("dir2")
+        tempFolder.createTestSymlink("dir2", "symlink")
+
+        val error = createTestFileSystem().use { fs ->
+            val request = Mkdir(
+                path = "symlink".toVirtualPath(),
+                baseDirectory = tempFolderDirectoryFd,
+                mode = FileModeFlag.S_IRWXU,
+                failIfExists = true,
+            )
+            fs.execute(Mkdir, request).leftOrNull()
+        }
+        assertThat(error?.errno).isEqualTo(EXIST)
     }
 
     @Test
