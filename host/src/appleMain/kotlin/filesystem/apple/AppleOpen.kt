@@ -29,7 +29,7 @@ import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 
 internal class AppleOpen(
     private val fsState: AppleFileSystemState,
-    private val fsExecutor: FileSystemActionExecutor = fsState.pathResolver,
+    private val fsExecutor: FileSystemActionExecutor = fsState.fsExecutor,
 ) : FileSystemOperationHandler<Open, OpenError, FileDescriptor> {
     override fun invoke(input: Open): Either<OpenError, FileDescriptor> {
         checkOpenFlags(input.openFlags, input.rights, input.path.isDirectoryRequest()).onLeft { return it.left() }
