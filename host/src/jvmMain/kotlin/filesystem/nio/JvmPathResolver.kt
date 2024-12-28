@@ -35,7 +35,6 @@ import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.real.nio.NioRealPath.NioRealPathFactory
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.withResolvePathError
-import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.io.IOException
 import java.nio.file.LinkOption.NOFOLLOW_LINKS
 import java.nio.file.NotLinkException
@@ -56,7 +55,7 @@ internal class JvmPathResolver(
         path: VirtualPath,
         baseDirectory: BaseDirectory,
         followSymlinks: Boolean,
-    ): Either<OpenError, NioRealPath> {
+    ): Either<ResolvePathError, NioRealPath> {
         val baseDirectoryPath: Either<ResolvePathError, NioRealPath> = when (baseDirectory) {
             CurrentWorkingDirectory -> getDirectoryChannel(currentWorkingDirectoryFd)
             is DirectoryFd -> getDirectoryChannel(baseDirectory.fd)
@@ -80,13 +79,10 @@ internal class JvmPathResolver(
                     val finalPath = base.nio.resolve(subPath.nio).normalize()
                     pathFactory.create(finalPath).right()
                 }
-                .withResolvePathErrorAsCommonError()
         } else {
-            baseDirectoryPath
-                .withResolvePathErrorAsCommonError()
-                .flatMap { base: NioRealPath ->
-                    NioSymlinkResolver(base, path, followSymlinks, pathConverter, pathFactory).resolve()
-                }
+            baseDirectoryPath.flatMap { base: NioRealPath ->
+                NioSymlinkResolver(base, path, followSymlinks, pathConverter, pathFactory).resolve()
+            }
         }
     }
 
@@ -113,7 +109,7 @@ internal class JvmPathResolver(
             closeFunction = { Unit.right() },
         )
 
-        fun resolve(): Either<OpenError, NioRealPath> {
+        fun resolve(): Either<ResolvePathError, NioRealPath> {
             return resolver.resolve().map { it.handle }
         }
 

@@ -22,6 +22,7 @@ public data class AccessDenied(
     ReadDirError,
     ReadLinkError,
     RenameError,
+    ResolveRelativePathErrors,
     SetTimestampError,
     StatError,
     SymlinkError,

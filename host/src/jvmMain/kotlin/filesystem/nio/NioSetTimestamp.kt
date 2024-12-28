@@ -8,12 +8,11 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
-import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.fdresource.nio.nioSetTimestamp
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.settimestamp.SetTimestamp
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 
 internal class NioSetTimestamp(
     private val fsState: NioFileSystemState,
@@ -21,14 +20,9 @@ internal class NioSetTimestamp(
     override fun invoke(input: SetTimestamp): Either<SetTimestampError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
             resolvePathResult
-                .mapLeft(OpenError::toSetTimestampError)
+                .withResolvePathErrorAsCommonError()
                 .flatMap {
                     nioSetTimestamp(it.nio, input.followSymlinks, input.atimeNanoseconds, input.mtimeNanoseconds)
                 }
         }
-}
-
-private fun OpenError.toSetTimestampError(): SetTimestampError = when (this) {
-    is SetTimestampError -> this
-    else -> IoError(this.message)
 }

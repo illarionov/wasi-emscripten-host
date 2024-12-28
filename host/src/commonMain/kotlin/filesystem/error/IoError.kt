@@ -24,6 +24,7 @@ public data class IoError(
     ReadDirError,
     ReadError,
     ReadLinkError,
+    ResolveRelativePathErrors,
     RenameError,
     SetTimestampError,
     StatError,

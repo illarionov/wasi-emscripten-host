@@ -19,6 +19,7 @@ import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkFile
 import at.released.weh.filesystem.path.real.nio.NioRealPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.Files
@@ -36,7 +37,7 @@ internal class NioUnlinkFile(
             input.baseDirectory,
             followSymlinks = false,
         )
-            .mapLeft(OpenError::toUnlinkError)
+            .withResolvePathErrorAsCommonError()
             .bind()
 
         if (path.nio.isDirectory(NOFOLLOW_LINKS)) {

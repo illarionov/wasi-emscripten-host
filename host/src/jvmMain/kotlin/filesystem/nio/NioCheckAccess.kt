@@ -10,15 +10,14 @@ import arrow.core.Either
 import arrow.core.raise.either
 import at.released.weh.filesystem.error.AccessDenied
 import at.released.weh.filesystem.error.CheckAccessError
-import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NoEntry
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.checkaccess.CheckAccess
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.EXECUTABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.READABLE
 import at.released.weh.filesystem.op.checkaccess.FileAccessibilityCheck.WRITEABLE
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import kotlin.io.path.exists
 import kotlin.io.path.isExecutable
 import kotlin.io.path.isReadable
@@ -29,7 +28,7 @@ internal class NioCheckAccess(
 ) : FileSystemOperationHandler<CheckAccess, CheckAccessError, Unit> {
     override fun invoke(input: CheckAccess): Either<CheckAccessError, Unit> = either {
         val path = pathResolver.resolve(input.path, input.baseDirectory, input.followSymlinks)
-            .mapLeft { it.toCheckAccessError() }
+            .withResolvePathErrorAsCommonError()
             .bind()
             .nio
         if (!path.exists(options = asLinkOptions(input.followSymlinks))) {
@@ -44,11 +43,5 @@ internal class NioCheckAccess(
         if (input.mode.contains(EXECUTABLE) && !path.isExecutable()) {
             raise(AccessDenied("File `$path` not executable"))
         }
-    }
-
-    private fun OpenError.toCheckAccessError(): CheckAccessError = if (this is CheckAccessError) {
-        this
-    } else {
-        IoError(this.message)
     }
 }

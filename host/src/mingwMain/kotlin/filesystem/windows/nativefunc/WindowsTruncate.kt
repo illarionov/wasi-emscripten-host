@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
@@ -81,4 +82,5 @@ private fun StatError.toTruncateError(): TruncateError = when (this) {
     is NotCapable -> AccessDenied(this.message)
     is NotDirectory -> this
     is TooManySymbolicLinks -> this
+    is Nfile -> IoError(message)
 }

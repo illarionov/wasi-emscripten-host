@@ -16,6 +16,7 @@ import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
@@ -23,12 +24,14 @@ import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.error.TooManySymbolicLinks
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.SymlinkResolver
 import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent
 import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent.Directory
 import at.released.weh.filesystem.path.real.windows.WindowsPathConverter
 import at.released.weh.filesystem.path.real.windows.WindowsPathConverter.normalizeWindowsSlashes
 import at.released.weh.filesystem.path.real.windows.nt.WindowsNtRelativePath
+import at.released.weh.filesystem.path.toOpenError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.withPathErrorAsCommonError
 import at.released.weh.filesystem.windows.path.ResolverPath
@@ -85,7 +88,7 @@ internal fun windowsNtCreateFileEx(
             shareAccess = shareAccess,
             createDisposition = createDisposition,
             createOptions = createOptions,
-        ).resolve().bind()
+        ).resolve().mapLeft(ResolvePathError::toOpenError).bind()
     }
 }
 
@@ -106,7 +109,7 @@ internal class WindowsSymlinkResolver(
         closeFunction = ::windowsClose,
     )
 
-    fun resolve(): Either<OpenError, HANDLE> {
+    fun resolve(): Either<ResolvePathError, HANDLE> {
         return resolver.resolve().map { it.handle }
     }
 
@@ -175,9 +178,10 @@ internal class WindowsSymlinkResolver(
         is InvalidArgument -> this
         is IoError -> this
         is NameTooLong -> this
+        is Nfile -> this
         is NoEntry -> this
-        is NotDirectory -> this
         is NotCapable -> this
+        is NotDirectory -> this
         is TooManySymbolicLinks -> this
     }
 }

@@ -9,28 +9,39 @@
 package at.released.weh.filesystem.path
 
 import arrow.core.Either
-import at.released.weh.filesystem.error.AccessDenied
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
-import at.released.weh.filesystem.error.InvalidArgument
-import at.released.weh.filesystem.error.NotCapable
-import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ResolveRelativePathErrors
 import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.ACCES
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import at.released.weh.filesystem.model.FileSystemErrno.INVAL
 import at.released.weh.filesystem.model.FileSystemErrno.IO
 import at.released.weh.filesystem.model.FileSystemErrno.NOTCAPABLE
 import at.released.weh.filesystem.model.FileSystemErrno.NOTDIR
 import at.released.weh.filesystem.path.PathError.AbsolutePath
+import at.released.weh.filesystem.path.PathError.AccessDenied
 import at.released.weh.filesystem.path.PathError.EmptyPath
 import at.released.weh.filesystem.path.PathError.FileDescriptorNotOpen
 import at.released.weh.filesystem.path.PathError.InvalidPathFormat
 import at.released.weh.filesystem.path.PathError.IoError
+import at.released.weh.filesystem.path.PathError.NameTooLong
+import at.released.weh.filesystem.path.PathError.NotDirectory
+import at.released.weh.filesystem.path.PathError.OpenFileDescriptorLimitReached
 import at.released.weh.filesystem.path.PathError.OtherOpenError
 import at.released.weh.filesystem.path.PathError.PathOutsideOfRootPath
+import at.released.weh.filesystem.path.PathError.TooManySymbolicLinks
+import at.released.weh.filesystem.error.AccessDenied as FileSystemAccessDenied
+import at.released.weh.filesystem.error.BadFileDescriptor as FileSystemBadFileDescriptor
+import at.released.weh.filesystem.error.InvalidArgument as FileSystemInvalidArgument
+import at.released.weh.filesystem.error.IoError as FileSystemIoError
+import at.released.weh.filesystem.error.NameTooLong as FileSystemNameTooLong
+import at.released.weh.filesystem.error.Nfile as FileSystemNfile
+import at.released.weh.filesystem.error.NotCapable as FileSystemNotCapable
+import at.released.weh.filesystem.error.NotDirectory as FileSystemNotDirectory
+import at.released.weh.filesystem.error.OpenError as FileSystemOpenError
+import at.released.weh.filesystem.error.TooManySymbolicLinks as FileSystemTooManySymbolicLinks
 
 public sealed interface PathError : FileSystemOperationError {
     public data class EmptyPath(
@@ -53,6 +64,11 @@ public sealed interface PathError : FileSystemOperationError {
         override val errno: FileSystemErrno = NOTCAPABLE,
     ) : PathError, ResolvePathError
 
+    public data class AccessDenied(
+        override val message: String,
+        override val errno: FileSystemErrno = ACCES,
+    ) : ResolvePathError
+
     public data class NotDirectory(
         override val message: String,
         override val errno: FileSystemErrno = NOTDIR,
@@ -63,13 +79,28 @@ public sealed interface PathError : FileSystemOperationError {
         override val errno: FileSystemErrno = BADF,
     ) : ResolvePathError
 
+    public data class NameTooLong(
+        override val message: String,
+        override val errno: FileSystemErrno = FileSystemErrno.NAMETOOLONG,
+    ) : ResolvePathError
+
+    public data class OpenFileDescriptorLimitReached(
+        override val message: String,
+        override val errno: FileSystemErrno = FileSystemErrno.NFILE,
+    ) : ResolvePathError
+
+    public data class TooManySymbolicLinks(
+        override val message: String,
+        override val errno: FileSystemErrno = FileSystemErrno.LOOP,
+    ) : ResolvePathError
+
     public data class IoError(
         override val message: String,
         override val errno: FileSystemErrno = IO,
     ) : ResolvePathError
 
     public data class OtherOpenError(
-        val openError: OpenError,
+        val openError: FileSystemOpenError,
         override val message: String = openError.message,
         override val errno: FileSystemErrno = openError.errno,
     ) : ResolvePathError
@@ -90,30 +121,53 @@ internal inline fun <T> Either<ResolvePathError, T>.withResolvePathErrorAsCommon
     mapLeft(ResolvePathError::toResolveRelativePathErrors)
 
 internal fun PathError.toResolveRelativePathErrors(): ResolveRelativePathErrors = when (this) {
-    is PathError.EmptyPath -> InvalidArgument(this.message)
-    is PathError.InvalidPathFormat -> InvalidArgument(this.message)
-    is PathError.AbsolutePath -> InvalidArgument(this.message)
-    is PathError.PathOutsideOfRootPath -> NotCapable(this.message)
+    is EmptyPath -> FileSystemInvalidArgument(this.message)
+    is InvalidPathFormat -> FileSystemInvalidArgument(this.message)
+    is AbsolutePath -> FileSystemInvalidArgument(this.message)
+    is PathOutsideOfRootPath -> FileSystemNotCapable(this.message)
 }
 
 internal fun ResolvePathError.toResolveRelativePathErrors(): ResolveRelativePathErrors = when (this) {
-    is EmptyPath -> InvalidArgument(message)
-    is InvalidPathFormat -> InvalidArgument(message)
-    is FileDescriptorNotOpen -> BadFileDescriptor(message)
-    is PathError.NotDirectory -> NotDirectory(message)
-    is AbsolutePath -> NotCapable(message)
-    is PathOutsideOfRootPath -> NotCapable(message)
-    is IoError -> BadFileDescriptor(message)
-    is OtherOpenError -> BadFileDescriptor(message)
+    is EmptyPath -> FileSystemInvalidArgument(message)
+    is InvalidPathFormat -> FileSystemInvalidArgument(message)
+    is FileDescriptorNotOpen -> FileSystemBadFileDescriptor(message)
+    is NotDirectory -> FileSystemNotDirectory(message)
+    is AbsolutePath -> FileSystemNotCapable(message)
+    is PathOutsideOfRootPath -> FileSystemNotCapable(message)
+    is IoError -> FileSystemIoError(message)
+    is OtherOpenError -> FileSystemBadFileDescriptor(message)
+    is AccessDenied -> FileSystemAccessDenied(message)
+    is NameTooLong -> FileSystemNameTooLong(message)
+    is OpenFileDescriptorLimitReached -> FileSystemNfile(message)
+    is TooManySymbolicLinks -> FileSystemTooManySymbolicLinks(message)
 }
 
 internal fun ResolvePathError.toGetCwdError(): GetCurrentWorkingDirectoryError = when (this) {
-    is AbsolutePath -> InvalidArgument("Path is absolute")
-    is EmptyPath -> InvalidArgument("Path is empty")
-    is InvalidPathFormat -> InvalidArgument("Invalid path format")
-    is PathOutsideOfRootPath -> AccessDenied("Path outside of root")
-    is FileDescriptorNotOpen -> AccessDenied("Invalid handle")
-    is IoError -> InvalidArgument("Can not read current directory")
-    is OtherOpenError -> AccessDenied("Failed to resolve path")
-    is PathError.NotDirectory -> AccessDenied("Not a directory")
+    is AbsolutePath -> FileSystemInvalidArgument("Path is absolute")
+    is EmptyPath -> FileSystemInvalidArgument("Path is empty")
+    is InvalidPathFormat -> FileSystemInvalidArgument("Invalid path format")
+    is PathOutsideOfRootPath -> FileSystemAccessDenied("Path outside of root")
+    is FileDescriptorNotOpen -> FileSystemAccessDenied("Invalid handle")
+    is IoError -> FileSystemInvalidArgument("Can not read current directory")
+    is OtherOpenError -> FileSystemAccessDenied("Failed to resolve path")
+    is NotDirectory -> FileSystemAccessDenied("Not a directory")
+    is AccessDenied -> FileSystemAccessDenied(message)
+    is NameTooLong -> FileSystemAccessDenied(message)
+    is OpenFileDescriptorLimitReached -> FileSystemAccessDenied(message)
+    is TooManySymbolicLinks -> FileSystemAccessDenied(message)
+}
+
+internal fun ResolvePathError.toOpenError(): OpenError = when (this) {
+    is AbsolutePath -> FileSystemNotCapable(message)
+    is AccessDenied -> FileSystemAccessDenied(message)
+    is EmptyPath -> FileSystemInvalidArgument(message)
+    is FileDescriptorNotOpen -> FileSystemBadFileDescriptor(message)
+    is InvalidPathFormat -> FileSystemInvalidArgument(message)
+    is IoError -> FileSystemIoError(message)
+    is NameTooLong -> FileSystemNameTooLong(message)
+    is NotDirectory -> FileSystemNotDirectory(message)
+    is OpenFileDescriptorLimitReached -> FileSystemNfile(message)
+    is OtherOpenError -> openError
+    is PathOutsideOfRootPath -> FileSystemNotCapable(message)
+    is TooManySymbolicLinks -> FileSystemTooManySymbolicLinks(message)
 }

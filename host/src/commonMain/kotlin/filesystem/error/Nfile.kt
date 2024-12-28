@@ -13,6 +13,7 @@ public data class Nfile(
 ) : FileSystemOperationError,
     AdvisoryLockError,
     OpenError,
-    ReadDirError {
+    ReadDirError,
+    ResolveRelativePathErrors {
     override val errno: FileSystemErrno = FileSystemErrno.NFILE
 }

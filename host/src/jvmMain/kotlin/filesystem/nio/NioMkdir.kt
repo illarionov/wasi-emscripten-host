@@ -12,12 +12,12 @@ import arrow.core.right
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.MkdirError
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.ext.fileModeAsFileAttributesIfSupported
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.mkdir.Mkdir
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
@@ -28,7 +28,7 @@ internal class NioMkdir(
 ) : FileSystemOperationHandler<Mkdir, MkdirError, Unit> {
     override fun invoke(input: Mkdir): Either<MkdirError, Unit> =
         fsState.executeWithPath(input.baseDirectory, input.path) { resolvePathResult ->
-            resolvePathResult.mapLeft(OpenError::toMkdirError)
+            resolvePathResult.withResolvePathErrorAsCommonError()
                 .flatMap { mkdir(it.nio, input.mode, input.failIfExists) }
         }
 
@@ -57,9 +57,4 @@ internal class NioMkdir(
             result
         }
     }
-}
-
-private fun OpenError.toMkdirError(): MkdirError = when (this) {
-    is MkdirError -> this
-    else -> IoError(this.message)
 }

@@ -53,7 +53,7 @@ public final class at/released/weh/filesystem/dsl/StandardInputOutputConfigBlock
 	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
 }
 
-public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/AccessDenied;
@@ -211,7 +211,7 @@ public final class at/released/weh/filesystem/error/InvalidArgument : at/release
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
+public final class at/released/weh/filesystem/error/IoError : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/CloseError, at/released/weh/filesystem/error/FallocateError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/SyncError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError, at/released/weh/filesystem/error/WriteError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/IoError;
@@ -262,7 +262,7 @@ public final class at/released/weh/filesystem/error/NameTooLong : at/released/we
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/Nfile : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError {
+public final class at/released/weh/filesystem/error/Nfile : at/released/weh/filesystem/error/AdvisoryLockError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ResolveRelativePathErrors {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/Nfile;
@@ -508,7 +508,7 @@ public final class at/released/weh/filesystem/error/TextFileBusy : at/released/w
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
+public final class at/released/weh/filesystem/error/TooManySymbolicLinks : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lat/released/weh/filesystem/error/TooManySymbolicLinks;
@@ -1857,6 +1857,20 @@ public final class at/released/weh/filesystem/path/PathError$AbsolutePath : at/r
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/filesystem/path/PathError$AccessDenied : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$AccessDenied;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$AccessDenied;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$AccessDenied;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class at/released/weh/filesystem/path/PathError$EmptyPath : at/released/weh/filesystem/path/PathError, at/released/weh/filesystem/path/ResolvePathError {
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
@@ -1914,6 +1928,20 @@ public final class at/released/weh/filesystem/path/PathError$IoError : at/releas
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class at/released/weh/filesystem/path/PathError$NameTooLong : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$NameTooLong;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$NameTooLong;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$NameTooLong;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class at/released/weh/filesystem/path/PathError$NotDirectory : at/released/weh/filesystem/path/ResolvePathError {
 	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
 	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -1921,6 +1949,20 @@ public final class at/released/weh/filesystem/path/PathError$NotDirectory : at/r
 	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$NotDirectory;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$NotDirectory;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$NotDirectory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$OpenFileDescriptorLimitReached : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$OpenFileDescriptorLimitReached;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$OpenFileDescriptorLimitReached;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$OpenFileDescriptorLimitReached;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;
@@ -1951,6 +1993,20 @@ public final class at/released/weh/filesystem/path/PathError$PathOutsideOfRootPa
 	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$PathOutsideOfRootPath;
 	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$PathOutsideOfRootPath;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$PathOutsideOfRootPath;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/path/PathError$TooManySymbolicLinks : at/released/weh/filesystem/path/ResolvePathError {
+	public fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public final fun copy (Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;)Lat/released/weh/filesystem/path/PathError$TooManySymbolicLinks;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/path/PathError$TooManySymbolicLinks;Ljava/lang/String;Lat/released/weh/filesystem/model/FileSystemErrno;ILjava/lang/Object;)Lat/released/weh/filesystem/path/PathError$TooManySymbolicLinks;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
 	public fun getMessage ()Ljava/lang/String;

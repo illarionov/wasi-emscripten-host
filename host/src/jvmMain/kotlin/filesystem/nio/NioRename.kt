@@ -13,7 +13,6 @@ import at.released.weh.filesystem.error.DirectoryNotEmpty
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NotDirectory
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.RenameError
@@ -21,6 +20,7 @@ import at.released.weh.filesystem.fdresource.NioFdResource
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.rename.Rename
 import at.released.weh.filesystem.path.real.nio.NioRealPath
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.io.IOException
 import java.nio.file.DirectoryNotEmptyException
 import java.nio.file.FileAlreadyExistsException
@@ -45,13 +45,13 @@ internal class NioRename(
                 path = input.oldPath,
                 baseDirectory = input.oldBaseDirectory,
                 followSymlinks = false,
-            ).mapLeft(OpenError::toRenameError).bind()
+            ).withResolvePathErrorAsCommonError().bind()
 
             newPath = fsState.pathResolver.resolve(
                 path = input.newPath,
                 baseDirectory = input.newBaseDirectory,
                 followSymlinks = false,
-            ).mapLeft(OpenError::toRenameError).bind()
+            ).withResolvePathErrorAsCommonError().bind()
 
             oldFdResource = fsState.findUnsafe(oldPath)
             newFdResource = fsState.findUnsafe(newPath)
@@ -93,9 +93,4 @@ internal class NioRename(
             }
         }
     }
-}
-
-private fun OpenError.toRenameError(): RenameError = when (this) {
-    is RenameError -> this
-    else -> IoError(this.message)
 }
