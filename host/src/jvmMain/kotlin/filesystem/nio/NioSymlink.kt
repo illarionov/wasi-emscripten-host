@@ -8,15 +8,15 @@ package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.flatMap
-import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.symlink.Symlink
+import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.real.nio.NioPathConverter
 import at.released.weh.filesystem.path.real.nio.NioRealPath
-import at.released.weh.filesystem.path.withPathErrorAsCommonError
+import at.released.weh.filesystem.path.withResolvePathError
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 
 internal class NioSymlink(
     private val fsState: NioFileSystemState,
@@ -26,22 +26,17 @@ internal class NioSymlink(
         return fsState.executeWithPath(
             input.newPathBaseDirectory,
             input.newPath,
-        ) { resolvedPath: Either<OpenError, NioRealPath> ->
+        ) { resolvedPath: Either<ResolvePathError, NioRealPath> ->
             val result = resolvedPath.flatMap { newRealPath: NioRealPath ->
                     pathConverter.toRealPath(input.oldPath)
-                        .withPathErrorAsCommonError()
+                        .withResolvePathError()
                         .map { oldRealPath -> newRealPath to oldRealPath }
                 }
-                .mapLeft(OpenError::toSymlinkError)
+                .withResolvePathErrorAsCommonError()
                 .flatMap { (newPath: NioRealPath, oldPath: NioRealPath) ->
                     createSymlink(newPath.nio, oldPath.nio, input.allowAbsoluteOldPath)
                 }
             result
         }
     }
-}
-
-private fun OpenError.toSymlinkError(): SymlinkError = when (this) {
-    is SymlinkError -> this
-    else -> IoError(this.message)
 }

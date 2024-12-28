@@ -14,6 +14,7 @@ import at.released.weh.filesystem.error.FallocateError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
@@ -60,4 +61,5 @@ private fun StatError.toFallocateError(): FallocateError = when (this) {
     is NotCapable -> InvalidArgument(this.message)
     is NotDirectory -> InvalidArgument(this.message)
     is TooManySymbolicLinks -> InvalidArgument(this.message)
+    is Nfile -> IoError(message)
 }

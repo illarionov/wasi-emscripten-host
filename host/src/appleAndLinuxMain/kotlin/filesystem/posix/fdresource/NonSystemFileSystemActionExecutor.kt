@@ -15,14 +15,11 @@ import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.right
 import at.released.weh.ext.flatMapLeft
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.error.FileSystemOperationError
-import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.Mfile
 import at.released.weh.filesystem.error.NoEntry
-import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.ReadLinkError
@@ -31,8 +28,6 @@ import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.model.Filetype.SYMBOLIC_LINK
 import at.released.weh.filesystem.op.stat.StructStat
-import at.released.weh.filesystem.path.PathError
-import at.released.weh.filesystem.path.PathError.PathOutsideOfRootPath
 import at.released.weh.filesystem.path.ResolvePathError
 import at.released.weh.filesystem.path.SymlinkResolver
 import at.released.weh.filesystem.path.SymlinkResolver.Subcomponent
@@ -112,7 +107,7 @@ internal class NonSystemFileSystemActionExecutor(
         )
 
         return symlinkResolver.resolve()
-            .mapLeft { errorMapper(it.toResolvePathError()) } // TODO: remove
+            .mapLeft { errorMapper(it) }
             .flatMap { resolvedPath: Subcomponent<OpenComponent> ->
                 try {
                     val newHandle = resolvedPath.handle
@@ -254,12 +249,4 @@ private fun ReadLinkError.toOpenError(): OpenError = if (this is OpenError) {
     this
 } else {
     FileSystemIoError(this.message)
-}
-
-private fun OpenError.toResolvePathError(): ResolvePathError = when (this) {
-    is NotCapable -> PathOutsideOfRootPath(this.message)
-    is NotDirectory -> PathError.NotDirectory(this.message)
-    is BadFileDescriptor -> PathError.FileDescriptorNotOpen(this.message)
-    is InvalidArgument -> PathError.InvalidPathFormat(this.message)
-    else -> PathError.OtherOpenError(this)
 }

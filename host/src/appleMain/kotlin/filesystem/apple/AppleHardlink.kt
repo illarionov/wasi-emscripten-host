@@ -24,7 +24,7 @@ internal class AppleHardlink(
             input.oldBaseDirectory,
             input.followSymlinks,
             ResolvePathError::toResolveRelativePathErrors,
-        ) { oldRealPath, oldBaseDirectory, oldNativeFollowSymlinks ->
+        ) { oldRealPath, oldBaseDirectory, _ ->
             fsExecutor.executeWithPath(
                 input.newPath,
                 input.newBaseDirectory,

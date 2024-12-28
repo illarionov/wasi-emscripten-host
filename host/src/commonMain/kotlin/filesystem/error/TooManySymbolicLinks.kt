@@ -20,6 +20,7 @@ public data class TooManySymbolicLinks(
     OpenError,
     ReadLinkError,
     RenameError,
+    ResolveRelativePathErrors,
     SetTimestampError,
     StatError,
     SymlinkError,

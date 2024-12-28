@@ -12,6 +12,7 @@ import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
+import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotCapable
 import at.released.weh.filesystem.error.NotDirectory
@@ -23,9 +24,10 @@ internal fun StatError.toFdAttributesError(): FdAttributesError = when (this) {
     is BadFileDescriptor -> this
     is InvalidArgument -> this
     is IoError -> this
-    is NameTooLong -> InvalidArgument(this.message)
-    is NoEntry -> InvalidArgument(this.message)
-    is NotCapable -> InvalidArgument(this.message)
-    is NotDirectory -> InvalidArgument(this.message)
+    is NameTooLong -> InvalidArgument(message)
+    is NoEntry -> InvalidArgument(message)
+    is NotCapable -> InvalidArgument(message)
+    is NotDirectory -> InvalidArgument(message)
     is TooManySymbolicLinks -> this
+    is Nfile -> InvalidArgument(message)
 }

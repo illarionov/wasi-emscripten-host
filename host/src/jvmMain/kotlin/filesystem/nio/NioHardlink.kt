@@ -11,7 +11,6 @@ import arrow.core.raise.either
 import at.released.weh.filesystem.error.Exists
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.error.IoError
-import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.ReadLinkError
 import at.released.weh.filesystem.error.SymlinkError
@@ -20,6 +19,7 @@ import at.released.weh.filesystem.fdresource.nio.createSymlink
 import at.released.weh.filesystem.fdresource.nio.readSymbolicLink
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.hardlink.Hardlink
+import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.io.IOException
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.FileSystemException
@@ -39,13 +39,13 @@ internal class NioHardlink(
             path = input.oldPath,
             baseDirectory = input.oldBaseDirectory,
             followSymlinks = input.followSymlinks,
-        ).mapLeft(OpenError::toHardlinkError).bind()
+        ).withResolvePathErrorAsCommonError().bind()
 
         val newPath = fsState.pathResolver.resolve(
             path = input.newPath,
             baseDirectory = input.newBaseDirectory,
             followSymlinks = false,
-        ).mapLeft(OpenError::toHardlinkError).bind()
+        ).withResolvePathErrorAsCommonError().bind()
 
         if (!input.followSymlinks && createLinkFollowSymlinks && oldPath.nio.isSymbolicLink()) {
             copySymlink(oldPath.nio, newPath.nio).bind()
@@ -94,8 +94,3 @@ private fun copySymlink(
 private fun ReadLinkError.toHardlinkError(): HardlinkError = this as HardlinkError
 
 private fun SymlinkError.toHardlinkError(): HardlinkError = this as HardlinkError
-
-private fun OpenError.toHardlinkError(): HardlinkError = when (this) {
-    is HardlinkError -> this
-    else -> IoError(this.message)
-}
