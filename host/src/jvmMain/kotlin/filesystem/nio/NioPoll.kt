@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows
+package at.released.weh.filesystem.nio
 
 import arrow.core.Either
 import arrow.core.left
@@ -18,23 +18,13 @@ import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.op.poll.Event
 import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.poll.Subscription
-import at.released.weh.filesystem.posix.op.poll.posixClockId
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
 import at.released.weh.host.clock.MonotonicClock
-import at.released.weh.host.windows.clock.WindowsMonotonicClock
-import kotlinx.atomicfu.locks.withLock
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import platform.posix.EINTR
-import platform.posix.EINVAL
-import platform.posix.ENOTSUP
-import platform.posix.clock_nanosleep
-import platform.posix.timespec
+import at.released.weh.host.jvm.clock.JvmMonotonicClock
+import kotlin.concurrent.withLock
 
-internal class WindowsPoll(
-    private val fsState: WindowsFileSystemState,
-    private val monotonicClock: MonotonicClock = WindowsMonotonicClock,
+internal class NioPoll(
+    private val fsState: NioFileSystemState,
+    private val monotonicClock: MonotonicClock = JvmMonotonicClock,
 ) : FileSystemOperationHandler<Poll, PollError, List<Event>> {
     private val pollHelper = PollHelper(
         fdsResourceProvider = { fsState.get(it) },
@@ -60,23 +50,15 @@ internal class WindowsPoll(
     }
 }
 
+@Suppress("MagicNumber", "UnusedParameter")
 private fun nanosleep(
     clock: Subscription.SubscriptionClockId,
     timeoutNs: Long,
 ): Either<FileSystemErrno, Unit> {
-    return memScoped {
-        @Suppress("MagicNumber")
-        val timespec: timespec = alloc<timespec>().apply {
-            tv_sec = timeoutNs / 1_000_000_000L
-            tv_nsec = (timeoutNs % 1_000_000_000).toInt()
-        }
-        val result = clock_nanosleep(clock.posixClockId, 0, timespec.ptr, null)
-        when (result) {
-            0 -> Unit.right()
-            EINTR -> FileSystemErrno.INTR.left()
-            EINVAL -> FileSystemErrno.INVAL.left()
-            ENOTSUP -> FileSystemErrno.NOTSUP.left()
-            else -> FileSystemErrno.INVAL.left()
-        }
+    try {
+        Thread.sleep(timeoutNs / 1_000_000, (timeoutNs % 1_000_000).toInt())
+    } catch (_: InterruptedException) {
+        return FileSystemErrno.INTR.left()
     }
+    return Unit.right()
 }

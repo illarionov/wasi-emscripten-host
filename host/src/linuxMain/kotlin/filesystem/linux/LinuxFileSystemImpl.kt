@@ -30,6 +30,7 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
@@ -79,6 +80,7 @@ internal class LinuxFileSystemImpl(
         GetCurrentWorkingDirectory to LinuxGetCurrentWorkingDirectory(fsState.pathResolver),
         Hardlink to LinuxHardlink(fsState.fsExecutor),
         Mkdir to LinuxMkdir(fsState.fsExecutor),
+        Poll to LinuxPoll(fsState),
         PrestatFd to LinuxPrestatFd(fsState),
         Symlink to LinuxSymlink(fsState.fsExecutor),
         ReadFd to LinuxReadFd(fsState),

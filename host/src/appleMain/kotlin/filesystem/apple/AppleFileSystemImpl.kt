@@ -29,6 +29,7 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
@@ -79,6 +80,7 @@ internal class AppleFileSystemImpl(
         GetCurrentWorkingDirectory to AppleGetCurrentWorkingDirectory(fsState.pathResolver),
         Hardlink to AppleHardlink(fsState.fsExecutor),
         Mkdir to AppleMkdir(fsState.fsExecutor),
+        Poll to ApplePoll(fsState),
         PrestatFd to ApplePrestatFd(fsState),
         Symlink to AppleSymlink(fsState.fsExecutor),
         ReadFd to AppleReadFd(fsState),
