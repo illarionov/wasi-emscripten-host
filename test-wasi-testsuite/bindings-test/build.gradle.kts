@@ -6,12 +6,9 @@
 
 import at.released.weh.gradle.multiplatform.test.setupCopyDirectoryToIosTestResources
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.APPLE
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_LINUX
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_MACOS
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_WINDOWS
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.LINUX
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.MINGW
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.jetbrains.kotlin.gradle.plugin.ExecutionTaskHolder
@@ -47,16 +44,10 @@ wasiTestsuiteTestGen {
         // legacy, not used anywhere
         TestIgnore("fd_fdstat_set_rights"),
 
-        // resolveBeneath is not yet implemented
-        TestIgnore("interesting_paths", setOf(APPLE)),
-
         // Fails on JVM for Windows because hardlinks to file must have the same inode,
         // Fails on MinGW because the test does not close all file descriptors before removing the directory
         // (https://github.com/WebAssembly/wasi-testsuite/pull/102)
         TestIgnore("path_link", setOf(JVM_ON_WINDOWS, MINGW)),
-
-        // Not yet implemented
-        TestIgnore("poll_oneoff_stdio", setOf(APPLE, LINUX, JVM)),
 
         // Fails on JVM for Linux because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
         // TODO: fix on MacOS

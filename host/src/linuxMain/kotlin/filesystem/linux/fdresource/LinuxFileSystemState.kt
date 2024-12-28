@@ -39,7 +39,7 @@ internal class LinuxFileSystemState private constructor(
     preopenedDirectories: Map<FileDescriptor, FdResource>,
     currentWorkingDirectory: FileDescriptor,
 ) : AutoCloseable {
-    private val fdsLock: ReentrantLock = reentrantLock()
+    internal val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )

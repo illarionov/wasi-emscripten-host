@@ -49,7 +49,7 @@ internal class AppleFileSystemState private constructor(
     currentWorkingDirectoryFd: FileDescriptor,
     isRootAccessAllowed: Boolean,
 ) : AutoCloseable {
-    private val fdsLock: ReentrantLock = reentrantLock()
+    internal val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
         stdio.toFileDescriptorMap() + preopenedDirectories,
     )

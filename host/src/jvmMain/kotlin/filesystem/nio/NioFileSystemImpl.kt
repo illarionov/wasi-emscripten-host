@@ -30,6 +30,7 @@ import at.released.weh.filesystem.op.lock.AddAdvisoryLockFd
 import at.released.weh.filesystem.op.lock.RemoveAdvisoryLockFd
 import at.released.weh.filesystem.op.mkdir.Mkdir
 import at.released.weh.filesystem.op.opencreate.Open
+import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.prestat.PrestatFd
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readlink.ReadLink
@@ -85,6 +86,7 @@ internal class NioFileSystemImpl(
         GetCurrentWorkingDirectory to NioGetCurrentWorkingDirectory(fsState.pathResolver, NioPathConverter(javaFs)),
         Hardlink to NioHardlink(fsState),
         Mkdir to NioMkdir(fsState),
+        Poll to NioPoll(fsState),
         PrestatFd to NioPrestatFd(fsState),
         ReadFd to NioReadFd(fsState),
         ReadDirFd to NioReadDirFd(fsState),

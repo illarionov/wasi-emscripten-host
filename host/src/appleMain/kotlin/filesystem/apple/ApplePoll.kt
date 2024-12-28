@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.windows
+package at.released.weh.filesystem.apple
 
 import arrow.core.Either
 import arrow.core.left
@@ -18,10 +18,8 @@ import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.op.poll.Event
 import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.poll.Subscription
-import at.released.weh.filesystem.posix.op.poll.posixClockId
-import at.released.weh.filesystem.windows.fdresource.WindowsFileSystemState
+import at.released.weh.host.apple.clock.AppleMonotonicClock
 import at.released.weh.host.clock.MonotonicClock
-import at.released.weh.host.windows.clock.WindowsMonotonicClock
 import kotlinx.atomicfu.locks.withLock
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -29,12 +27,12 @@ import kotlinx.cinterop.ptr
 import platform.posix.EINTR
 import platform.posix.EINVAL
 import platform.posix.ENOTSUP
-import platform.posix.clock_nanosleep
 import platform.posix.timespec
+import platform.posix.nanosleep as posixNanosleep
 
-internal class WindowsPoll(
-    private val fsState: WindowsFileSystemState,
-    private val monotonicClock: MonotonicClock = WindowsMonotonicClock,
+internal class ApplePoll(
+    private val fsState: AppleFileSystemState,
+    private val monotonicClock: MonotonicClock = AppleMonotonicClock,
 ) : FileSystemOperationHandler<Poll, PollError, List<Event>> {
     private val pollHelper = PollHelper(
         fdsResourceProvider = { fsState.get(it) },
@@ -61,16 +59,16 @@ internal class WindowsPoll(
 }
 
 private fun nanosleep(
-    clock: Subscription.SubscriptionClockId,
+    @Suppress("UnusedParameter") clock: Subscription.SubscriptionClockId,
     timeoutNs: Long,
 ): Either<FileSystemErrno, Unit> {
     return memScoped {
         @Suppress("MagicNumber")
         val timespec: timespec = alloc<timespec>().apply {
             tv_sec = timeoutNs / 1_000_000_000L
-            tv_nsec = (timeoutNs % 1_000_000_000).toInt()
+            tv_nsec = (timeoutNs % 1_000_000_000)
         }
-        val result = clock_nanosleep(clock.posixClockId, 0, timespec.ptr, null)
+        val result = posixNanosleep(timespec.ptr, null)
         when (result) {
             0 -> Unit.right()
             EINTR -> FileSystemErrno.INTR.left()
