@@ -28,6 +28,7 @@ import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscriptio
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionClockId.MONOTONIC
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionClockId.REALTIME
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionTimeout
+import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.MonotonicClock
 
 internal const val POLL_PERIOD_NS = 100_000_000L
@@ -131,20 +132,44 @@ internal class PollHelper(
         return listOf(ClockEvent(errno, minTimeoutSubscription.userdata)).right()
     }
 
-    internal fun FileDescriptorSubscription.toErrorEvent(
-        errno: FileSystemErrno = BADF,
-    ) = Event.FileDescriptorEvent(
-        errno = errno,
-        userdata = userdata,
-        fileDescriptor = fileDescriptor,
-        type = type,
-        bytesAvailable = 0,
-        isHangup = false,
-    )
-
     internal class EventGroups(
         val fdsToBlock: List<Pair<FileDescriptorSubscription, FdResource>>,
         val clockSubscriptions: List<ClockSubscription>,
         val events: List<Event>,
     )
 }
+
+internal fun getMinimalTimeoutOrNull(
+    subscriptions: List<ClockSubscription>,
+    realtimeClock: Clock,
+    monotonicClock: MonotonicClock,
+): Pair<Long, ClockSubscription>? = subscriptions
+    .map { it.getTimeoutNs(realtimeClock, monotonicClock) to it }
+    .minByOrNull { it.first }
+
+private fun ClockSubscription.getTimeoutNs(
+    realtimeClock: Clock,
+    monotonicClock: MonotonicClock,
+): Long = when (timeout) {
+    is SubscriptionTimeout.Absolute -> {
+        val now = when (this.clock) {
+            REALTIME -> realtimeClock.getCurrentTimeEpochNanoseconds()
+            MONOTONIC -> monotonicClock.getTimeMarkNanoseconds()
+            else -> return Long.MAX_VALUE
+        }
+        timeout.timeoutNs - now
+    }
+
+    is SubscriptionTimeout.Relative -> timeout.timeoutNs
+}
+
+internal fun FileDescriptorSubscription.toErrorEvent(
+    errno: FileSystemErrno = BADF,
+) = Event.FileDescriptorEvent(
+    errno = errno,
+    userdata = userdata,
+    fileDescriptor = fileDescriptor,
+    type = type,
+    bytesAvailable = 0,
+    isHangup = false,
+)
