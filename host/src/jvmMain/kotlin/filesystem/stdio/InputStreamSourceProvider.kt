@@ -12,6 +12,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.Again
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.NonblockingPollError
+import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
 import kotlinx.io.RawSource
 import kotlinx.io.asSource
@@ -35,13 +36,18 @@ private class InputStreamStdioSource(
                 StdioPollEvent(
                     errno = SUCCESS,
                     bytesAvailable = bytesAvailable.toLong(),
-                    isHangup = false,
+                    isHangup = true,
                 ).right()
             } else {
                 AGAIN_ERROR
             }
-        } catch (ioe: IOException) {
-            BadFileDescriptor("Input stream closed (${ioe.message})").left()
+        } catch (_: IOException) {
+            // XXX: find out why this executed on CI
+            return StdioPollEvent(
+                errno = FileSystemErrno.SUCCESS,
+                bytesAvailable = 0,
+                isHangup = true,
+            ).right()
         }
     }
 
