@@ -28,6 +28,7 @@ import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscriptio
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionClockId.MONOTONIC
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionClockId.REALTIME
 import at.released.weh.filesystem.op.poll.Subscription.SubscriptionTimeout
+import at.released.weh.filesystem.op.poll.toEvent
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.MonotonicClock
 
@@ -65,13 +66,13 @@ internal class PollHelper(
                             ifLeft = { error: NonblockingPollError ->
                                 when (error) {
                                     is Again -> fdsToBlock.add(subscription to fd)
-                                    else -> events.add(subscription.toErrorEvent(error.errno))
+                                    else -> events.add(subscription.toEvent(error.errno))
                                 }
                             },
                             ifRight = { event -> events.add(event) },
                         )
                     } else {
-                        events.add(subscription.toErrorEvent())
+                        events.add(subscription.toEvent(errno = BADF))
                     }
                 }
             }
@@ -103,7 +104,7 @@ internal class PollHelper(
                     ifLeft = { error ->
                         when (error) {
                             is Again -> null
-                            else -> subscription.toErrorEvent(error.errno)
+                            else -> subscription.toEvent(error.errno)
                         }
                     },
                     ifRight = ::identity,
@@ -151,25 +152,11 @@ private fun ClockSubscription.getTimeoutNs(
     realtimeClock: Clock,
     monotonicClock: MonotonicClock,
 ): Long = when (timeout) {
-    is SubscriptionTimeout.Absolute -> {
-        val now = when (this.clock) {
-            REALTIME -> realtimeClock.getCurrentTimeEpochNanoseconds()
-            MONOTONIC -> monotonicClock.getTimeMarkNanoseconds()
-            else -> return Long.MAX_VALUE
-        }
-        timeout.timeoutNs - now
+    is SubscriptionTimeout.Absolute -> when (clock) {
+        REALTIME -> timeout.timeoutNs - realtimeClock.getCurrentTimeEpochNanoseconds()
+        MONOTONIC -> timeout.timeoutNs - monotonicClock.getTimeMarkNanoseconds()
+        else -> Long.MAX_VALUE
     }
 
     is SubscriptionTimeout.Relative -> timeout.timeoutNs
 }
-
-internal fun FileDescriptorSubscription.toErrorEvent(
-    errno: FileSystemErrno = BADF,
-) = Event.FileDescriptorEvent(
-    errno = errno,
-    userdata = userdata,
-    fileDescriptor = fileDescriptor,
-    type = type,
-    bytesAvailable = 0,
-    isHangup = false,
-)
