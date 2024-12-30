@@ -7,6 +7,11 @@
 package at.released.weh.filesystem.op.poll
 
 import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
+import at.released.weh.filesystem.op.poll.Event.ClockEvent
+import at.released.weh.filesystem.op.poll.Subscription.ClockSubscription
+import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 
 public sealed interface Subscription {
     public val userdata: Long
@@ -45,3 +50,23 @@ public sealed interface Subscription {
         val type: FileDescriptorEventType,
     ) : Subscription
 }
+
+internal fun ClockSubscription.toEvent(
+    errno: FileSystemErrno = SUCCESS,
+) = ClockEvent(
+    errno = errno,
+    userdata = this.userdata,
+)
+
+internal fun FileDescriptorSubscription.toEvent(
+    errno: FileSystemErrno = SUCCESS,
+    bytesAvailable: Long = 0,
+    isHangup: Boolean = false,
+) = Event.FileDescriptorEvent(
+    errno = errno,
+    userdata = userdata,
+    fileDescriptor = fileDescriptor,
+    type = type,
+    bytesAvailable = bytesAvailable,
+    isHangup = isHangup,
+)

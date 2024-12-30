@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("LOCAL_VARIABLE_EARLY_DECLARATION")
+
 package at.released.weh.filesystem.apple
 
 import arrow.core.Either
@@ -13,12 +15,21 @@ import arrow.core.right
 import at.released.weh.filesystem.error.InvalidArgument
 import at.released.weh.filesystem.error.PollError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
-import at.released.weh.filesystem.internal.op.poll.PollHelper
+import at.released.weh.filesystem.internal.op.poll.getMinimalTimeoutOrNull
 import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import at.released.weh.filesystem.op.poll.Event
 import at.released.weh.filesystem.op.poll.Poll
 import at.released.weh.filesystem.op.poll.Subscription
+import at.released.weh.filesystem.op.poll.Subscription.ClockSubscription
+import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
+import at.released.weh.filesystem.op.poll.toEvent
+import at.released.weh.filesystem.posix.poll.PosixPollHelper
+import at.released.weh.filesystem.posix.poll.PosixPollHelper.NonPollableSubscription
+import at.released.weh.filesystem.posix.poll.PosixPollHelper.PollableSubscription
+import at.released.weh.host.apple.clock.AppleClock
 import at.released.weh.host.apple.clock.AppleMonotonicClock
+import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.MonotonicClock
 import kotlinx.atomicfu.locks.withLock
 import kotlinx.cinterop.alloc
@@ -32,31 +43,66 @@ import platform.posix.nanosleep as posixNanosleep
 
 internal class ApplePoll(
     private val fsState: AppleFileSystemState,
+    private val realtimeClock: Clock = AppleClock,
     private val monotonicClock: MonotonicClock = AppleMonotonicClock,
 ) : FileSystemOperationHandler<Poll, PollError, List<Event>> {
-    private val pollHelper = PollHelper(
-        fdsResourceProvider = { fsState.get(it) },
+    private val pollHelper = PosixPollHelper(
         monotonicClock = monotonicClock,
         nanosleep = ::nanosleep,
     )
 
+    @Suppress("DestructuringDeclarationWithTooManyEntries")
     override fun invoke(input: Poll): Either<PollError, List<Event>> = either {
-        val subscriptionGroups = fsState.fdsLock.withLock {
-            pollHelper.groupSubscriptions(input.subscriptions)
-        }
-        if (subscriptionGroups.events.isNotEmpty()) {
-            return subscriptionGroups.events.right()
+        val (pollable, nonPollable, clockSubscriptions, events) = fsState.fdsLock.withLock {
+            groupSubscriptions(input.subscriptions)
         }
 
-        return if (subscriptionGroups.fdsToBlock.isEmpty() && subscriptionGroups.clockSubscriptions.isEmpty()) {
-            InvalidArgument("Subscription list is empty").left()
-        } else if (subscriptionGroups.fdsToBlock.isEmpty()) {
-            pollHelper.waitNearestTimer(subscriptionGroups.clockSubscriptions)
-        } else {
-            pollHelper.pollSubscriptions(subscriptionGroups.fdsToBlock, subscriptionGroups.clockSubscriptions)
+        return try {
+            if (events.isNotEmpty()) {
+                return events.right()
+            }
+            if (pollable.isEmpty() && nonPollable.isEmpty() && clockSubscriptions.isEmpty()) {
+                return InvalidArgument("Subscription list is empty").left()
+            }
+            val timeoutSubscription = getMinimalTimeoutOrNull(clockSubscriptions, realtimeClock, monotonicClock)
+            pollHelper.pollSubscriptions(pollable, nonPollable, timeoutSubscription)
+        } finally {
+            pollHelper.closeSubscriptions(pollable)
         }
     }
+
+    private fun groupSubscriptions(
+        subscriptions: List<Subscription>,
+    ): AppleEventGroups {
+        val pollable: MutableList<PollableSubscription> = ArrayList(subscriptions.size)
+        val nonPollable: MutableList<NonPollableSubscription> = mutableListOf()
+        val clockSubscriptions: MutableList<ClockSubscription> = mutableListOf()
+        val events: MutableList<Event> = ArrayList(subscriptions.size)
+
+        subscriptions.forEach { subscription: Subscription ->
+            when (subscription) {
+                is ClockSubscription -> clockSubscriptions.add(subscription)
+                is FileDescriptorSubscription -> {
+                    val channel = fsState.get(subscription.fileDescriptor)
+                    if (channel != null) {
+                        // TODO: detect subscriptions that can be polled using native poll()
+                        nonPollable.add(NonPollableSubscription(subscription, channel))
+                    } else {
+                        events.add(subscription.toEvent(errno = BADF))
+                    }
+                }
+            }
+        }
+        return AppleEventGroups(pollable, nonPollable, clockSubscriptions, events)
+    }
 }
+
+private data class AppleEventGroups(
+    val pollableSubscriptions: List<PollableSubscription>,
+    val nonPollableSubscriptions: List<NonPollableSubscription>,
+    val clockSubscriptions: List<ClockSubscription>,
+    val events: List<Event>,
+)
 
 private fun nanosleep(
     @Suppress("UnusedParameter") clock: Subscription.SubscriptionClockId,

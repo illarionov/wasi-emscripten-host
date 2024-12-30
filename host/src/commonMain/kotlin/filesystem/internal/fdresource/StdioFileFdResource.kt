@@ -155,7 +155,6 @@ internal class StdioFileFdResource(
                     is StdioReadWriteError.IoError -> IoError(error.message)
                 }
             }.flatMap {
-                // TODO: transfers should be atomic
                 it.transferTo(iovecs)
             }
     }
@@ -169,7 +168,6 @@ internal class StdioFileFdResource(
                     is StdioReadWriteError.IoError -> IoError(error.message)
                 }
             }.flatMap {
-                // TODO: transfers should be atomic
                 it.transferFrom(cIovecs)
             }
     }
