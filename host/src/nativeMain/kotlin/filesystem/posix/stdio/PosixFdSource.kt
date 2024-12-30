@@ -13,8 +13,8 @@ import arrow.core.right
 import at.released.weh.filesystem.error.Again
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.NonblockingPollError
-import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
+import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.nativefunc.nativeFdBytesAvailable
 import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioSource
@@ -30,16 +30,17 @@ import platform.posix.dup
 import platform.posix.errno
 
 internal expect fun readNative(
-    fd: Int,
+    fd: NativeFileFd,
     buf: CValuesRef<*>,
     count: Int,
 ): Either<Int, Int>
 
 internal class PosixFdSource private constructor(
-    private val fd: FileDescriptor,
-) : StdioSource {
+    private val fd: NativeFileFd,
+) : StdioSource, StdioHasNativeFd {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
+    override val nativeFileDescriptor: Int = fd.fd
 
     override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
         checkSourceNotClosed()
@@ -89,7 +90,7 @@ internal class PosixFdSource private constructor(
             return
         }
 
-        val result = platform.posix.close(fd)
+        val result = platform.posix.close(fd.fd)
         if (result == -1) {
             throw IOException("Can not close $fd. Error `$errno`")
         }
@@ -102,13 +103,13 @@ internal class PosixFdSource private constructor(
         private val AGAIN_ERROR = Again("Data not available").left()
 
         fun create(
-            fd: FileDescriptor = STDIN_FILENO,
+            fd: NativeFileFd = NativeFileFd(STDIN_FILENO),
         ): PosixFdSource {
-            val newfd = dup(fd)
+            val newfd = dup(fd.fd)
             if (newfd == -1) {
                 throw IOException("Can not duplicate $fd. Error `$errno`")
             }
-            return PosixFdSource(newfd)
+            return PosixFdSource(NativeFileFd(newfd))
         }
     }
 }

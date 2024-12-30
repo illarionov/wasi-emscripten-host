@@ -9,13 +9,14 @@ package at.released.weh.filesystem.posix.stdio
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CValuesRef
 import platform.posix.errno
 import platform.posix.fsync
 import platform.posix.write
 
-internal actual fun syncNative(fd: Int): Either<Int, Unit> {
-    val result = fsync(fd)
+internal actual fun syncNative(fd: NativeFileFd): Either<Int, Unit> {
+    val result = fsync(fd.fd)
     return if (result == 0) {
         Unit.right()
     } else {
@@ -24,11 +25,11 @@ internal actual fun syncNative(fd: Int): Either<Int, Unit> {
 }
 
 internal actual fun writeNative(
-    fd: Int,
+    fd: NativeFileFd,
     buf: CValuesRef<*>,
     bytes: Int,
 ): Either<Int, Int> {
-    val bytesWritten = write(fd, buf, bytes.toULong())
+    val bytesWritten = write(fd.fd, buf, bytes.toULong())
     return if (bytes >= 0) {
         bytesWritten.toInt().right()
     } else {
