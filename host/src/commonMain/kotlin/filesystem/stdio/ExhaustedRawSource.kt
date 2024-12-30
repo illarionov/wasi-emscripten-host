@@ -6,13 +6,16 @@
 
 package at.released.weh.filesystem.stdio
 
+import arrow.core.Either
+import arrow.core.right
+import at.released.weh.filesystem.error.NonblockingPollError
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import kotlinx.io.Buffer
-import kotlinx.io.RawSource
 import kotlin.concurrent.Volatile
 
 internal class ExhaustedRawSource(
     @Volatile private var isClosed: Boolean = false,
-) : RawSource {
+) : StdioSource {
     override fun close() {
         isClosed = true
     }
@@ -21,6 +24,14 @@ internal class ExhaustedRawSource(
         checkSourceNotClosed()
         require(byteCount >= 0)
         return -1
+    }
+
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
+        return StdioPollEvent(
+            errno = BADF,
+            bytesAvailable = 0,
+            isHangup = true,
+        ).right()
     }
 
     private fun checkSourceNotClosed(): Unit = check(!isClosed) { "Source is closed" }

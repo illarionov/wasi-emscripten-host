@@ -7,20 +7,19 @@
 package at.released.weh.filesystem.posix.stdio
 
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.stdio.SinkProvider
-import kotlinx.io.RawSink
+import at.released.weh.filesystem.stdio.StdioSink
 import platform.posix.STDERR_FILENO
 import platform.posix.STDOUT_FILENO
 
 internal class PosixSinkProvider(
     private val fd: FileDescriptor,
-) : SinkProvider {
-    override fun open(): RawSink {
+) : StdioSink.Provider {
+    override fun open(): StdioSink {
         return PosixFdSink.create(fd)
     }
 
     internal companion object {
-        val stdoutProvider: SinkProvider = PosixSinkProvider(fd = STDOUT_FILENO)
-        val stderrProvider: SinkProvider = PosixSinkProvider(fd = STDERR_FILENO)
+        val stdoutProvider: StdioSink.Provider = PosixSinkProvider(fd = STDOUT_FILENO)
+        val stderrProvider: StdioSink.Provider = PosixSinkProvider(fd = STDERR_FILENO)
     }
 }

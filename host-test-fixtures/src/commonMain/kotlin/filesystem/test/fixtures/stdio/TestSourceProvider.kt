@@ -6,17 +6,16 @@
 
 package at.released.weh.filesystem.test.fixtures.stdio
 
-import at.released.weh.filesystem.stdio.SourceProvider
+import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.io.Buffer
-import kotlinx.io.RawSource
 import kotlinx.io.writeString
 
-public class TestSourceProvider : SourceProvider {
+public class TestSourceProvider : StdioSource.Provider {
     public val source: TestRawSource = TestRawSource()
 
-    override fun open(): RawSource = source
+    override fun open(): StdioSource = source
 
-    public class TestRawSource : RawSource {
+    public class TestRawSource : StdioSource {
         public val buffer: Buffer = Buffer()
 
         override fun close(): Unit = Unit

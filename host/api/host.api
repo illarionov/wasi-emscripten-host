@@ -45,12 +45,12 @@ public abstract interface class at/released/weh/filesystem/dsl/FileSystemEngineC
 }
 
 public final class at/released/weh/filesystem/dsl/StandardInputOutputConfigBlock {
-	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
-	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
-	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
-	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
-	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/SourceProvider;)V
-	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
+	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/StdioSource$Provider;
+	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
+	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/StdioSource$Provider;)V
+	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
 }
 
 public final class at/released/weh/filesystem/error/AccessDenied : at/released/weh/filesystem/error/CheckAccessError, at/released/weh/filesystem/error/ChmodError, at/released/weh/filesystem/error/ChownError, at/released/weh/filesystem/error/FdAttributesError, at/released/weh/filesystem/error/FileSystemOperationError, at/released/weh/filesystem/error/GetCurrentWorkingDirectoryError, at/released/weh/filesystem/error/HardlinkError, at/released/weh/filesystem/error/MkdirError, at/released/weh/filesystem/error/OpenError, at/released/weh/filesystem/error/ReadDirError, at/released/weh/filesystem/error/ReadLinkError, at/released/weh/filesystem/error/RenameError, at/released/weh/filesystem/error/ResolveRelativePathErrors, at/released/weh/filesystem/error/SetTimestampError, at/released/weh/filesystem/error/StatError, at/released/weh/filesystem/error/SymlinkError, at/released/weh/filesystem/error/TruncateError, at/released/weh/filesystem/error/UnlinkError {
@@ -2046,25 +2046,56 @@ public final class at/released/weh/filesystem/preopened/PreopenedDirectory {
 public final class at/released/weh/filesystem/stdio/JvmStandardInputOutput : at/released/weh/filesystem/stdio/StandardInputOutput {
 	public static final field INSTANCE Lat/released/weh/filesystem/stdio/JvmStandardInputOutput;
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
-	public fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
-	public fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public fun getStderrProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+	public fun getStdinProvider ()Lat/released/weh/filesystem/stdio/StdioSource$Provider;
+	public fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class at/released/weh/filesystem/stdio/SinkProvider {
-	public abstract fun open ()Lkotlinx/io/RawSink;
-}
-
-public abstract interface class at/released/weh/filesystem/stdio/SourceProvider {
-	public abstract fun open ()Lkotlinx/io/RawSource;
-}
-
 public abstract interface class at/released/weh/filesystem/stdio/StandardInputOutput {
-	public abstract fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
-	public abstract fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
-	public abstract fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public abstract fun getStderrProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+	public abstract fun getStdinProvider ()Lat/released/weh/filesystem/stdio/StdioSource$Provider;
+	public abstract fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+}
+
+public final class at/released/weh/filesystem/stdio/StdioPollEvent {
+	public static final field Companion Lat/released/weh/filesystem/stdio/StdioPollEvent$Companion;
+	public fun <init> ()V
+	public fun <init> (Lat/released/weh/filesystem/model/FileSystemErrno;JZ)V
+	public synthetic fun <init> (Lat/released/weh/filesystem/model/FileSystemErrno;JZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public final fun component2 ()J
+	public final fun component3 ()Z
+	public final fun copy (Lat/released/weh/filesystem/model/FileSystemErrno;JZ)Lat/released/weh/filesystem/stdio/StdioPollEvent;
+	public static synthetic fun copy$default (Lat/released/weh/filesystem/stdio/StdioPollEvent;Lat/released/weh/filesystem/model/FileSystemErrno;JZILjava/lang/Object;)Lat/released/weh/filesystem/stdio/StdioPollEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytesAvailable ()J
+	public final fun getErrno ()Lat/released/weh/filesystem/model/FileSystemErrno;
+	public static final fun getSTDIO_POLL_EVENT_SUCCESS ()Lat/released/weh/filesystem/stdio/StdioPollEvent;
+	public fun hashCode ()I
+	public final fun isHangup ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class at/released/weh/filesystem/stdio/StdioPollEvent$Companion {
+	public final fun getSTDIO_POLL_EVENT_SUCCESS ()Lat/released/weh/filesystem/stdio/StdioPollEvent;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/StdioSink : kotlinx/io/RawSink {
+	public fun pollNonblocking ()Larrow/core/Either;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/StdioSink$Provider {
+	public abstract fun open ()Lat/released/weh/filesystem/stdio/StdioSink;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/StdioSource : kotlinx/io/RawSource {
+	public fun pollNonblocking ()Larrow/core/Either;
+}
+
+public abstract interface class at/released/weh/filesystem/stdio/StdioSource$Provider {
+	public abstract fun open ()Lat/released/weh/filesystem/stdio/StdioSource;
 }
 
 public abstract interface class at/released/weh/host/CommandArgsProvider {
@@ -2096,9 +2127,9 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
 	public final fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
-	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
-	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/SourceProvider;
-	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/SinkProvider;
+	public final fun getStderrProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
+	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/StdioSource$Provider;
+	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
 	public final fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
 	public final fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
 	public final fun setClock (Lat/released/weh/host/clock/Clock;)V
@@ -2109,9 +2140,9 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
 	public final fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)V
 	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
-	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
-	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/SourceProvider;)V
-	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/SinkProvider;)V
+	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
+	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/StdioSource$Provider;)V
+	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
 	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
 	public final fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
 }

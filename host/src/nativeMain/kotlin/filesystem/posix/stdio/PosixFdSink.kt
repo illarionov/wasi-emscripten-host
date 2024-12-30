@@ -10,14 +10,17 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.stdio.StdioPollEvent
+import at.released.weh.filesystem.stdio.StdioPollEvent.Companion.STDIO_POLL_EVENT_SUCCESS
+import at.released.weh.filesystem.stdio.StdioSink
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
-import kotlinx.io.RawSink
 import kotlinx.io.readByteArray
 import platform.posix.STDOUT_FILENO
 import platform.posix.dup
@@ -35,7 +38,7 @@ internal expect fun writeNative(
 
 internal class PosixFdSink private constructor(
     private val fd: FileDescriptor,
-) : RawSink {
+) : StdioSink {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
 
@@ -78,6 +81,11 @@ internal class PosixFdSink private constructor(
         if (result == -1) {
             throw IOException("Can not close $fd. Error `$errno`")
         }
+    }
+
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
+        // XXX: use real poll?
+        return STDIO_POLL_EVENT_SUCCESS.right()
     }
 
     private fun checkSinkNotClosed(): Unit = check(!isClosed.value) { "Sink is closed" }

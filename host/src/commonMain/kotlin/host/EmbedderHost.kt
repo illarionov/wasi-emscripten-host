@@ -13,8 +13,8 @@ import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.dsl.DirectoryConfigBlock
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.filesystem.stdio.SinkProvider
-import at.released.weh.filesystem.stdio.SourceProvider
+import at.released.weh.filesystem.stdio.StdioSink
+import at.released.weh.filesystem.stdio.StdioSource
 import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.CputimeSource
@@ -38,9 +38,9 @@ public interface EmbedderHost : AutoCloseable {
     @WasiEmscriptenHostDsl
     public class Builder {
         public var rootLogger: Logger = Logger
-        public var stdinProvider: SourceProvider? = null
-        public var stdoutProvider: SinkProvider? = null
-        public var stderrProvider: SinkProvider? = null
+        public var stdinProvider: StdioSource.Provider? = null
+        public var stdoutProvider: StdioSink.Provider? = null
+        public var stderrProvider: StdioSink.Provider? = null
         public var systemEnvProvider: SystemEnvProvider? = null
         public var commandArgsProvider: CommandArgsProvider? = null
         public var fileSystem: FileSystem? = null

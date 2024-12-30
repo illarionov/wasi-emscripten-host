@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.stdio
+package at.released.weh.filesystem.posix.nativefunc
 
-import kotlinx.io.IOException
-import kotlinx.io.RawSink
+import arrow.core.Either
 
-public fun interface SinkProvider {
-    @Throws(IOException::class)
-    public fun open(): RawSink
-}
+internal expect fun nativeFdBytesAvailable(fd: Int): Either<Int, Int>

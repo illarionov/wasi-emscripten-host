@@ -7,12 +7,11 @@
 package at.released.weh.filesystem.posix.stdio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
-import at.released.weh.filesystem.stdio.SourceProvider
-import kotlinx.io.RawSource
+import at.released.weh.filesystem.stdio.StdioSource
 
 @InternalWasiEmscriptenHostApi
-internal object PosixStdinSourceProvider : SourceProvider {
-    override fun open(): RawSource {
+internal object PosixStdinSourceProvider : StdioSource.Provider {
+    override fun open(): StdioSource {
         return PosixFdSource.create()
     }
 }

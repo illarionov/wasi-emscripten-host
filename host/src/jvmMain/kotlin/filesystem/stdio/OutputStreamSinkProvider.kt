@@ -12,6 +12,11 @@ import java.io.OutputStream
 
 internal class OutputStreamSinkProvider(
     private val streamProvider: () -> OutputStream,
-) : SinkProvider {
-    override fun open(): RawSink = streamProvider().asSink()
+) : StdioSink.Provider {
+    override fun open(): StdioSink = OutputStreamStdioSink(streamProvider())
 }
+
+private class OutputStreamStdioSink(
+    private val outputStream: OutputStream,
+    private val sink: RawSink = outputStream.asSink(),
+) : StdioSink, RawSink by sink

@@ -7,14 +7,23 @@
 package at.released.weh.filesystem.posix.stdio
 
 import arrow.core.Either
+import arrow.core.flatMap
+import arrow.core.left
+import arrow.core.right
+import at.released.weh.filesystem.error.Again
+import at.released.weh.filesystem.error.BadFileDescriptor
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
+import at.released.weh.filesystem.posix.nativefunc.nativeFdBytesAvailable
+import at.released.weh.filesystem.stdio.StdioPollEvent
+import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
-import kotlinx.io.RawSource
 import platform.posix.EBADF
 import platform.posix.STDIN_FILENO
 import platform.posix.dup
@@ -28,7 +37,7 @@ internal expect fun readNative(
 
 internal class PosixFdSource private constructor(
     private val fd: FileDescriptor,
-) : RawSource {
+) : StdioSource {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
 
@@ -58,6 +67,22 @@ internal class PosixFdSource private constructor(
         )
     }
 
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
+        return nativeFdBytesAvailable(fd)
+            .mapLeft { BadFileDescriptor("Can not read bytes available") }
+            .flatMap { bytesAvailable ->
+                if (bytesAvailable != 0) {
+                    StdioPollEvent(
+                        errno = SUCCESS,
+                        bytesAvailable = bytesAvailable.toLong(),
+                        isHangup = false,
+                    ).right()
+                } else {
+                    AGAIN_ERROR
+                }
+            }
+    }
+
     override fun close() {
         if (isClosed.getAndSet(true)) {
             // Do not close the same file descriptor twice even in case of an error
@@ -74,6 +99,7 @@ internal class PosixFdSource private constructor(
 
     internal companion object {
         const val MAX_REQUEST_BYTES = 65536
+        private val AGAIN_ERROR = Again("Data not available").left()
 
         fun create(
             fd: FileDescriptor = STDIN_FILENO,
