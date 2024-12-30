@@ -59,8 +59,8 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.stdio.ExhaustedRawSource
-import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSink
 import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.withLock
@@ -70,13 +70,13 @@ import kotlinx.io.RawSource
 
 internal class StdioFileFdResource(
     val sourceProvider: StdioSource.Provider,
-    val sinkProvider: SinkProvider,
+    val sinkProvider: StdioSink.Provider,
 ) : FdResource {
     private val writeLock: ReentrantLock = ReentrantLock()
     private val readLock: ReentrantLock = ReentrantLock()
     private var isOpen: Boolean = true
-    private var source: RawSource? = null
-    private var sink: RawSink? = null
+    private var source: StdioSource? = null
+    private var sink: StdioSink? = null
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> {
         return FdAttributesResult(

@@ -10,6 +10,7 @@ import arrow.core.Either
 import arrow.core.right
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileSystemErrno
+import at.released.weh.filesystem.model.FileSystemErrno.BADF
 import at.released.weh.filesystem.op.poll.FileDescriptorEventType
 import kotlinx.io.Buffer
 import kotlin.concurrent.Volatile
@@ -27,10 +28,9 @@ internal class ExhaustedRawSource(
         return -1
     }
 
-    override fun pollNonblocking(type: FileDescriptorEventType): Either<NonblockingPollError, StdioPollEvent> {
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
         return StdioPollEvent(
-            errno = FileSystemErrno.BADF,
-            type = type,
+            errno = BADF,
             bytesAvailable = 0,
             isHangup = true,
         ).right()

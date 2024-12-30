@@ -9,8 +9,8 @@ package at.released.weh.filesystem
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.posix.stdio.PosixStandardInputOutput
-import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSink
 import at.released.weh.filesystem.stdio.StdioSource
 import at.released.weh.filesystem.windows.WindowsFileSystemImpl
 
@@ -24,9 +24,9 @@ public object WindowsFileSystem : FileSystemEngine<Nothing> {
         val stdio = object : StandardInputOutput {
             override val stdinProvider: StdioSource.Provider =
                 stdioConfig.stdinProvider ?: PosixStandardInputOutput.stdinProvider
-            override val stdoutProvider: SinkProvider =
+            override val stdoutProvider: StdioSink.Provider =
                 stdioConfig.stdoutProvider ?: PosixStandardInputOutput.stdoutProvider
-            override val stderrProvider: SinkProvider =
+            override val stderrProvider: StdioSink.Provider =
                 stdioConfig.stderrProvider ?: PosixStandardInputOutput.stderrProvider
         }
 

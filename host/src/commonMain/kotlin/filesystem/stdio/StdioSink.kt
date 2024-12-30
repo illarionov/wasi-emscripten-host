@@ -11,13 +11,13 @@ import arrow.core.right
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.stdio.StdioPollEvent.Companion.STDIO_POLL_EVENT_SUCCESS
 import kotlinx.io.IOException
-import kotlinx.io.RawSource
+import kotlinx.io.RawSink
 
-public interface StdioSource : RawSource {
+public interface StdioSink : RawSink {
     public fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> = STDIO_POLL_EVENT_SUCCESS.right()
 
     public fun interface Provider {
         @Throws(IOException::class)
-        public fun open(): StdioSource
+        public fun open(): StdioSink
     }
 }

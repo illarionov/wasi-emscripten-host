@@ -8,6 +8,6 @@ package at.released.weh.filesystem.stdio
 
 public data object JvmStandardInputOutput : StandardInputOutput {
     override val stdinProvider: StdioSource.Provider = InputStreamSourceProvider(System::`in`)
-    override val stdoutProvider: SinkProvider = OutputStreamSinkProvider(System::out)
-    override val stderrProvider: SinkProvider = OutputStreamSinkProvider(System::err)
+    override val stdoutProvider: StdioSink.Provider = OutputStreamSinkProvider(System::out)
+    override val stderrProvider: StdioSink.Provider = OutputStreamSinkProvider(System::err)
 }

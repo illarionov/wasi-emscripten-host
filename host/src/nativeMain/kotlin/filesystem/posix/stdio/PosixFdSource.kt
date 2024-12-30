@@ -61,9 +61,9 @@ internal class PosixFdSource private constructor(
         )
     }
 
-    override fun pollNonblocking(type: FileDescriptorEventType): Either<NonblockingPollError, StdioPollEvent> {
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
         // TODO
-        return super.pollNonblocking(type)
+        return super.pollNonblocking()
     }
 
     override fun close() {

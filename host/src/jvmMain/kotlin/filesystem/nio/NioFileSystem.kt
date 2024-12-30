@@ -11,8 +11,8 @@ import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemEngine
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.stdio.JvmStandardInputOutput
-import at.released.weh.filesystem.stdio.SinkProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSink
 import at.released.weh.filesystem.stdio.StdioSource
 
 public object NioFileSystem : FileSystemEngine<NioFileSystemConfig> {
@@ -42,7 +42,7 @@ public object NioFileSystem : FileSystemEngine<NioFileSystemConfig> {
 
     private data class JvmLocalStandardInputOutput(
         override val stdinProvider: StdioSource.Provider,
-        override val stdoutProvider: SinkProvider,
-        override val stderrProvider: SinkProvider,
+        override val stdoutProvider: StdioSink.Provider,
+        override val stderrProvider: StdioSink.Provider,
     ) : StandardInputOutput
 }
