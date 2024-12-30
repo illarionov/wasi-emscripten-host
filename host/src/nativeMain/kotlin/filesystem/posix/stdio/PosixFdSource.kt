@@ -9,7 +9,6 @@ package at.released.weh.filesystem.posix.stdio
 import arrow.core.Either
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.op.poll.FileDescriptorEventType
 import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.atomic

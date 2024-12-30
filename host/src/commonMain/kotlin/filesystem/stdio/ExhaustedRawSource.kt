@@ -9,9 +9,7 @@ package at.released.weh.filesystem.stdio
 import arrow.core.Either
 import arrow.core.right
 import at.released.weh.filesystem.error.NonblockingPollError
-import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
-import at.released.weh.filesystem.op.poll.FileDescriptorEventType
 import kotlinx.io.Buffer
 import kotlin.concurrent.Volatile
 

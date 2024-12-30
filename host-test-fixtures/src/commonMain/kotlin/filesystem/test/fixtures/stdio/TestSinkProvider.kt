@@ -8,7 +8,6 @@ package at.released.weh.filesystem.test.fixtures.stdio
 
 import at.released.weh.filesystem.stdio.StdioSink
 import kotlinx.io.Buffer
-import kotlinx.io.RawSink
 import kotlinx.io.readString
 
 public class TestSinkProvider : StdioSink.Provider {

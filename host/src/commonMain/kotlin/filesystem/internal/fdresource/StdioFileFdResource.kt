@@ -47,26 +47,26 @@ import at.released.weh.filesystem.internal.fdresource.stdio.transferTo
 import at.released.weh.filesystem.model.FdFlag
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
-import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.Filetype.CHARACTER_DEVICE
 import at.released.weh.filesystem.model.Whence
 import at.released.weh.filesystem.op.fadvise.Advice
 import at.released.weh.filesystem.op.fdattributes.FdAttributesResult
 import at.released.weh.filesystem.op.lock.Advisorylock
 import at.released.weh.filesystem.op.poll.Event.FileDescriptorEvent
+import at.released.weh.filesystem.op.poll.FileDescriptorEventType.READ
+import at.released.weh.filesystem.op.poll.FileDescriptorEventType.WRITE
 import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.stdio.ExhaustedRawSource
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioSink
 import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.withLock
 import kotlinx.io.IOException
-import kotlinx.io.RawSink
-import kotlinx.io.RawSource
 
 internal class StdioFileFdResource(
     val sourceProvider: StdioSource.Provider,
@@ -172,7 +172,7 @@ internal class StdioFileFdResource(
             }
     }
 
-    private fun getOrOpenSinkUnsafe(): Either<StdioReadWriteError, RawSink> {
+    private fun getOrOpenSinkUnsafe(): Either<StdioReadWriteError, StdioSink> {
         if (!isOpen) {
             return Closed("Stdio file descriptor is closed").left()
         }
@@ -190,7 +190,7 @@ internal class StdioFileFdResource(
         }
     }
 
-    private fun getOrOpenSourceUnsafe(): Either<StdioReadWriteError, RawSource> {
+    private fun getOrOpenSourceUnsafe(): Either<StdioReadWriteError, StdioSource> {
         if (!isOpen) {
             return Closed("Stdio file descriptor is closed").left()
         }
@@ -238,15 +238,30 @@ internal class StdioFileFdResource(
     override fun pollNonblocking(
         subscription: FileDescriptorSubscription,
     ): Either<NonblockingPollError, FileDescriptorEvent> {
-        // TODO
-        return FileDescriptorEvent(
-            errno = FileSystemErrno.SUCCESS,
-            userdata = subscription.userdata,
-            fileDescriptor = subscription.fileDescriptor,
-            type = subscription.type,
-            bytesAvailable = 0,
-            isHangup = false,
-        ).right()
+        val eventSource: Either<NonblockingPollError, StdioPollEvent> = when (subscription.type) {
+            READ -> {
+                val source = readLock.withLock {
+                    getOrOpenSourceUnsafe()
+                }
+                source.mapLeft { BadFileDescriptor(it.message) }.flatMap(StdioSource::pollNonblocking)
+            }
+            WRITE -> {
+                val sink = writeLock.withLock {
+                    getOrOpenSinkUnsafe()
+                }
+                sink.mapLeft { BadFileDescriptor(it.message) }.flatMap(StdioSink::pollNonblocking)
+            }
+        }
+        return eventSource.map { event ->
+            FileDescriptorEvent(
+                errno = event.errno,
+                userdata = subscription.userdata,
+                fileDescriptor = subscription.fileDescriptor,
+                type = subscription.type,
+                bytesAvailable = event.bytesAvailable,
+                isHangup = event.isHangup,
+            )
+        }
     }
 
     companion object {
