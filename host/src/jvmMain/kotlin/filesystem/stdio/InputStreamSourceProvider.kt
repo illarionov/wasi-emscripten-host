@@ -10,7 +10,6 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.Again
-import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
