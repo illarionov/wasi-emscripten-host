@@ -7,7 +7,7 @@
 package at.released.weh.filesystem.stdio
 
 public interface StandardInputOutput {
-    public val stdinProvider: SourceProvider
+    public val stdinProvider: StdioSource.Provider
     public val stdoutProvider: SinkProvider
     public val stderrProvider: SinkProvider
 }

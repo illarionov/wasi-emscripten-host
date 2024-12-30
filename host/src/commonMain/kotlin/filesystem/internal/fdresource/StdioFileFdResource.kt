@@ -60,8 +60,8 @@ import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.stdio.ExhaustedRawSource
 import at.released.weh.filesystem.stdio.SinkProvider
-import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.withLock
 import kotlinx.io.IOException
@@ -69,7 +69,7 @@ import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 
 internal class StdioFileFdResource(
-    val sourceProvider: SourceProvider,
+    val sourceProvider: StdioSource.Provider,
     val sinkProvider: SinkProvider,
 ) : FdResource {
     private val writeLock: ReentrantLock = ReentrantLock()
@@ -258,7 +258,7 @@ internal class StdioFileFdResource(
                 sinkProvider = this.stdoutProvider,
             )
             val stdErr = StdioFileFdResource(
-                sourceProvider = SourceProvider(::ExhaustedRawSource),
+                sourceProvider = StdioSource.Provider(::ExhaustedRawSource),
                 sinkProvider = this.stderrProvider,
             )
             return mapOf(

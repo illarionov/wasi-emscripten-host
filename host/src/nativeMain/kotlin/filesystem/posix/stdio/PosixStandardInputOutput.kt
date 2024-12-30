@@ -7,11 +7,11 @@
 package at.released.weh.filesystem.posix.stdio
 
 import at.released.weh.filesystem.stdio.SinkProvider
-import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSource
 
 public data object PosixStandardInputOutput : StandardInputOutput {
-    override val stdinProvider: SourceProvider = PosixStdinSourceProvider
+    override val stdinProvider: StdioSource.Provider = PosixStdinSourceProvider
     override val stdoutProvider: SinkProvider = PosixSinkProvider.stdoutProvider
     override val stderrProvider: SinkProvider = PosixSinkProvider.stderrProvider
 }

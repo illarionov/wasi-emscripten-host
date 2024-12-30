@@ -11,8 +11,8 @@ import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.linux.LinuxFileSystemImpl
 import at.released.weh.filesystem.posix.stdio.PosixStandardInputOutput
 import at.released.weh.filesystem.stdio.SinkProvider
-import at.released.weh.filesystem.stdio.SourceProvider
 import at.released.weh.filesystem.stdio.StandardInputOutput
+import at.released.weh.filesystem.stdio.StdioSource
 
 public object LinuxFileSystem : FileSystemEngine<Nothing> {
     @InternalWasiEmscriptenHostApi
@@ -22,7 +22,7 @@ public object LinuxFileSystem : FileSystemEngine<Nothing> {
     ): FileSystem {
         val stdioConfig = commonConfig.stdioConfig
         val stdio = object : StandardInputOutput {
-            override val stdinProvider: SourceProvider =
+            override val stdinProvider: StdioSource.Provider =
                 stdioConfig.stdinProvider ?: PosixStandardInputOutput.stdinProvider
             override val stdoutProvider: SinkProvider =
                 stdioConfig.stdoutProvider ?: PosixStandardInputOutput.stdoutProvider

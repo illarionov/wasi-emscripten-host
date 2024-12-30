@@ -7,14 +7,17 @@
 package at.released.weh.filesystem.posix.stdio
 
 import arrow.core.Either
+import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.op.poll.FileDescriptorEventType
+import at.released.weh.filesystem.stdio.StdioPollEvent
+import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
-import kotlinx.io.RawSource
 import platform.posix.EBADF
 import platform.posix.STDIN_FILENO
 import platform.posix.dup
@@ -28,7 +31,7 @@ internal expect fun readNative(
 
 internal class PosixFdSource private constructor(
     private val fd: FileDescriptor,
-) : RawSource {
+) : StdioSource {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
 
@@ -56,6 +59,11 @@ internal class PosixFdSource private constructor(
                 }
             },
         )
+    }
+
+    override fun pollNonblocking(type: FileDescriptorEventType): Either<NonblockingPollError, StdioPollEvent> {
+        // TODO
+        return super.pollNonblocking(type)
     }
 
     override fun close() {
