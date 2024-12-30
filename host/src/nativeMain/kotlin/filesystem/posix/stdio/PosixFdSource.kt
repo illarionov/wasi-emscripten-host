@@ -7,8 +7,15 @@
 package at.released.weh.filesystem.posix.stdio
 
 import arrow.core.Either
+import arrow.core.flatMap
+import arrow.core.left
+import arrow.core.right
+import at.released.weh.filesystem.error.Again
+import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
+import at.released.weh.filesystem.posix.nativefunc.nativeFdBytesAvailable
 import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioSource
 import kotlinx.atomicfu.atomic
@@ -61,8 +68,19 @@ internal class PosixFdSource private constructor(
     }
 
     override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
-        // TODO
-        return super.pollNonblocking()
+        return nativeFdBytesAvailable(fd)
+            .mapLeft { BadFileDescriptor("Can not read bytes available") }
+            .flatMap { bytesAvailable ->
+                if (bytesAvailable != 0) {
+                    StdioPollEvent(
+                        errno = SUCCESS,
+                        bytesAvailable = bytesAvailable.toLong(),
+                        isHangup = false,
+                    ).right()
+                } else {
+                    AGAIN_ERROR
+                }
+            }
     }
 
     override fun close() {
@@ -81,6 +99,7 @@ internal class PosixFdSource private constructor(
 
     internal companion object {
         const val MAX_REQUEST_BYTES = 65536
+        private val AGAIN_ERROR = Again("Data not available").left()
 
         fun create(
             fd: FileDescriptor = STDIN_FILENO,

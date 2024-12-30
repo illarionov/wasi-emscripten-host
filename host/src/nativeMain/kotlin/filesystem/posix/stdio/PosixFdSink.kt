@@ -13,6 +13,7 @@ import arrow.core.right
 import at.released.weh.filesystem.error.NonblockingPollError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.stdio.StdioPollEvent
+import at.released.weh.filesystem.stdio.StdioPollEvent.Companion.STDIO_POLL_EVENT_SUCCESS
 import at.released.weh.filesystem.stdio.StdioSink
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CValuesRef
@@ -83,8 +84,8 @@ internal class PosixFdSink private constructor(
     }
 
     override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
-        // TODO
-        return super.pollNonblocking()
+        // XXX: use real poll?
+        return STDIO_POLL_EVENT_SUCCESS.right()
     }
 
     private fun checkSinkNotClosed(): Unit = check(!isClosed.value) { "Sink is closed" }
