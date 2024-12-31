@@ -92,7 +92,7 @@ kotlin {
             implementation(kotlin("test-junit"))
         }
         commonTest.dependencies {
-            implementation(projects.bindingsChasm)
+            implementation(projects.bindingsChasmWasip1)
             implementation(kotlin("test"))
         }
         jvmTest.dependencies {

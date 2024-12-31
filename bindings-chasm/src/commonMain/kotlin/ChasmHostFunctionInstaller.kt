@@ -6,7 +6,6 @@
 
 package at.released.weh.bindings.chasm
 
-import at.released.weh.bindings.chasm.dsl.ChasmHostFunctionInstallerDsl
 import at.released.weh.bindings.chasm.exports.ChasmEmscriptenMainExports
 import at.released.weh.bindings.chasm.exports.ChasmEmscriptenStackExports
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
@@ -32,7 +31,7 @@ import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
  *
  * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
  *
- * To create a new instance, use either [Companion.invoke].
+ * To create a new instance, use [Companion.invoke].
  *
  * Usage example:
  *

@@ -6,15 +6,14 @@
 
 package at.released.weh.wasi.bindings.test.chasm.base
 
-import at.released.weh.bindings.chasm.ChasmHostFunctionInstaller
 import at.released.weh.bindings.chasm.exception.ProcExitException
+import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import io.github.charlietap.chasm.embedding.instance
 import io.github.charlietap.chasm.embedding.invoke
 import io.github.charlietap.chasm.embedding.module
-import io.github.charlietap.chasm.embedding.shapes.Import
 import io.github.charlietap.chasm.embedding.shapes.Instance
 import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.embedding.shapes.flatMap
@@ -54,13 +53,9 @@ object ChasmWasmTestRuntime : WasmTestRuntime {
         wasmFile: ByteArray,
         host: EmbedderHost,
     ): Instance {
-        val chasmInstaller = ChasmHostFunctionInstaller(store) {
+        val hostImports = ChasmWasiPreview1Builder(store) {
             this.host = host
-        }
-        val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
-        val hostImports: List<Import> = buildList {
-            addAll(wasiHostFunctions)
-        }
+        }.build()
 
         val instance: Instance = module(
             bytes = wasmFile,

@@ -1,15 +1,12 @@
-# Module bindings-chasm
+# Module bindings-chasm-wasip1
 
-[Chasm] WebAssembly runtime integration.
+Wasi Preview 1 host functions for [Chasm] WebAssembly runtime.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chasm?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chasm/overview)
-
-* Primary targets: *JVM*, *LinuxX64*
-* Other targets: *Android*, *iosSimulatorArm64*, *iosArm64*, *iosX64*, *linuxArm64*, *macosArm64*, *macosX64*, *mingwX64*
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chasm-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chasm/overview)
 
 ## Usage
 
-Use [ChasmHostFunctionInstaller](https://weh.released.at/wasi-emscripten-host/aggregate-documentation/build/dokka/html/bindings-chasm/at.released.weh.bindings.chasm/-chasm-host-function-installer/index.html)
+Use [ChasmWasiPreview1Installer](http://localhost:63342/wasi-emscripten-host/aggregate-documentation/build/dokka/html/bindings-chasm/at.released.weh.bindings.chasm/-chasm-host-function-installer/index.html)
 to set up host functions.
 
 ```kotlin
@@ -26,8 +23,8 @@ val memoryType = MemoryType(
 )
 val memory: Memory = memory(store, memoryType)
 
-// Prepare WASI and Emscripten host imports
-val chasmInstaller = ChasmHostFunctionInstaller(store) {
+// Prepare WASI host imports
+val chasmInstaller = ChasmWasiPreview1Installer(store) {
     memoryProvider = { memory }
 }
 val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
