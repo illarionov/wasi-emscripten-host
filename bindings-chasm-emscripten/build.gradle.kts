@@ -13,8 +13,8 @@ plugins {
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_bindings_chasm_version",
-    envVariableName = "WEH_BINDINGS_CHASM_VERSION",
+    propertiesFileKey = "weh_bindings_chasm_emscripten_version",
+    envVariableName = "WEH_BINDINGS_CHASM_EMSCRIPTEN_VERSION",
 ).get()
 
 kotlin {
@@ -41,8 +41,6 @@ kotlin {
             api(projects.commonApi)
             implementation(projects.commonUtil)
             implementation(libs.kotlinx.io)
-            // compileOnly(libs.chasm.memory)
-            // compileOnly(libs.chasm.runtime)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -9,7 +9,7 @@ plugins {
 }
 
 dependencies {
-//    mavenSnapshotAggregation(projects.bindingsChasm)
+    mavenSnapshotAggregation(projects.bindingsChasmEmscripten)
     mavenSnapshotAggregation(projects.bindingsChasmWasip1)
     mavenSnapshotAggregation(projects.bindingsChicory)
     mavenSnapshotAggregation(projects.bindingsGraalvm241)

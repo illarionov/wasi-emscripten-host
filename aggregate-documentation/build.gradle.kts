@@ -28,7 +28,7 @@ tasks.register<Sync>("buildWebsite") {
 }
 
 dependencies {
-//    dokkatoo(projects.bindingsChasm)
+    dokkatoo(projects.bindingsChasmEmscripten)
     dokkatoo(projects.bindingsChasmWasip1)
     dokkatoo(projects.bindingsChicory)
     dokkatoo(projects.bindingsGraalvm241)

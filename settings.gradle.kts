@@ -34,7 +34,7 @@ rootProject.name = "wasi-emscripten-host"
 
 include("aggregate-documentation")
 include("aggregate-distribution")
-// include("bindings-chasm")
+include("bindings-chasm-emscripten")
 include("bindings-chasm-wasip1")
 include("bindings-chicory")
 include("bindings-graalvm241")
