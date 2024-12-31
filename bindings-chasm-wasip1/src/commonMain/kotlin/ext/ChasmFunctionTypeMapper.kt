@@ -6,13 +6,15 @@
 
 package at.released.weh.bindings.chasm.ext
 
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes
 import io.github.charlietap.chasm.embedding.shapes.ValueType
 import io.github.charlietap.chasm.embedding.shapes.FunctionType as ChasmFunctionType
 
-internal fun List<HostFunctionType>.toChasmFunctionTypes(): Map<HostFunctionType, ChasmFunctionType> = associateWith(
+@InternalWasiEmscriptenHostApi
+public fun List<HostFunctionType>.toChasmFunctionTypes(): Map<HostFunctionType, ChasmFunctionType> = associateWith(
     HostFunctionType::toChasmFunctionType,
 )
 

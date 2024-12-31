@@ -6,20 +6,17 @@
 
 package at.released.weh.bindings.chasm
 
-import at.released.weh.bindings.chasm.dsl.ChasmHostFunctionInstallerDsl
+import at.released.weh.bindings.chasm.dsl.ChasmHostFunctionDsl
 import at.released.weh.bindings.chasm.exports.ChasmEmscriptenMainExports
 import at.released.weh.bindings.chasm.exports.ChasmEmscriptenStackExports
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
 import at.released.weh.bindings.chasm.module.emscripten.createEmscriptenHostFunctions
-import at.released.weh.bindings.chasm.module.wasi.createCustomWasiPreview1HostFunctions
-import at.released.weh.bindings.chasm.module.wasi.createWasiPreview1HostFunctions
+import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
 import at.released.weh.common.api.Logger
 import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
-import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
-import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import io.github.charlietap.chasm.embedding.shapes.Import
@@ -32,7 +29,7 @@ import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
  *
  * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
  *
- * To create a new instance, use either [Companion.invoke].
+ * To create a new instance, use [Companion.invoke].
  *
  * Usage example:
  *
@@ -41,44 +38,36 @@ import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
  * val memory: Memory = memory(store, memoryType)
  *
  * // Prepare WASI and Emscripten host imports
- * val chasmInstaller = ChasmHostFunctionInstaller(store) {
+ * val chasmHostBuilder = ChasmEmscriptenHostBuilder(store) {
  *     memoryProvider = { memory }
  * }
- * val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
- * val emscriptenInstaller = chasmInstaller.setupEmscriptenFunctions()
+ * val wasiHostFunctions = chasmHostBuilder.setupWasiPreview1HostFunctions()
+ * val emscriptenFinalizer = chasmHostBuilder.setupEmscriptenFunctions()
  * ```
  */
-public class ChasmHostFunctionInstaller private constructor(
+public class ChasmEmscriptenHostBuilder private constructor(
     private val store: Store,
-    memoryProvider: (Store.() -> Memory)?,
+    private val memoryProvider: (Store.() -> Memory)?,
     private val host: EmbedderHost,
 ) {
     private val memory = ChasmMemoryAdapter(store, memoryProvider)
 
     public fun setupWasiPreview1HostFunctions(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
-    ): List<Import> {
-        val wasiMemoryReader = DefaultWasiMemoryReader(memory, host.fileSystem)
-        val wasiMemoryWriter = DefaultWasiMemoryWriter(memory, host.fileSystem)
-        return createWasiPreview1HostFunctions(
-            store = store,
-            memory = memory,
-            wasiMemoryReader = wasiMemoryReader,
-            wasiMemoryWriter = wasiMemoryWriter,
-            host = host,
-            moduleName = moduleName,
-        ) + createCustomWasiPreview1HostFunctions(store, moduleName)
-    }
+    ): List<Import> = ChasmWasiPreview1Builder(store) {
+        this.host = this@ChasmEmscriptenHostBuilder.host
+        this.memoryProvider = this@ChasmEmscriptenHostBuilder.memoryProvider
+    }.build(moduleName)
 
     public fun setupEmscriptenFunctions(
         moduleName: String = ENV_MODULE_NAME,
-    ): ChasmEmscriptenInstaller {
-        return ChasmEmscriptenInstaller(store, memory, host.rootLogger).apply {
+    ): ChasmEmscriptenSetupFinalizer {
+        return ChasmEmscriptenSetupFinalizer(store, memory, host.rootLogger).apply {
             setupEmscriptenFunctions(host, moduleName)
         }
     }
 
-    public class ChasmEmscriptenInstaller internal constructor(
+    public class ChasmEmscriptenSetupFinalizer internal constructor(
         private val store: Store,
         private val memory: ChasmMemoryAdapter,
         private val rootLogger: Logger,
@@ -118,10 +107,10 @@ public class ChasmHostFunctionInstaller private constructor(
     public companion object {
         public operator fun invoke(
             store: Store,
-            block: ChasmHostFunctionInstallerDsl.() -> Unit = {},
-        ): ChasmHostFunctionInstaller {
-            val config = ChasmHostFunctionInstallerDsl().apply(block)
-            return ChasmHostFunctionInstaller(
+            block: ChasmHostFunctionDsl.() -> Unit = {},
+        ): ChasmEmscriptenHostBuilder {
+            val config = ChasmHostFunctionDsl().apply(block)
+            return ChasmEmscriptenHostBuilder(
                 store = store,
                 memoryProvider = config.memoryProvider,
                 host = config.host ?: EmbedderHost.Builder().build(),

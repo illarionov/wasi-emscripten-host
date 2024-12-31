@@ -9,13 +9,12 @@ plugins {
     id("at.released.weh.gradle.lint.android-lint-noagp")
     id("at.released.weh.gradle.multiplatform.kotlin")
     id("at.released.weh.gradle.multiplatform.publish")
-    id("at.released.weh.gradle.wasm.codegen.chasm.chasm-adapter-generator")
 }
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_bindings_chasm_version",
-    envVariableName = "WEH_BINDINGS_CHASM_VERSION",
+    propertiesFileKey = "weh_bindings_chasm_emscripten_version",
+    envVariableName = "WEH_BINDINGS_CHASM_EMSCRIPTEN_VERSION",
 ).get()
 
 kotlin {
@@ -36,14 +35,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.host)
+            api(projects.bindingsChasmWasip1)
             api(libs.chasm)
             api(projects.emscriptenRuntime)
-            implementation(projects.commonApi)
+            api(projects.commonApi)
             implementation(projects.commonUtil)
-            implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
-            compileOnly(libs.chasm.memory)
-            compileOnly(libs.chasm.runtime)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

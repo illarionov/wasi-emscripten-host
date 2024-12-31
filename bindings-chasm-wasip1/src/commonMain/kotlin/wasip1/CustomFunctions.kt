@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.bindings.chasm.module.wasi
+package at.released.weh.bindings.chasm.wasip1
 
 import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.bindings.chasm.ext.asInt

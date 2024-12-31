@@ -9,6 +9,7 @@
 package at.released.weh.bindings.chasm.memory
 
 import at.released.weh.bindings.chasm.ext.orThrow
+import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 import at.released.weh.wasm.core.memory.Memory
@@ -23,6 +24,7 @@ import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 import io.github.charlietap.chasm.embedding.shapes.Memory as ChasmMemory
 
+@InternalWasiEmscriptenHostApi
 public class ChasmMemoryAdapter(
     private val store: Store,
     memoryProvider: (Store.() -> ChasmMemory)?,
