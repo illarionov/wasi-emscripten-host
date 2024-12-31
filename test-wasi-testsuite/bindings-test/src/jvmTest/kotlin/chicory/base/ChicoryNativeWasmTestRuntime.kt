@@ -8,7 +8,7 @@ package at.released.weh.wasi.bindings.test.chicory.base
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import at.released.weh.bindings.chicory.ProcExitException
+import at.released.weh.bindings.chicory.exception.ProcExitException
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime

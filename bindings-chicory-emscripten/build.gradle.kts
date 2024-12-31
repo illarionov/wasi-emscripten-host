@@ -13,33 +13,22 @@ plugins {
 
 group = "at.released.weh"
 version = wehVersions.getSubmoduleVersionProvider(
-    propertiesFileKey = "weh_bindings_chasm_emscripten_version",
-    envVariableName = "WEH_BINDINGS_CHASM_EMSCRIPTEN_VERSION",
+    propertiesFileKey = "weh_bindings_chicory_emscripten_version",
+    envVariableName = "WEH_BINDINGS_CHICORY_EMSCRIPTEN_VERSION",
 ).get()
 
 kotlin {
     jvm()
-    iosSimulatorArm64()
-    iosArm64()
-    iosX64()
-    linuxArm64()
-    linuxX64()
-    macosArm64()
-    macosX64()
-    mingwX64 {
-        binaries.all {
-            linkerOpts("-lole32")
-        }
-    }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.host)
-            api(libs.chasm)
-            api(projects.emscriptenRuntime)
             api(projects.commonApi)
+            implementation(projects.bindingsChicoryWasip1)
             implementation(projects.commonUtil)
-            implementation(projects.bindingsChasmWasip1)
+            api(projects.emscriptenRuntime)
+            implementation(projects.wasmWasiPreview1)
+            api(libs.chicory.runtime)
             implementation(libs.kotlinx.io)
         }
         commonTest.dependencies {

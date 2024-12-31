@@ -27,7 +27,7 @@ internal object ChicoryClassname {
         const val CHICORY_BINDINGS_PACKAGE = "at.released.weh.bindings.chicory"
         const val ADAPTER_PACKAGE = "$CHICORY_BINDINGS_PACKAGE.host.module.wasi"
         val CHICORY_FUNCTIONS_CLASS_NAME = ClassName(ADAPTER_PACKAGE, "ChicoryWasiPreview1Functions")
-        val CHICORY_MEMORY_PROVIDER_CLASS_NAME = ClassName(CHICORY_BINDINGS_PACKAGE, "ChicoryMemoryProvider")
+        val CHICORY_MEMORY_PROVIDER_CLASS_NAME = ClassName("$CHICORY_BINDINGS_PACKAGE.memory", "ChicoryMemoryProvider")
         val VALUE_AS_WASM_ADDR = MemberName("at.released.weh.bindings.chicory.ext", "asWasmAddr")
         val WASI_MEMORY_READER_PROVIDER = Function1::class.asClassName().parameterizedBy(
             INSTANCE,
