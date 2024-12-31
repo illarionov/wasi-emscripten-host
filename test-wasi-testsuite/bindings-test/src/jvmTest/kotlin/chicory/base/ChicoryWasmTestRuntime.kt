@@ -6,8 +6,8 @@
 
 package at.released.weh.wasi.bindings.test.chicory.base
 
-import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller
-import at.released.weh.bindings.chicory.ProcExitException
+import at.released.weh.bindings.chicory.exception.ProcExitException
+import at.released.weh.bindings.chicory.wasip1.ChicoryWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
@@ -26,10 +26,9 @@ object ChicoryWasmTestRuntime : WasmTestRuntime {
         arguments: WasiTestsuiteArguments,
         rootDir: Path,
     ): Int {
-        val installer = ChicoryHostFunctionInstaller {
+        val wasiFunctions: List<HostFunction> = ChicoryWasiPreview1Builder {
             this.host = host
-        }
-        val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
+        }.build()
         val store = Store().apply {
             wasiFunctions.forEach { hostFunction -> addFunction(hostFunction) }
         }
