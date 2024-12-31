@@ -172,6 +172,14 @@ internal class StdioFileFdResource(
             }
     }
 
+    internal fun getOrOpenSink(): Either<StdioReadWriteError, StdioSink> = writeLock.withLock {
+        getOrOpenSinkUnsafe()
+    }
+
+    internal fun getOrOpenSource(): Either<StdioReadWriteError, StdioSource> = readLock.withLock {
+        getOrOpenSourceUnsafe()
+    }
+
     private fun getOrOpenSinkUnsafe(): Either<StdioReadWriteError, StdioSink> {
         if (!isOpen) {
             return Closed("Stdio file descriptor is closed").left()
@@ -267,7 +275,7 @@ internal class StdioFileFdResource(
     companion object {
         const val STDIO_FD_RIGHTS: FdRights = FD_DATASYNC or FD_READ or FD_SYNC or FD_WRITE
 
-        fun StandardInputOutput.toFileDescriptorMap(): Map<FileDescriptor, StdioFileFdResource> {
+        fun StandardInputOutput.toFileDescriptorMap(): Map<FileDescriptor, FdResource> {
             val stdInStdOut = StdioFileFdResource(
                 sourceProvider = this.stdinProvider,
                 sinkProvider = this.stdoutProvider,

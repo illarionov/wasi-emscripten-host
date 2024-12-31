@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("UseCheckOrError")
+
 package at.released.weh.filesystem.posix.stdio
 
 import arrow.core.Either
@@ -18,6 +20,7 @@ import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.posix.nativefunc.nativeFdBytesAvailable
 import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioSource
+import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.addressOf
@@ -29,18 +32,13 @@ import platform.posix.STDIN_FILENO
 import platform.posix.dup
 import platform.posix.errno
 
-internal expect fun readNative(
-    fd: NativeFileFd,
-    buf: CValuesRef<*>,
-    count: Int,
-): Either<Int, Int>
+internal expect fun readNative(fd: NativeFileFd, buf: CValuesRef<*>, count: Int): Either<Int, Int>
 
 internal class PosixFdSource private constructor(
     private val fd: NativeFileFd,
-) : StdioSource, StdioHasNativeFd {
-    @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
-    private var isClosed = atomic<Boolean>(false)
-    override val nativeFileDescriptor: Int = fd.fd
+) : StdioSource, StdioWithPollableFileDescriptor {
+    private var isClosed: AtomicBoolean = atomic(false)
+    override val pollableFileDescriptor: Int = fd.fd
 
     override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
         checkSourceNotClosed()
@@ -58,9 +56,8 @@ internal class PosixFdSource private constructor(
                     bytesRead.toLong()
                 }
             },
-            ifLeft = { errNo ->
-                @Suppress("UseCheckOrError")
-                when (errNo) {
+            ifLeft = { errno: Int ->
+                when (errno) {
                     EBADF -> throw IllegalStateException("Bad file descriptor")
                     else -> throw IOException("Error $errno")
                 }
@@ -68,21 +65,19 @@ internal class PosixFdSource private constructor(
         )
     }
 
-    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> {
-        return nativeFdBytesAvailable(fd)
-            .mapLeft { BadFileDescriptor("Can not read bytes available") }
-            .flatMap { bytesAvailable ->
-                if (bytesAvailable != 0) {
-                    StdioPollEvent(
-                        errno = SUCCESS,
-                        bytesAvailable = bytesAvailable.toLong(),
-                        isHangup = false,
-                    ).right()
-                } else {
-                    AGAIN_ERROR
-                }
+    override fun pollNonblocking(): Either<NonblockingPollError, StdioPollEvent> = nativeFdBytesAvailable(fd)
+        .mapLeft { BadFileDescriptor("Can not read bytes available") }
+        .flatMap { bytesAvailable ->
+            if (bytesAvailable != 0) {
+                StdioPollEvent(
+                    errno = SUCCESS,
+                    bytesAvailable = bytesAvailable.toLong(),
+                    isHangup = false,
+                ).right()
+            } else {
+                AGAIN_ERROR
             }
-    }
+        }
 
     override fun close() {
         if (isClosed.getAndSet(true)) {

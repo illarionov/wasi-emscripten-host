@@ -6,14 +6,10 @@
 
 package at.released.weh.filesystem.posix.fdresource
 
-import at.released.weh.filesystem.internal.fdresource.FdResource
+import arrow.core.Either
+import at.released.weh.filesystem.error.NotSupported
+import at.released.weh.filesystem.op.poll.FileDescriptorEventType
 
-internal interface PosixFdResource : FdResource {
-    val fdResourceType: FdResourceType
-
-    public enum class FdResourceType {
-        DIRECTORY,
-        FILE,
-        OTHER,
-    }
+internal interface ResourceWithPollableFileDescriptor {
+    fun getPollableFileDescriptor(event: FileDescriptorEventType): Either<NotSupported, Int>
 }

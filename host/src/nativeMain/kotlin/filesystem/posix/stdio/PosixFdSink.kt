@@ -38,10 +38,10 @@ internal expect fun writeNative(
 
 internal class PosixFdSink private constructor(
     private val fd: NativeFileFd,
-) : StdioSink, StdioHasNativeFd {
+) : StdioSink, StdioWithPollableFileDescriptor {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
-    override val nativeFileDescriptor: Int get() = fd.fd
+    override val pollableFileDescriptor: Int get() = fd.fd
 
     override fun flush() {
         checkSinkNotClosed()

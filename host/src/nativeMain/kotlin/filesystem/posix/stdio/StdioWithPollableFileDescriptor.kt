@@ -6,6 +6,6 @@
 
 package at.released.weh.filesystem.posix.stdio
 
-public interface StdioHasNativeFd {
-    public val nativeFileDescriptor: Int
+public interface StdioWithPollableFileDescriptor {
+    public val pollableFileDescriptor: Int
 }

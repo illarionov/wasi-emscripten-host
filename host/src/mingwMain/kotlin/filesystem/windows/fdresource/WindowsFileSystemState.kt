@@ -15,10 +15,10 @@ import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
+import at.released.weh.filesystem.posix.fdresource.NativeStdioFileFdResource.Companion.toFileDescriptorMapWithNativeFd
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import at.released.weh.filesystem.stdio.StandardInputOutput
 import at.released.weh.filesystem.windows.WindowsPathResolver
@@ -37,7 +37,7 @@ internal class WindowsFileSystemState private constructor(
 ) : AutoCloseable {
     internal val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
-        stdio.toFileDescriptorMap() + preopenedDirectories,
+        stdio.toFileDescriptorMapWithNativeFd() + preopenedDirectories,
     )
     val pathResolver = WindowsPathResolver(fileDescriptors, fdsLock, currentWorkingDirectory, withRootAccess)
 
