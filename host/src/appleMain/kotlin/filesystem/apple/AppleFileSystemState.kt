@@ -22,7 +22,6 @@ import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
-import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
@@ -31,6 +30,7 @@ import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_NOFOLLOW
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import at.released.weh.filesystem.posix.fdresource.DirectFileSystemActionExecutor
 import at.released.weh.filesystem.posix.fdresource.FileSystemActionExecutor
+import at.released.weh.filesystem.posix.fdresource.NativeStdioFileFdResource.Companion.toFileDescriptorMapWithNativeFd
 import at.released.weh.filesystem.posix.fdresource.NonSystemFileSystemActionExecutor
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryChannel
 import at.released.weh.filesystem.posix.fdresource.PosixDirectoryFdResource
@@ -51,7 +51,7 @@ internal class AppleFileSystemState private constructor(
 ) : AutoCloseable {
     internal val fdsLock: ReentrantLock = reentrantLock()
     private val fileDescriptors: FileDescriptorTable<FdResource> = FileDescriptorTable(
-        stdio.toFileDescriptorMap() + preopenedDirectories,
+        stdio.toFileDescriptorMapWithNativeFd() + preopenedDirectories,
     )
     val pathResolver = PosixPathResolver(fileDescriptors, fdsLock, currentWorkingDirectoryFd)
     val fsExecutor: FileSystemActionExecutor = if (isRootAccessAllowed) {

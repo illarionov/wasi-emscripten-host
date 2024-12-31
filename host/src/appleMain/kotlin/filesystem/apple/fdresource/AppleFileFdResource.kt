@@ -49,8 +49,6 @@ import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.op.stat.StructStat
 import at.released.weh.filesystem.posix.NativeFileFd
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
 import at.released.weh.filesystem.posix.nativefunc.posixAddAdvisoryLockFd
 import at.released.weh.filesystem.posix.nativefunc.posixClose
 import at.released.weh.filesystem.posix.nativefunc.posixRemoveAdvisoryLock
@@ -58,9 +56,8 @@ import at.released.weh.filesystem.posix.nativefunc.posixSeek
 
 internal class AppleFileFdResource(
     channel: NativeFileChannel,
-) : PosixFdResource, FdResource {
+) : FdResource {
     private val channel = channel.copy()
-    override val fdResourceType: FdResourceType = FdResourceType.FILE
 
     override fun fdAttributes(): Either<FdAttributesError, FdAttributesResult> = appleFdAttributes(channel)
 

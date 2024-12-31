@@ -24,6 +24,8 @@ import at.released.weh.filesystem.op.poll.Subscription
 import at.released.weh.filesystem.op.poll.Subscription.ClockSubscription
 import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscription
 import at.released.weh.filesystem.op.poll.toEvent
+import at.released.weh.filesystem.posix.NativeFileFd
+import at.released.weh.filesystem.posix.fdresource.ResourceWithPollableFileDescriptor
 import at.released.weh.filesystem.posix.poll.PosixPollHelper
 import at.released.weh.filesystem.posix.poll.PosixPollHelper.NonPollableSubscription
 import at.released.weh.filesystem.posix.poll.PosixPollHelper.PollableSubscription
@@ -82,14 +84,12 @@ internal class ApplePoll(
         subscriptions.forEach { subscription: Subscription ->
             when (subscription) {
                 is ClockSubscription -> clockSubscriptions.add(subscription)
-                is FileDescriptorSubscription -> {
-                    val channel = fsState.get(subscription.fileDescriptor)
-                    if (channel != null) {
-                        // TODO: detect subscriptions that can be polled using native poll()
-                        nonPollable.add(NonPollableSubscription(subscription, channel))
-                    } else {
-                        events.add(subscription.toEvent(errno = BADF))
-                    }
+                is FileDescriptorSubscription -> when (val channel = fsState.get(subscription.fileDescriptor)) {
+                    null -> events.add(subscription.toEvent(errno = BADF))
+                    is ResourceWithPollableFileDescriptor -> channel.getPollableFileDescriptor(subscription.type)
+                        .onLeft { nonPollable.add(NonPollableSubscription(subscription, channel)) }
+                        .onRight { pollable.add(PollableSubscription(NativeFileFd(it), false, subscription)) }
+                    else -> nonPollable.add(NonPollableSubscription(subscription, channel))
                 }
             }
         }

@@ -9,6 +9,7 @@ package at.released.weh.filesystem.posix.nativefunc
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -18,10 +19,10 @@ import platform.posix.FIONREAD
 import platform.posix.errno
 import platform.posix.ioctl
 
-internal actual fun nativeFdBytesAvailable(fd: Int): Either<Int, Int> = memScoped {
+internal actual fun nativeFdBytesAvailable(fd: NativeFileFd): Either<Int, Int> = memScoped {
     val intptr: IntVar = alloc()
 
-    val result = ioctl(fd, FIONREAD.toULong(), intptr.ptr)
+    val result = ioctl(fd.fd, FIONREAD.toULong(), intptr.ptr)
     return if (result == 0) {
         intptr.value.right()
     } else {

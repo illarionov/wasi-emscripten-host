@@ -9,16 +9,17 @@ package at.released.weh.filesystem.posix.stdio
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CValuesRef
 import platform.posix.errno
 import platform.posix.read
 
 internal actual fun readNative(
-    fd: Int,
+    fd: NativeFileFd,
     buf: CValuesRef<*>,
     count: Int,
 ): Either<Int, Int> {
-    val bytes = read(fd, buf, count.toULong())
+    val bytes = read(fd.fd, buf, count.toULong())
     return if (bytes > 0) {
         bytes.toInt().right()
     } else {

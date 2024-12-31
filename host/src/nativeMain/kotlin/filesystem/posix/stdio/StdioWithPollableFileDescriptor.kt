@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.weh.filesystem.posix.nativefunc
+package at.released.weh.filesystem.posix.stdio
 
-import arrow.core.Either
-import at.released.weh.filesystem.posix.NativeFileFd
-
-internal expect fun nativeFdBytesAvailable(fd: NativeFileFd): Either<Int, Int>
+public interface StdioWithPollableFileDescriptor {
+    public val pollableFileDescriptor: Int
+}

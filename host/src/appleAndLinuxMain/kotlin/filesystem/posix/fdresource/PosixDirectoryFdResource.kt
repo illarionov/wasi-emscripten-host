@@ -33,15 +33,11 @@ import at.released.weh.filesystem.op.poll.Subscription.FileDescriptorSubscriptio
 import at.released.weh.filesystem.op.readwrite.FileSystemByteBuffer
 import at.released.weh.filesystem.op.readwrite.ReadWriteStrategy
 import at.released.weh.filesystem.posix.NativeDirectoryFd
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType
-import at.released.weh.filesystem.posix.fdresource.PosixFdResource.FdResourceType.DIRECTORY
 import at.released.weh.filesystem.posix.nativefunc.posixClose
 
 internal abstract class PosixDirectoryFdResource(
     internal val channel: PosixDirectoryChannel,
-) : PosixFdResource, FdResource {
-    override val fdResourceType: FdResourceType = DIRECTORY
-
+) : FdResource {
     init {
         require(channel.nativeFd != NativeDirectoryFd.CURRENT_WORKING_DIRECTORY)
     }

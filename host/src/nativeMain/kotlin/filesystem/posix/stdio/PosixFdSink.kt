@@ -11,7 +11,7 @@ import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
 import at.released.weh.filesystem.error.NonblockingPollError
-import at.released.weh.filesystem.model.FileDescriptor
+import at.released.weh.filesystem.posix.NativeFileFd
 import at.released.weh.filesystem.stdio.StdioPollEvent
 import at.released.weh.filesystem.stdio.StdioPollEvent.Companion.STDIO_POLL_EVENT_SUCCESS
 import at.released.weh.filesystem.stdio.StdioSink
@@ -27,20 +27,21 @@ import platform.posix.dup
 import platform.posix.errno
 
 internal expect fun syncNative(
-    fd: Int,
+    fd: NativeFileFd,
 ): Either<Int, Unit>
 
 internal expect fun writeNative(
-    fd: Int,
+    fd: NativeFileFd,
     buf: CValuesRef<*>,
     bytes: Int,
 ): Either<Int, Int>
 
 internal class PosixFdSink private constructor(
-    private val fd: FileDescriptor,
-) : StdioSink {
+    private val fd: NativeFileFd,
+) : StdioSink, StdioWithPollableFileDescriptor {
     @Suppress("GENERIC_VARIABLE_WRONG_DECLARATION")
     private var isClosed = atomic<Boolean>(false)
+    override val pollableFileDescriptor: Int get() = fd.fd
 
     override fun flush() {
         checkSinkNotClosed()
@@ -67,7 +68,7 @@ internal class PosixFdSink private constructor(
             offset.left()
         }
         bytesOrError.onRight {
-            throw IOException("Can not write to $fd: $errno")
+            throw IOException("Can not write to ${fd.fd}: $errno")
         }
     }
 
@@ -77,7 +78,7 @@ internal class PosixFdSink private constructor(
             return
         }
 
-        val result = platform.posix.close(fd)
+        val result = platform.posix.close(fd.fd)
         if (result == -1) {
             throw IOException("Can not close $fd. Error `$errno`")
         }
@@ -92,13 +93,13 @@ internal class PosixFdSink private constructor(
 
     internal companion object {
         fun create(
-            fd: FileDescriptor = STDOUT_FILENO,
+            fd: NativeFileFd = NativeFileFd(STDOUT_FILENO),
         ): PosixFdSink {
-            val newfd = dup(fd)
+            val newfd = dup(fd.fd)
             if (newfd == -1) {
                 throw IOException("Can not duplicate $fd. Error `$errno`")
             }
-            return PosixFdSink(newfd)
+            return PosixFdSink(NativeFileFd(newfd))
         }
     }
 }

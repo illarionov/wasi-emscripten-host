@@ -9,6 +9,7 @@ package at.released.weh.filesystem.posix.stdio
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.posix.NativeFileFd
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.toLong
@@ -20,8 +21,8 @@ import platform.posix.write
 import platform.windows.FlushFileBuffers
 import platform.windows.INVALID_HANDLE_VALUE
 
-internal actual fun syncNative(fd: Int): Either<Int, Unit> {
-    val handle: intptr_t = _get_osfhandle(fd)
+internal actual fun syncNative(fd: NativeFileFd): Either<Int, Unit> {
+    val handle: intptr_t = _get_osfhandle(fd.fd)
     if (handle == INVALID_HANDLE_VALUE.toLong()) {
         return EBADF.left()
     }
@@ -34,11 +35,11 @@ internal actual fun syncNative(fd: Int): Either<Int, Unit> {
 }
 
 internal actual fun writeNative(
-    fd: Int,
+    fd: NativeFileFd,
     buf: CValuesRef<*>,
     bytes: Int,
 ): Either<Int, Int> {
-    val bytesWritten = write(fd, buf, bytes.toUInt())
+    val bytesWritten = write(fd.fd, buf, bytes.toUInt())
     return if (bytes >= 0) {
         bytesWritten.right()
     } else {
