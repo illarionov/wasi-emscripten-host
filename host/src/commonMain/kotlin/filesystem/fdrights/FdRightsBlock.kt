@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.fdrights
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.fdrights.FdRightsFlag.DIRECTORY_BASE_RIGHTS
 import at.released.weh.filesystem.fdrights.FdRightsFlag.DIRECTORY_INHERITING_RIGHTS
 import at.released.weh.filesystem.fdrights.FdRightsFlag.FILE_BASE_RIGHTS
 
-public data class FdRightsBlock(
+@WasiEmscriptenHostDataModel
+public class FdRightsBlock(
     @FdRightsType
     public val rights: FdRights,
 

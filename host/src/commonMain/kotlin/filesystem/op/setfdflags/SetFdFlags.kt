@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.setfdflags
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.SetFdFlagsError
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FdflagsType
@@ -17,12 +18,13 @@ import at.released.weh.filesystem.op.FileSystemOperation
  * Sets the status flags of an open file descriptor [fd] to [flags].
  * This is similar to `fcntl(fd, F_SETFL, flags)` in POSIX.
  */
-public data class SetFdFlags(
+@WasiEmscriptenHostDataModel
+public class SetFdFlags(
     @IntFileDescriptor
     public val fd: FileDescriptor,
 
     @FdflagsType
-    val flags: Fdflags,
+    public val flags: Fdflags,
 ) {
     public companion object : FileSystemOperation<SetFdFlags, SetFdFlagsError, Unit> {
         override val tag: String = "setfdflags"

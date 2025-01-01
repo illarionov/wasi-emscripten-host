@@ -18,7 +18,22 @@ class WindowsLocalTimeFormatterTest {
     fun formatter_should_work() = LocalTimeFormatterTestFixtures.novosibirskJul27.let { test ->
         withTimeZone("GMT-07") {
             val tm: StructTm = WindowsLocalTimeFormatter.format(test.timeEpochSeconds)
-            assertThat(tm).isEqualTo(test.timeInfo.copy(tm_zone = tm.tm_zone))
+            assertThat(tm).isEqualTo(test.timeInfo.withTmZone(tm_zone = tm.tm_zone))
         }
     }
+
+    @Suppress("FunctionParameterNaming")
+    private fun StructTm.withTmZone(tm_zone: String?): StructTm = StructTm(
+        tm_sec = tm_sec,
+        tm_min = tm_min,
+        tm_hour = tm_hour,
+        tm_mday = tm_mday,
+        tm_mon = tm_mon,
+        tm_year = tm_year,
+        tm_wday = tm_wday,
+        tm_yday = tm_yday,
+        tm_isdst = tm_isdst,
+        tm_gmtoff = tm_gmtoff,
+        tm_zone = tm_zone,
+    )
 }

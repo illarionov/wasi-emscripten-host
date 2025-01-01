@@ -9,6 +9,7 @@
 package at.released.weh.filesystem.path
 
 import arrow.core.Either
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.GetCurrentWorkingDirectoryError
 import at.released.weh.filesystem.error.OpenError
@@ -44,63 +45,75 @@ import at.released.weh.filesystem.error.OpenError as FileSystemOpenError
 import at.released.weh.filesystem.error.TooManySymbolicLinks as FileSystemTooManySymbolicLinks
 
 public sealed interface PathError : FileSystemOperationError {
-    public data class EmptyPath(
+    @WasiEmscriptenHostDataModel
+    public class EmptyPath(
         override val message: String = "Path is empty",
         override val errno: FileSystemErrno = INVAL,
     ) : PathError, ResolvePathError
 
-    public data class InvalidPathFormat(
+    @WasiEmscriptenHostDataModel
+    public class InvalidPathFormat(
         override val message: String,
         override val errno: FileSystemErrno = INVAL,
     ) : PathError, ResolvePathError
 
-    public data class AbsolutePath(
+    @WasiEmscriptenHostDataModel
+    public class AbsolutePath(
         override val message: String,
         override val errno: FileSystemErrno = NOTCAPABLE,
     ) : PathError, ResolvePathError
 
-    public data class PathOutsideOfRootPath(
+    @WasiEmscriptenHostDataModel
+    public class PathOutsideOfRootPath(
         override val message: String,
         override val errno: FileSystemErrno = NOTCAPABLE,
     ) : PathError, ResolvePathError
 
-    public data class AccessDenied(
+    @WasiEmscriptenHostDataModel
+    public class AccessDenied(
         override val message: String,
         override val errno: FileSystemErrno = ACCES,
     ) : ResolvePathError
 
-    public data class NotDirectory(
+    @WasiEmscriptenHostDataModel
+    public class NotDirectory(
         override val message: String,
         override val errno: FileSystemErrno = NOTDIR,
     ) : ResolvePathError
 
-    public data class FileDescriptorNotOpen(
+    @WasiEmscriptenHostDataModel
+    public class FileDescriptorNotOpen(
         override val message: String,
         override val errno: FileSystemErrno = BADF,
     ) : ResolvePathError
 
-    public data class NameTooLong(
+    @WasiEmscriptenHostDataModel
+    public class NameTooLong(
         override val message: String,
         override val errno: FileSystemErrno = FileSystemErrno.NAMETOOLONG,
     ) : ResolvePathError
 
-    public data class OpenFileDescriptorLimitReached(
+    @WasiEmscriptenHostDataModel
+    public class OpenFileDescriptorLimitReached(
         override val message: String,
         override val errno: FileSystemErrno = FileSystemErrno.NFILE,
     ) : ResolvePathError
 
-    public data class TooManySymbolicLinks(
+    @WasiEmscriptenHostDataModel
+    public class TooManySymbolicLinks(
         override val message: String,
         override val errno: FileSystemErrno = FileSystemErrno.LOOP,
     ) : ResolvePathError
 
-    public data class IoError(
+    @WasiEmscriptenHostDataModel
+    public class IoError(
         override val message: String,
         override val errno: FileSystemErrno = IO,
     ) : ResolvePathError
 
-    public data class OtherOpenError(
-        val openError: FileSystemOpenError,
+    @WasiEmscriptenHostDataModel
+    public class OtherOpenError(
+        public val openError: FileSystemOpenError,
         override val message: String = openError.message,
         override val errno: FileSystemErrno = openError.errno,
     ) : ResolvePathError

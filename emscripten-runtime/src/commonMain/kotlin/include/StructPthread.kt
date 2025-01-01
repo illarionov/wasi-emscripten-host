@@ -8,6 +8,7 @@
 
 package at.released.weh.emcripten.runtime.include
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
 
@@ -16,21 +17,22 @@ import at.released.weh.wasm.core.WasmPtr
  *
  * [pthread_impl.h](https://github.com/emscripten-core/emscripten/blob/3.1.61/system/lib/libc/musl/src/internal/pthread_impl.h)
  */
-public data class StructPthread(
+@WasiEmscriptenHostDataModel
+public class StructPthread(
     @IntWasmPtr(StructPthread::class)
-    val self: WasmPtr,
+    public val self: WasmPtr,
 
     // uintptr_t *dtv;
 
     @IntWasmPtr(StructPthread::class)
-    val prev: WasmPtr,
+    public val prev: WasmPtr,
 
     @IntWasmPtr(StructPthread::class)
-    val next: WasmPtr,
+    public val next: WasmPtr,
 
-    val sysinfo: uintptr_t,
+    public val sysinfo: uintptr_t,
     // canary_pad
-    val canary: uintptr_t,
+    public val canary: uintptr_t,
     // Part 2 -- implementation details, non-ABI.
     // …
     /* Part 3 -- the positions of these fields relative to
@@ -45,7 +47,7 @@ public data class StructPthread(
      * still require dynamic allocation.
      */
     @IntWasmPtr
-    val tlsBase: WasmPtr,
+    public val tlsBase: WasmPtr,
 
     /**
      * The lowest level of the proxying system. Other threads can enqueue
@@ -58,7 +60,7 @@ public data class StructPthread(
      * notified that their messages will not be processed after all.
      */
     @IntWasmPtr
-    val mailbox: WasmPtr,
+    public val mailbox: WasmPtr,
 
     /**
      * To ensure that no other thread is concurrently enqueueing a message
@@ -70,7 +72,7 @@ public data class StructPthread(
      * closed and no further messages will be enqueued.
      * _Atomic int mailbox_refcount;
      */
-    val mailboxRefcount: Int,
+    public val mailboxRefcount: Int,
 
     /**
      * Whether the thread has executed an `Atomics.waitAsync` on this
@@ -81,14 +83,14 @@ public data class StructPthread(
      * postMessage path. Once this becomes true, it remains true so we never
      * fall back to postMessage unnecessarily.
      */
-    val waitingAsync: Int,
+    public val waitingAsync: Int,
 
     /**
      * When dynamic linking is enabled, threads use this to facilitate the
      * synchronization of loaded code between threads.
      * See [emscripten_futex_wait.c](https://github.com/emscripten-core/emscripten/blob/3.1.61/system/lib/pthread/emscripten_futex_wait.c)
      */
-    val sleeping: Byte,
+    public val sleeping: Byte,
 ) {
     public companion object {
         public const val STRUCT_PTHREAD_STACK_HIGH_OFFSET: Int = 52

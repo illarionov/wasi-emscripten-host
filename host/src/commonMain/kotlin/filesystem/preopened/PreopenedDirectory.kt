@@ -6,9 +6,11 @@
 
 package at.released.weh.filesystem.preopened
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class PreopenedDirectory(
-    val realPath: String,
-    val virtualPath: VirtualPath,
+@WasiEmscriptenHostDataModel
+public class PreopenedDirectory(
+    public val realPath: String,
+    public val virtualPath: VirtualPath,
 )

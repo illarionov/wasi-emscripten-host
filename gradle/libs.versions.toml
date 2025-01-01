@@ -25,6 +25,7 @@ kotlinx-serialization-json = "1.7.3"
 kotlinx-io ="0.6.0"
 kermit = "2.0.5"
 node-plugin = "7.0.2"
+poko-plugin = "0.18.2"
 spotless = "7.0.0.BETA4"
 
 [libraries]
@@ -60,6 +61,7 @@ detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-p
 diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
 dokkatoo-plugin = { group = "dev.adamko.dokkatoo", name = "dokkatoo-plugin", version.ref = "dokkatoo" }
 node-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "node-plugin" }
+poko-plugin = { group = "dev.drewhamilton.poko", name = "poko-gradle-plugin", version.ref = "poko-plugin" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradle-maven-publish-plugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-binary-compatibility-validator-plugin = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "kotlinx-binary-compatibility-validator" }

@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.chown
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.ChownError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class ChownFd(
+@WasiEmscriptenHostDataModel
+public class ChownFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val owner: Int,

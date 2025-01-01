@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.poll
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
@@ -20,12 +21,14 @@ public sealed interface Subscription {
         public val timeoutNs: Long
         public val precisionNs: Long
 
-        public data class Absolute(
+        @WasiEmscriptenHostDataModel
+        public class Absolute(
             override val timeoutNs: Long,
             override val precisionNs: Long,
         ) : SubscriptionTimeout
 
-        public data class Relative(
+        @WasiEmscriptenHostDataModel
+        public class Relative(
             override val timeoutNs: Long,
             override val precisionNs: Long,
         ) : SubscriptionTimeout
@@ -38,16 +41,18 @@ public sealed interface Subscription {
         THREAD_CPUTIME_ID,
     }
 
-    public data class ClockSubscription(
+    @WasiEmscriptenHostDataModel
+    public class ClockSubscription(
         override val userdata: Long = 0,
-        val clock: SubscriptionClockId,
-        val timeout: SubscriptionTimeout,
+        public val clock: SubscriptionClockId,
+        public val timeout: SubscriptionTimeout,
     ) : Subscription
 
-    public data class FileDescriptorSubscription(
+    @WasiEmscriptenHostDataModel
+    public class FileDescriptorSubscription(
         override val userdata: Long = 0,
         public val fileDescriptor: FileDescriptor,
-        val type: FileDescriptorEventType,
+        public val type: FileDescriptorEventType,
     ) : Subscription
 }
 

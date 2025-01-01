@@ -6,6 +6,8 @@
 
 package at.released.weh.host
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
+
 /**
  * Time conversion information from <time.h>:
  *   * extern char \*tzname\[2];
@@ -17,11 +19,12 @@ package at.released.weh.host
  *  @param stdName Timezone name when daylight saving time is not in effect
  *  @param dstName Timezone name when daylight saving time is in effect
  */
-public data class TimeZoneInfo(
-    val timeZone: Long,
-    val daylight: Int,
-    val stdName: String,
-    val dstName: String,
+@WasiEmscriptenHostDataModel
+public class TimeZoneInfo(
+    public val timeZone: Long,
+    public val daylight: Int,
+    public val stdName: String,
+    public val dstName: String,
 ) {
     public fun interface Provider {
         public fun getTimeZoneInfo(): TimeZoneInfo

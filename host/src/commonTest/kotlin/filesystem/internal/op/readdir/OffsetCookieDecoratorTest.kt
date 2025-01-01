@@ -12,6 +12,7 @@ import assertk.assertions.isEmpty
 import assertk.tableOf
 import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.op.readdir.withCookie
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_CURRENT_DIR_ENTRY
 import at.released.weh.filesystem.test.fixtures.readdir.TestDirEntry.TEST_PARENT_DIR_ENTRY
 import kotlin.test.Test
@@ -32,9 +33,9 @@ class OffsetCookieDecoratorTest {
         val files: List<DirEntry> = iterator.asSequence().toList()
 
         assertThat(files).containsExactlyInAnyOrder(
-            TEST_CURRENT_DIR_ENTRY.copy(cookie = 1),
-            TEST_PARENT_DIR_ENTRY.copy(cookie = 2),
-            testDirEntry.copy(cookie = 3),
+            TEST_CURRENT_DIR_ENTRY.withCookie(cookie = 1),
+            TEST_PARENT_DIR_ENTRY.withCookie(cookie = 2),
+            testDirEntry.withCookie(cookie = 3),
         )
     }
 
@@ -57,12 +58,12 @@ class OffsetCookieDecoratorTest {
             .row(
                 listOf(dir1, dir2, dir3),
                 1L,
-                listOf(dir2.copy(cookie = 2), dir3.copy(cookie = 3)),
+                listOf(dir2.withCookie(cookie = 2), dir3.withCookie(cookie = 3)),
             )
             .row(
                 listOf(dir1, dir2, dir3),
                 2L,
-                listOf(dir3.copy(cookie = 3)),
+                listOf(dir3.withCookie(cookie = 3)),
             )
             .row(
                 listOf(dir1, dir2, dir3),

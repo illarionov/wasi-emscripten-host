@@ -6,9 +6,11 @@
 
 package at.released.weh.filesystem.error
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 
-public data class NotSupported(
+@WasiEmscriptenHostDataModel
+public class NotSupported(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,

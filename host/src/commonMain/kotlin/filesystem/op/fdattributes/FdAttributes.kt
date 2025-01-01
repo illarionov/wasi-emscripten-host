@@ -6,14 +6,16 @@
 
 package at.released.weh.filesystem.op.fdattributes
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.FdAttributesError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class FdAttributes(
+@WasiEmscriptenHostDataModel
+public class FdAttributes(
     @IntFileDescriptor
-    val fd: FileDescriptor,
+    public val fd: FileDescriptor,
 ) {
     public companion object : FileSystemOperation<FdAttributes, FdAttributesError, FdAttributesResult> {
         override val tag: String = "fdattributes"

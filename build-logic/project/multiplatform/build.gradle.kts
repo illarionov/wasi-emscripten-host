@@ -16,4 +16,5 @@ dependencies {
     implementation(libs.atomicfu.plugin)
     implementation(libs.gradle.maven.publish.plugin)
     implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.poko.plugin)
 }

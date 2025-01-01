@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.fdresource.nio
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
@@ -19,11 +20,14 @@ public sealed class ChannelPositionError(
     override val message: String,
 ) : FileSystemOperationError {
     @InternalWasiEmscriptenHostApi
-    public data class ClosedChannel(override val message: String) : ChannelPositionError(BADF, message)
+    @WasiEmscriptenHostDataModel
+    public class ClosedChannel(override val message: String) : ChannelPositionError(BADF, message)
 
     @InternalWasiEmscriptenHostApi
-    public data class IoError(override val message: String) : ChannelPositionError(IO, message)
+    @WasiEmscriptenHostDataModel
+    public class IoError(override val message: String) : ChannelPositionError(IO, message)
 
     @InternalWasiEmscriptenHostApi
-    public data class InvalidArgument(override val message: String) : ChannelPositionError(INVAL, message)
+    @WasiEmscriptenHostDataModel
+    public class InvalidArgument(override val message: String) : ChannelPositionError(INVAL, message)
 }

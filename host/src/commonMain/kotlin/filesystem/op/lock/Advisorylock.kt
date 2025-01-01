@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.op.lock
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.Whence
 
-public data class Advisorylock(
-    val type: AdvisorylockLockType,
-    val whence: Whence,
-    val start: Long,
-    val length: Long,
+@WasiEmscriptenHostDataModel
+public class Advisorylock(
+    public val type: AdvisorylockLockType,
+    public val whence: Whence,
+    public val start: Long,
+    public val length: Long,
 )

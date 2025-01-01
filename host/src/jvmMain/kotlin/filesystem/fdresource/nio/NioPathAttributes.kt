@@ -9,6 +9,7 @@ package at.released.weh.filesystem.fdresource.nio
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.ext.asLinkOptions
 import at.released.weh.filesystem.model.FileSystemErrno
@@ -50,19 +51,22 @@ internal fun Path.readAttributeMapIfSupported(
 }
 
 internal sealed interface ReadAttributesError : FileSystemOperationError {
-    public data class NotSupported(
+    @WasiEmscriptenHostDataModel
+    public class NotSupported(
         override val message: String = "Unsupported attribute",
     ) : ReadAttributesError {
         override val errno: FileSystemErrno = FileSystemErrno.NOTSUP
     }
 
-    public data class IoError(
+    @WasiEmscriptenHostDataModel
+    public class IoError(
         override val message: String,
     ) : ReadAttributesError {
         override val errno: FileSystemErrno = FileSystemErrno.IO
     }
 
-    public data class AccessDenied(
+    @WasiEmscriptenHostDataModel
+    public class AccessDenied(
         override val message: String,
     ) : ReadAttributesError {
         override val errno: FileSystemErrno = FileSystemErrno.ACCES

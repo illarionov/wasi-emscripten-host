@@ -6,6 +6,8 @@
 
 package at.released.weh.filesystem.op.readwrite
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
+
 public sealed class ReadWriteStrategy {
     /**
      * Reads from the file descriptor's current position, updating it accordingly.
@@ -15,5 +17,6 @@ public sealed class ReadWriteStrategy {
     /**
      * Read from the given [position] within the file without using and updating the file descriptor's offset
      */
-    public data class Position(val position: Long) : ReadWriteStrategy()
+    @WasiEmscriptenHostDataModel
+    public class Position(public val position: Long) : ReadWriteStrategy()
 }

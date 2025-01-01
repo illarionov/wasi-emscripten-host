@@ -350,18 +350,6 @@ public final class at/released/weh/emcripten/runtime/include/StructPthread {
 	public static final field STRUCT_PTHREAD_STACK_HIGH_OFFSET I
 	public static final field STRUCT_PTHREAD_STACK_SZIE_OFFSET I
 	public fun <init> (IIIIIIIIIB)V
-	public final fun component1 ()I
-	public final fun component10 ()B
-	public final fun component2 ()I
-	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun component5 ()I
-	public final fun component6 ()I
-	public final fun component7 ()I
-	public final fun component8 ()I
-	public final fun component9 ()I
-	public final fun copy (IIIIIIIIIB)Lat/released/weh/emcripten/runtime/include/StructPthread;
-	public static synthetic fun copy$default (Lat/released/weh/emcripten/runtime/include/StructPthread;IIIIIIIIIBILjava/lang/Object;)Lat/released/weh/emcripten/runtime/include/StructPthread;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCanary ()I
 	public final fun getMailbox ()I

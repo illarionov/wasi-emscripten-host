@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.fdattributes
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.fdrights.FdRights
 import at.released.weh.filesystem.fdrights.FdRightsType
 import at.released.weh.filesystem.model.Fdflags
@@ -21,9 +22,10 @@ import at.released.weh.filesystem.model.Filetype
  * @param inheritingRights Maximum set of rights that may be installed on new file descriptors
  * that are created through this file descriptor, e.g., through `path_open`.
  */
-public data class FdAttributesResult(
-    val type: Filetype,
-    @FdflagsType val flags: Fdflags,
-    @FdRightsType val rights: FdRights,
-    @FdRightsType val inheritingRights: FdRights,
+@WasiEmscriptenHostDataModel
+public class FdAttributesResult(
+    public val type: Filetype,
+    @FdflagsType public val flags: Fdflags,
+    @FdRightsType public val rights: FdRights,
+    @FdRightsType public val inheritingRights: FdRights,
 )

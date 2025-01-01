@@ -6,9 +6,11 @@
 
 package at.released.weh.filesystem.error
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 
-public data class DirectoryNotEmpty(
+@WasiEmscriptenHostDataModel
+public class DirectoryNotEmpty(
     override val message: String,
 ) : FileSystemOperationError, RenameError, UnlinkError {
     override val errno: FileSystemErrno = FileSystemErrno.NOTEMPTY

@@ -6,13 +6,15 @@
 
 package at.released.weh.filesystem.op.settimestamp
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class SetTimestamp(
+@WasiEmscriptenHostDataModel
+public class SetTimestamp(
     public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
     public val atimeNanoseconds: Long?,
