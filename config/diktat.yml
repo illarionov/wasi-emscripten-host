@@ -80,7 +80,7 @@
   enabled: false
 
 - name: HEADER_MISSING_OR_WRONG_COPYRIGHT
-  enabled: true
+  enabled: false
   configuration:
     isCopyrightMandatory: true
     copyrightText: 'Copyright ;@currYear;, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file'

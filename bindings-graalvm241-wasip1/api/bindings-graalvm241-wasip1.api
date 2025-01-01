@@ -1,0 +1,83 @@
+public abstract class at/released/weh/bindings/graalvm241/memory/MemorySource {
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySource$ExportedExternalMemory : at/released/weh/bindings/graalvm241/memory/MemorySource {
+	public fun <init> (Lorg/graalvm/polyglot/Context;ILjava/lang/String;)V
+	public synthetic fun <init> (Lorg/graalvm/polyglot/Context;ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getExportedName ()Ljava/lang/String;
+	public final fun getSourceContext ()Lorg/graalvm/polyglot/Context;
+	public final fun getSourceMemoryIndex ()I
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySource$ExportedMemory : at/released/weh/bindings/graalvm241/memory/MemorySource {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Lat/released/weh/bindings/graalvm241/memory/MemorySpec;)V
+	public synthetic fun <init> (Ljava/lang/String;Lat/released/weh/bindings/graalvm241/memory/MemorySpec;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getMemoryName ()Ljava/lang/String;
+	public final fun getSpec ()Lat/released/weh/bindings/graalvm241/memory/MemorySpec;
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySource$ImportedMemory : at/released/weh/bindings/graalvm241/memory/MemorySource {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/bindings/graalvm241/memory/MemorySpec;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lat/released/weh/bindings/graalvm241/memory/MemorySpec;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getMemoryName ()Ljava/lang/String;
+	public final fun getModuleName ()Ljava/lang/String;
+	public final fun getSpec ()Lat/released/weh/bindings/graalvm241/memory/MemorySpec;
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySpec {
+	public static final field Companion Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Companion;
+	public synthetic fun <init> (Lat/released/weh/wasm/core/memory/Pages;Lat/released/weh/wasm/core/memory/Pages;ZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxSize ()Lat/released/weh/wasm/core/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/wasm/core/memory/Pages;
+	public final fun getSharedMemory ()Z
+	public final fun getSupportMemory64 ()Z
+	public final fun getUseUnsafeMemory ()Z
+	public fun hashCode ()I
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySpec$Builder {
+	public fun <init> ()V
+	public final fun build ()Lat/released/weh/bindings/graalvm241/memory/MemorySpec;
+	public final fun getMaxSize ()Lat/released/weh/wasm/core/memory/Pages;
+	public final fun getMinSize ()Lat/released/weh/wasm/core/memory/Pages;
+	public final fun getShared ()Z
+	public final fun getSupportMemory64 ()Z
+	public final fun getUseUnsafe ()Z
+	public final fun setMaxSize (Lat/released/weh/wasm/core/memory/Pages;)Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Builder;
+	public final synthetic fun setMaxSize (Lat/released/weh/wasm/core/memory/Pages;)V
+	public final fun setMinSize (Lat/released/weh/wasm/core/memory/Pages;)Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Builder;
+	public final synthetic fun setMinSize (Lat/released/weh/wasm/core/memory/Pages;)V
+	public final fun setShared (Z)Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Builder;
+	public final synthetic fun setShared (Z)V
+	public final fun setSupportMemory64 (Z)Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Builder;
+	public final synthetic fun setSupportMemory64 (Z)V
+	public final fun setUseUnsafe (Z)Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Builder;
+	public final synthetic fun setUseUnsafe (Z)V
+}
+
+public final class at/released/weh/bindings/graalvm241/memory/MemorySpec$Companion {
+	public final synthetic fun invoke (Lkotlin/jvm/functions/Function1;)Lat/released/weh/bindings/graalvm241/memory/MemorySpec;
+	public static synthetic fun invoke$default (Lat/released/weh/bindings/graalvm241/memory/MemorySpec$Companion;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/graalvm241/memory/MemorySpec;
+}
+
+public final class at/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder {
+	public static final field Companion Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder$Companion;
+	public fun <init> ()V
+	public final fun build (Lorg/graalvm/polyglot/Context;Ljava/lang/String;)V
+	public static synthetic fun build$default (Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;Lorg/graalvm/polyglot/Context;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
+	public final fun getMemorySource ()Lat/released/weh/bindings/graalvm241/memory/MemorySource$ImportedMemory;
+	public final fun setHost (Lat/released/weh/host/EmbedderHost;)Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;
+	public final synthetic fun setHost (Lat/released/weh/host/EmbedderHost;)V
+	public final fun setMemorySource (Lat/released/weh/bindings/graalvm241/memory/MemorySource$ImportedMemory;)Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;
+	public final synthetic fun setMemorySource (Lat/released/weh/bindings/graalvm241/memory/MemorySource$ImportedMemory;)V
+}
+
+public final class at/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder$Companion {
+	public final synthetic fun invoke (Lkotlin/jvm/functions/Function1;)Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;
+	public static synthetic fun invoke$default (Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder$Companion;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;
+}
+

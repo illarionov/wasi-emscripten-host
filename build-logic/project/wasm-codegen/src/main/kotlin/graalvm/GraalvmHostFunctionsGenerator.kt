@@ -206,11 +206,10 @@ internal class GraalvmHostFunctionsGenerator(
 
     companion object {
         private const val PACKAGE_NAME = "at.released.weh.bindings.graalvm241"
-        private const val MEMORY_PACKAGE_NAME = "$PACKAGE_NAME.host.memory"
-        private const val HOST_MODULE_PACKAGE_NAME = "$PACKAGE_NAME.host.module"
-        private const val FUNCTIONS_PACKAGE_NAME = "$HOST_MODULE_PACKAGE_NAME.wasi.function"
+        private const val MEMORY_PACKAGE_NAME = "$PACKAGE_NAME.memory"
+        private const val FUNCTIONS_PACKAGE_NAME = "$PACKAGE_NAME.wasip1.function"
         private const val EXT_PACKAGE_NAME = "$PACKAGE_NAME.ext"
-        private val BASE_WASM_NODE_CLASSNAME = ClassName("$HOST_MODULE_PACKAGE_NAME.wasi", "BaseWasiWasmNode")
+        private val BASE_WASM_NODE_CLASSNAME = ClassName("$PACKAGE_NAME.wasip1", "BaseWasiWasmNode")
         private val ARGS_AS_BYTE = MemberName(EXT_PACKAGE_NAME, "getArgAsByte")
         private val ARGS_AS_SHORT = MemberName(EXT_PACKAGE_NAME, "getArgAsShort")
         private val ARGS_AS_INT = MemberName(EXT_PACKAGE_NAME, "getArgAsInt")
