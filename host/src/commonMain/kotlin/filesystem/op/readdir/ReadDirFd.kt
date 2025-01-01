@@ -6,19 +6,23 @@
 
 package at.released.weh.filesystem.op.readdir
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.ReadDirError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class ReadDirFd(
+@WasiEmscriptenHostDataModel
+public class ReadDirFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val startPosition: DirSequenceStartPosition = DirSequenceStartPosition.Start,
 ) {
     public sealed class DirSequenceStartPosition {
         public data object Start : DirSequenceStartPosition()
-        public data class Cookie(public val cookie: Long) : DirSequenceStartPosition()
+
+        @WasiEmscriptenHostDataModel
+        public class Cookie(public val cookie: Long) : DirSequenceStartPosition()
     }
 
     public companion object : FileSystemOperation<ReadDirFd, ReadDirError, DirEntrySequence> {

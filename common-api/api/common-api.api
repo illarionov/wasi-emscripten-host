@@ -28,6 +28,9 @@ public final class at/released/weh/common/api/Logger$Companion : at/released/weh
 	public fun withTag (Ljava/lang/String;)Lat/released/weh/common/api/Logger;
 }
 
+public abstract interface annotation class at/released/weh/common/api/WasiEmscriptenHostDataModel : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class at/released/weh/common/api/WasiEmscriptenHostDsl : java/lang/annotation/Annotation {
 }
 

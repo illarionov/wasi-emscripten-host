@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.op.poll
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.PollError
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class Poll(
-    val subscriptions: List<Subscription>,
+@WasiEmscriptenHostDataModel
+public class Poll(
+    public val subscriptions: List<Subscription>,
 ) {
     public companion object : FileSystemOperation<Poll, PollError, List<Event>> {
         override val tag: String = "poll"

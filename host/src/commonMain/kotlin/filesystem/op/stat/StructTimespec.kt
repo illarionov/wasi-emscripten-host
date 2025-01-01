@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.op.stat
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import kotlin.time.Duration.Companion.seconds
 
-public data class StructTimespec(
-    val seconds: Long,
-    val nanoseconds: Long,
+@WasiEmscriptenHostDataModel
+public class StructTimespec(
+    public val seconds: Long,
+    public val nanoseconds: Long,
 ) {
     override fun toString(): String {
         return "TS($seconds sec $nanoseconds nsec)"

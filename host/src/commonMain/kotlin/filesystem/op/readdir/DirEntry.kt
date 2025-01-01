@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.op.readdir
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.Filetype
 
-public data class DirEntry(
-    val name: String,
-    val type: Filetype,
-    val inode: Long,
-    val cookie: Long,
+@WasiEmscriptenHostDataModel
+public class DirEntry(
+    public val name: String,
+    public val type: Filetype,
+    public val inode: Long,
+    public val cookie: Long,
 )

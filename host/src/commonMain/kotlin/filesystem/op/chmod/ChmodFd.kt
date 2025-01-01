@@ -6,13 +6,15 @@
 
 package at.released.weh.filesystem.op.chmod
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class ChmodFd(
+@WasiEmscriptenHostDataModel
+public class ChmodFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
 

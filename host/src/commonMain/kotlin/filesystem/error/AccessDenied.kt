@@ -6,9 +6,11 @@
 
 package at.released.weh.filesystem.error
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 
-public data class AccessDenied(
+@WasiEmscriptenHostDataModel
+public class AccessDenied(
     override val message: String,
 ) : FileSystemOperationError,
     CheckAccessError,

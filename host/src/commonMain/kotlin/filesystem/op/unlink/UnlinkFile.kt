@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.unlink
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
@@ -15,7 +16,8 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 /**
  * Remove a file or symbolic link at [path] relative to the base directory [baseDirectory].
  */
-public data class UnlinkFile(
+@WasiEmscriptenHostDataModel
+public class UnlinkFile(
     public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 ) {

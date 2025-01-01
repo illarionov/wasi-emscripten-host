@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.truncate
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.TruncateError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -18,7 +19,8 @@ import at.released.weh.filesystem.op.FileSystemOperation
  *
  * The file offset is not changed.
  */
-public data class TruncateFd(
+@WasiEmscriptenHostDataModel
+public class TruncateFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val length: Long,

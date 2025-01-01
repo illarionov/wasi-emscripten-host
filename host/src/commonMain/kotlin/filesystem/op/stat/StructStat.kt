@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.stat
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.model.Filetype
 
@@ -26,21 +27,22 @@ import at.released.weh.filesystem.model.Filetype
  * @param modificationTime Time of last modification
  * @param changeStatusTime Time of last status change
  */
-public data class StructStat(
-    val deviceId: Long,
-    val inode: Long,
-    @FileMode val mode: Int,
-    val type: Filetype,
-    val links: Long,
-    val usedId: Long,
-    val groupId: Long,
-    val specialFileDeviceId: Long,
-    val size: Long,
-    val blockSize: Long,
-    val blocks: Long,
-    val accessTime: StructTimespec,
-    val modificationTime: StructTimespec,
-    val changeStatusTime: StructTimespec,
+@WasiEmscriptenHostDataModel
+public class StructStat(
+    public val deviceId: Long,
+    public val inode: Long,
+    @FileMode public val mode: Int,
+    public val type: Filetype,
+    public val links: Long,
+    public val usedId: Long,
+    public val groupId: Long,
+    public val specialFileDeviceId: Long,
+    public val size: Long,
+    public val blockSize: Long,
+    public val blocks: Long,
+    public val accessTime: StructTimespec,
+    public val modificationTime: StructTimespec,
+    public val changeStatusTime: StructTimespec,
 ) {
     override fun toString(): String {
         return "StructStat($deviceId/$specialFileDeviceId $inode $links; " +

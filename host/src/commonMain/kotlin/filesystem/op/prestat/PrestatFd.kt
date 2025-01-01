@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.prestat
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.PrestatError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
@@ -14,9 +15,10 @@ import at.released.weh.filesystem.op.FileSystemOperation
 /**
  * Return a path of the given preopened file descriptor.
  */
-public data class PrestatFd(
+@WasiEmscriptenHostDataModel
+public class PrestatFd(
     @IntFileDescriptor
-    val fd: FileDescriptor,
+    public val fd: FileDescriptor,
 ) {
     public companion object : FileSystemOperation<PrestatFd, PrestatError, PrestatResult> {
         override val tag: String = "prestatfd"

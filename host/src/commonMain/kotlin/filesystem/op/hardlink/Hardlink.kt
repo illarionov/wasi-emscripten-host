@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.hardlink
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.HardlinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class Hardlink(
+@WasiEmscriptenHostDataModel
+public class Hardlink(
     public val oldBaseDirectory: BaseDirectory,
     public val oldPath: VirtualPath,
     public val newBaseDirectory: BaseDirectory,

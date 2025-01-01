@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.sync
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.SyncError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class SyncFd(
+@WasiEmscriptenHostDataModel
+public class SyncFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
 

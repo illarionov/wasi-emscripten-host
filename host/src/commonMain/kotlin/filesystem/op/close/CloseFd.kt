@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.close
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.CloseError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class CloseFd(
+@WasiEmscriptenHostDataModel
+public class CloseFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
 ) {

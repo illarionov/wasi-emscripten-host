@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.op.lock
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.AdvisoryLockError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class AddAdvisoryLockFd(
+@WasiEmscriptenHostDataModel
+public class AddAdvisoryLockFd(
     public val fd: FileDescriptor,
 
     public val flock: Advisorylock,

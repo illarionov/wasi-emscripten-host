@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.opencreate
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.OpenError
 import at.released.weh.filesystem.fdrights.FdRightsBlock
 import at.released.weh.filesystem.model.BaseDirectory
@@ -27,7 +28,8 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
  * The [openFlags] argument may indicate the file is to be created if it does not exist (by specifying  the
  * [Fcntl.O_CREAT]	flag). In this case, file is created with mode [mode].
  */
-public data class Open(
+@WasiEmscriptenHostDataModel
+public class Open(
     public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 

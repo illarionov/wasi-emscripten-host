@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.logging
 
 import arrow.core.Either
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.FileSystemInterceptor
 import at.released.weh.filesystem.FileSystemInterceptor.Chain
 import at.released.weh.filesystem.error.FileSystemOperationError
@@ -83,18 +84,21 @@ public class LoggingFileSystemInterceptor(
         VERBOSE,
     }
 
-    public data class LoggingEvents(
-        val start: OperationStart = OperationStart(inputs = NONE),
-        val end: OperationEnd = OperationEnd(),
+    @WasiEmscriptenHostDataModel
+    public class LoggingEvents(
+        public val start: OperationStart = OperationStart(inputs = NONE),
+        public val end: OperationEnd = OperationEnd(),
     ) {
-        public data class OperationStart(
-            val inputs: OperationLoggingLevel = BASIC,
+        @WasiEmscriptenHostDataModel
+        public class OperationStart(
+            public val inputs: OperationLoggingLevel = BASIC,
         )
 
-        public data class OperationEnd(
-            val inputs: OperationLoggingLevel = BASIC,
-            val outputs: OperationLoggingLevel = BASIC,
-            val trackDuration: Boolean = false,
+        @WasiEmscriptenHostDataModel
+        public class OperationEnd(
+            public val inputs: OperationLoggingLevel = BASIC,
+            public val outputs: OperationLoggingLevel = BASIC,
+            public val trackDuration: Boolean = false,
         )
     }
 

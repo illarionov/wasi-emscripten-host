@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.prestat
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class PrestatResult(
+@WasiEmscriptenHostDataModel
+public class PrestatResult(
     @IntFileDescriptor
-    val fd: FileDescriptor,
-    val path: VirtualPath,
+    public val fd: FileDescriptor,
+    public val path: VirtualPath,
 )

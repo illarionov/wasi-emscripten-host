@@ -14,4 +14,5 @@ This document contains a list of used third-party libraries.
 - [Kermit](https://kermit.touchlab.co/). Apache 2.0 License.
 - [Kotlin Multiplatform](https://kotlinlang.org). Apache 2.0 License.
 - [Kotlinx Binary compatibility validator](https://github.com/Kotlin/binary-compatibility-validator). Apache 2.0 License.
+- [Poko](https://github.com/drewhamilton/Poko). Apache 2.0 License.
 - [Spotless](https://github.com/diffplug/spotless). Apache 2.0 License.

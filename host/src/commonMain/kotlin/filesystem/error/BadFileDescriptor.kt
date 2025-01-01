@@ -6,10 +6,12 @@
 
 package at.released.weh.filesystem.error
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.BADF
 
-public data class BadFileDescriptor(
+@WasiEmscriptenHostDataModel
+public class BadFileDescriptor(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,

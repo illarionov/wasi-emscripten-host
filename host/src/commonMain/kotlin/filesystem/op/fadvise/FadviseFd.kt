@@ -6,17 +6,19 @@
 
 package at.released.weh.filesystem.op.fadvise
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.FadviseError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class FadviseFd(
+@WasiEmscriptenHostDataModel
+public class FadviseFd(
     @IntFileDescriptor
-    val fd: FileDescriptor,
-    val offset: Long,
-    val length: Long,
-    val advice: Advice,
+    public val fd: FileDescriptor,
+    public val offset: Long,
+    public val length: Long,
+    public val advice: Advice,
 ) {
     public companion object : FileSystemOperation<FadviseFd, FadviseError, Unit> {
         override val tag: String = "fadvisefd"

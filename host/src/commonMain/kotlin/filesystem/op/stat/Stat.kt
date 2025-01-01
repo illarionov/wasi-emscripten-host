@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.stat
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.StatError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
@@ -19,10 +20,11 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
  * By default, all symbolic links are followed. If [followSymlinks] is set to false and [path] is a symbolic link,
  * the status of the symbolic link itself is returned instead of the target file.
  */
-public data class Stat(
-    val path: VirtualPath,
-    val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
-    val followSymlinks: Boolean = true,
+@WasiEmscriptenHostDataModel
+public class Stat(
+    public val path: VirtualPath,
+    public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
+    public val followSymlinks: Boolean = true,
 ) {
     public companion object : FileSystemOperation<Stat, StatError, StructStat> {
         override val tag: String = "stat"

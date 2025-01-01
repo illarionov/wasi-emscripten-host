@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.settimestamp
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.SetTimestampError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class SetTimestampFd(
+@WasiEmscriptenHostDataModel
+public class SetTimestampFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val atimeNanoseconds: Long?,

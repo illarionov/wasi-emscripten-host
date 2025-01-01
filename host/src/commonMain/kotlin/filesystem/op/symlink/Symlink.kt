@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.symlink
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.SymlinkError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
@@ -17,7 +18,8 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
  * [oldPath] is a contents of the symbolic link.
  * [newPath] is a destination path of the symbolic link, resolved relative to the [newPathBaseDirectory].
  */
-public data class Symlink(
+@WasiEmscriptenHostDataModel
+public class Symlink(
     public val oldPath: VirtualPath,
     public val newPath: VirtualPath,
     public val newPathBaseDirectory: BaseDirectory = CurrentWorkingDirectory,

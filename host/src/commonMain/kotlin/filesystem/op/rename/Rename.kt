@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.rename
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.RenameError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
@@ -14,7 +15,8 @@ import at.released.weh.filesystem.path.virtual.VirtualPath
 /**
  * Rename a file or directory
  */
-public data class Rename(
+@WasiEmscriptenHostDataModel
+public class Rename(
     public val oldBaseDirectory: BaseDirectory,
     public val oldPath: VirtualPath,
     public val newBaseDirectory: BaseDirectory,

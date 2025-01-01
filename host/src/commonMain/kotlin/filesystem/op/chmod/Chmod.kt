@@ -6,6 +6,7 @@
 
 package at.released.weh.filesystem.op.chmod
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.ChmodError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.BaseDirectory.CurrentWorkingDirectory
@@ -13,7 +14,8 @@ import at.released.weh.filesystem.model.FileMode
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class Chmod(
+@WasiEmscriptenHostDataModel
+public class Chmod(
     public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = CurrentWorkingDirectory,
 

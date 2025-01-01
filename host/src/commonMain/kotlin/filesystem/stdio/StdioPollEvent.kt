@@ -6,11 +6,13 @@
 
 package at.released.weh.filesystem.stdio
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.SUCCESS
 import kotlin.jvm.JvmStatic
 
-public data class StdioPollEvent(
+@WasiEmscriptenHostDataModel
+public class StdioPollEvent(
     public val errno: FileSystemErrno = SUCCESS,
     public val bytesAvailable: Long = 0,
     public val isHangup: Boolean = false,

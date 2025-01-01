@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.checkaccess
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.CheckAccessError
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.op.FileSystemOperation
 import at.released.weh.filesystem.path.virtual.VirtualPath
 
-public data class CheckAccess(
+@WasiEmscriptenHostDataModel
+public class CheckAccess(
     public val path: VirtualPath,
     public val baseDirectory: BaseDirectory = BaseDirectory.CurrentWorkingDirectory,
     public val mode: Set<FileAccessibilityCheck>,

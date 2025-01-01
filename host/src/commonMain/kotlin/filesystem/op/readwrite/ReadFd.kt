@@ -6,12 +6,14 @@
 
 package at.released.weh.filesystem.op.readwrite
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.error.ReadError
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.FileSystemOperation
 
-public data class ReadFd(
+@WasiEmscriptenHostDataModel
+public class ReadFd(
     @IntFileDescriptor
     public val fd: FileDescriptor,
     public val iovecs: List<FileSystemByteBuffer>,

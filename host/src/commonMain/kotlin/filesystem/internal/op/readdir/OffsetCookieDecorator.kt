@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.internal.op.readdir
 
 import at.released.weh.filesystem.op.readdir.DirEntry
+import at.released.weh.filesystem.op.readdir.withCookie
 import kotlinx.io.IOException
 
 /**
@@ -36,7 +37,7 @@ internal class OffsetCookieDecorator(
         }
 
         currentOffset += 1
-        val next = delegate.next().copy(cookie = currentOffset)
+        val next = delegate.next().withCookie(currentOffset)
 
         return next
     }

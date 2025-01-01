@@ -6,10 +6,12 @@
 
 package at.released.weh.filesystem.error
 
+import at.released.weh.common.api.WasiEmscriptenHostDataModel
 import at.released.weh.filesystem.model.FileSystemErrno
 import at.released.weh.filesystem.model.FileSystemErrno.INTR
 
-public data class Interrupted(
+@WasiEmscriptenHostDataModel
+public class Interrupted(
     override val message: String,
 ) : FileSystemOperationError,
     AdvisoryLockError,
