@@ -9,6 +9,7 @@ package at.released.weh.host.internal
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemEngine
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
+import at.released.weh.filesystem.lock.GlobalLockFileSystemInterceptor
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor
 import at.released.weh.host.EmbedderHost.Builder
 
@@ -30,6 +31,7 @@ private fun <E : FileSystemEngineConfig> Builder.createDefaultFileSystem(
 ): FileSystem {
     val builder = this
     return FileSystem(engine) {
+        addInterceptor(GlobalLockFileSystemInterceptor())
         addInterceptor(LoggingFileSystemInterceptor(builder.rootLogger.withTag(fsLoggerTag)))
         stdio {
             stdinProvider = builder.stdinProvider

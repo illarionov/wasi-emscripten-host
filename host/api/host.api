@@ -579,6 +579,11 @@ public final class at/released/weh/filesystem/fdrights/FdRightsFlag {
 public abstract interface annotation class at/released/weh/filesystem/fdrights/FdRightsType : java/lang/annotation/Annotation {
 }
 
+public final class at/released/weh/filesystem/lock/GlobalLockFileSystemInterceptor : at/released/weh/filesystem/FileSystemInterceptor {
+	public fun <init> ()V
+	public fun intercept (Lat/released/weh/filesystem/FileSystemInterceptor$Chain;)Larrow/core/Either;
+}
+
 public final class at/released/weh/filesystem/logging/LoggingFileSystemInterceptor : at/released/weh/filesystem/FileSystemInterceptor {
 	public static final field Companion Lat/released/weh/filesystem/logging/LoggingFileSystemInterceptor$Companion;
 	public fun <init> (Lkotlin/jvm/functions/Function1;Lat/released/weh/filesystem/logging/LoggingFileSystemInterceptor$LoggingEvents;Ljava/util/Map;)V
