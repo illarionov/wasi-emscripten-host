@@ -6,7 +6,7 @@
 
 package at.released.weh.wasi.bindings.test.graalvm.base
 
-import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
+import at.released.weh.bindings.graalvm241.wasip1.GraalvmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
@@ -28,16 +28,12 @@ class GraalvmWasmTestRuntime(
     ): Int {
         val source = Source.newBuilder("wasm", ByteSequence.create(wasmFile), "testproc").build()
 
-        val context: Context = Context.newBuilder()
-            .engine(engine)
-            .build()
-        context.use {
+        Context.newBuilder().engine(engine).build().use { context ->
             context.initialize("wasm")
 
-            val installer = GraalvmHostFunctionInstaller(context) {
+            GraalvmWasiPreview1Builder {
                 this.host = host
-            }
-            installer.setupWasiPreview1Module()
+            }.build(context)
 
             context.eval(source)
 

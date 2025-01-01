@@ -98,7 +98,7 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.chicory.wasi)
             implementation(projects.bindingsChicoryWasip1)
-            implementation(projects.bindingsGraalvm241)
+            implementation(projects.bindingsGraalvm241Wasip1)
         }
     }
 }
