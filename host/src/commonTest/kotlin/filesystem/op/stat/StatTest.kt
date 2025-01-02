@@ -15,18 +15,12 @@ import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
-import at.released.weh.test.ignore.annotations.IgnoreApple
-import at.released.weh.test.ignore.annotations.IgnoreJvm
-import at.released.weh.test.ignore.annotations.IgnoreLinux
 import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.fail
 
 class StatTest : BaseFileSystemIntegrationTest() {
     @Test
-    @IgnoreLinux // TODO: check
-    @IgnoreJvm
-    @IgnoreApple
     fun statfd_file_success_case() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
         val testFile = tempFolder.createTestFile(size = 100)
@@ -38,9 +32,6 @@ class StatTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreLinux // TODO: check
-    @IgnoreJvm
-    @IgnoreApple
     fun statfd_directory_success_case() {
         val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
         val tempDirectory = tempFolder.createTestDirectory()

@@ -39,6 +39,7 @@ import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
 import at.released.weh.filesystem.op.unlink.UnlinkFile
+import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.path.virtual.VirtualPath.Companion.isDirectoryRequest
 import at.released.weh.filesystem.windows.nativefunc.open.AttributeDesiredAccess.READ_WRITE_DELETE
 import at.released.weh.filesystem.windows.win32api.errorcode.Win32ErrorCode
@@ -64,7 +65,7 @@ internal class WindowsUnlinkFile(
             path = input.path,
             followSymlinks = false,
             access = READ_WRITE_DELETE,
-            errorMapper = { openErrorToUnlinkError(input, it) },
+            errorMapper = { openErrorToUnlinkError(input.path, it) },
             block = ::deleteFileByHandle,
         )
     }
@@ -119,8 +120,8 @@ internal class WindowsUnlinkFile(
         }
 
         @Suppress("CyclomaticComplexMethod")
-        private fun openErrorToUnlinkError(
-            input: UnlinkFile,
+        internal fun openErrorToUnlinkError(
+            inputPath: VirtualPath,
             error: OpenError,
         ): UnlinkError {
             return when (error) {
@@ -132,7 +133,7 @@ internal class WindowsUnlinkFile(
                 is Interrupted -> IoError(error.message)
                 is InvalidArgument -> {
                     // In some cases error 0xC0000033U (STATUS_OBJECT_NAME_INVALID) is returned.
-                    if (input.path.isDirectoryRequest()) {
+                    if (inputPath.isDirectoryRequest()) {
                         NotDirectory("Path with trailing slash")
                     } else {
                         error

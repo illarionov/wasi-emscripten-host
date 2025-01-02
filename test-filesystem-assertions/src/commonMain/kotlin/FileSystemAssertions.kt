@@ -19,6 +19,9 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.jvm.JvmName
 
+// A set of assertions for verifying files in the file system based on the kotlinx.io.files.SystemFileSystem
+// Note that all symlinks are followed, and tests are performed on the resolved files, not on the symlinks.
+
 public fun Assert<Path>.metadata(): Assert<FileMetadata> = transform(appendName("Metadata", separator = ".")) { path ->
     SystemFileSystem.metadataOrNull(path)
 }.isNotNull()

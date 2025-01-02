@@ -17,9 +17,7 @@ import at.released.weh.filesystem.path.withResolvePathErrorAsCommonError
 import java.nio.file.Files
 import java.nio.file.LinkOption.NOFOLLOW_LINKS
 import java.nio.file.Path
-import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
-import kotlin.io.path.isSymbolicLink
 
 internal class NioUnlinkDirectory(
     private val pathResolver: JvmPathResolver,
@@ -32,11 +30,7 @@ internal class NioUnlinkDirectory(
             .nio
 
         if (!path.isDirectory(NOFOLLOW_LINKS)) {
-            val isSymlinkToDirectory = path.isSymbolicLink() && path.isDirectory()
-            val isSymlinkToNonExistent = path.isSymbolicLink() && !path.exists()
-            if (!isSymlinkToDirectory && !isSymlinkToNonExistent) {
-                return NotDirectory("`$path` is not a directory").left()
-            }
+            return NotDirectory("`$path` is not a directory").left()
         }
 
         return Either.catch {

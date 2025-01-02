@@ -21,7 +21,6 @@ public class ProcRaiseFunctionHandle(
         signalCode: Byte,
     ): Errno {
         Signal.fromCode(signalCode.toInt()) ?: return Errno.INVAL
-        // TODO
         return Errno.NOTSUP
     }
 }

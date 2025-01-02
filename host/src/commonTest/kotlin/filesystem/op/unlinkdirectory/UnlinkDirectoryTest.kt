@@ -25,8 +25,6 @@ import at.released.weh.filesystem.testutil.createTestSymlink
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
 import at.released.weh.test.filesystem.assertions.isExists
 import at.released.weh.test.filesystem.assertions.isNotExists
-import at.released.weh.test.ignore.annotations.IgnoreApple
-import at.released.weh.test.ignore.annotations.IgnoreLinux
 import kotlin.test.Test
 import kotlin.test.fail
 
@@ -61,18 +59,18 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreLinux // TODO: fix
-    @IgnoreApple // TODO: fix
-    fun unlinkdirectory_on_symlink_to_directory_should_succeed() {
+    fun unlinkdirectory_on_symlink_to_directory_should_fail() {
         val testDirectory = tempFolder.createTestDirectory()
         val testSymlink = tempFolder.createTestSymlink(testDirectory.name, "testSymlink", SYMLINK_TO_DIRECTORY)
 
-        createTestFileSystem().use { fs ->
+        val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
             val request = UnlinkDirectory(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
-            fs.execute(UnlinkDirectory, request).getOrElse { fail("UnlinkDirectory failed: $it") }
+            fs.execute(UnlinkDirectory, request).leftOrNull()
         }
+
+        assertThat(unlinkError?.errno).isIn(NOENT, NOTDIR)
         assertThat(testDirectory).isExists()
-        assertThat(testSymlink).isNotExists()
+        assertThat(testSymlink).isExists()
     }
 
     @Test
@@ -85,19 +83,19 @@ class UnlinkDirectoryTest : BaseFileSystemIntegrationTest() {
             fs.execute(UnlinkDirectory, request).leftOrNull()
         }
         assertThat(unlinkError?.errno).isEqualTo(NOTDIR)
+        assertThat(testFile).isExists()
+        assertThat(testSymlink).isExists()
     }
 
     @Test
-    @IgnoreLinux // TODO: fix
-    @IgnoreApple // TODO: fix
-    fun unlinkdirectory_on_symlink_to_nonexistent_target_should_succeed() {
+    fun unlinkdirectory_on_symlink_to_nonexistent_target_should_fail() {
         val testSymlink = tempFolder.createTestSymlink("nonexistent_target", "testSymlink", SYMLINK_TO_DIRECTORY)
 
-        createTestFileSystem().use { fs ->
+        val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
             val request = UnlinkDirectory(testSymlink.name.toVirtualPath(), tempFolderDirectoryFd)
-            fs.execute(UnlinkDirectory, request).getOrElse { fail("UnlinkDirectory failed: $it") }
+            fs.execute(UnlinkDirectory, request).leftOrNull()
         }
-        assertThat(testSymlink).isNotExists()
+        assertThat(unlinkError?.errno).isEqualTo(NOTDIR)
     }
 
     @Test
