@@ -18,9 +18,11 @@ import at.released.weh.filesystem.error.IoError
 import at.released.weh.filesystem.error.NameTooLong
 import at.released.weh.filesystem.error.NoEntry
 import at.released.weh.filesystem.error.NotDirectory
+import at.released.weh.filesystem.error.PathIsDirectory
 import at.released.weh.filesystem.error.PermissionDenied
 import at.released.weh.filesystem.error.TooManySymbolicLinks
 import at.released.weh.filesystem.error.UnlinkError
+import at.released.weh.filesystem.model.Filetype.DIRECTORY
 import at.released.weh.filesystem.path.real.posix.PosixRealPath
 import at.released.weh.filesystem.posix.NativeDirectoryFd
 import platform.posix.EACCES
@@ -49,7 +51,21 @@ internal fun appleUnlinkFile(
     return if (resultCode == 0) {
         Unit.right()
     } else {
-        errno.errnoToUnlinkFileError().left()
+        val originalError = errno.errnoToUnlinkFileError()
+        return if (originalError is PermissionDenied) {
+            val isDirectory = appleStat(directoryFd, path, false)
+                .fold(
+                    ifLeft = { false },
+                    ifRight = { it.type == DIRECTORY },
+                )
+            if (isDirectory) {
+                PathIsDirectory("Path is directory").left()
+            } else {
+                originalError.left()
+            }
+        } else {
+            originalError.left()
+        }
     }
 }
 
