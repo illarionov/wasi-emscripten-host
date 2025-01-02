@@ -11,5 +11,5 @@ import kotlinx.io.files.Path
 public actual val Path.isPosixFileModeSupported: Boolean get() = true
 
 internal actual fun Path.getFileMode(): Set<PosixFileModeBit> {
-    TODO("Not yet implemented")
+    error("Not yet implemented")
 }

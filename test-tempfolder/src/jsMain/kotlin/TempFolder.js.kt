@@ -7,5 +7,5 @@
 package at.released.weh.test.utils
 
 internal actual fun createPlatformTempFolder(namePrefix: String): TempFolder {
-    TODO("Not yet implemented")
+    error("Not yet implemented")
 }

@@ -47,13 +47,13 @@ internal object CheckAccessMapper {
         }
         var mask = 0
         if (flags.contains(READABLE)) {
-            mask = mask and R_OK
+            mask = mask or R_OK
         }
         if (flags.contains(WRITEABLE)) {
-            mask = mask and W_OK
+            mask = mask or W_OK
         }
         if (flags.contains(EXECUTABLE)) {
-            mask = mask and X_OK
+            mask = mask or X_OK
         }
         return mask
     }

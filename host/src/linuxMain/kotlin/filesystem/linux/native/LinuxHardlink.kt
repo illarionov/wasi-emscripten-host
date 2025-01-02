@@ -63,7 +63,6 @@ internal fun linuxHardlink(
         flags = flags or AT_SYMLINK_FOLLOW
     }
 
-    // TODO: check RESOLVE_BENEATH
     val resultCode = linkat(
         oldBaseDirectoryFd.linuxFd,
         oldPath.kString,

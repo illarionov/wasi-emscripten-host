@@ -21,7 +21,6 @@ import at.released.weh.filesystem.testutil.createTestSymlink
 import at.released.weh.filesystem.testutil.tempFolderDirectoryFd
 import at.released.weh.test.filesystem.assertions.isExists
 import at.released.weh.test.filesystem.assertions.isNotExists
-import at.released.weh.test.ignore.annotations.IgnoreApple
 import kotlin.test.Test
 import kotlin.test.fail
 
@@ -37,7 +36,6 @@ class UnlinkFileTest : BaseFileSystemIntegrationTest() {
     }
 
     @Test
-    @IgnoreApple // TODO: fix
     fun unlinkfile_on_directory_should_fail() {
         val testDirectory = tempFolder.createTestDirectory()
         val unlinkError: UnlinkError? = createTestFileSystem().use { fs ->
