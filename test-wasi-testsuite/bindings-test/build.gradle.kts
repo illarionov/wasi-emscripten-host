@@ -50,7 +50,7 @@ wasiTestsuiteTestGen {
         TestIgnore("path_link", setOf(JVM_ON_WINDOWS, MINGW)),
 
         // Fails on JVM for Linux because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
-        // TODO: fix on MacOS
+        // Fails on JVM for macOS, fixed by JDK-8343785 (JDK24)
         TestIgnore("symlink_filestat", setOf(JVM_ON_LINUX, JVM_ON_MACOS)),
     )
 }
