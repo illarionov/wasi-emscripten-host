@@ -66,7 +66,6 @@ kotlin {
             api(projects.commonApi)
             api(libs.arrow.core)
             api(libs.kotlinx.io)
-            implementation(libs.kotlinx.datetime)
             implementation(projects.commonUtil)
         }
         commonTest.dependencies {
@@ -78,6 +77,7 @@ kotlin {
             implementation(projects.testTempfolder)
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotest.property)
         }
     }
