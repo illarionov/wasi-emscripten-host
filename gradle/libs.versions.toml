@@ -6,7 +6,6 @@ agp = "8.7.3"
 antlr4 = "4.13.2"
 atomicfu = "0.26.1"
 arrow = "2.0.0"
-android-annotation = "1.9.0-alpha03"
 assertk = "0.28.1"
 chasm = "0.9.2"
 chicory = "1.0.0"
@@ -29,7 +28,6 @@ poko-plugin = "0.18.2"
 spotless = "7.0.0.BETA4"
 
 [libraries]
-android-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "android-annotation" }
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
 antlr4-runtime = { group = "org.antlr", name = "antlr4-runtime", version.ref = "antlr4" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }

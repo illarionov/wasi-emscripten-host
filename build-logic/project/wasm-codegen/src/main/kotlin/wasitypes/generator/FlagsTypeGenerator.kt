@@ -7,10 +7,10 @@
 package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.createAndroidAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.TypedefAnnotationType.INT_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.TypedefAnnotationType.LONG_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.createTypedefAnnotation
 import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
 import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
 import at.released.weh.gradle.wasm.codegen.util.flagsMarkerAnnotationClassName
@@ -100,7 +100,7 @@ internal class FlagsTypeGenerator(
             )
             .addModifiers(PUBLIC)
             .addAnnotation(createRetentionAnnotation(SOURCE))
-            .addAnnotation(createTargetAnnotation(AndroidAnnotationExt.defaultTarget))
+            .addAnnotation(createTargetAnnotation(TypedefAnnotationExt.defaultTarget))
 
         val allowedConstants: List<MemberName> = typedef.flags.map { (identifier, _) ->
             MemberName(flagsObjectName, identifier.toUppercaseWithUnderscores())
@@ -108,8 +108,8 @@ internal class FlagsTypeGenerator(
 
         val androidAnnotation = when (nativeType) {
             BYTE, SHORT -> null
-            INT -> createAndroidAnnotation(INT_DEF, true, allowedConstants)
-            LONG -> createAndroidAnnotation(LONG_DEF, true, allowedConstants)
+            INT -> createTypedefAnnotation(INT_DEF, true, allowedConstants)
+            LONG -> createTypedefAnnotation(LONG_DEF, true, allowedConstants)
             else -> error("Unknown type")
         }
         androidAnnotation?.let {

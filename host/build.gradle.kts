@@ -64,7 +64,6 @@ kotlin {
 
         commonMain.dependencies {
             api(projects.commonApi)
-            api(libs.android.annotation) // TODO: remove
             api(libs.arrow.core)
             api(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)

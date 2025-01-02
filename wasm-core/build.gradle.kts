@@ -31,7 +31,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.commonApi)
-            api(libs.android.annotation)
             api(libs.kotlinx.io)
         }
         commonTest.dependencies {

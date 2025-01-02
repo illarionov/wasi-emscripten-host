@@ -7,7 +7,7 @@
 package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt
 import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
 import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
 import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
@@ -50,7 +50,7 @@ internal class ListTypeGenerator(
     private fun generateMarkerAnnotation(): TypeSpec {
         val annotations = listOf(
             createRetentionAnnotation(SOURCE),
-            createTargetAnnotation(AndroidAnnotationExt.defaultTarget),
+            createTargetAnnotation(TypedefAnnotationExt.defaultTarget),
         )
 
         return TypeSpec.annotationBuilder(annotationClassName)

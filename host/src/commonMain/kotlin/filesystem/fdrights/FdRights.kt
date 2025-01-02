@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.fdrights
 
-import androidx.annotation.LongDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostLongDef
 import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_ADVISE
 import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_ALLOCATE
 import at.released.weh.filesystem.fdrights.FdRightsFlag.FD_DATASYNC
@@ -262,7 +262,7 @@ public object FdRightsFlag {
     PROPERTY_SETTER,
     VALUE_PARAMETER,
 )
-@LongDef(
+@WasiEmscriptenHostLongDef(
     flag = true,
     value = [
         FD_DATASYNC,

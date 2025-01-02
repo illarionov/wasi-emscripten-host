@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.model
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
@@ -22,7 +22,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
     AnnotationTarget.PROPERTY_SETTER,
     AnnotationTarget.VALUE_PARAMETER,
 )
-@IntDef(open = true)
+@WasiEmscriptenHostIntDef(open = true)
 public annotation class IntFileDescriptor
 
 public typealias FileDescriptor = Int

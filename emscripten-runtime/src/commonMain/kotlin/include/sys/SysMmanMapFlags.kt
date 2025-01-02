@@ -6,7 +6,7 @@
 
 package at.released.weh.emcripten.runtime.include.sys
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
@@ -14,7 +14,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
  *
  * <sys/mman.h>
  */
-@IntDef(
+@WasiEmscriptenHostIntDef(
     flag = true,
     value = [
         MmapFlag.MAP_HUGE_MASK,

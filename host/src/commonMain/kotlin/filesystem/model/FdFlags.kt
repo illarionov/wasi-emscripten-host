@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.model
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import at.released.weh.filesystem.model.FdFlag.FD_APPEND
 import at.released.weh.filesystem.model.FdFlag.FD_DSYNC
 import at.released.weh.filesystem.model.FdFlag.FD_NONBLOCK
@@ -16,7 +16,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
 
 public typealias Fdflags = Int
 
-@IntDef(
+@WasiEmscriptenHostIntDef(
     flag = true,
     value = [
         FD_APPEND,
