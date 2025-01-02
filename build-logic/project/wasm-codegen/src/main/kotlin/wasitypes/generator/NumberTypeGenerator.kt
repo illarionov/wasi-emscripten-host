@@ -7,10 +7,10 @@
 package at.released.weh.gradle.wasm.codegen.wasitypes.generator
 
 import at.released.weh.gradle.wasm.codegen.util.className
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.LONG_DEF
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.createAndroidAnnotation
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.TypedefAnnotationType.INT_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.TypedefAnnotationType.LONG_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.createTypedefAnnotation
 import at.released.weh.gradle.wasm.codegen.util.classname.createRetentionAnnotation
 import at.released.weh.gradle.wasm.codegen.util.classname.createTargetAnnotation
 import at.released.weh.gradle.wasm.codegen.util.markerAnnotationClassName
@@ -55,8 +55,8 @@ internal class NumberTypeGenerator(
 
         val annotations = listOf(
             createRetentionAnnotation(SOURCE),
-            createTargetAnnotation(AndroidAnnotationExt.defaultTarget),
-            createAndroidAnnotation(androidAnnotationType, false, emptyList()),
+            createTargetAnnotation(TypedefAnnotationExt.defaultTarget),
+            createTypedefAnnotation(androidAnnotationType, false, emptyList()),
         )
 
         return TypeSpec.annotationBuilder(annotationClassName)

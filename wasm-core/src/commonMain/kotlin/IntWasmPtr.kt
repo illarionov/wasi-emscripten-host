@@ -6,10 +6,10 @@
 
 package at.released.weh.wasm.core
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import kotlin.reflect.KClass
 
-@IntDef(flag = false)
+@WasiEmscriptenHostIntDef(flag = false)
 @Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.FIELD,

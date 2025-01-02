@@ -12,6 +12,7 @@ import at.released.weh.wasm.core.WasmValueTypes.I32
 public const val POINTER: Int = I32
 
 @WasmValueType
+@Suppress("NOTHING_TO_INLINE")
 public inline fun witxPointer(
     @Suppress("UNUSED_PARAMETER") @WasmValueType type: Int,
 ): Int = POINTER

@@ -35,7 +35,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.android.annotation)
             api(projects.commonApi)
             api(projects.host)
             api(projects.wasmCore)

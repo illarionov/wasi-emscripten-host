@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.model
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import at.released.weh.filesystem.model.FileModeFlag.S_IRGRP
 import at.released.weh.filesystem.model.FileModeFlag.S_IROTH
 import at.released.weh.filesystem.model.FileModeFlag.S_IRUSR
@@ -26,7 +26,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
 /**
  * File mode bits (mode_t)
  */
-@IntDef(
+@WasiEmscriptenHostIntDef(
     flag = true,
     value = [
         S_ISUID,

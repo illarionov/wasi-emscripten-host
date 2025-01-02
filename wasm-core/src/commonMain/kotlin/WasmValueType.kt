@@ -8,14 +8,14 @@
 
 package at.released.weh.wasm.core
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 
 /**
  * Binary opcode of the WebAssembly value type.
  *
  * The main opcodes are defined in [WasmValueTypes].
  */
-@IntDef(
+@WasiEmscriptenHostIntDef(
     value = [
         WasmValueTypes.I32,
         WasmValueTypes.I64,

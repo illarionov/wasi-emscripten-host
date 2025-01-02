@@ -6,7 +6,7 @@
 
 package at.released.weh.filesystem.op.opencreate
 
-import androidx.annotation.IntDef
+import at.released.weh.common.api.typedef.WasiEmscriptenHostIntDef
 import at.released.weh.common.ext.maskToString
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ACCMODE
 import at.released.weh.filesystem.op.opencreate.OpenFileFlag.O_ASYNC
@@ -30,7 +30,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
 
 public typealias OpenFileFlags = Int
 
-@IntDef(
+@WasiEmscriptenHostIntDef(
     flag = true,
     value = [
         O_RDONLY,

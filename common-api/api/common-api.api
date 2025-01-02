@@ -34,3 +34,15 @@ public abstract interface annotation class at/released/weh/common/api/WasiEmscri
 public abstract interface annotation class at/released/weh/common/api/WasiEmscriptenHostDsl : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class at/released/weh/common/api/typedef/WasiEmscriptenHostIntDef : java/lang/annotation/Annotation {
+	public abstract fun flag ()Z
+	public abstract fun open ()Z
+	public abstract fun value ()[I
+}
+
+public abstract interface annotation class at/released/weh/common/api/typedef/WasiEmscriptenHostLongDef : java/lang/annotation/Annotation {
+	public abstract fun flag ()Z
+	public abstract fun open ()Z
+	public abstract fun value ()[J
+}
+

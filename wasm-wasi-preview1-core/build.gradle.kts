@@ -33,7 +33,6 @@ kotlin {
         commonMain.dependencies {
             api(projects.commonApi)
             api(projects.wasmCore)
-            api(libs.android.annotation)
         }
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)

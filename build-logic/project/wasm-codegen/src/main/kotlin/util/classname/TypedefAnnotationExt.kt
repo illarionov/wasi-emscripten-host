@@ -6,13 +6,13 @@
 
 package at.released.weh.gradle.wasm.codegen.util.classname
 
-import at.released.weh.gradle.wasm.codegen.util.classname.AndroidAnnotationExt.AndroidxAnnotationType.INT_DEF
+import at.released.weh.gradle.wasm.codegen.util.classname.TypedefAnnotationExt.TypedefAnnotationType.INT_DEF
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 
-internal object AndroidAnnotationExt {
+internal object TypedefAnnotationExt {
     val defaultTarget: List<AnnotationTarget> = listOf(
         AnnotationTarget.FIELD,
         AnnotationTarget.FUNCTION,
@@ -23,8 +23,8 @@ internal object AndroidAnnotationExt {
         AnnotationTarget.VALUE_PARAMETER,
     )
 
-    fun createAndroidAnnotation(
-        type: AndroidxAnnotationType = INT_DEF,
+    fun createTypedefAnnotation(
+        type: TypedefAnnotationType = INT_DEF,
         isFlag: Boolean = true,
         values: List<MemberName> = emptyList(),
     ): AnnotationSpec = AnnotationSpec.builder(type.className).apply {
@@ -46,9 +46,8 @@ internal object AndroidAnnotationExt {
         }
     }.build()
 
-    enum class AndroidxAnnotationType(val className: ClassName) {
-        INT_DEF(ClassName("androidx.annotation", "IntDef")),
-        LONG_DEF(ClassName("androidx.annotation", "LongDef")),
-        STRING_DEF(ClassName("androidx.annotation", "StringDef")),
+    enum class TypedefAnnotationType(val className: ClassName) {
+        INT_DEF(ClassName("at.released.weh.common.api.typedef", "WasiEmscriptenHostIntDef")),
+        LONG_DEF(ClassName("at.released.weh.common.api.typedef", "WasiEmscriptenHostLongDef")),
     }
 }
