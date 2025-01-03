@@ -22,13 +22,13 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.host)
             api(projects.commonApi)
-            implementation(projects.bindingsChicoryWasip1)
-            implementation(projects.commonUtil)
+            api(projects.host)
+            api(projects.bindingsChicoryWasip1)
             api(projects.emscriptenRuntime)
-            implementation(projects.wasmWasiPreview1)
             api(libs.chicory.runtime)
+            implementation(projects.commonUtil)
+            implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
         }
         commonTest.dependencies {
