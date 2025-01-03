@@ -24,6 +24,8 @@ internal class ChicoryFunctionBindings(
             instance.export(exportName)
         } catch (@Suppress("SwallowedException") ex: ChicoryException) {
             null
+        } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") ex: NullPointerException) {
+            null
         }?.let { exportFunction ->
             exportName to ChicoryWasmFunctionBinding(exportFunction)
         }
@@ -42,7 +44,7 @@ internal class ChicoryFunctionBindings(
     }
 }
 
-internal class ChasmIntGlobalsBindings(
+internal class ChicoryIntGlobalsBindings(
     private val instance: Instance,
     exportNames: Set<String>,
 ) {
@@ -50,6 +52,8 @@ internal class ChasmIntGlobalsBindings(
         try {
             instance.export(exportName)
         } catch (@Suppress("SwallowedException") ex: ChicoryException) {
+            null
+        } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") ex: NullPointerException) {
             null
         }?.let { exportFunction ->
             exportName to exportFunction
