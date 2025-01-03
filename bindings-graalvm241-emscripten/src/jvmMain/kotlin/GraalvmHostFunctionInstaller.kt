@@ -69,7 +69,7 @@ public class GraalvmHostFunctionInstaller private constructor(
         memory: ImportedMemory? = ImportedMemory(),
     ) {
         GraalvmWasiPreview1Builder {
-            this.host = host
+            this.host = this@GraalvmHostFunctionInstaller.host
             this.memorySource = memory
         }.build(graalWasmContext, moduleName)
     }

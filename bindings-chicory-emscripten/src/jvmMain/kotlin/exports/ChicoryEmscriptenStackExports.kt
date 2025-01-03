@@ -6,8 +6,8 @@
 
 package at.released.weh.bindings.chicory.exports
 
-import at.released.weh.bindings.chicory.ext.ChicoryIntGlobalsBindings
 import at.released.weh.bindings.chicory.ext.ChicoryFunctionBindings
+import at.released.weh.bindings.chicory.ext.ChicoryIntGlobalsBindings
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_FUNCTION_NAMES
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStackExports.Companion.EMSCRIPTEN_STACK_EXPORTED_GLOBAL_NAMES
