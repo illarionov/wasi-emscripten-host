@@ -24,16 +24,15 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.commonApi)
             api(projects.host)
-            api(projects.wasmCore)
             api(projects.emscriptenRuntime)
+            api(projects.bindingsGraalvm241Wasip1)
             implementation(projects.commonApi)
             implementation(projects.commonUtil)
-            implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
         }
         jvmMain.dependencies {
-            api(projects.bindingsGraalvm241Wasip1)
             api(libs.graalvm241.polyglot.polyglot)
             compileOnly(libs.graalvm241.wasm.language)
             implementation(libs.graalvm241.polyglot.wasm)

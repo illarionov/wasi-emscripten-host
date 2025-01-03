@@ -36,10 +36,10 @@ kotlin {
         commonMain.dependencies {
             api(projects.host)
             api(libs.chasm)
+            api(projects.bindingsChasmWasip1)
             api(projects.emscriptenRuntime)
             api(projects.commonApi)
             implementation(projects.commonUtil)
-            implementation(projects.bindingsChasmWasip1)
             implementation(libs.kotlinx.io)
         }
         commonTest.dependencies {
