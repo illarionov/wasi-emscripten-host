@@ -56,6 +56,7 @@ import at.released.weh.bindings.graalvm241.wasip1.function.SockSend
 import at.released.weh.bindings.graalvm241.wasip1.function.SockShutdown
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import org.graalvm.polyglot.Context
@@ -118,7 +119,7 @@ public class GraalvmWasiPreview1Builder {
             graalvmContext = wasmContext,
             moduleName = moduleName,
             memorySource = memorySource,
-            host = host ?: EmbedderHost.Builder().build(),
+            host = host ?: EmbedderHostBuilder().build(),
             functions = WasiPreview1HostFunction.entries.associateWith { it.nodeFactory },
         )
     }

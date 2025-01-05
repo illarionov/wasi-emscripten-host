@@ -97,7 +97,7 @@ public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/w
 	public fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public fun getRootLogger ()Lat/released/weh/common/api/Logger;
 	public fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
-	public fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
+	public fun getTimeZoneInfoProvider ()Lat/released/weh/host/TimeZoneInfo$Provider;
 	public fun setClock (Lat/released/weh/host/clock/Clock;)V
 	public fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
 	public fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)V
@@ -107,6 +107,6 @@ public class at/released/weh/host/test/fixtures/TestEmbedderHost : at/released/w
 	public fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)V
 	public fun setRootLogger (Lat/released/weh/common/api/Logger;)V
 	public fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
-	public fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
+	public fun setTimeZoneInfoProvider (Lat/released/weh/host/TimeZoneInfo$Provider;)V
 }
 

@@ -39,7 +39,7 @@ public open class TestEmbedderHost(
     override var localTimeFormatter: LocalTimeFormatter = LocalTimeFormatter {
         StructTm(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
     },
-    override var timeZoneInfo: TimeZoneInfo.Provider = TimeZoneInfo.Provider {
+    override var timeZoneInfoProvider: TimeZoneInfo.Provider = TimeZoneInfo.Provider {
         TimeZoneInfo(-1, -1, "Dummy", "Dummy")
     },
     override var entropySource: EntropySource = EntropySource { size ->

@@ -12,6 +12,7 @@ import at.released.weh.common.api.Logger
 import at.released.weh.filesystem.test.fixtures.stdio.TestSinkProvider
 import at.released.weh.host.CommandArgsProvider
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.host.SystemEnvProvider
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.wasi.bindings.test.ext.copyRecursively
@@ -98,14 +99,14 @@ public class WasiSuiteTestExecutor(
     private fun setupHost(
         arguments: WasiTestsuiteArguments,
     ): EmbedderHost {
-        return EmbedderHost.Builder().apply {
-            rootLogger = logger
-            commandArgsProvider = CommandArgsProvider { listOf("testproc") + arguments.args }
-            systemEnvProvider = SystemEnvProvider(arguments::env)
-            stdoutProvider = testStdout
-            stderrProvider = testStderr
-            directories()
-                .setAllowRootAccess(false)
+        return EmbedderHostBuilder {
+            logger = logger
+            commandArgs = CommandArgsProvider { listOf("testproc") + arguments.args }
+            systemEnv = SystemEnvProvider(arguments::env)
+            stdout = testStdout
+            stderr = testStderr
+            fileSystem {
+                isRootAccessAllowed = false
                 .apply {
                     for (subdirectory in arguments.dirs) {
                         addPreopenedDirectory(
@@ -114,6 +115,7 @@ public class WasiSuiteTestExecutor(
                         )
                     }
                 }
+            }
         }.build()
     }
 }

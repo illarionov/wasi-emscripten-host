@@ -33,9 +33,9 @@ public object AppleFileSystem : FileSystemEngine<Nothing> {
         return AppleFileSystemImpl(
             interceptors = commonConfig.interceptors,
             stdio = stdio,
-            currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
-            preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
-            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
+            currentWorkingDirectory = commonConfig.currentWorkingDirectory,
+            preopenedDirectories = commonConfig.preopenedDirectories,
+            isRootAccessAllowed = commonConfig.isRootAccessAllowed,
         )
     }
 }

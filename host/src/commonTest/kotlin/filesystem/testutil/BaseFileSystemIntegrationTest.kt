@@ -33,8 +33,6 @@ public abstract class BaseFileSystemIntegrationTest {
     ): FileSystem = DefaultTestFileSystem(
         engine = getDefaultTestEngine(),
     ) {
-        this.directories {
-            currentWorkingDirectory = root.toString()
-        }
+        currentWorkingDirectory = root.toString()
     }
 }

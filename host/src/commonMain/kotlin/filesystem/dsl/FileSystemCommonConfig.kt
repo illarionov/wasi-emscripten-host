@@ -8,10 +8,13 @@ package at.released.weh.filesystem.dsl
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.FileSystemInterceptor
+import at.released.weh.filesystem.preopened.PreopenedDirectory
 
 @InternalWasiEmscriptenHostApi
 public interface FileSystemCommonConfig {
     public val interceptors: List<FileSystemInterceptor>
     public val stdioConfig: StandardInputOutputConfigBlock
-    public val directoryConfig: DirectoryConfigBlock
+    public val isRootAccessAllowed: Boolean
+    public val currentWorkingDirectory: String?
+    public val preopenedDirectories: List<PreopenedDirectory>
 }

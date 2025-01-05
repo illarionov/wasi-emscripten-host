@@ -23,16 +23,16 @@ import at.released.weh.host.internal.thisOrCreateDefaultFileSystem
 
 internal expect val appleSystemEnvProvider: SystemEnvProvider
 
-internal actual fun createDefaultEmbedderHost(builder: EmbedderHost.Builder): EmbedderHost = object : EmbedderHost {
-    override val rootLogger: Logger = builder.rootLogger
-    override val systemEnvProvider: SystemEnvProvider = builder.systemEnvProvider ?: appleSystemEnvProvider
-    override val commandArgsProvider: CommandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
+internal actual fun createDefaultEmbedderHost(builder: EmbedderHostBuilder): EmbedderHost = object : EmbedderHost {
+    override val rootLogger: Logger = builder.logger
+    override val systemEnvProvider: SystemEnvProvider = builder.systemEnv ?: appleSystemEnvProvider
+    override val commandArgsProvider: CommandArgsProvider = builder.commandArgs ?: EmptyCommandArgsProvider
     override val fileSystem = builder.thisOrCreateDefaultFileSystem(AppleFileSystem, "FSappl")
     override val monotonicClock: MonotonicClock = builder.monotonicClock ?: AppleMonotonicClock
-    override val clock: Clock = builder.clock ?: AppleClock
-    override val cputimeSource: CputimeSource = builder.cputimeSource ?: AppleCputimeSource
+    override val clock: Clock = builder.realTimeClock ?: AppleClock
+    override val cputimeSource: CputimeSource = builder.cpuTime ?: AppleCputimeSource
     override val localTimeFormatter: LocalTimeFormatter = builder.localTimeFormatter ?: AppleLocalTimeFormatter
-    override val timeZoneInfo: Provider = builder.timeZoneInfo ?: AppleTimeZoneInfoProvider
+    override val timeZoneInfoProvider: Provider = builder.timeZoneInfo ?: AppleTimeZoneInfoProvider
     override val entropySource: EntropySource = builder.entropySource ?: AppleEntropySource
     override fun close() {
         fileSystem.close()
