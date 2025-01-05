@@ -23,7 +23,7 @@ import at.released.weh.host.internal.thisOrCreateDefaultFileSystem
 
 internal expect val appleSystemEnvProvider: SystemEnvProvider
 
-internal actual fun createDefaultEmbedderHost(builder: EmbedderHost.Builder): EmbedderHost = object : EmbedderHost {
+internal actual fun createDefaultEmbedderHost(builder: EmbedderHostBuilder): EmbedderHost = object : EmbedderHost {
     override val rootLogger: Logger = builder.rootLogger
     override val systemEnvProvider: SystemEnvProvider = builder.systemEnvProvider ?: appleSystemEnvProvider
     override val commandArgsProvider: CommandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
@@ -32,7 +32,7 @@ internal actual fun createDefaultEmbedderHost(builder: EmbedderHost.Builder): Em
     override val clock: Clock = builder.clock ?: AppleClock
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: AppleCputimeSource
     override val localTimeFormatter: LocalTimeFormatter = builder.localTimeFormatter ?: AppleLocalTimeFormatter
-    override val timeZoneInfo: Provider = builder.timeZoneInfo ?: AppleTimeZoneInfoProvider
+    override val timeZoneInfoProvider: Provider = builder.timeZoneInfoProvider ?: AppleTimeZoneInfoProvider
     override val entropySource: EntropySource = builder.entropySource ?: AppleEntropySource
     override fun close() {
         fileSystem.close()

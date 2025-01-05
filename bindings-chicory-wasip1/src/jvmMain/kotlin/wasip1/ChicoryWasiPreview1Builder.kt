@@ -13,6 +13,7 @@ import at.released.weh.bindings.chicory.memory.chicoryWasiMemoryReaderProvider
 import at.released.weh.bindings.chicory.memory.chicoryWasiMemoryWriterProvider
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import com.dylibso.chicory.runtime.HostFunction
 
@@ -79,7 +80,7 @@ public class ChicoryWasiPreview1Builder {
     public fun build(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
     ): List<HostFunction> {
-        val host = host ?: EmbedderHost.Builder().build()
+        val host = host ?: EmbedderHostBuilder().build()
         val memoryProvider = memoryProvider ?: DefaultChicoryMemoryProvider
         val wasiMemoryReaderProvider = chicoryWasiMemoryReaderProvider(memoryProvider, host.fileSystem)
         val wasiMemoryWriterProvider = chicoryWasiMemoryWriterProvider(memoryProvider, host.fileSystem)

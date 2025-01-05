@@ -18,5 +18,5 @@ internal class OutputStreamSinkProvider(
 
 private class OutputStreamStdioSink(
     private val outputStream: OutputStream,
-    private val sink: RawSink = outputStream.asSink(),
+    sink: RawSink = outputStream.asSink(),
 ) : StdioSink, RawSink by sink

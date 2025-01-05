@@ -7,7 +7,6 @@
 package at.released.weh.host
 
 import at.released.weh.filesystem.LinuxFileSystem
-import at.released.weh.host.EmbedderHost.Builder
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.internal.EmptyCommandArgsProvider
 import at.released.weh.host.internal.thisOrCreateDefaultFileSystem
@@ -19,7 +18,7 @@ import at.released.weh.host.linux.clock.LinuxClock
 import at.released.weh.host.linux.clock.LinuxCputimeSource
 import at.released.weh.host.linux.clock.LinuxMonotonicClock
 
-internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = object : EmbedderHost {
+internal actual fun createDefaultEmbedderHost(builder: EmbedderHostBuilder): EmbedderHost = object : EmbedderHost {
     override val rootLogger = builder.rootLogger
     override val systemEnvProvider = builder.systemEnvProvider ?: LinuxSystemEnvProvider
     override val commandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
@@ -28,7 +27,7 @@ internal actual fun createDefaultEmbedderHost(builder: Builder): EmbedderHost = 
     override val clock = builder.clock ?: LinuxClock
     override val cputimeSource: CputimeSource = builder.cputimeSource ?: LinuxCputimeSource
     override val localTimeFormatter = builder.localTimeFormatter ?: LinuxLocalTimeFormatter
-    override val timeZoneInfo = builder.timeZoneInfo ?: LinuxTimeZoneInfoProvider
+    override val timeZoneInfoProvider = builder.timeZoneInfoProvider ?: LinuxTimeZoneInfoProvider
     override val entropySource = builder.entropySource ?: LinuxEntropySource
     override fun close() {
         fileSystem.close()

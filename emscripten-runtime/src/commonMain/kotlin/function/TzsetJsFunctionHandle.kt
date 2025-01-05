@@ -25,7 +25,7 @@ public class TzsetJsFunctionHandle(
         @IntWasmPtr(Byte::class) stdName: WasmPtr,
         @IntWasmPtr(Byte::class) dstName: WasmPtr,
     ) {
-        val tzInfo = host.timeZoneInfo.getTimeZoneInfo()
+        val tzInfo = host.timeZoneInfoProvider.getTimeZoneInfo()
         memory.writeI32(timezone, tzInfo.timeZone.toInt())
         memory.writeI32(daylight, tzInfo.daylight)
 

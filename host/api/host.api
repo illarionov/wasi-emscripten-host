@@ -36,8 +36,14 @@ public final class at/released/weh/filesystem/dsl/FileSystemConfigBlock {
 	public fun <init> ()V
 	public final fun addInterceptor (Lat/released/weh/filesystem/FileSystemInterceptor;)V
 	public final fun addInterceptor (Lkotlin/jvm/functions/Function1;)V
-	public final fun directories (Lkotlin/jvm/functions/Function1;)V
+	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun engine (Lkotlin/jvm/functions/Function1;)V
+	public final fun getCurrentWorkingDirectory ()Ljava/lang/String;
+	public final fun getPreopenedDirectories ()Ljava/util/List;
+	public final fun isRootAccessAllowed ()Z
+	public final fun preopened (Lkotlin/jvm/functions/Function1;)V
+	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)V
+	public final fun setRootAccessAllowed (Z)V
 	public final fun stdio (Lkotlin/jvm/functions/Function1;)V
 }
 
@@ -1709,18 +1715,19 @@ public abstract interface class at/released/weh/host/EmbedderHost : java/lang/Au
 	public abstract fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public abstract fun getRootLogger ()Lat/released/weh/common/api/Logger;
 	public abstract fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
-	public abstract fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
+	public abstract fun getTimeZoneInfoProvider ()Lat/released/weh/host/TimeZoneInfo$Provider;
 }
 
-public final class at/released/weh/host/EmbedderHost$Builder {
+public final class at/released/weh/host/EmbedderHostBuilder {
+	public static final field Companion Lat/released/weh/host/EmbedderHostBuilder$Companion;
 	public fun <init> ()V
 	public final fun build ()Lat/released/weh/host/EmbedderHost;
-	public final fun directories ()Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
+	public final fun fileSystem ()Lat/released/weh/host/FileSystemSimpleConfigBlock;
+	public final synthetic fun fileSystem (Lkotlin/jvm/functions/Function1;)Lat/released/weh/host/EmbedderHostBuilder;
 	public final fun getClock ()Lat/released/weh/host/clock/Clock;
 	public final fun getCommandArgsProvider ()Lat/released/weh/host/CommandArgsProvider;
 	public final fun getCputimeSource ()Lat/released/weh/host/clock/CputimeSource;
 	public final fun getEntropySource ()Lat/released/weh/host/EntropySource;
-	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
 	public final fun getLocalTimeFormatter ()Lat/released/weh/host/LocalTimeFormatter;
 	public final fun getMonotonicClock ()Lat/released/weh/host/clock/MonotonicClock;
 	public final fun getRootLogger ()Lat/released/weh/common/api/Logger;
@@ -1728,31 +1735,62 @@ public final class at/released/weh/host/EmbedderHost$Builder {
 	public final fun getStdinProvider ()Lat/released/weh/filesystem/stdio/StdioSource$Provider;
 	public final fun getStdoutProvider ()Lat/released/weh/filesystem/stdio/StdioSink$Provider;
 	public final fun getSystemEnvProvider ()Lat/released/weh/host/SystemEnvProvider;
-	public final fun getTimeZoneInfo ()Lat/released/weh/host/TimeZoneInfo$Provider;
-	public final fun setClock (Lat/released/weh/host/clock/Clock;)V
-	public final fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
-	public final fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)V
-	public final fun setEntropySource (Lat/released/weh/host/EntropySource;)V
-	public final fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
-	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
-	public final fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)V
-	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)V
-	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
-	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/StdioSource$Provider;)V
-	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
-	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
-	public final fun setTimeZoneInfo (Lat/released/weh/host/TimeZoneInfo$Provider;)V
+	public final fun getTimeZoneInfoProvider ()Lat/released/weh/host/TimeZoneInfo$Provider;
+	public final fun setClock (Lat/released/weh/host/clock/Clock;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setClock (Lat/released/weh/host/clock/Clock;)V
+	public final fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setCommandArgsProvider (Lat/released/weh/host/CommandArgsProvider;)V
+	public final fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setCputimeSource (Lat/released/weh/host/clock/CputimeSource;)V
+	public final fun setEntropySource (Lat/released/weh/host/EntropySource;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setEntropySource (Lat/released/weh/host/EntropySource;)V
+	public final fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setLocalTimeFormatter (Lat/released/weh/host/LocalTimeFormatter;)V
+	public final fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setMonotonicClock (Lat/released/weh/host/clock/MonotonicClock;)V
+	public final fun setRootLogger (Lat/released/weh/common/api/Logger;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setRootLogger (Lat/released/weh/common/api/Logger;)V
+	public final fun setStderrProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setStderrProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
+	public final fun setStdinProvider (Lat/released/weh/filesystem/stdio/StdioSource$Provider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setStdinProvider (Lat/released/weh/filesystem/stdio/StdioSource$Provider;)V
+	public final fun setStdoutProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setStdoutProvider (Lat/released/weh/filesystem/stdio/StdioSink$Provider;)V
+	public final fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setSystemEnvProvider (Lat/released/weh/host/SystemEnvProvider;)V
+	public final fun setTimeZoneInfoProvider (Lat/released/weh/host/TimeZoneInfo$Provider;)Lat/released/weh/host/EmbedderHostBuilder;
+	public final synthetic fun setTimeZoneInfoProvider (Lat/released/weh/host/TimeZoneInfo$Provider;)V
 }
 
-public final class at/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder {
-	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
-	public final fun done ()Lat/released/weh/host/EmbedderHost$Builder;
-	public final fun setAllowRootAccess (Z)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
-	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHost$Builder$DirectoriesBuilder;
+public final class at/released/weh/host/EmbedderHostBuilder$Companion {
+	public final synthetic fun invoke (Lkotlin/jvm/functions/Function1;)Lat/released/weh/host/EmbedderHostBuilder;
+	public static synthetic fun invoke$default (Lat/released/weh/host/EmbedderHostBuilder$Companion;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lat/released/weh/host/EmbedderHostBuilder;
+}
+
+public final class at/released/weh/host/EmbedderHostBuilder$DirectoriesBuilder {
+	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)Lat/released/weh/host/EmbedderHostBuilder$DirectoriesBuilder;
+	public final fun done ()Lat/released/weh/host/EmbedderHostBuilder;
+	public final fun setAllowRootAccess (Z)Lat/released/weh/host/EmbedderHostBuilder$DirectoriesBuilder;
+	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)Lat/released/weh/host/EmbedderHostBuilder$DirectoriesBuilder;
 }
 
 public abstract interface class at/released/weh/host/EntropySource {
 	public abstract fun generateEntropy (I)[B
+}
+
+public final class at/released/weh/host/FileSystemSimpleConfigBlock {
+	public final fun addPreopenedDirectory (Ljava/lang/String;Ljava/lang/String;)Lat/released/weh/host/FileSystemSimpleConfigBlock;
+	public final fun getCurrentWorkingDirectory ()Ljava/lang/String;
+	public final fun getFileSystem ()Lat/released/weh/filesystem/FileSystem;
+	public final fun getPreopenedDirectories ()Ljava/util/List;
+	public final fun isRootAccessAllowed ()Z
+	public final synthetic fun preopened (Lkotlin/jvm/functions/Function1;)V
+	public final fun setAllowRootAccess (Z)Lat/released/weh/host/FileSystemSimpleConfigBlock;
+	public final fun setCurrentWorkingDirectory (Ljava/lang/String;)Lat/released/weh/host/FileSystemSimpleConfigBlock;
+	public final synthetic fun setCurrentWorkingDirectory (Ljava/lang/String;)V
+	public final fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)Lat/released/weh/host/FileSystemSimpleConfigBlock;
+	public final synthetic fun setFileSystem (Lat/released/weh/filesystem/FileSystem;)V
+	public final synthetic fun setRootAccessAllowed (Z)V
 }
 
 public abstract interface class at/released/weh/host/LocalTimeFormatter {

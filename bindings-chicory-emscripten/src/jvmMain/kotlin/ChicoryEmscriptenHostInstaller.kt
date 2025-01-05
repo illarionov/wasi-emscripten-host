@@ -19,6 +19,7 @@ import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import com.dylibso.chicory.runtime.HostFunction
@@ -123,7 +124,7 @@ public class ChicoryEmscriptenHostInstaller private constructor(
 
         public fun build(): ChicoryEmscriptenHostInstaller {
             return ChicoryEmscriptenHostInstaller(
-                host ?: EmbedderHost.Builder().build(),
+                host ?: EmbedderHostBuilder().build(),
                 memoryProvider,
             )
         }

@@ -17,6 +17,7 @@ import at.released.weh.emcripten.runtime.export.DefaultEmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.EmscriptenRuntime
 import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import at.released.weh.wasm.core.WasmModules.WASI_SNAPSHOT_PREVIEW1_MODULE_NAME
 import io.github.charlietap.chasm.embedding.shapes.Import
@@ -113,7 +114,7 @@ public class ChasmEmscriptenHostBuilder private constructor(
             return ChasmEmscriptenHostBuilder(
                 store = store,
                 memoryProvider = config.memoryProvider,
-                host = config.host ?: EmbedderHost.Builder().build(),
+                host = config.host ?: EmbedderHostBuilder().build(),
             )
         }
     }

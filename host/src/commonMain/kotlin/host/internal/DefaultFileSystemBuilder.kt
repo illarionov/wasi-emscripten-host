@@ -11,25 +11,28 @@ import at.released.weh.filesystem.FileSystemEngine
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
 import at.released.weh.filesystem.lock.GlobalLockFileSystemInterceptor
 import at.released.weh.filesystem.logging.LoggingFileSystemInterceptor
-import at.released.weh.host.EmbedderHost.Builder
+import at.released.weh.host.EmbedderHostBuilder
+import at.released.weh.host.FileSystemSimpleConfigBlock
 
-internal fun <E : FileSystemEngineConfig> Builder.thisOrCreateDefaultFileSystem(
+internal fun <E : FileSystemEngineConfig> EmbedderHostBuilder.thisOrCreateDefaultFileSystem(
     engine: FileSystemEngine<E>,
     fsLoggerTag: String,
 ): FileSystem {
-    val builderFs = this.fileSystem
-    return if (builderFs != null) {
-        NoCloseFileSystemDecorator(builderFs)
+    val overridenFileSystem = this.fileSystem().fileSystem
+    return if (overridenFileSystem != null) {
+        // If the file system is overridden, we should not close it.
+        NoCloseFileSystemDecorator(overridenFileSystem)
     } else {
         createDefaultFileSystem(engine, fsLoggerTag)
     }
 }
 
-private fun <E : FileSystemEngineConfig> Builder.createDefaultFileSystem(
+private fun <E : FileSystemEngineConfig> EmbedderHostBuilder.createDefaultFileSystem(
     engine: FileSystemEngine<E>,
     fsLoggerTag: String,
 ): FileSystem {
-    val builder = this
+    val builder: EmbedderHostBuilder = this
+    val fileSystemConfig: FileSystemSimpleConfigBlock = builder.fileSystem()
     return FileSystem(engine) {
         addInterceptor(GlobalLockFileSystemInterceptor())
         addInterceptor(LoggingFileSystemInterceptor(builder.rootLogger.withTag(fsLoggerTag)))
@@ -38,12 +41,10 @@ private fun <E : FileSystemEngineConfig> Builder.createDefaultFileSystem(
             stdoutProvider = builder.stdoutProvider
             stderrProvider = builder.stderrProvider
         }
-        directories {
-            isRootAccessAllowed = builder.directoriesConfigBlock.isRootAccessAllowed
-            currentWorkingDirectory = builder.directoriesConfigBlock.currentWorkingDirectory
-            preopened {
-                addAll(builder.directoriesConfigBlock.preopenedDirectories)
-            }
+        isRootAccessAllowed = fileSystemConfig.isRootAccessAllowed
+        currentWorkingDirectory = fileSystemConfig.currentWorkingDirectory
+        preopened {
+            addAll(fileSystemConfig.preopenedDirectories)
         }
     }
 }

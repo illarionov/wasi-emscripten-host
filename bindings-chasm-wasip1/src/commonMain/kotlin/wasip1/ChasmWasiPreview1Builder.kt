@@ -10,6 +10,7 @@ import at.released.weh.bindings.chasm.dsl.ChasmHostFunctionDsl
 import at.released.weh.bindings.chasm.memory.ChasmMemoryAdapter
 import at.released.weh.bindings.chasm.module.wasi.createWasiPreview1HostFunctions
 import at.released.weh.host.EmbedderHost
+import at.released.weh.host.EmbedderHostBuilder
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryReader
 import at.released.weh.wasi.preview1.memory.DefaultWasiMemoryWriter
 import at.released.weh.wasm.core.WasmModules
@@ -66,7 +67,7 @@ public class ChasmWasiPreview1Builder private constructor(
             return ChasmWasiPreview1Builder(
                 store = store,
                 memoryProvider = config.memoryProvider,
-                host = config.host ?: EmbedderHost.Builder().build(),
+                host = config.host ?: EmbedderHostBuilder().build(),
             )
         }
     }

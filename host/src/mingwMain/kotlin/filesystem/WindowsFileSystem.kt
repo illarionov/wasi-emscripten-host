@@ -33,9 +33,9 @@ public object WindowsFileSystem : FileSystemEngine<Nothing> {
         return WindowsFileSystemImpl(
             interceptors = commonConfig.interceptors,
             stdio = stdio,
-            isRootAccessAllowed = commonConfig.directoryConfig.isRootAccessAllowed,
-            currentWorkingDirectory = commonConfig.directoryConfig.currentWorkingDirectory,
-            preopenedDirectories = commonConfig.directoryConfig.preopenedDirectories,
+            isRootAccessAllowed = commonConfig.isRootAccessAllowed,
+            currentWorkingDirectory = commonConfig.currentWorkingDirectory,
+            preopenedDirectories = commonConfig.preopenedDirectories,
         )
     }
 }
