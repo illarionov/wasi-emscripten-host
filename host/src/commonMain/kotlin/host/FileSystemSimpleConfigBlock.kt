@@ -27,7 +27,6 @@ public class FileSystemSimpleConfigBlock internal constructor() {
      */
     @set:JvmSynthetic // Hide from Java
     public var currentWorkingDirectory: String? = null
-
     private val _preopenedDirectories: MutableList<PreopenedDirectory> = mutableListOf()
 
     /**
@@ -36,19 +35,19 @@ public class FileSystemSimpleConfigBlock internal constructor() {
     public val preopenedDirectories: List<PreopenedDirectory> get() = _preopenedDirectories.toMutableList()
 
     /**
-     * Specifies whether access to files outside the pre-opened directories is allowed.
-     */
-    public fun setAllowRootAccess(isRootAccessAllowed: Boolean): FileSystemSimpleConfigBlock = apply {
-        this.isRootAccessAllowed = isRootAccessAllowed
-    }
-
-    /**
      * Implementation of the filesystem.
      * Allows you to completely redefine the implementation. This provides access to more precise settings
      * and parameters of a specific implementation.
      */
     @set:JvmSynthetic // Hide from Java
     public var fileSystem: FileSystem? = null
+
+    /**
+     * Specifies whether access to files outside the pre-opened directories is allowed.
+     */
+    public fun setAllowRootAccess(isRootAccessAllowed: Boolean): FileSystemSimpleConfigBlock = apply {
+        this.isRootAccessAllowed = isRootAccessAllowed
+    }
 
     /**
      * Sets the current working directory.
@@ -61,6 +60,7 @@ public class FileSystemSimpleConfigBlock internal constructor() {
     /**
      * Adds a pre-opened directory.
      * The directory is mapped from a real path on the host system to a virtual path on the WASM FileSystem.
+     *
      * @param realPath The path of the directory on the real file system.
      * @param virtualPath Mount point inside the virtual file system.
      */

@@ -100,11 +100,11 @@ public class WasiSuiteTestExecutor(
         arguments: WasiTestsuiteArguments,
     ): EmbedderHost {
         return EmbedderHostBuilder {
-            rootLogger = logger
-            commandArgsProvider = CommandArgsProvider { listOf("testproc") + arguments.args }
-            systemEnvProvider = SystemEnvProvider(arguments::env)
-            stdoutProvider = testStdout
-            stderrProvider = testStderr
+            logger = logger
+            commandArgs = CommandArgsProvider { listOf("testproc") + arguments.args }
+            systemEnv = SystemEnvProvider(arguments::env)
+            stdout = testStdout
+            stderr = testStderr
             fileSystem {
                 isRootAccessAllowed = false
                 .apply {

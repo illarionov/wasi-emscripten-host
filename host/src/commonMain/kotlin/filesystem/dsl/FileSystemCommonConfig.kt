@@ -9,7 +9,6 @@ package at.released.weh.filesystem.dsl
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.filesystem.FileSystemInterceptor
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.host.FileSystemSimpleConfigBlock
 
 @InternalWasiEmscriptenHostApi
 public interface FileSystemCommonConfig {

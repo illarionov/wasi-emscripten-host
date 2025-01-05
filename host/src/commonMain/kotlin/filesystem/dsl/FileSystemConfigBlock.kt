@@ -14,8 +14,6 @@ import at.released.weh.filesystem.FileSystemInterceptor.Chain
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
-import at.released.weh.host.FileSystemSimpleConfigBlock
-import kotlin.jvm.JvmSynthetic
 
 @WasiEmscriptenHostDsl
 public class FileSystemConfigBlock<E : FileSystemEngineConfig> {

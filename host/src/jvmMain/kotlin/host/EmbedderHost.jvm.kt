@@ -20,15 +20,15 @@ import at.released.weh.host.jvm.clock.JvmMonotonicClock
 
 @JvmSynthetic // Hide from Java
 internal actual fun createDefaultEmbedderHost(builder: EmbedderHostBuilder): EmbedderHost = object : EmbedderHost {
-    override val rootLogger = builder.rootLogger
-    override val systemEnvProvider = builder.systemEnvProvider ?: JvmSystemEnvProvider
-    override val commandArgsProvider = builder.commandArgsProvider ?: JvmCommandArgsProvider
+    override val rootLogger = builder.logger
+    override val systemEnvProvider = builder.systemEnv ?: JvmSystemEnvProvider
+    override val commandArgsProvider = builder.commandArgs ?: JvmCommandArgsProvider
     override val fileSystem = builder.thisOrCreateDefaultFileSystem(NioFileSystem, "FSnio")
-    override val clock = builder.clock ?: JvmClock
-    override val cputimeSource: CputimeSource = builder.cputimeSource ?: UnsupportedCputimeSource
+    override val clock = builder.realTimeClock ?: JvmClock
+    override val cputimeSource: CputimeSource = builder.cpuTime ?: UnsupportedCputimeSource
     override val monotonicClock = builder.monotonicClock ?: JvmMonotonicClock
     override val localTimeFormatter = builder.localTimeFormatter ?: JvmLocalTimeFormatter()
-    override val timeZoneInfoProvider = builder.timeZoneInfoProvider ?: JvmTimeZoneInfoProvider()
+    override val timeZoneInfoProvider = builder.timeZoneInfo ?: JvmTimeZoneInfoProvider()
     override val entropySource = builder.entropySource ?: JvmEntropySource()
     override fun close() {
         fileSystem.close()

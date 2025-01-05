@@ -24,49 +24,49 @@ public class EmbedderHostBuilder {
      * Can be overridden to log internal debug messages.
      */
     @set:JvmSynthetic // Hide from Java
-    public var rootLogger: Logger = Logger
+    public var logger: Logger = Logger
 
     /**
      * Implementation of the STDIN stream.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var stdinProvider: StdioSource.Provider? = null
+    public var stdin: StdioSource.Provider? = null
 
     /**
      * Implementation of the STDOUT stream.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var stdoutProvider: StdioSink.Provider? = null
+    public var stdout: StdioSink.Provider? = null
 
     /**
      * Implementation of the STDERR stream.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var stderrProvider: StdioSink.Provider? = null
+    public var stderr: StdioSink.Provider? = null
 
     /**
      * Provider of the system environment variables.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var systemEnvProvider: SystemEnvProvider? = null
+    public var systemEnv: SystemEnvProvider? = null
 
     /**
      * Provider of the application's command line arguments.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var commandArgsProvider: CommandArgsProvider? = null
+    public var commandArgs: CommandArgsProvider? = null
 
     /**
      * Implementation of the real-time clock.
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var clock: Clock? = null
+    public var realTimeClock: Clock? = null
 
     /**
      * Implementation of the monotonic clock.
@@ -80,7 +80,7 @@ public class EmbedderHostBuilder {
      * Set to null to use the default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var cputimeSource: CputimeSource? = null
+    public var cpuTime: CputimeSource? = null
 
     /**
      * Source of the entropy.
@@ -103,64 +103,63 @@ public class EmbedderHostBuilder {
      * Set to null to use default implementation.
      */
     @set:JvmSynthetic // Hide from Java
-    public var timeZoneInfoProvider: TimeZoneInfo.Provider? = null
-
+    public var timeZoneInfo: TimeZoneInfo.Provider? = null
     private var fileSystemConfigBlock: FileSystemSimpleConfigBlock = FileSystemSimpleConfigBlock()
 
     /**
      * The logger for the embedder host.
      * Can be overridden to log internal debug messages.
      */
-    public fun setRootLogger(rootLogger: Logger): EmbedderHostBuilder = apply {
-        this.rootLogger = rootLogger
+    public fun setLogger(logger: Logger): EmbedderHostBuilder = apply {
+        this.logger = logger
     }
 
     /**
      * Implementation of the STDIN stream.
      * Set to null to use the default implementation.
      */
-    public fun setStdinProvider(stdinProvider: StdioSource.Provider?): EmbedderHostBuilder = apply {
-        this.stdinProvider = stdinProvider
+    public fun setStdin(stdin: StdioSource.Provider?): EmbedderHostBuilder = apply {
+        this.stdin = stdin
     }
 
     /**
      * Implementation of the STDOUT stream.
      * Set to null to use the default implementation.
      */
-    public fun setStdoutProvider(stdoutProvider: StdioSink.Provider?): EmbedderHostBuilder = apply {
-        this.stdoutProvider = stdoutProvider
+    public fun setStdout(stdout: StdioSink.Provider?): EmbedderHostBuilder = apply {
+        this.stdout = stdout
     }
 
     /**
      * Implementation of the STDERR stream.
      * Set to null to use the default implementation.
      */
-    public fun setStderrProvider(stderrProvider: StdioSink.Provider?): EmbedderHostBuilder = apply {
-        this.stderrProvider = stderrProvider
+    public fun setStderr(stderr: StdioSink.Provider?): EmbedderHostBuilder = apply {
+        this.stderr = stderr
     }
 
     /**
      * Provider of the system environment variables.
      * Set to null to use the default implementation.
      */
-    public fun setSystemEnvProvider(systemEnvProvider: SystemEnvProvider?): EmbedderHostBuilder = apply {
-        this.systemEnvProvider = systemEnvProvider
+    public fun setSystemEnv(systemEnv: SystemEnvProvider?): EmbedderHostBuilder = apply {
+        this.systemEnv = systemEnv
     }
 
     /**
      * Provider of the application's command line arguments.
      * Set to null to use the default implementation.
      */
-    public fun setCommandArgsProvider(commandArgsProvider: CommandArgsProvider?): EmbedderHostBuilder = apply {
-        this.commandArgsProvider = commandArgsProvider
+    public fun setCommandArgs(commandArgs: CommandArgsProvider?): EmbedderHostBuilder = apply {
+        this.commandArgs = commandArgs
     }
 
     /**
      * Implementation of the real-time clock.
      * Set to null to use the default implementation.
      */
-    public fun setClock(clock: Clock?): EmbedderHostBuilder = apply {
-        this.clock = clock
+    public fun setRealTimeClock(realTimeClock: Clock?): EmbedderHostBuilder = apply {
+        this.realTimeClock = realTimeClock
     }
 
     /**
@@ -175,8 +174,8 @@ public class EmbedderHostBuilder {
      * Implementation of clocks used to measure CPU time.
      * Set to null to use the default implementation.
      */
-    public fun setCputimeSource(cputimeSource: CputimeSource?): EmbedderHostBuilder = apply {
-        this.cputimeSource = cputimeSource
+    public fun setCpuTime(cpuTime: CputimeSource?): EmbedderHostBuilder = apply {
+        this.cpuTime = cpuTime
     }
 
     /**
@@ -201,8 +200,8 @@ public class EmbedderHostBuilder {
      * Used in Emscripten bindings.
      * Set to null to use default implementation.
      */
-    public fun setTimeZoneInfoProvider(timeZoneInfo: TimeZoneInfo.Provider?): EmbedderHostBuilder = apply {
-        this.timeZoneInfoProvider = timeZoneInfo
+    public fun setTimeZoneInfo(timeZoneInfo: TimeZoneInfo.Provider?): EmbedderHostBuilder = apply {
+        this.timeZoneInfo = timeZoneInfo
     }
 
     /**

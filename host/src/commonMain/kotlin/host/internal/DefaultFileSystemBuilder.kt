@@ -35,11 +35,11 @@ private fun <E : FileSystemEngineConfig> EmbedderHostBuilder.createDefaultFileSy
     val fileSystemConfig: FileSystemSimpleConfigBlock = builder.fileSystem()
     return FileSystem(engine) {
         addInterceptor(GlobalLockFileSystemInterceptor())
-        addInterceptor(LoggingFileSystemInterceptor(builder.rootLogger.withTag(fsLoggerTag)))
+        addInterceptor(LoggingFileSystemInterceptor(builder.logger.withTag(fsLoggerTag)))
         stdio {
-            stdinProvider = builder.stdinProvider
-            stdoutProvider = builder.stdoutProvider
-            stderrProvider = builder.stderrProvider
+            stdinProvider = builder.stdin
+            stdoutProvider = builder.stdout
+            stderrProvider = builder.stderr
         }
         isRootAccessAllowed = fileSystemConfig.isRootAccessAllowed
         currentWorkingDirectory = fileSystemConfig.currentWorkingDirectory

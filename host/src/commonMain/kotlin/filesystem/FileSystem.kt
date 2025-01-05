@@ -7,7 +7,6 @@
 package at.released.weh.filesystem
 
 import arrow.core.Either
-import at.released.weh.host.FileSystemSimpleConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.dsl.FileSystemConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig

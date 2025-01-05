@@ -23,15 +23,15 @@ import at.released.weh.host.windows.clock.WindowsCputimeSource
 import at.released.weh.host.windows.clock.WindowsMonotonicClock
 
 internal actual fun createDefaultEmbedderHost(builder: EmbedderHostBuilder): EmbedderHost = object : EmbedderHost {
-    override val rootLogger: Logger = builder.rootLogger
-    override val systemEnvProvider: SystemEnvProvider = builder.systemEnvProvider ?: WindowsSystemEnvProvider
-    override val commandArgsProvider: CommandArgsProvider = builder.commandArgsProvider ?: EmptyCommandArgsProvider
+    override val rootLogger: Logger = builder.logger
+    override val systemEnvProvider: SystemEnvProvider = builder.systemEnv ?: WindowsSystemEnvProvider
+    override val commandArgsProvider: CommandArgsProvider = builder.commandArgs ?: EmptyCommandArgsProvider
     override val fileSystem = builder.thisOrCreateDefaultFileSystem(WindowsFileSystem, "FSmingw")
     override val monotonicClock: MonotonicClock = builder.monotonicClock ?: WindowsMonotonicClock
-    override val clock: Clock = builder.clock ?: WindowsClock
-    override val cputimeSource: CputimeSource = builder.cputimeSource ?: WindowsCputimeSource
+    override val clock: Clock = builder.realTimeClock ?: WindowsClock
+    override val cputimeSource: CputimeSource = builder.cpuTime ?: WindowsCputimeSource
     override val localTimeFormatter: LocalTimeFormatter = builder.localTimeFormatter ?: WindowsLocalTimeFormatter
-    override val timeZoneInfoProvider: Provider = builder.timeZoneInfoProvider ?: WindowsTimeZoneInfoProvider
+    override val timeZoneInfoProvider: Provider = builder.timeZoneInfo ?: WindowsTimeZoneInfoProvider
     override val entropySource: EntropySource = builder.entropySource ?: WindowsEntropySource
     override fun close() {
         fileSystem.close()
