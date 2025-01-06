@@ -4,13 +4,13 @@ plugins {
 
 kotlin {
     jvm()
-//    iosSimulatorArm64()
-//    iosArm64()
-//    iosX64()
+    iosSimulatorArm64()
+    iosArm64()
+    iosX64()
     linuxArm64()
     linuxX64()
-//    macosArm64()
-//    macosX64()
+    macosArm64()
+    macosX64()
     mingwX64()
 
     sourceSets {
