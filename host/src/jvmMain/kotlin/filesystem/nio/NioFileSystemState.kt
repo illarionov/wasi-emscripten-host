@@ -10,6 +10,7 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.fdresource.NioDirectoryFdResource
@@ -21,6 +22,7 @@ import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
 import at.released.weh.filesystem.internal.fdresource.StdioFileFdResource.Companion.toFileDescriptorMap
+import at.released.weh.filesystem.internal.getDefaultPath
 import at.released.weh.filesystem.model.BaseDirectory
 import at.released.weh.filesystem.model.Fdflags
 import at.released.weh.filesystem.model.FileDescriptor
@@ -163,11 +165,13 @@ internal class NioFileSystemState private constructor(
         fun create(
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
-            currentWorkingDirectory: String?,
+            currentWorkingDirectory: CurrentWorkingDirectoryConfig,
             preopenedDirectories: List<PreopenedDirectory>,
             javaFs: NioFileSystem = FileSystems.getDefault(),
         ): NioFileSystemState {
-            val preopened = NioDirectoryOpener(javaFs).preopen(currentWorkingDirectory, preopenedDirectories)
+            val cwdPath = currentWorkingDirectory.getDefaultPath(isRootAccessAllowed)
+
+            val preopened = NioDirectoryOpener(javaFs).preopen(cwdPath, preopenedDirectories)
                 .getOrElse { openError ->
                     throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
                 }

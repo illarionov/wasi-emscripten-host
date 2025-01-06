@@ -27,7 +27,7 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
         private set
 
     public var isRootAccessAllowed: Boolean = false
-    public var currentWorkingDirectory: String? = null
+    public var currentWorkingDirectory: CurrentWorkingDirectoryConfig = CurrentWorkingDirectoryConfig.Default
     private val _preopenedDirectories: MutableList<PreopenedDirectory> = mutableListOf()
     public val preopenedDirectories: List<PreopenedDirectory> get() = _preopenedDirectories
 

@@ -9,6 +9,7 @@ package at.released.weh.host
 import arrow.core.getOrElse
 import at.released.weh.common.api.WasiEmscriptenHostDsl
 import at.released.weh.filesystem.FileSystem
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.filesystem.preopened.PreopenedDirectory
 import kotlin.jvm.JvmSynthetic
@@ -21,12 +22,25 @@ public class FileSystemSimpleConfigBlock internal constructor() {
     @set:JvmSynthetic // Hide from Java
     public var isRootAccessAllowed: Boolean = false
 
+    @JvmSynthetic // Hide from Java
+    internal var currentWorkingDirectoryConfig: CurrentWorkingDirectoryConfig = CurrentWorkingDirectoryConfig.Default
+
     /**
      * Sets the current working directory.
      * Used in Emscripten bindings.
      */
     @set:JvmSynthetic // Hide from Java
-    public var currentWorkingDirectory: String? = null
+    @Suppress("NO_CORRESPONDING_PROPERTY")
+    public var currentWorkingDirectory: String?
+        get() = (currentWorkingDirectoryConfig as? CurrentWorkingDirectoryConfig.Path)?.path
+        set(value) {
+            currentWorkingDirectoryConfig = if (value != null) {
+                CurrentWorkingDirectoryConfig.Path(value)
+            } else {
+                CurrentWorkingDirectoryConfig.Inactive
+            }
+        }
+
     private val _preopenedDirectories: MutableList<PreopenedDirectory> = mutableListOf()
 
     /**

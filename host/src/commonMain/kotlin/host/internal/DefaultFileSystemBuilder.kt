@@ -42,7 +42,7 @@ private fun <E : FileSystemEngineConfig> EmbedderHostBuilder.createDefaultFileSy
             stderrProvider = builder.stderr
         }
         isRootAccessAllowed = fileSystemConfig.isRootAccessAllowed
-        currentWorkingDirectory = fileSystemConfig.currentWorkingDirectory
+        currentWorkingDirectory = fileSystemConfig.currentWorkingDirectoryConfig
         preopened {
             addAll(fileSystemConfig.preopenedDirectories)
         }

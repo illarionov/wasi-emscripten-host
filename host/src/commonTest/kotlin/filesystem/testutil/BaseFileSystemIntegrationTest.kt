@@ -7,6 +7,7 @@
 package at.released.weh.filesystem.testutil
 
 import at.released.weh.filesystem.FileSystem
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.test.logger.TestLogger
 import at.released.weh.test.utils.TempFolder
 import at.released.weh.test.utils.absolutePath
@@ -33,6 +34,6 @@ public abstract class BaseFileSystemIntegrationTest {
     ): FileSystem = DefaultTestFileSystem(
         engine = getDefaultTestEngine(),
     ) {
-        currentWorkingDirectory = root.toString()
+        currentWorkingDirectory = CurrentWorkingDirectoryConfig.Path(root.toString())
     }
 }

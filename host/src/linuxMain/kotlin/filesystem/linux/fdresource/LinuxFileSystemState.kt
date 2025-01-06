@@ -10,12 +10,14 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
+import at.released.weh.filesystem.internal.getDefaultPath
 import at.released.weh.filesystem.linux.fdresource.LinuxFileFdResource.NativeFileChannel
 import at.released.weh.filesystem.linux.native.linuxOpenRaw
 import at.released.weh.filesystem.model.FileDescriptor
@@ -120,11 +122,12 @@ internal class LinuxFileSystemState private constructor(
         @Throws(IOException::class)
         fun create(
             stdio: StandardInputOutput,
-            currentWorkingDirectory: String?,
+            currentWorkingDirectory: CurrentWorkingDirectoryConfig,
             preopenedDirectories: List<PreopenedDirectory>,
+            isRootAccessAllowed: Boolean,
         ): LinuxFileSystemState {
             val (cwdResult, directories) = PosixDirectoryPreopener(::linuxOpenRaw).preopen(
-                currentWorkingDirectory,
+                currentWorkingDirectory.getDefaultPath(isRootAccessAllowed),
                 preopenedDirectories,
             ).getOrElse { openError ->
                 throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")

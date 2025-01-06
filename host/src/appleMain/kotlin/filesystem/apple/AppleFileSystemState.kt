@@ -16,12 +16,14 @@ import at.released.weh.filesystem.apple.fdresource.AppleFileFdResource.NativeFil
 import at.released.weh.filesystem.apple.nativefunc.appleOpenRaw
 import at.released.weh.filesystem.apple.nativefunc.appleReadLink
 import at.released.weh.filesystem.apple.nativefunc.appleStat
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.internal.fdresource.FdResource
+import at.released.weh.filesystem.internal.getDefaultPath
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
@@ -141,12 +143,12 @@ internal class AppleFileSystemState private constructor(
         @Throws(IOException::class)
         fun create(
             stdio: StandardInputOutput,
-            currentWorkingDirectory: String?,
+            currentWorkingDirectory: CurrentWorkingDirectoryConfig,
             preopenedDirectories: List<PreopenedDirectory>,
             isRootAccessAllowed: Boolean,
         ): AppleFileSystemState {
             val (cwdResult, directories) = PosixDirectoryPreopener(::appleOpenRaw).preopen(
-                currentWorkingDirectory,
+                currentWorkingDirectory.getDefaultPath(isRootAccessAllowed),
                 preopenedDirectories,
             ).getOrElse { openError ->
                 throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
