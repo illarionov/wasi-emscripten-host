@@ -111,6 +111,7 @@ public class GraalvmWasiPreview1Builder {
         this.memorySource = memorySource
     }
 
+    @JvmOverloads
     public fun build(
         wasmContext: Context,
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,

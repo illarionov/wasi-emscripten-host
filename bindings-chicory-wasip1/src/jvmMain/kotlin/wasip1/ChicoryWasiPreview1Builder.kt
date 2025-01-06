@@ -77,6 +77,7 @@ public class ChicoryWasiPreview1Builder {
         this.memoryProvider = memoryProvider
     }
 
+    @JvmOverloads
     public fun build(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
     ): List<HostFunction> {

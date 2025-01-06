@@ -66,6 +66,7 @@ public final class at/released/weh/bindings/graalvm241/memory/MemorySpec$Compani
 public final class at/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder {
 	public static final field Companion Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder$Companion;
 	public fun <init> ()V
+	public final fun build (Lorg/graalvm/polyglot/Context;)V
 	public final fun build (Lorg/graalvm/polyglot/Context;Ljava/lang/String;)V
 	public static synthetic fun build$default (Lat/released/weh/bindings/graalvm241/wasip1/GraalvmWasiPreview1Builder;Lorg/graalvm/polyglot/Context;Ljava/lang/String;ILjava/lang/Object;)V
 	public final fun getHost ()Lat/released/weh/host/EmbedderHost;
