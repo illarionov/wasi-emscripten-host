@@ -25,7 +25,7 @@ public fun <E : FileSystemEngineConfig> FileSystem(
     val commonConfig = object : FileSystemCommonConfig {
         override val interceptors: List<FileSystemInterceptor> = config.interceptors
         override val stdioConfig: StandardInputOutputConfigBlock = stdioConfig
-        override val isRootAccessAllowed: Boolean = config.isRootAccessAllowed
+        override val unrestricted: Boolean = config.unrestricted
         override val currentWorkingDirectory: CurrentWorkingDirectoryConfig = config.currentWorkingDirectory
         override val preopenedDirectories: List<PreopenedDirectory> = config.preopenedDirectories
     }

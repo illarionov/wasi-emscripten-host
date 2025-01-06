@@ -26,7 +26,7 @@ public class FileSystemConfigBlock<E : FileSystemEngineConfig> {
     internal var stdioConfig: StandardInputOutputConfigBlock.() -> Unit = {}
         private set
 
-    public var isRootAccessAllowed: Boolean = false
+    public var unrestricted: Boolean = false
     public var currentWorkingDirectory: CurrentWorkingDirectoryConfig = CurrentWorkingDirectoryConfig.Default
     private val _preopenedDirectories: MutableList<PreopenedDirectory> = mutableListOf()
     public val preopenedDirectories: List<PreopenedDirectory> get() = _preopenedDirectories

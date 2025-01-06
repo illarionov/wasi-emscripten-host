@@ -20,7 +20,7 @@ public class FileSystemSimpleConfigBlock internal constructor() {
      * Specifies whether access to files outside the pre-opened directories is allowed.
      */
     @set:JvmSynthetic // Hide from Java
-    public var isRootAccessAllowed: Boolean = false
+    public var unrestricted: Boolean = false
 
     @JvmSynthetic // Hide from Java
     internal var currentWorkingDirectoryConfig: CurrentWorkingDirectoryConfig = CurrentWorkingDirectoryConfig.Default
@@ -59,8 +59,8 @@ public class FileSystemSimpleConfigBlock internal constructor() {
     /**
      * Specifies whether access to files outside the pre-opened directories is allowed.
      */
-    public fun setAllowRootAccess(isRootAccessAllowed: Boolean): FileSystemSimpleConfigBlock = apply {
-        this.isRootAccessAllowed = isRootAccessAllowed
+    public fun setUnrestricted(unrestricted: Boolean): FileSystemSimpleConfigBlock = apply {
+        this.unrestricted = unrestricted
     }
 
     /**

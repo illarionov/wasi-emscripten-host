@@ -218,13 +218,4 @@ public class EmbedderHostBuilder {
     }
 
     public fun build(): EmbedderHost = createDefaultEmbedderHost(this)
-
-    public companion object {
-        @JvmSynthetic // Hide from Java
-        public operator fun invoke(
-            block: EmbedderHostBuilder.() -> Unit = {},
-        ): EmbedderHostBuilder {
-            return EmbedderHostBuilder().apply(block)
-        }
-    }
 }
