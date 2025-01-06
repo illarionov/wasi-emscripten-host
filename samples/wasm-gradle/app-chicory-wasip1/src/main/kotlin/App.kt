@@ -32,7 +32,7 @@ fun main() {
 }
 
 private fun executeCode(embedderHost: EmbedderHost, wasmModule: WasmModule) {
-    // Prepare WASI and Emscripten host imports
+    // Prepare WASI host imports
     val wasiImports: List<HostFunction> = ChicoryWasiPreview1Builder {
         host = embedderHost
     }.build()

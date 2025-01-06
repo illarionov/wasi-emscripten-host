@@ -77,7 +77,7 @@ public class ChicoryEmscriptenHostInstaller private constructor(
     @JvmOverloads
     public fun setupWasiPreview1HostFunctions(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
-    ): List<HostFunction> = ChicoryWasiPreview1Builder {
+    ): List<@JvmSuppressWildcards HostFunction> = ChicoryWasiPreview1Builder {
         this.host = this@ChicoryEmscriptenHostInstaller.host
         this.memoryProvider = this@ChicoryEmscriptenHostInstaller.memoryProvider
     }.build(moduleName)
@@ -134,7 +134,7 @@ public class ChicoryEmscriptenHostInstaller private constructor(
         private val host: EmbedderHost,
         private val memoryProvider: ChicoryMemoryProvider,
     ) {
-        public var emscriptenFunctions: List<HostFunction> = emptyList()
+        public var emscriptenFunctions: List<@JvmSuppressWildcards HostFunction> = emptyList()
             private set
         private var _emscriptenStack: EmscriptenStack? = null
         private val emscriptenStack: EmscriptenStack

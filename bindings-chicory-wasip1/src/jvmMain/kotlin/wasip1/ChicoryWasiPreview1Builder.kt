@@ -80,7 +80,7 @@ public class ChicoryWasiPreview1Builder {
     @JvmOverloads
     public fun build(
         moduleName: String = WASI_SNAPSHOT_PREVIEW1_MODULE_NAME,
-    ): List<HostFunction> {
+    ): List<@JvmSuppressWildcards HostFunction> {
         val host = host ?: EmbedderHostBuilder().build()
         val memoryProvider = memoryProvider ?: DefaultChicoryMemoryProvider
         val wasiMemoryReaderProvider = chicoryWasiMemoryReaderProvider(memoryProvider, host.fileSystem)
