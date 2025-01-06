@@ -16,9 +16,6 @@ import com.dylibso.chicory.runtime.ImportValues
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.wasm.Parser
 
-// You can use `wasm-objdump -x helloworld.wasm -j Memory` to get the memory limits declared in the WebAssembly binary.
-const val INITIAL_MEMORY_SIZE_PAGES = 258
-
 fun main() {
     // Create Host and run code
     EmbedderHost {
@@ -28,10 +25,10 @@ fun main() {
     }.use(::executeCode)
 }
 
-private fun executeCode(host: EmbedderHost) {
+private fun executeCode(embedderHost: EmbedderHost) {
     // Prepare WASI and Emscripten host imports
     val installer = ChicoryEmscriptenHostInstaller {
-        this.host = host
+        host = embedderHost
     }
 
     val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()

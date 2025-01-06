@@ -6,9 +6,10 @@
 
 package at.released.weh.sample.graalvm.gradle.app
 
-import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller
+import at.released.weh.bindings.graalvm241.wasip1.GraalvmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 
 internal object App
@@ -26,7 +27,7 @@ fun main() {
 
 private fun executeCode(embedderHost: EmbedderHost) {
     // Prepare Source
-    val source = Source.newBuilder("wasm", App::class.java.getResource("helloworld.wasm"))
+    val source = Source.newBuilder("wasm", App::class.java.getResource("helloworld_wasi.wasm"))
         .name(HELLO_WORLD_MODULE_NAME)
         .build()
 
@@ -36,33 +37,24 @@ private fun executeCode(embedderHost: EmbedderHost) {
         // Context must be initialized before installing modules
         context.initialize("wasm")
 
-        // Setup modules
-        val installer = GraalvmHostFunctionInstaller(context) {
+        // Setup WASI Preview 1 module
+        GraalvmWasiPreview1Builder {
             host = embedderHost
-        }
-        installer.setupWasiPreview1Module()
-        val emscriptenInstaller = installer.setupEmscriptenFunctions()
+        }.build(context)
 
         // Evaluate the WebAssembly module
         context.eval(source)
 
-        // Finish initialization after module instantiation
-        emscriptenInstaller.finalize(HELLO_WORLD_MODULE_NAME).use { emscriptenEnv ->
-            // Initialize Emscripten runtime environment
-            emscriptenEnv.emscriptenRuntime.initMainThread()
-            run(context)
+        // Run code
+        val startFunction = context.getBindings("wasm").getMember(HELLO_WORLD_MODULE_NAME).getMember("_start")
+
+        try {
+            startFunction.execute()
+        } catch (re: PolyglotException) {
+            if (re.message?.startsWith("Program exited with status code") == false) {
+                throw re
+            }
+            Unit
         }
     }
-}
-
-private fun run(
-    context: Context,
-) {
-    val mainFunction = context.getBindings("wasm").getMember(HELLO_WORLD_MODULE_NAME).getMember("main")
-    mainFunction.execute(
-        /* argc */
-        0,
-        /* argv */
-        0,
-    ).asInt()
 }

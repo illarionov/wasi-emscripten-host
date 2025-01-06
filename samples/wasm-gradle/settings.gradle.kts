@@ -12,5 +12,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "wasm-gradle"
 include("app-graalvm-emscripten")
+include("app-graalvm-wasip1")
 include("app-chicory-emscripten")
+include("app-chicory-wasip1")
 include("app-chasm-emscripten")
+include("app-chasm-wasip1")

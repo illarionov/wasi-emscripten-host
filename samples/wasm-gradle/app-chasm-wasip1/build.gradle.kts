@@ -16,7 +16,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.chasm)
-            implementation(libs.weh.chasm.emscripten)
+            implementation(libs.weh.chasm.wasip1)
         }
     }
 }

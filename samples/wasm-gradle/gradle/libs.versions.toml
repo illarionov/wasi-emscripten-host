@@ -4,7 +4,7 @@ kotlin = "2.1.0"
 chasm = "0.9.2"
 chicory = "1.0.0"
 graalvm = "24.1.1"
-weh = "0.1-alpha02-SNAPSHOT"
+weh = "0.1"
 
 [libraries]
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }

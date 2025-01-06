@@ -7,6 +7,7 @@
 package at.released.weh.sample.chasm.gradle.app
 
 import at.released.weh.bindings.chasm.ChasmEmscriptenHostBuilder
+import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.instance
 import io.github.charlietap.chasm.embedding.invoke
 import io.github.charlietap.chasm.embedding.module
@@ -19,10 +20,21 @@ import io.github.charlietap.chasm.embedding.store
 import java.io.InputStream
 
 fun main() {
+    // Create Host and run code
+    EmbedderHost {
+        fileSystem {
+            unrestricted = true
+        }
+    }.use(::executeCode)
+}
+
+private fun executeCode(embedderHost: EmbedderHost) {
     val store: Store = store()
 
     // Prepare WASI and Emscripten host imports
-    val chasmBuilder = ChasmEmscriptenHostBuilder(store)
+    val chasmBuilder = ChasmEmscriptenHostBuilder(store) {
+        this.host = embedderHost
+    }
     val wasiHostFunctions = chasmBuilder.setupWasiPreview1HostFunctions()
     val emscriptenInstaller = chasmBuilder.setupEmscriptenFunctions()
 
