@@ -7,6 +7,7 @@
 package at.released.weh.filesystem
 
 import arrow.core.Either
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.dsl.FileSystemCommonConfig
 import at.released.weh.filesystem.dsl.FileSystemConfigBlock
 import at.released.weh.filesystem.dsl.FileSystemEngineConfig
@@ -25,7 +26,7 @@ public fun <E : FileSystemEngineConfig> FileSystem(
         override val interceptors: List<FileSystemInterceptor> = config.interceptors
         override val stdioConfig: StandardInputOutputConfigBlock = stdioConfig
         override val isRootAccessAllowed: Boolean = config.isRootAccessAllowed
-        override val currentWorkingDirectory: String? = config.currentWorkingDirectory
+        override val currentWorkingDirectory: CurrentWorkingDirectoryConfig = config.currentWorkingDirectory
         override val preopenedDirectories: List<PreopenedDirectory> = config.preopenedDirectories
     }
     return engine.create(

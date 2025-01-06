@@ -9,6 +9,7 @@ package at.released.weh.filesystem.linux
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemInterceptor
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -55,13 +56,14 @@ internal class LinuxFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
     isRootAccessAllowed: Boolean,
-    currentWorkingDirectory: String?,
+    currentWorkingDirectory: CurrentWorkingDirectoryConfig,
     preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
     private val fsState = LinuxFileSystemState.create(
         stdio = stdio,
         currentWorkingDirectory = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
+        isRootAccessAllowed = isRootAccessAllowed,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(
         Open to LinuxOpen(fsState, fsState.fsExecutor, isRootAccessAllowed),

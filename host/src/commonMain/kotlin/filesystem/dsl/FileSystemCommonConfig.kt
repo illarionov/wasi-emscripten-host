@@ -15,6 +15,6 @@ public interface FileSystemCommonConfig {
     public val interceptors: List<FileSystemInterceptor>
     public val stdioConfig: StandardInputOutputConfigBlock
     public val isRootAccessAllowed: Boolean
-    public val currentWorkingDirectory: String?
+    public val currentWorkingDirectory: CurrentWorkingDirectoryConfig
     public val preopenedDirectories: List<PreopenedDirectory>
 }

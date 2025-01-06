@@ -9,6 +9,7 @@ package at.released.weh.filesystem.windows
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemInterceptor
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -55,13 +56,13 @@ internal class WindowsFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
     isRootAccessAllowed: Boolean,
-    currentWorkingDirectory: String?,
+    currentWorkingDirectory: CurrentWorkingDirectoryConfig,
     preopenedDirectories: List<PreopenedDirectory>,
 ) : FileSystem {
     private val fsState = WindowsFileSystemState.create(
         stdio = stdio,
         isRootAccessAllowed = isRootAccessAllowed,
-        cwd = currentWorkingDirectory ?: "",
+        cwd = currentWorkingDirectory,
         preopenedDirectories = preopenedDirectories,
     )
     private val operations: Map<FileSystemOperation<*, *, *>, FileSystemOperationHandler<*, *, *>> = mapOf(

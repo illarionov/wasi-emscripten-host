@@ -10,11 +10,13 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.BadFileDescriptor
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.error.Nfile
 import at.released.weh.filesystem.internal.FileDescriptorTable
 import at.released.weh.filesystem.internal.fdresource.FdResource
+import at.released.weh.filesystem.internal.getDefaultPath
 import at.released.weh.filesystem.model.FileDescriptor
 import at.released.weh.filesystem.model.IntFileDescriptor
 import at.released.weh.filesystem.op.Messages.fileDescriptorNotOpenMessage
@@ -116,10 +118,11 @@ internal class WindowsFileSystemState private constructor(
         fun create(
             stdio: StandardInputOutput,
             isRootAccessAllowed: Boolean,
-            cwd: String,
+            cwd: CurrentWorkingDirectoryConfig,
             preopenedDirectories: List<PreopenedDirectory>,
         ): WindowsFileSystemState {
-            val (cwdResult, directories) = WindowsBatchDirectoryOpener.preopen(cwd, preopenedDirectories)
+            val cwdPath = cwd.getDefaultPath(isRootAccessAllowed)
+            val (cwdResult, directories) = WindowsBatchDirectoryOpener.preopen(cwdPath, preopenedDirectories)
                 .getOrElse { openError ->
                     throw IOException("Can not preopen `${openError.directory}`: ${openError.error}")
                 }

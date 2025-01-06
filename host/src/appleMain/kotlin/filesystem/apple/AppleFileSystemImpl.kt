@@ -9,6 +9,7 @@ package at.released.weh.filesystem.apple
 import arrow.core.Either
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.FileSystemInterceptor
+import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.filesystem.error.FileSystemOperationError
 import at.released.weh.filesystem.internal.delegatefs.DelegateOperationsFileSystem
 import at.released.weh.filesystem.internal.delegatefs.FileSystemOperationHandler
@@ -53,7 +54,7 @@ import at.released.weh.filesystem.stdio.StandardInputOutput
 internal class AppleFileSystemImpl(
     interceptors: List<FileSystemInterceptor>,
     stdio: StandardInputOutput,
-    currentWorkingDirectory: String?,
+    currentWorkingDirectory: CurrentWorkingDirectoryConfig,
     preopenedDirectories: List<PreopenedDirectory>,
     isRootAccessAllowed: Boolean,
 ) : FileSystem {
