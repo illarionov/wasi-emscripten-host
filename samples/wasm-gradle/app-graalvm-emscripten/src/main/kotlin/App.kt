@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:OptIn(InternalWasiEmscriptenHostApi::class)
-
 package at.released.weh.sample.graalvm.gradle.app
 
 import at.released.weh.bindings.graalvm241.GraalvmHostFunctionInstaller

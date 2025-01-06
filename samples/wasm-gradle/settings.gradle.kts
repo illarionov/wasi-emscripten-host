@@ -5,11 +5,12 @@ plugins {
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }
 
 rootProject.name = "wasm-gradle"
-include("app-graalvm")
-include("app-chicory")
-include("app-chasm")
+include("app-graalvm-emscripten")
+include("app-chicory-emscripten")
+include("app-chasm-emscripten")

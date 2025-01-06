@@ -1,19 +1,22 @@
 [versions]
-kotlin = "2.0.20"
+kotlin = "2.1.0"
 
-chasm = "0.9.0"
-chicory = "0.0.12"
-graalvm = "24.0.2"
-weh = "0.1-alpha01"
+chasm = "0.9.2"
+chicory = "1.0.0"
+graalvm = "24.1.1"
+weh = "0.1-alpha02-SNAPSHOT"
 
 [libraries]
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }
 chicory = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
 graalvm-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
-weh-chasm = { group = "at.released.weh", name = "bindings-chasm", version.ref = "weh" }
-weh-chicory = { group = "at.released.weh", name = "bindings-chicory", version.ref = "weh" }
-weh-graalvm = { group = "at.released.weh", name = "bindings-graalvm241", version.ref = "weh" }
+weh-chasm-emscripten = { group = "at.released.weh", name = "bindings-chasm-emscripten", version.ref = "weh" }
+weh-chasm-wasip1 = { group = "at.released.weh", name = "bindings-chasm-wasip1", version.ref = "weh" }
+weh-chicory-emscripten = { group = "at.released.weh", name = "bindings-chicory-emscripten", version.ref = "weh" }
+weh-chicory-wasip1 = { group = "at.released.weh", name = "bindings-chicory-wasip1", version.ref = "weh" }
+weh-graalvm-emscripten = { group = "at.released.weh", name = "bindings-graalvm241-emscripten", version.ref = "weh" }
+weh-graalvm-wasip1 = { group = "at.released.weh", name = "bindings-graalvm241-wasip1", version.ref = "weh" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

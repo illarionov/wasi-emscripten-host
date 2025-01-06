@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.weh.graalvm)
+    implementation(libs.weh.graalvm.emscripten)
     implementation(libs.graalvm.polyglot)
     implementation(libs.graalvm.wasm)
 }
@@ -15,7 +15,7 @@ application {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(23)
         vendor = JvmVendorSpec.GRAAL_VM
     }
 }

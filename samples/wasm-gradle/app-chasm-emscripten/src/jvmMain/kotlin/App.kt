@@ -6,49 +6,27 @@
 
 package at.released.weh.sample.chasm.gradle.app
 
-import at.released.weh.bindings.chasm.ChasmHostFunctionInstaller
+import at.released.weh.bindings.chasm.ChasmEmscriptenHostBuilder
 import io.github.charlietap.chasm.embedding.instance
 import io.github.charlietap.chasm.embedding.invoke
-import io.github.charlietap.chasm.embedding.memory
 import io.github.charlietap.chasm.embedding.module
 import io.github.charlietap.chasm.embedding.shapes.Import
-import io.github.charlietap.chasm.embedding.shapes.Limits
-import io.github.charlietap.chasm.embedding.shapes.Memory
-import io.github.charlietap.chasm.embedding.shapes.MemoryType
 import io.github.charlietap.chasm.embedding.shapes.Store
 import io.github.charlietap.chasm.embedding.shapes.Value.Number.I32
 import io.github.charlietap.chasm.embedding.shapes.flatMap
 import io.github.charlietap.chasm.embedding.shapes.fold
 import io.github.charlietap.chasm.embedding.store
-
-// You can use `wasm-objdump -x helloworld.wasm -j Memory` to get the memory limits declared in the WebAssembly binary.
-const val INITIAL_MEMORY_SIZE_PAGES = 258U
+import java.io.InputStream
 
 fun main() {
     val store: Store = store()
 
-    // Prepare Host memory
-    val memoryType = MemoryType(
-        Limits(
-            min = INITIAL_MEMORY_SIZE_PAGES,
-            max = INITIAL_MEMORY_SIZE_PAGES,
-        ),
-    )
-    val memory: Memory = memory(store, memoryType)
-
     // Prepare WASI and Emscripten host imports
-    val chasmInstaller = ChasmHostFunctionInstaller(store) {
-        memoryProvider = { memory }
-    }
-    val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
-    val emscriptenInstaller = chasmInstaller.setupEmscriptenFunctions()
+    val chasmBuilder = ChasmEmscriptenHostBuilder(store)
+    val wasiHostFunctions = chasmBuilder.setupWasiPreview1HostFunctions()
+    val emscriptenInstaller = chasmBuilder.setupEmscriptenFunctions()
 
     val hostImports: List<Import> = buildList {
-        Import(
-            moduleName = "env",
-            entityName = "memory",
-            value = memory,
-        )
         addAll(emscriptenInstaller.emscriptenFunctions)
         addAll(wasiHostFunctions)
     }
@@ -56,9 +34,7 @@ fun main() {
     // Load WebAssembly binary
     val helloWorldBytes = checkNotNull(Thread.currentThread().contextClassLoader.getResource("helloworld.wasm"))
         .openStream()
-        .use {
-            it.readAllBytes()
-        }
+        .use(InputStream::readAllBytes)
 
     // Instantiate the WebAssembly module
     val instance = module(

@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(libs.chicory)
-    implementation(libs.weh.chicory)
+    implementation(libs.weh.chicory.emscripten)
 }
 
 application {
