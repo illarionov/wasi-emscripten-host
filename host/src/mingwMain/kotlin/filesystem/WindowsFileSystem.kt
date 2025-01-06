@@ -33,7 +33,7 @@ public object WindowsFileSystem : FileSystemEngine<Nothing> {
         return WindowsFileSystemImpl(
             interceptors = commonConfig.interceptors,
             stdio = stdio,
-            isRootAccessAllowed = commonConfig.isRootAccessAllowed,
+            isRootAccessAllowed = commonConfig.unrestricted,
             currentWorkingDirectory = commonConfig.currentWorkingDirectory,
             preopenedDirectories = commonConfig.preopenedDirectories,
         )

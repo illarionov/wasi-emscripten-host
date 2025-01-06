@@ -11,6 +11,14 @@ import at.released.weh.filesystem.FileSystem
 import at.released.weh.host.clock.Clock
 import at.released.weh.host.clock.CputimeSource
 import at.released.weh.host.clock.MonotonicClock
+import kotlin.jvm.JvmSynthetic
+
+@JvmSynthetic // Hide from Java
+public fun EmbedderHost(
+    block: EmbedderHostBuilder.() -> Unit = {},
+): EmbedderHost {
+    return EmbedderHostBuilder().apply(block).build()
+}
 
 public interface EmbedderHost : AutoCloseable {
     public val rootLogger: Logger

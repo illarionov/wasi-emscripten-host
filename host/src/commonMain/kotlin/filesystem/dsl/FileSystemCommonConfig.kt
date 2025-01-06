@@ -14,7 +14,7 @@ import at.released.weh.filesystem.preopened.PreopenedDirectory
 public interface FileSystemCommonConfig {
     public val interceptors: List<FileSystemInterceptor>
     public val stdioConfig: StandardInputOutputConfigBlock
-    public val isRootAccessAllowed: Boolean
+    public val unrestricted: Boolean
     public val currentWorkingDirectory: CurrentWorkingDirectoryConfig
     public val preopenedDirectories: List<PreopenedDirectory>
 }
