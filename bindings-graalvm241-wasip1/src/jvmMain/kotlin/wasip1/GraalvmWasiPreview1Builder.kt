@@ -73,12 +73,20 @@ import org.graalvm.polyglot.Context
  * Context.newBuilder().engine(engine).build().use { context ->
  *     context.initialize("wasm")
  *     GraalvmWasiPreview1Builder {
- *         this.host = host // setup host
+ *         host = embedderHost // setup host
  *     }.build(context)
  *     context.eval(source)
  *
  *     val startFunc = context.getBindings("wasm").getMember("proc").getMember("_start")
  *     startFunc.execute()
+ *     try {
+ *          startFunction.execute()
+ *      } catch (re: PolyglotException) {
+ *          if (re.message?.startsWith("Program exited with status code") == false) {
+ *              throw re
+ *          }
+ *          Unit
+ *     }
  * }
  * ```
  *

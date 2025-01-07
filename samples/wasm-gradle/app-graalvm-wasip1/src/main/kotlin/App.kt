@@ -20,7 +20,7 @@ fun main() {
     // Create Host and run code
     EmbedderHost {
         fileSystem {
-            unrestricted = true
+            addPreopenedDirectory(".", "/data")
         }
     }.use(::executeCode)
 }
