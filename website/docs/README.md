@@ -3,26 +3,33 @@ sidebar_label: 'Overview'
 sidebar_position: 1
 ---
 
-# Wasi Emscripten Host
+# WASI-Emscripten-Host
 
-This Kotlin Multiplatform library provides an experimental implementation of WebAssembly host functions from the
-[Emscripten JS][Emscripten] environment, and some functions defined in the WASI Preview 1 specification.  
-It is designed to work with JVM/Multiplatform WebAssembly runtimes such as [GraalVM][GraalWasm], [Chicory], and [Chasm].
+This Kotlin Multiplatform library provides an implementation of the of the host functions specified in [WASI Preview 1],
+as well as an experimental implementation of the [Emscripten JS][Emscripten] environment host functions.  
+It is designed to work with JVM/Multiplatform WebAssembly runtimes such as [GraalWASM][GraalWasm], [Chicory], and [Chasm].
 
-The primary goal is to run WebAssembly binaries compiled with Emscripten in a JVM environment, without the need for a
-browser or JavaScript.
+The primary goal is to run WebAssembly binaries compiled for WASM WASI or for Emscripten in a JVM environment, 
+without the need for a browser or JavaScript.
 
-Currently, the library implements a limited subset of host functions needed to run a single-threaded 
-version of SQLite compiled with Emscripten. It may also work in other cases.
-The WASI/Emscripten filesystem is partially implemented.
+The library currently implements all non-deprecated functions of the WASI Preview 1 specification
+and mostly passes the [WASI Testsuite]. For more details and specifics of the WASI Preview 1 implementation, refer 
+to the  the [WASI Preview 1 Implementation](WASIP1.md).
+
+A limited set of Emscripten environment functions is also implemented, sufficient to run a single-threaded 
+version of SQLite compiled with Emscripten. It may also work in other cases. The description of the Emscripten
+implementation and an example of compiling a C++ application to work with this library can be found on the
+ [Emscripten environment](Emscripten.md).
+
+Supported Kotlin targets: _JVM_ (based on NIO), _macosArm64_, macosX64_, _iosArm64_, _iosX64_, _iosSimulatorArm64_, _linuxX64_, _linuxArm64_, _mingwX64_.
 
 ## Usage
 
 Refer to the sections on integration with runtimes:
 
-* [Usage with GraalVM](Integration/GraalVM.md)
-* [Usage with Chicory](Integration/Chicory.md)
 * [Usage with Chasm](Integration/Chasm)
+* [Usage with Chicory](Integration/Chicory.md)
+* [Usage with GraalVM](Integration/GraalVM.md)
 
 ## Releases
 
@@ -34,38 +41,10 @@ repositories {
 }
 ```
 
-Snapshot versions may be published to an own repository:
-
-```kotlin
-pluginManagement {
-    repositories {
-        maven {
-            url = uri("https://maven.pixnews.ru")
-            mavenContent {
-                includeGroup("at.released.weh")
-            }
-        }
-    }
-}
-```
-
-## Status and Future Plans
-
-The project is likely to be frozen. However, if there is interest or demand, we may implement the full set of
-WASI functions. 
-
-## Related projects
-
-Here are some related projects:
-
-* [wasm-sqlite-driver-binary] SQLite binaries, the primary target for this library.
-* [wasm-sqlite-open-helper] Implementation of SQLiteDriver and SupportSQLiteOpenHelper.Factory based on SQLite 
-compiled for Wasm. This is a project where this library is used.
-
 [Emscripten]: https://emscripten.org/
 [Chasm]: https://github.com/CharlieTap/chasm
 [Chicory]: https://github.com/dylibso/chicory
 [GraalWasm]: https://www.graalvm.org/latest/reference-manual/wasm/
-[Maven Central]: https://central.sonatype.com/artifact/at.released.weh/bindings-graalvm240
-[wasm-sqlite-driver-binary]: https://github.com/illarionov/wasm-sqlite-driver-binary
-[wasm-sqlite-open-helper]: https://github.com/illarionov/wasm-sqlite-open-helper
+[Maven Central]: https://central.sonatype.com/artifact/at.released.weh/bindings-chasm-wasip1
+[WASI Preview 1]: https://wasi.dev/
+[WASI Testsuite]: https://github.com/WebAssembly/wasi-testsuite
