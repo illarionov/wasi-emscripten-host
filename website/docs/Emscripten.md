@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Emscripten environment'
+sidebar_label: 'Emscripten Environment'
 sidebar_position: 4
 ---
 
@@ -116,20 +116,6 @@ emscripten_resize_heap
 emscripten_unwind_to_js_event_loop
 exit
 getentropy
-```
-
-Implemented (or declared) functions of the WASI Preview 1:
-
-```
-environ_get
-environ_sizes_get
-fd_close
-fd_pread
-fd_pwrite
-fd_read
-fd_seek
-fd_sync
-fd_write
 ```
 
 [Emscripten]: https://emscripten.org/
