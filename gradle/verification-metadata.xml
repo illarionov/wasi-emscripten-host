@@ -357,6 +357,11 @@
             <pgp value="9E3044071B758EBCB7E45673700E4F39BC05364B"/>
          </artifact>
       </component>
+      <component group="org.eclipse.platform" name="org.eclipse.osgi" version="3.18.500">
+         <artifact name="org.eclipse.osgi-3.18.500.jar">
+            <pgp value="9E3044071B758EBCB7E45673700E4F39BC05364B"/>
+         </artifact>
+      </component>
       <component group="org.freemarker" name="freemarker" version="2.3.32">
          <artifact name="freemarker-2.3.32.jar">
             <pgp value="13AC2213964ABE1D1C147C0E1939A2520BAB1D90"/>
