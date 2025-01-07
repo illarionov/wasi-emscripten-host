@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0.BETA4")
+        classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.0")
         classpath("com.github.node-gradle:gradle-node-plugin:7.0.2")
         classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.30.0")
