@@ -30,20 +30,39 @@ import io.github.charlietap.chasm.embedding.shapes.Instance as ChasmInstance
  *
  * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
  *
- * To create a new instance, use [Companion.invoke].
+ * To create a new instance, use [ChasmEmscriptenHostBuilder(store)][Companion.invoke].
  *
  * Usage example:
  *
  * ```kotlin
- * // Prepare Host memory
- * val memory: Memory = memory(store, memoryType)
+ * val store: Store = store()
  *
- * // Prepare WASI and Emscripten host imports
  * val chasmHostBuilder = ChasmEmscriptenHostBuilder(store) {
- *     memoryProvider = { memory }
+ *     this.host = embedderHost
  * }
  * val wasiHostFunctions = chasmHostBuilder.setupWasiPreview1HostFunctions()
  * val emscriptenFinalizer = chasmHostBuilder.setupEmscriptenFunctions()
+ *
+ * val hostImports: List<Import> = buildList {
+ *     addAll(emscriptenInstaller.emscriptenFunctions)
+ *     addAll(wasiHostFunctions)
+ * }
+ *
+ * // Instantiate the WebAssembly module
+ * val instance = module(helloWorldBytes).flatMap { module ->
+ *     instance(store, module, hostImports)
+ * }.fold(
+ *     onSuccess = { it },
+ *     onError = { error("Can node instantiate WebAssembly binary: $it") },
+ * )
+ *
+ * // Finalize initialization after module instantiation
+ * val emscriptenRuntime = emscriptenInstaller.finalize(instance)
+ *
+ * // Initialize Emscripten runtime environment
+ * emscriptenRuntime.initMainThread()
+ *
+ * // Execute code
  * ```
  */
 public class ChasmEmscriptenHostBuilder private constructor(
