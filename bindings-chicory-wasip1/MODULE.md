@@ -1,57 +1,55 @@
-# Module bindings-chicory
+# Module bindings-chicory-wasip1
 
-[Chicory] JVM WebAssembly runtime integration.
+Implementation of WASI Preview 1 host functions for the [Chicory] JVM WebAssembly runtime.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
 
 * Targets: *JVM*, *Android API 31+*
 
 ## Usage
 
-Use [ChasmHostFunctionInstaller](https://weh.released.at/api/bindings-chicory/at.released.weh.bindings.chicory/-chicory-host-function-installer/index.html)
+Use [ChasmWasiPreview1Builder](https://weh.released.at/api/bindings-chicory-wasip1/at.released.weh.bindings.chicory.wasip1/-chicory-wasi-preview1-builder/index.html)
 to set up host functions.
 
 ```kotlin
-// Prepare Host memory
-val memory = HostMemory(
-    /* moduleName = */ "env",
-    /* fieldName = */ "memory",
-    /* memory = */
-    Memory(
-        MemoryLimits(INITIAL_MEMORY_SIZE_PAGES),
-    ),
-)
+import at.released.weh.bindings.chicory.exception.ProcExitException
+import at.released.weh.bindings.chicory.wasip1.ChicoryWasiPreview1Builder
+import at.released.weh.host.EmbedderHost
+import com.dylibso.chicory.runtime.HostFunction
+import com.dylibso.chicory.runtime.ImportValues
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.wasm.Parser
+import com.dylibso.chicory.wasm.WasmModule
 
-// Prepare WASI and Emscripten host imports
-val installer = ChicoryHostFunctionInstaller(
-    memory = memory.memory(),
-)
-val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
-val emscriptenInstaller: ChicoryEmscriptenInstaller = installer.setupEmscriptenFunctions()
-val hostImports = HostImports(
-    /* functions = */ (emscriptenInstaller.emscriptenFunctions + wasiFunctions).toTypedArray(),
-    /* globals = */ arrayOf<HostGlobal>(),
-    /* memory = */ memory,
-    /* tables = */ arrayOf<HostTable>(),
-)
+// Create Host and run code
+EmbedderHost {
+    fileSystem {
+        addPreopenedDirectory(".", "/data")
+    }
+}.use { executeCode(it) }
 
-// Build Chicory Module
-val module = Module
-    .builder("helloworld.wasm")
-    .withHostImports(hostImports)
-    .withInitialize(true)
-    .withStart(false)
-    .build()
+private fun executeCode(embedderHost: EmbedderHost) {
+    // Prepare WASI Preview 1 host imports
+    val wasiImports: List<HostFunction> = ChicoryWasiPreview1Builder {
+        host = embedderHost
+    }.build()
+    val hostImports = ImportValues.builder().withFunctions(wasiImports).build()
 
-// Instantiate the WebAssembly module
-val instance = module.instantiate()
+    // Instantiate the WebAssembly module
+    val instance = Instance
+        .builder(wasmModule)
+        .withImportValues(hostImports)
+        .withInitialize(true)
+        .withStart(false)
+        .build()
 
-// Finalize initialization after module instantiation
-val emscriptenRuntime = emscriptenInstaller.finalize(instance)
-
-// Initialize Emscripten runtime environment
-emscriptenRuntime.initMainThread()
-
+    // Execute code
+    try {
+        instance.export("_start").apply()
+    } catch (pre: ProcExitException) {
+        // Handle exception depending on pre.exitCode
+    }
+}
 ```
 
 [Chicory]: https://github.com/dylibso/chicory
