@@ -38,9 +38,15 @@ import org.graalvm.polyglot.Context
  * Usage example:
  *
  * ```kotlin
+ * // Setup host
+ * val embedderHost = EmbeddeerHost {
+ *    …
+ * }
+ *
  * // Setup modules
  * val installer = GraalvmHostFunctionInstaller(context) {
- *    ...
+ *    host = embedderHost
+ *    …
  * }
  * installer.setupWasiPreview1Module()
  * val emscriptenInstaller = installer.setupEmscriptenFunctions()
@@ -49,7 +55,7 @@ import org.graalvm.polyglot.Context
  * context.eval(source)
  *
  * // Finish initialization after module instantiation
- * emscriptenInstaller.finalize(HELLO_WORLD_MODULE_NAME).use { emscriptenEnv ->
+ * emscriptenInstaller.finalize(moduleName).use { emscriptenEnv ->
  *     // Initialize Emscripten runtime environment
  *     emscriptenEnv.emscriptenRuntime.initMainThread()
  *

@@ -28,12 +28,9 @@ import io.github.charlietap.chasm.embedding.shapes.Store
  * Usage example:
  *
  * ```kotlin
- * // Prepare Host memory
- * val memory: Memory = memory(store, memoryType)
- *
  * // Prepare WASI host imports
- * val wasiFunctions: List<Import> = ChasmWasiPreview1Builder(store) {
- *     memoryProvider = { memory }
+ * val wasiImports: List<Import> = ChasmWasiPreview1Builder(store) {
+ *     host = embedderHost
  * }.build()
  * ```
  */

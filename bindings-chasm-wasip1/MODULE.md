@@ -1,62 +1,63 @@
 # Module bindings-chasm-wasip1
 
-Wasi Preview 1 host functions for [Chasm] WebAssembly runtime.
+Implementation of WASI Preview 1 host functions for [Chasm] WebAssembly runtime.
 
 [<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chasm-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chasm/overview)
 
 ## Usage
 
-Use [ChasmWasiPreview1Installer](http://localhost:63342/wasi-emscripten-host/aggregate-documentation/build/dokka/html/bindings-chasm/at.released.weh.bindings.chasm/-chasm-host-function-installer/index.html)
+Use [ChasmWasiPreview1Builder](https://weh.released.at/api/bindings-chasm-wasip1/at.released.weh.bindings.chasm.wasip1/-chasm-wasi-preview1-builder/index.html)
 to set up host functions.
 
 ```kotlin
-const val INITIAL_MEMORY_SIZE_PAGES = 258U
+import at.released.weh.bindings.chasm.exception.ProcExitException
+import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
+import at.released.weh.host.EmbedderHost
+import io.github.charlietap.chasm.embedding.instance
+import io.github.charlietap.chasm.embedding.invoke
+import io.github.charlietap.chasm.embedding.module
+import io.github.charlietap.chasm.embedding.shapes.Import
+import io.github.charlietap.chasm.embedding.shapes.Store
+import io.github.charlietap.chasm.embedding.shapes.flatMap
+import io.github.charlietap.chasm.embedding.shapes.fold
+import io.github.charlietap.chasm.embedding.store
 
-val store: Store = store()
-
-// Prepare Host memory
-val memoryType = MemoryType(
-    Limits(
-        min = INITIAL_MEMORY_SIZE_PAGES,
-        max = INITIAL_MEMORY_SIZE_PAGES,
-    ),
-)
-val memory: Memory = memory(store, memoryType)
-
-// Prepare WASI host imports
-val chasmInstaller = ChasmWasiPreview1Installer(store) {
-    memoryProvider = { memory }
-}
-val wasiHostFunctions = chasmInstaller.setupWasiPreview1HostFunctions()
-val emscriptenInstaller = chasmInstaller.setupEmscriptenFunctions()
-
-val hostImports: List<Import> = buildList {
-    Import(
-        moduleName = "env",
-        entityName = "memory",
-        value = memory,
-    )
-    addAll(emscriptenInstaller.emscriptenFunctions)
-    addAll(wasiHostFunctions)
+// Create Host and run code
+EmbedderHost {
+    fileSystem {
+        addPreopenedDirectory(".", "/data")
+    }
+}.use {
+    executeCode(it, wasmBinary)
 }
 
-// Instantiate the WebAssembly module
-val instance = module(
-    bytes = helloWorldBytes,
-).flatMap { module ->
-    instance(store, module, hostImports)
-}.fold(
-    onSuccess = { it },
-    onError = { throw WasmException("Can node instantiate WebAssembly binary: $it") },
-)
+fun executeCode(embedderHost: EmbedderHost, wasmBinary: ByteArray): Int {
+    val store: Store = store()
 
-// Finalize initialization after module instantiation
-val emscriptenRuntime = emscriptenInstaller.finalize(instance)
+    // Prepare WASI host imports
+    val wasiImports: List<Import> = ChasmWasiPreview1Builder(store) {
+        host = embedderHost
+    }.build()
 
-// Initialize Emscripten runtime environment
-emscriptenRuntime.initMainThread()
+    // Instantiate the WebAssembly module
+    val instance = module(wasmBinary)
+        .flatMap { module -> instance(store, module, wasiImports) }
+        .fold(
+            onSuccess = { it },
+            onError = { error("Can node instantiate WebAssembly binary: $it") },
+        )
 
-// Execute code
+    // Execute code
+    try {
+        invoke(store, instance, "_start").fold(
+            onSuccess = { it },
+            onError = { error("main() failed") },
+        )
+    } catch (pre: ProcExitException) {
+        return pre.exitCode
+    }
+    return 0
+}
 ```
 
 [Chasm]: https://github.com/CharlieTap/chasm

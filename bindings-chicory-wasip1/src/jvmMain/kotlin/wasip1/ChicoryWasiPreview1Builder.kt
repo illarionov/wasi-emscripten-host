@@ -26,27 +26,19 @@ import com.dylibso.chicory.runtime.HostFunction
  *
  * ```kotlin
  * // Prepare WASI host imports
- * val builder = ChicoryWasiPreview1Builder()
- * val wasiFunctions: List<HostFunction> = builder.build()
- * val hostImports = HostImports(
- *     /* functions = */ wasiFunctions.toTypedArray(),
- *     /* globals = */ arrayOf<HostGlobal>(),
- *     /* memory = */ memory,
- *     /* tables = */ arrayOf<HostTable>(),
- * )
+ * val wasiImports: List<HostFunction> = ChicoryWasiPreview1Builder {
+ *     host = embedderHost
+ * }.build()
  *
- * // Setup Chicory Module
- * val module = Module
- *     .builder("helloworld.wasm")
- *     .withHostImports(hostImports)
- *     .withInitialize(true)
- *     .withStart(false)
- *     .build()
+ * val hostImports = ImportValues.builder().withFunctions(wasiImports).build()
  *
  * // Instantiate the WebAssembly module
- * val instance = module.instantiate()
- *
- * // Use module
+ * val instance = Instance
+ *      .builder(wasmModule)
+ *      .withImportValues(hostImports)
+ *      .withInitialize(true)
+ *      .withStart(false)
+ *      .build()
  * ```
  */
 @WasiEmscriptenHostDsl
