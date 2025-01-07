@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file
+ * Copyright 2024-2025, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -30,38 +30,57 @@ import com.dylibso.chicory.runtime.Instance
  *
  * Sets up WebAssembly host imports that provide the Emscripten env and WASI Preview 1 implementations.
  *
- * To create a new instance, use either [Companion.invoke] or [Builder].
+ * To create a new instance, use either [ChicoryEmscriptenHostInstaller {}][Companion.invoke] or [Builder].
  *
  * Usage example:
  *
  * ```kotlin
+ * import at.released.weh.host.EmbedderHost
+ * import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller
+ * import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller.ChicoryEmscriptenSetupFinalizer
+ * import com.dylibso.chicory.runtime.HostFunction
+ * import com.dylibso.chicory.runtime.ImportValues
+ * import com.dylibso.chicory.runtime.Instance
+ *
+ * // Create Host and run code
+ * val embedderHost = EmbedderHost {
+ *     fileSystem {
+ *         unrestricted = true
+ *     }
+ * }
+ *
  * // Prepare WASI and Emscripten host imports
- * val installer = ChicoryEmscriptenHostInstaller()
+ * val installer = ChicoryEmscriptenHostInstaller {
+ *     host = embedderHost
+ * }
+ *
  * val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
  * val emscriptenFinalizer: ChicoryEmscriptenSetupFinalizer = installer.setupEmscriptenFunctions()
- * val hostImports = HostImports(
- *     /* functions = */ (emscriptenInstaller.emscriptenFunctions + wasiFunctions).toTypedArray(),
- *     /* globals = */ arrayOf<HostGlobal>(),
- *     /* memory = */ memory,
- *     /* tables = */ arrayOf<HostTable>(),
- * )
  *
- * // Setup Chicory Module
- * val module = Module
- *     .builder("helloworld.wasm")
- *     .withHostImports(hostImports)
- *     .withInitialize(true)
- *     .withStart(false)
+ * val hostImports = ImportValues.builder()
+ *     .withFunctions(emscriptenFinalizer.emscriptenFunctions + wasiFunctions)
  *     .build()
  *
  * // Instantiate the WebAssembly module
- * val instance = module.instantiate()
+ * val instance = Instance
+ *     .builder("helloworld.wasm")
+ *     .withImportValues(hostImports)
+ *     .withInitialize(true)
+ *     .withStart(false)
+ *     .build()
  *
  * // Finalize initialization after module instantiation
  * val emscriptenRuntime = emscriptenFinalizer.finalize(instance)
  *
  * // Initialize Emscripten runtime environment
  * emscriptenRuntime.initMainThread()
+ *
+ * // Execute code
+ * instance.export("main").apply(
+ *     /* argc */ 0,
+ *     /* argv */ 0,
+ * )[0]
+ *
  * ```
  */
 public class ChicoryEmscriptenHostInstaller private constructor(

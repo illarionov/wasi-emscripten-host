@@ -1,57 +1,68 @@
-# Module bindings-chicory
+# Module bindings-chicory-emscripten
 
-[Chicory] Emscripten JVM WebAssembly runtime integration.
+Implementation of Emscripten host functions for the [Chicory] JVM WebAssembly runtime integration.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-emscripten?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
 
 * Targets: *JVM*, *Android API 31+*
 
 ## Usage
 
-Use [ChicoryHostFunctionInstaller](https://weh.released.at/api/bindings-chicory/at.released.weh.bindings.chicory/-chicory-host-function-installer/index.html)
+Use [ChicoryEmscriptenHostInstaller](https://weh.released.at/api/bindings-chicory/at.released.weh.bindings.chicory/-chicory-emscripten-host-installer/index.html)
 to set up host functions.
 
 ```kotlin
-// Prepare Host memory
-val memory = HostMemory(
-    /* moduleName = */ "env",
-    /* fieldName = */ "memory",
-    /* memory = */
-    Memory(
-        MemoryLimits(INITIAL_MEMORY_SIZE_PAGES),
-    ),
-)
+import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller
+import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller.ChicoryEmscriptenSetupFinalizer
+import at.released.weh.host.EmbedderHost
+import com.dylibso.chicory.runtime.HostFunction
+import com.dylibso.chicory.runtime.ImportValues
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.wasm.Parser
 
-// Prepare WASI and Emscripten host imports
-val installer = ChicoryHostFunctionInstaller(
-    memory = memory.memory(),
-)
-val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
-val emscriptenInstaller: ChicoryEmscriptenInstaller = installer.setupEmscriptenFunctions()
-val hostImports = HostImports(
-    /* functions = */ (emscriptenInstaller.emscriptenFunctions + wasiFunctions).toTypedArray(),
-    /* globals = */ arrayOf<HostGlobal>(),
-    /* memory = */ memory,
-    /* tables = */ arrayOf<HostTable>(),
-)
+// Create Host and run code
+EmbedderHost {
+    fileSystem {
+        unrestricted = true
+    }
+}.use(::executeCode)
 
-// Build Chicory Module
-val module = Module
-    .builder("helloworld.wasm")
-    .withHostImports(hostImports)
-    .withInitialize(true)
-    .withStart(false)
-    .build()
+private fun executeCode(embedderHost: EmbedderHost) {
+    // Prepare WASI and Emscripten host imports
+    val installer = ChicoryEmscriptenHostInstaller {
+        host = embedderHost
+    }
 
-// Instantiate the WebAssembly module
-val instance = module.instantiate()
+    val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
+    val emscriptenFinalizer: ChicoryEmscriptenSetupFinalizer = installer.setupEmscriptenFunctions()
 
-// Finalize initialization after module instantiation
-val emscriptenRuntime = emscriptenInstaller.finalize(instance)
+    val hostImports = ImportValues.builder()
+        .withFunctions(emscriptenFinalizer.emscriptenFunctions + wasiFunctions)
+        .build()
 
-// Initialize Emscripten runtime environment
-emscriptenRuntime.initMainThread()
+    // Load WebAssembly binary
+    val wasmModule = Parser.parse(/* … */)
 
+    // Instantiate the WebAssembly module
+    val instance = Instance
+        .builder(wasmModule)
+        .withImportValues(hostImports)
+        .withInitialize(true)
+        .withStart(false)
+        .build()
+
+    // Finalize initialization after module instantiation
+    val emscriptenRuntime = emscriptenFinalizer.finalize(instance)
+
+    // Initialize Emscripten runtime environment
+    emscriptenRuntime.initMainThread()
+
+    // Execute code
+    instance.export("main").apply(
+        /* argc */ 0,
+        /* argv */ 0,
+    )[0]
+}
 ```
 
 [Chicory]: https://github.com/dylibso/chicory
