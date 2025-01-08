@@ -6,22 +6,21 @@ sidebar_position: 1
 # WASI-Emscripten-Host
 
 This Kotlin Multiplatform library provides an implementation of the of the host functions specified in [WASI Preview 1],
-as well as an experimental implementation of the [Emscripten JS][Emscripten] environment host functions.  
+as well as an experimental implementation of the [Emscripten JS][Emscripten] environment host functions.
 It is designed to work with JVM/Multiplatform WebAssembly runtimes such as [GraalWASM][GraalWasm], [Chicory], and [Chasm].
 
 The primary goal is to run WebAssembly binaries compiled for WASM WASI or for Emscripten in a JVM environment, 
 without the need for a browser or JavaScript.
 
 The library currently implements all non-deprecated functions of the WASI Preview 1 specification
-and mostly passes the [WASI Testsuite]. For more details and specifics of the WASI Preview 1 implementation, refer 
-to the  the [WASI Preview 1 Implementation](WASIP1.md).
+and mostly passes the [WASI Testsuite]. For more details, refer to the  the [WASI Preview 1 Implementation](WASIP1.md).
 
-A limited set of Emscripten environment functions is also implemented, sufficient to run a single-threaded 
-version of SQLite compiled with Emscripten. It may also work in other cases. The description of the Emscripten
+A limited set of Emscripten environment is also implemented, sufficient to run a single-threaded 
+version of SQLite compiled with Emscripten. The description of the Emscripten
 implementation and an example of compiling a C++ application to work with this library can be found on the
  [Emscripten environment](Emscripten.md).
 
-Supported Kotlin targets: _JVM_ (based on NIO), _macosArm64_, macosX64_, _iosArm64_, _iosX64_, _iosSimulatorArm64_, _linuxX64_, _linuxArm64_, _mingwX64_.
+Supported Kotlin targets: _JVM_, _macosArm64_, macosX64_, _iosArm64_, _iosX64_, _iosSimulatorArm64_, _linuxX64_, _linuxArm64_, _mingwX64_.
 
 ## Usage
 

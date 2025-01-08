@@ -1,7 +1,7 @@
 ---
 sidebar_label: 'Chicory'
 sidebar_position: 2
-description: 'Implementation of Emscripten host functions for Chicory'
+description: 'Implementation of WASI Preview 1 and Emscripten host functions for Chicory'
 ---
 
 import Tabs from '@theme/Tabs';
@@ -9,21 +9,23 @@ import TabItem from '@theme/TabItem';
 
 # Chicory Integration
 
-[Chicory] is a zero-dependency, pure Java WebAssembly runtime. 
+[Chicory] is a zero-dependency, pure Java WebAssembly runtime.
 
 Key Features:
 
 - Compatible with Android API 33+ and JVM JDK 17+.
 - Simple JVM-only runtime with minimal dependencies.
 - Supports single-threaded execution only.
+  
+This integration allows you to run WebAssembly binaries that use either WASI Preview 1 or Emscripten functions on the JVM with Chicory.
 
-This integration allows you to run WebAssembly binaries using the Emscripten and WASI Preview 1 APIs on the JVM 
-with Chicory.
+Compatible with version **[1.0.0][Chicory_version]** of Chicory.
 
-The runtime is actively developed, and its public interfaces are subject to frequent changes.  
-Our integration is compatible with version **[0.0.12][Chicory_version]** of Chicory.
+## WASI Preview 1 Bindings Integration
 
-## Installation
+Check [WASI Preview 1](../WASIP1) to see the limitations of the WASI P1 implementation.
+
+### Installation
 
 Add the required dependencies:
 
@@ -32,109 +34,81 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory:0.1-alpha01")
-    implementation("com.dylibso.chicory:runtime:0.0.12")
+    implementation("at.released.weh:bindings-chicory-wasip1:0.1")
+    implementation("com.dylibso.chicory:runtime:1.0.0")
 }
 ```
     </TabItem>
 
     <TabItem value="maven" label="Maven">
 ```xml
-<repositories>
-    <repository>
-        <id>Google</id>
-        <url>https://maven.google.com</url>
-    </repository>
-</repositories>
-
 <dependencies>
     <dependency>
         <groupId>at.released.weh</groupId>
-        <artifactId>bindings-chicory-jvm</artifactId>
-        <version>0.1-alpha01</version>
+        <artifactId>bindings-chicory-wasip1-jvm</artifactId>
+        <version>0.1</version>
     </dependency>
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>0.0.12</version>
+        <version>1.0.0</version>
     </dependency>
 </dependencies>
 ```
     </TabItem>
 </Tabs>
 
+### Usage
 
-## Usage
-
-Below is an example demonstrating the execution of **helloworld.wasm**, prepared
-in the "[Emscripten Example](../Emscripten#example)".
+Below is an example demonstrating the execution of **helloworld.wasm**, build using Emscripten with the `STANDALONE_WASM` flag.
 
 <Tabs>
     <TabItem value="kotlin" label="Kotlin" default>
 
 ```kotlin
-import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller
-import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.ChicoryEmscriptenInstaller
+import at.released.weh.bindings.chicory.exception.ProcExitException
+import at.released.weh.bindings.chicory.wasip1.ChicoryWasiPreview1Builder
+import at.released.weh.host.EmbedderHost
 import com.dylibso.chicory.runtime.HostFunction
-import com.dylibso.chicory.runtime.HostGlobal
-import com.dylibso.chicory.runtime.HostImports
-import com.dylibso.chicory.runtime.HostMemory
-import com.dylibso.chicory.runtime.HostTable
-import com.dylibso.chicory.runtime.Memory
-import com.dylibso.chicory.runtime.Module
-import com.dylibso.chicory.wasm.types.MemoryLimits
-import com.dylibso.chicory.wasm.types.Value
-
-// You can use `wasm-objdump -x helloworld.wasm -j Memory` to get the memory limits
-// declared in the WebAssembly binary.
-const val INITIAL_MEMORY_SIZE_PAGES = 258
+import com.dylibso.chicory.runtime.ImportValues
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.wasm.Parser
+import com.dylibso.chicory.wasm.WasmModule
+import kotlin.system.exitProcess
 
 fun main() {
-    // Prepare Host memory
-    val memory = HostMemory(
-        /* moduleName = */ "env",
-        /* fieldName = */ "memory",
-        /* memory = */
-        Memory(
-            MemoryLimits(INITIAL_MEMORY_SIZE_PAGES),
-        ),
-    )
+    // Create Host and run code
+    EmbedderHost {
+        fileSystem {
+            addPreopenedDirectory(".", "/data")
+        }
+    }.use { executeCode(it) }
+}
 
-    // Prepare WASI and Emscripten host imports
-    val installer = ChicoryHostFunctionInstaller(
-        memory = memory.memory(),
-    )
-    val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
-    val emscriptenInstaller: ChicoryEmscriptenInstaller = installer.setupEmscriptenFunctions()
-    val hostImports = HostImports(
-        /* functions = */ (emscriptenInstaller.emscriptenFunctions + wasiFunctions).toTypedArray(),
-        /* globals = */ arrayOf<HostGlobal>(),
-        /* memory = */ memory,
-        /* tables = */ arrayOf<HostTable>(),
-    )
+private fun executeCode(embedderHost: EmbedderHost) {
+    // Prepare WASI host imports
+    val wasiImports: List<HostFunction> = ChicoryWasiPreview1Builder {
+        host = embedderHost
+    }.build()
 
-    // Setup Chicory Module
-    val module = Module
-        .builder("helloworld.wasm")
-        .withHostImports(hostImports)
+    val hostImports = ImportValues.builder().withFunctions(wasiImports).build()
+
+    // Instantiate the WebAssembly module
+    val instance = Instance
+        .builder(File("helloworld_wasi.wasm"))
+        .withImportValues(hostImports)
         .withInitialize(true)
         .withStart(false)
         .build()
 
-    // Instantiate the WebAssembly module
-    val instance = module.instantiate()
-
-    // Finalize initialization after module instantiation
-    val emscriptenRuntime = emscriptenInstaller.finalize(instance)
-
-    // Initialize Emscripten runtime environment
-    emscriptenRuntime.initMainThread()
-
     // Execute code
-    instance.export("main").apply(
-        /* argc */ Value.i32(0),
-        /* argv */ Value.i32(0),
-    )[0].asInt()
+    try {
+        instance.export("_start").apply()
+    } catch (pre: ProcExitException) {
+        if (pre.exitCode != 0) {
+            exitProcess(pre.exitCode)
+        }
+    }
 }
 ```
 
@@ -143,66 +117,50 @@ fun main() {
     <TabItem value="java" label="Java">
 
 ```java
-import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller;
-import at.released.weh.bindings.chicory.ChicoryHostFunctionInstaller.ChicoryEmscriptenInstaller;
+import at.released.weh.bindings.chicory.exception.ProcExitException;
+import at.released.weh.bindings.chicory.wasip1.ChicoryWasiPreview1Builder;
+import at.released.weh.host.EmbedderHost;
+import at.released.weh.host.EmbedderHostBuilder;
 import com.dylibso.chicory.runtime.HostFunction;
-import com.dylibso.chicory.runtime.HostGlobal;
-import com.dylibso.chicory.runtime.HostImports;
-import com.dylibso.chicory.runtime.HostMemory;
-import com.dylibso.chicory.runtime.HostTable;
-import com.dylibso.chicory.runtime.Memory;
-import com.dylibso.chicory.runtime.Module;
-import com.dylibso.chicory.wasm.types.MemoryLimits;
-import com.dylibso.chicory.wasm.types.Value;
-import java.util.ArrayList;
+import com.dylibso.chicory.runtime.ImportValues;
+import com.dylibso.chicory.runtime.Instance;
+import com.dylibso.chicory.wasm.Parser;
+import com.dylibso.chicory.wasm.WasmModule;
+import java.util.Collection;
+import java.util.List;
 
 public class App {
-    // You can use `wasm-objdump -x helloworld.wasm -j Memory` to get the memory limits
-    // declared in the WebAssembly binary.
-    private static final int INITIAL_MEMORY_SIZE_PAGES = 258;
+    public static void main(String[] args) throws Exception {
+        // Prepare Host
+        var hostBuilder = new EmbedderHostBuilder();
+        hostBuilder.fileSystem().addPreopenedDirectory(".", "/data");
 
-    public static void main(String[] args) {
-        // Prepare Host memory
-        var memory = new HostMemory(
-                /* moduleName = */ "env",
-                /* fieldName = */ "memory",
-                /* memory = */ new Memory(new MemoryLimits(INITIAL_MEMORY_SIZE_PAGES))
-        );
+        try (var embedderHost = hostBuilder.build()) {
+            executeWasmCode(embedderHost, wasmModule);
+        }
+    }
 
-        // Prepare WASI and Emscripten host imports
-        var installer = new ChicoryHostFunctionInstaller.Builder(memory.memory()).build();
-        var hostFunctions = new ArrayList<>(installer.setupWasiPreview1HostFunctions());
-        ChicoryEmscriptenInstaller emscriptenInstaller = installer.setupEmscriptenFunctions();
-        hostFunctions.addAll(emscriptenInstaller.getEmscriptenFunctions());
+    private static void executeWasmCode(EmbedderHost embedderHost) {
+        // Prepare WASI host imports
+        Collection<HostFunction> wasiImports = new ChicoryWasiPreview1Builder().setHost(embedderHost).build();
 
-        var hostImports = new HostImports(
-                /* functions = */ hostFunctions.toArray(new HostFunction[0]),
-                /* globals = */ new HostGlobal[0],
-                /* memory = */ new HostMemory[]{memory},
-                /* tables = */ new HostTable[0]
-        );
+        var hostImports = ImportValues.builder().withFunctions(List.copyOf(wasiImports)).build();
 
-        // Build Chicory Module
-        var module = Module.builder("helloworld.wasm")
-                .withHostImports(hostImports)
+        // Instantiate the WebAssembly module
+        var instance = Instance.builder(new File("helloworld_wasi.wasm"))
+                .withImportValues(hostImports)
                 .withInitialize(true)
                 .withStart(false)
                 .build();
 
-        // Instantiate the WebAssembly module
-        var instance = module.instantiate();
-
-        // Finalize initialization after module instantiation
-        var emscriptenRuntime = emscriptenInstaller.finalize(instance);
-
-        // Initialize Emscripten runtime environment
-        emscriptenRuntime.initMainThread();
-
         // Execute code
-        instance.export("main").apply(
-                /* argc */ Value.i32(0),
-                /* argv */ Value.i32(0)
-        )[0].asInt();
+        try {
+            instance.export("_start").apply();
+        } catch (ProcExitException pre) {
+            if (pre.getExitCode() != 0) {
+                System.exit(pre.getExitCode());
+            }
+        }
     }
 }
 ```
@@ -210,15 +168,177 @@ public class App {
     </TabItem>
 </Tabs>
 
-You can also check out the example in the repository:
+
+## Chicory WASI Preview 1 implementation
+
+Chicory includes its own implementation of the WASI Preview 1 interfaces.
+You can find documentation on how to use it here: https://chicory.dev/docs/usage/wasi/.
+
+## Emscripten bindings integration
+
+### Installation
+
+Add the required dependencies:
+
+<Tabs>
+    <TabItem value="gradle" label="Gradle" default>
+
+```kotlin
+dependencies {
+    implementation("at.released.weh:bindings-chicory-emscripten:0.1")
+    implementation("com.dylibso.chicory:runtime:1.0.0")
+}
+```
+    </TabItem>
+
+    <TabItem value="maven" label="Maven">
+```xml
+<dependencies>
+    <dependency>
+        <groupId>at.released.weh</groupId>
+        <artifactId>bindings-chicory-emscripten-jvm</artifactId>
+        <version>0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>com.dylibso.chicory</groupId>
+        <artifactId>runtime</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
+    </TabItem>
+</Tabs>
+
+### Usage
+
+Below is an example demonstrating the execution of **helloworld.wasm**, prepared
+in the "[Emscripten Example](../Emscripten#example)".
+
+<Tabs>
+    <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller
+import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller.ChicoryEmscriptenSetupFinalizer
+import at.released.weh.host.EmbedderHost
+import com.dylibso.chicory.runtime.HostFunction
+import com.dylibso.chicory.runtime.ImportValues
+import com.dylibso.chicory.runtime.Instance
+import com.dylibso.chicory.wasm.Parser
+
+fun main() {
+    // Create Host and run code
+    EmbedderHost {
+        fileSystem {
+            unrestricted = true
+        }
+    }.use(::executeCode)
+}
+
+private fun executeCode(embedderHost: EmbedderHost) {
+    // Prepare WASI and Emscripten host imports
+    val installer = ChicoryEmscriptenHostInstaller {
+        host = embedderHost
+    }
+
+    val wasiFunctions: List<HostFunction> = installer.setupWasiPreview1HostFunctions()
+    val emscriptenFinalizer: ChicoryEmscriptenSetupFinalizer = installer.setupEmscriptenFunctions()
+
+    val hostImports = ImportValues.builder()
+        .withFunctions(emscriptenFinalizer.emscriptenFunctions + wasiFunctions)
+        .build()
+
+    // Instantiate the WebAssembly module
+    val instance = Instance
+        .builder(File("helloworld.wasm"))
+        .withImportValues(hostImports)
+        .withInitialize(true)
+        .withStart(false)
+        .build()
+
+    // Finalize initialization after module instantiation
+    val emscriptenRuntime = emscriptenFinalizer.finalize(instance)
+
+    // Initialize Emscripten runtime environment
+    emscriptenRuntime.initMainThread()
+
+    // Execute code
+    instance.export("main").apply(
+        /* argc */ 0,
+        /* argv */ 0,
+    )[0]
+}
+```
+
+    </TabItem>
+
+    <TabItem value="java" label="Java">
+
+```java
+import at.released.weh.bindings.chicory.ChicoryEmscriptenHostInstaller;
+import at.released.weh.host.EmbedderHost;
+import at.released.weh.host.EmbedderHostBuilder;
+import com.dylibso.chicory.runtime.ImportFunction;
+import com.dylibso.chicory.runtime.ImportValues;
+import com.dylibso.chicory.runtime.Instance;
+import com.dylibso.chicory.wasm.Parser;
+import com.dylibso.chicory.wasm.WasmModule;
+import java.util.ArrayList;
+
+public class App {
+    public static void main(String[] args) throws Exception {
+        // Prepare Host
+        var hostBuilder = new EmbedderHostBuilder();
+        hostBuilder.fileSystem().setUnrestricted(true);
+        try (var embedderHost = hostBuilder.build()) {
+            executeWasmCode(embedderHost);
+        }
+    }
+
+    private static void executeWasmCode(EmbedderHost embedderHost) throws Exception {
+        // Prepare WASI and Emscripten host imports
+        var installer = new ChicoryEmscriptenHostInstaller.Builder()
+                .setHost(embedderHost)
+                .build();
+
+        ArrayList<ImportFunction> hostFunctions = new ArrayList<>(installer.setupWasiPreview1HostFunctions());
+        var emscriptenFinalizer = installer.setupEmscriptenFunctions();
+        hostFunctions.addAll(emscriptenFinalizer.getEmscriptenFunctions());
+
+        var hostImports = ImportValues.builder().withFunctions(hostFunctions).build();
+
+        // Instantiate the WebAssembly module
+        var instance = Instance.builder(new File("helloworld.wasm"))
+                .withImportValues(hostImports)
+                .withInitialize(true)
+                .withStart(false)
+                .build();
+
+        // Finalize initialization after module instantiation
+        var emscriptenRuntime = emscriptenFinalizer.finalize(instance);
+
+        // Initialize Emscripten runtime environment
+        emscriptenRuntime.initMainThread();
+
+        // Execute code
+        long exitCode = instance.export("main").apply(
+                /* argc */ 0,
+                /* argv */ 0
+        )[0];
+    }
+}
+```
+
+    </TabItem>
+</Tabs>
+
+
+## Other samples
+
+You can also check out samples in the repository:
 
 * Gradle project with Kotlin code: [samples/wasm-gradle/app-chicory]
 * Maven project with Java code: [samples/wasm-maven/chicory-maven]
-
-## Internal WASI Preview 1 implementation
-
-Chicory includes its own implementation of the WASI Preview 1 interfaces.  
-You can find documentation on how to use it here: [chicory/wasi].
 
 ## Runtime Optimizations
 
@@ -226,16 +346,16 @@ Chicory is also working on an Ahead-of-Time (AOT) compiler that translates WebAs
 To experiment with this feature, you can add the following dependency:
 
 ```kotlin
-implementation("com.dylibso.chicory:aot:0.0.12")
+implementation("com.dylibso.chicory:aot-experimental:1.0.0")
 ```
 
 And add `Engine` when building `Module`:
 
 ```kotlin
-import com.dylibso.chicory.aot.AotMachine
+import com.dylibso.chicory.experimental.aot.AotMachine
 
 val module = Module
-    .builder("helloworld.wasm")
+    .builder(File("helloworld.wasm"))
     .withHostImports(hostImports)
     .withInitialize(true)
     .withStart(false)
@@ -246,9 +366,8 @@ val module = Module
 
 For the latest updates, check this link: [chicory/aot].
 
-[Chicory]: https://github.com/dylibso/chicory
-[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/0.0.12
-[samples/wasm-gradle/app-chicory]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle/app-chicory
-[samples/wasm-maven/chicory-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven/chicory-maven
-[chicory/wasi]: https://github.com/dylibso/chicory/tree/main/wasi
-[chicory/aot]: https://github.com/dylibso/chicory/tree/main/aot
+[Chicory]: https://chicory.dev/
+[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.0.0
+[samples/wasm-gradle/app-chicory]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle
+[samples/wasm-maven/chicory-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven
+[chicory/aot]: https://chicory.dev/docs/experimental/aot
