@@ -35,12 +35,13 @@ kotlin {
         jvmMain.dependencies {
             api(libs.graalvm241.polyglot.polyglot)
             compileOnly(libs.graalvm241.wasm.language)
-            implementation(libs.graalvm241.polyglot.wasm)
+            compileOnly(libs.graalvm241.polyglot.wasm)
             implementation(libs.graalvm241.truffle.api)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.graalvm241.polyglot.wasm)
         }
     }
 }

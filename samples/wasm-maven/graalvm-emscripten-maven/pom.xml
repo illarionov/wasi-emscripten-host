@@ -32,12 +32,6 @@
             <groupId>at.released.weh</groupId>
             <artifactId>bindings-graalvm241-emscripten-jvm</artifactId>
             <version>0.1-alpha02-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.graalvm.wasm</groupId>
-                    <artifactId>wasm-community</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>

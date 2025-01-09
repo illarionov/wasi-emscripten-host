@@ -90,6 +90,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(kotlin("test-junit"))
+            implementation(libs.graalvm241.polyglot.wasm)
         }
         commonTest.dependencies {
             implementation(projects.bindingsChasmWasip1)
