@@ -59,12 +59,6 @@ dependencies {
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-graalvm241-emscripten-wasip1</artifactId>
         <version>0.1</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.graalvm.wasm</groupId>
-                <artifactId>wasm-community</artifactId>
-            </exclusion>
-        </exclusions>
     </dependency>
 </dependencies>
 ```
@@ -266,12 +260,6 @@ dependencies {
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-graalvm241-emscripten-jvm</artifactId>
         <version>0.1</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.graalvm.wasm</groupId>
-                <artifactId>wasm-community</artifactId>
-            </exclusion>
-        </exclusions>
     </dependency>
 </dependencies>
 ```
