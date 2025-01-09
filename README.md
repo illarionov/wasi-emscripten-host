@@ -1,16 +1,16 @@
 # Wasi-emscripten-host
 
-Wasi-emscripten-host is a Kotlin Multiplatform library that implements the WebAssembly host functions of the 
-[Emscripten] environment, and some functions defined in the WASI Preview 1 specification.
+Kotlin Multiplatform implementation of WebAssembly host functions from WASI Preview 1 system interface and from
+[Emscripten] environment.
 
-It is designed to execute WebAssembly binaries compiled using the Emscripten toolchain on JVM/Multiplatform WebAssembly 
+It is designed to execute WebAssembly binaries compiled using the Emscripten toolchain on JVM/Multiplatform WebAssembly
 runtimes such as [GraalVM][GraalWasm], [Chicory], and [Chasm].
 
 For more information, visit the project website: [weh.released.at](https://weh.released.at)
 
 [Emscripten]: https://emscripten.org/
 [Chasm]: https://github.com/CharlieTap/chasm
-[Chicory]: https://github.com/dylibso/chicory
+[Chicory]: https://chicory.dev/
 [GraalWasm]: https://www.graalvm.org/latest/reference-manual/wasm/
 
 ## License
@@ -19,7 +19,7 @@ These services are licensed under Apache 2.0 License. Authors and contributors a
 [Authors](AUTHORS) file.
 
 ```
-Copyright 2024 wasi-emscripten-host project authors and contributors.
+Copyright 2024-2025 wasi-emscripten-host project authors and contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
