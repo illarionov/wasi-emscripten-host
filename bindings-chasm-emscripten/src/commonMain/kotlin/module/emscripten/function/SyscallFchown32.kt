@@ -11,7 +11,7 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.emcripten.runtime.function.SyscallFchown32FunctionHandle
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallFchown32(
     host: EmbedderHost,
@@ -23,6 +23,6 @@ internal class SyscallFchown32(
             args[1].asInt(),
             args[2].asInt(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

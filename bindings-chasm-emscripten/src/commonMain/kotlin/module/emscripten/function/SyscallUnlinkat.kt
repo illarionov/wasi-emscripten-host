@@ -13,7 +13,7 @@ import at.released.weh.emcripten.runtime.function.SyscallUnlinkatFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallUnlinkat(
     host: EmbedderHost,
@@ -27,6 +27,6 @@ internal class SyscallUnlinkat(
             args[1].asWasmAddr(),
             args[2].asInt(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

@@ -6,7 +6,6 @@
 
 package at.released.weh.wasi.bindings.test.chasm.base
 
-import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
@@ -32,20 +31,14 @@ object ChasmWasmTestRuntime : WasmTestRuntime {
     ): Int {
         val store: Store = store()
         val instance = setupInstance(store, wasmFile, host)
-
-        val exitCode: Int = try {
-            invoke(store, instance, "_start").fold(
-                onSuccess = { 0 },
-                onError = { executionError ->
-                    HOST_FUNCTION_ERROR_PATTERN.matchEntire(executionError.error)?.let { match ->
-                        match.groups[1]!!.value.toIntOrNull()
-                    } ?: -1
-                },
-            )
-        } catch (pre: ProcExitException) {
-            pre.exitCode
-        }
-        return exitCode
+        return invoke(store, instance, "_start").fold(
+            onSuccess = { 0 },
+            onError = { executionError ->
+                HOST_FUNCTION_ERROR_PATTERN.matchEntire(executionError.error)?.let { match ->
+                    match.groups[1]!!.value.toIntOrNull()
+                } ?: -1
+            },
+        )
     }
 
     private fun setupInstance(

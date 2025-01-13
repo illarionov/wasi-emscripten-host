@@ -17,9 +17,10 @@ import io.github.charlietap.chasm.embedding.shapes.Function
 import io.github.charlietap.chasm.embedding.shapes.Global
 import io.github.charlietap.chasm.embedding.shapes.Instance
 import io.github.charlietap.chasm.embedding.shapes.Store
-import io.github.charlietap.chasm.embedding.shapes.Value
 import io.github.charlietap.chasm.embedding.shapes.fold
 import io.github.charlietap.chasm.embedding.shapes.onError
+import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -59,7 +60,7 @@ internal class ChasmIntGlobalsBindings(
     val optional: ReadWriteProperty<Any?, Int?> = object : ReadWriteProperty<Any?, Int?> {
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int? = globals[property.name]?.let { global ->
             readGlobal(store, global).fold(
-                onSuccess = Value::asInt,
+                onSuccess = ExecutionValue::asInt,
                 onError = { error -> throw ChasmErrorException(error) },
             )
         }
@@ -67,7 +68,7 @@ internal class ChasmIntGlobalsBindings(
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int?) {
             checkNotNull(value) { "Can not set global ${property.name} to null" }
             globals[property.name]?.let { global ->
-                writeGlobal(store, global, Value.Number.I32(value))
+                writeGlobal(store, global, NumberValue.I32(value))
                     .onError { error -> throw ChasmErrorException(error) }
             }
         }
@@ -76,14 +77,14 @@ internal class ChasmIntGlobalsBindings(
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
             val global = getGlobal(property.name)
             return readGlobal(store, global).fold(
-                onSuccess = Value::asInt,
+                onSuccess = ExecutionValue::asInt,
                 onError = { error -> throw ChasmErrorException(error) },
             )
         }
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
             val global = getGlobal(property.name)
-            writeGlobal(store, global, Value.Number.I32(value))
+            writeGlobal(store, global, NumberValue.I32(value))
                 .onError { error -> throw ChasmErrorException(error) }
         }
 

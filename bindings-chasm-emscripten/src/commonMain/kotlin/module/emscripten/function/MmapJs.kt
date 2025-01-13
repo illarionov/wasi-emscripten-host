@@ -13,7 +13,7 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.emcripten.runtime.function.MmapJsFunctionHandle
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class MmapJs(
     host: EmbedderHost,
@@ -30,6 +30,6 @@ internal class MmapJs(
             args[5].asWasmAddr(),
             args[6].asWasmAddr(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

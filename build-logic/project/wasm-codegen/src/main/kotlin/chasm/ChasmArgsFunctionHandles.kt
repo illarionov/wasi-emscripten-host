@@ -57,8 +57,8 @@ internal class ChasmArgsFunctionHandles(
 
         fun chasmHostFunctionDeclaration(): FunSpec = FunSpec.builder(chasmHostFunctionName).apply {
             addParameter("context", HOST_FUNCTION_CONTEXT)
-            addParameter("args", LIST.parameterizedBy(ChasmShapesClassname.VALUE))
-            returns(LIST.parameterizedBy(ChasmShapesClassname.VALUE))
+            addParameter("args", LIST.parameterizedBy(ChasmShapesClassname.EXECUTION_VALUE))
+            returns(LIST.parameterizedBy(ChasmShapesClassname.EXECUTION_VALUE))
 
             val handleArgs: List<Pair<String, MemberName>> =
                 baseTypeResolver.getFuncInputArgs(func).mapIndexed { index, (baseType: WasiBaseWasmType, _, comment) ->

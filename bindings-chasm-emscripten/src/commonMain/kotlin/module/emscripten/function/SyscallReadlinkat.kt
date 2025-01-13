@@ -13,7 +13,7 @@ import at.released.weh.emcripten.runtime.function.SyscallReadlinkatFunctionHandl
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallReadlinkat(
     host: EmbedderHost,
@@ -28,6 +28,6 @@ internal class SyscallReadlinkat(
             buf = args[2].asWasmAddr(),
             bufSize = args[3].asInt(),
         )
-        listOf(Value.Number.I32(sizeOrErrno))
+        listOf(NumberValue.I32(sizeOrErrno))
     }
 }

@@ -12,7 +12,7 @@ import at.released.weh.emcripten.runtime.function.SyscallRmdirFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallRmdir(
     host: EmbedderHost,
@@ -24,6 +24,6 @@ internal class SyscallRmdir(
             memory,
             args[0].asWasmAddr(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

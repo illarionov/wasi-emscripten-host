@@ -11,7 +11,7 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.emcripten.runtime.function.EmscriptenAsmConstIntFunctionHandle
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class EmscriptenAsmConstInt(host: EmbedderHost) : HostFunctionProvider {
     private val handle = EmscriptenAsmConstIntFunctionHandle(host)
@@ -21,6 +21,6 @@ internal class EmscriptenAsmConstInt(host: EmbedderHost) : HostFunctionProvider 
             sigPtr = args[1].asWasmAddr(),
             argbuf = args[2].asWasmAddr(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

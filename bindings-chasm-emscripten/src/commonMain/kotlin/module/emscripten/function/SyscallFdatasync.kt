@@ -11,13 +11,13 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.emcripten.runtime.function.FdDatasyncFunctionHandle
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallFdatasync(
     host: EmbedderHost,
 ) : HostFunctionProvider {
     val handle = FdDatasyncFunctionHandle(host)
     override val function: HostFunction = { args ->
-        listOf(Value.Number.I32(handle.execute(args[0].asInt()).code))
+        listOf(NumberValue.I32(handle.execute(args[0].asInt()).code))
     }
 }

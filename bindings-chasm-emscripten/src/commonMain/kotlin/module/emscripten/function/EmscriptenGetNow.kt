@@ -10,13 +10,13 @@ import at.released.weh.bindings.chasm.module.emscripten.HostFunctionProvider
 import at.released.weh.emcripten.runtime.function.EmscriptenGetNowFunctionHandle
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class EmscriptenGetNow(
     host: EmbedderHost,
 ) : HostFunctionProvider {
     private val handle = EmscriptenGetNowFunctionHandle(host)
     override val function: HostFunction = {
-        listOf(Value.Number.F64(handle.execute()))
+        listOf(NumberValue.F64(handle.execute()))
     }
 }

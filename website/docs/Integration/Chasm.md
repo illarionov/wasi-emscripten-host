@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 [Chasm] is an experimental WebAssembly runtime built on Kotlin Multiplatform.
 It supports Android API 26+, JVM JDK 17+, and a variety of multiplatform targets.
 
-This integration is compatible with version [0.9.2][Chasm_version] of Chasm.
+This integration is compatible with version [0.9.4][Chasm_version] of Chasm.
 
 ## Wasi Preview 1 Bindings Integration
 
@@ -25,8 +25,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.2")
-        implementation("at.released.weh:bindings-chasm-wasip1:0.1")
+        implementation("io.github.charlietap.chasm:chasm:0.9.4")
+        implementation("at.released.weh:bindings-chasm-wasip1:0.2")
     }
 }
 ```
@@ -36,7 +36,6 @@ sourceSets {
 Below is an example demonstrating the execution of **helloworld.wasm**, build using Emscripten with the `STANDALONE_WASM` flag.
 
 ```kotlin
-import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.instance
@@ -82,14 +81,11 @@ fun executeCode(embedderHost: EmbedderHost, wasmBinary: ByteArray): Int {
         )
 
     // Execute code
-    try {
-        invoke(store, instance, "_start").fold(
-            onSuccess = { it },
-            onError = { throw WasmException("main() failed") },
-        )
-    } catch (pre: ProcExitException) {
-        return pre.exitCode
-    }
+    invoke(store, instance, "_start").fold(
+        onSuccess = { "Success" },
+        onError = { executionError -> executionError.error },
+    )
+
     return 0
 }
 
@@ -105,8 +101,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.2")
-        implementation("at.released.weh:bindings-chasm-emscripten:0.1")
+        implementation("io.github.charlietap.chasm:chasm:0.9.4")
+        implementation("at.released.weh:bindings-chasm-emscripten:0.2")
     }
 }
 ```
@@ -203,5 +199,5 @@ class WasmException(message: String) : RuntimeException(message)
   This example showcases how to execute a Kotlin/Wasm-WASI binary in a Kotlin Multiplatform project.
 
 [Chasm]: https://github.com/CharlieTap/chasm
-[Chasm_version]: https://github.com/CharlieTap/chasm/releases/tag/0.9.2
+[Chasm_version]: https://github.com/CharlieTap/chasm/releases/tag/0.9.4
 [Samples]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples
