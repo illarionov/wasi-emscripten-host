@@ -34,7 +34,7 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-wasip1:0.1")
+    implementation("at.released.weh:bindings-chicory-wasip1:0.2")
     implementation("com.dylibso.chicory:runtime:1.0.0")
 }
 ```
@@ -46,7 +46,7 @@ dependencies {
     <dependency>
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-chicory-wasip1-jvm</artifactId>
-        <version>0.1</version>
+        <version>0.2</version>
     </dependency>
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
@@ -185,7 +185,7 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-emscripten:0.1")
+    implementation("at.released.weh:bindings-chicory-emscripten:0.2")
     implementation("com.dylibso.chicory:runtime:1.0.0")
 }
 ```

@@ -33,7 +33,7 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-graalvm241-wasip1:0.1")
+    implementation("at.released.weh:bindings-graalvm241-wasip1:0.2")
     implementation("org.graalvm.polyglot:polyglot:24.1.1")
     implementation("org.graalvm.polyglot:wasm:24.1.1")
 }
@@ -234,7 +234,7 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-graalvm241-emscripten:0.1")
+    implementation("at.released.weh:bindings-graalvm241-emscripten:0.2")
     implementation("org.graalvm.polyglot:polyglot:24.1.1")
     implementation("org.graalvm.polyglot:wasm:24.1.1")
 }

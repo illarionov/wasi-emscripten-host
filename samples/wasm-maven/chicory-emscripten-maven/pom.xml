@@ -18,7 +18,7 @@
         <dependency>
             <groupId>at.released.weh</groupId>
             <artifactId>bindings-chicory-emscripten-jvm</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>com.dylibso.chicory</groupId>
