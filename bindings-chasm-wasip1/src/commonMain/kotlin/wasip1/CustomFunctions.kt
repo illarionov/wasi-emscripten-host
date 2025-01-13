@@ -6,14 +6,17 @@
 
 package at.released.weh.bindings.chasm.wasip1
 
-import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.wasm.core.WasmModules
+import io.github.charlietap.chasm.ast.type.FunctionType
+import io.github.charlietap.chasm.ast.type.NumberType.I32
+import io.github.charlietap.chasm.ast.type.ResultType
+import io.github.charlietap.chasm.ast.type.ValueType
 import io.github.charlietap.chasm.embedding.function
-import io.github.charlietap.chasm.embedding.shapes.FunctionType
 import io.github.charlietap.chasm.embedding.shapes.Import
 import io.github.charlietap.chasm.embedding.shapes.Store
-import io.github.charlietap.chasm.embedding.shapes.ValueType.Number.I32
+import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.host.HostFunctionException
 import io.github.charlietap.chasm.embedding.shapes.HostFunction as ChasmHostFunction
 
 internal fun createCustomWasiPreview1HostFunctions(
@@ -24,14 +27,19 @@ internal fun createCustomWasiPreview1HostFunctions(
         Import(
             moduleName,
             "proc_exit",
-            function(store, FunctionType(listOf(I32), listOf()), procExitHostFunction),
+            function(
+                store,
+                FunctionType(
+                    ResultType(listOf(ValueType.Number(I32))),
+                    ResultType(listOf()),
+                ),
+                procExitHostFunction,
+            ),
         ),
     )
 }
 
-private val procExitHostFunction: ChasmHostFunction = { args ->
+private val procExitHostFunction: ChasmHostFunction = { args: List<ExecutionValue> ->
     val exitCode = args[0].asInt()
-    // TODO: throw HostFunctionException on Chasm 0.9.3+
-    // throw HostFunctionException(exitCode.toString())
-    throw ProcExitException(exitCode)
+    throw HostFunctionException(exitCode.toString())
 }

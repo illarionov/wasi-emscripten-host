@@ -10,8 +10,10 @@ import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes
-import io.github.charlietap.chasm.embedding.shapes.ValueType
-import io.github.charlietap.chasm.embedding.shapes.FunctionType as ChasmFunctionType
+import io.github.charlietap.chasm.ast.type.NumberType
+import io.github.charlietap.chasm.ast.type.ResultType
+import io.github.charlietap.chasm.ast.type.ValueType
+import io.github.charlietap.chasm.ast.type.FunctionType as ChasmFunctionType
 
 @InternalWasiEmscriptenHostApi
 public fun List<HostFunctionType>.toChasmFunctionTypes(): Map<HostFunctionType, ChasmFunctionType> = associateWith(
@@ -19,16 +21,16 @@ public fun List<HostFunctionType>.toChasmFunctionTypes(): Map<HostFunctionType, 
 )
 
 internal fun HostFunctionType.toChasmFunctionType(): ChasmFunctionType = ChasmFunctionType(
-    paramTypes.map(::wasmValueTypeToChasmValueTypes),
-    returnTypes.map(::wasmValueTypeToChasmValueTypes),
+    ResultType(paramTypes.map(::wasmValueTypeToChasmValueTypes)),
+    ResultType(returnTypes.map(::wasmValueTypeToChasmValueTypes)),
 )
 
 internal fun wasmValueTypeToChasmValueTypes(
     @WasmValueType type: Int,
 ): ValueType = when (type) {
-    WasmValueTypes.I32 -> ValueType.Number.I32
-    WasmValueTypes.I64 -> ValueType.Number.I64
-    WasmValueTypes.F32 -> ValueType.Number.F32
-    WasmValueTypes.F64 -> ValueType.Number.F64
+    WasmValueTypes.I32 -> ValueType.Number(NumberType.I32)
+    WasmValueTypes.I64 -> ValueType.Number(NumberType.I64)
+    WasmValueTypes.F32 -> ValueType.Number(NumberType.F32)
+    WasmValueTypes.F64 -> ValueType.Number(NumberType.F64)
     else -> error("Unsupported WASM value type `$type`")
 }

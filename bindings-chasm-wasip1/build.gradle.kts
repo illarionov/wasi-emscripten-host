@@ -27,11 +27,6 @@ kotlin {
     linuxX64()
     macosArm64()
     macosX64()
-    mingwX64 {
-        binaries.all {
-            linkerOpts("-lntdll")
-        }
-    }
 
     sourceSets {
         commonMain.dependencies {
@@ -42,7 +37,6 @@ kotlin {
             implementation(projects.wasmWasiPreview1)
             implementation(libs.kotlinx.io)
             compileOnly(libs.chasm.memory)
-            compileOnly(libs.chasm.runtime)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

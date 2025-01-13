@@ -6,7 +6,6 @@
 
 package at.released.weh.sample.chasm.gradle.app
 
-import at.released.weh.bindings.chasm.exception.ProcExitException
 import at.released.weh.bindings.chasm.wasip1.ChasmWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import io.github.charlietap.chasm.embedding.instance
@@ -52,14 +51,11 @@ fun executeCode(embedderHost: EmbedderHost, wasmBinary: ByteArray): Int {
         )
 
     // Execute code
-    try {
-        invoke(store, instance, "_start").fold(
-            onSuccess = { it },
-            onError = { throw WasmException("main() failed") },
-        )
-    } catch (pre: ProcExitException) {
-        return pre.exitCode
-    }
+    invoke(store, instance, "_start").fold(
+        onSuccess = { "Success" },
+        onError = { executionError -> executionError.error },
+    )
+
     return 0
 }
 

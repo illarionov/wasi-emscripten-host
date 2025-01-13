@@ -13,7 +13,7 @@ import at.released.weh.emcripten.runtime.function.SyscallFstat64FunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallFstat64(
     host: EmbedderHost,
@@ -26,6 +26,6 @@ internal class SyscallFstat64(
             args[0].asInt(),
             args[1].asWasmAddr(),
         )
-        listOf(Value.Number.I32(result))
+        listOf(NumberValue.I32(result))
     }
 }

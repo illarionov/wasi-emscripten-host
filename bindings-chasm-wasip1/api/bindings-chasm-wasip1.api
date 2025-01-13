@@ -18,11 +18,6 @@ public class at/released/weh/bindings/chasm/exception/ChasmException : java/lang
 	public fun <init> (Ljava/lang/Throwable;)V
 }
 
-public final class at/released/weh/bindings/chasm/exception/ProcExitException : at/released/weh/bindings/chasm/exception/ChasmException {
-	public fun <init> (I)V
-	public final fun getExitCode ()I
-}
-
 public final class at/released/weh/bindings/chasm/wasip1/ChasmWasiPreview1Builder {
 	public static final field Companion Lat/released/weh/bindings/chasm/wasip1/ChasmWasiPreview1Builder$Companion;
 	public synthetic fun <init> (Lio/github/charlietap/chasm/embedding/shapes/Store;Lkotlin/jvm/functions/Function1;Lat/released/weh/host/EmbedderHost;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

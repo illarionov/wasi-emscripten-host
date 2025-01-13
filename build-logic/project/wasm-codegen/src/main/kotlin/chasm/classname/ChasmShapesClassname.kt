@@ -12,13 +12,22 @@ import com.squareup.kotlinpoet.MemberName.Companion.member
 
 internal object ChasmShapesClassname {
     const val PACKAGE = "io.github.charlietap.chasm.embedding.shapes"
-    val FUNCTION_TYPE = ClassName(PACKAGE, "FunctionType")
     val HOST_FUNCTION_CONTEXT = ClassName(PACKAGE, "HostFunctionContext")
     val IMPORT = ClassName(PACKAGE, "Import")
     val STORE = ClassName(PACKAGE, "Store")
-    val VALUE = ClassName(PACKAGE, "Value")
-    val VALUE_TYPE = ClassName(PACKAGE, "ValueType")
-    val VALUE_TYPE_I32 = VALUE_TYPE.nestedClass("Number").member("I32")
-    val VALUE_TYPE_I64 = VALUE_TYPE.nestedClass("Number").member("I64")
     val CHASM_EMBEDDING_FUNCTION = MemberName("io.github.charlietap.chasm.embedding", "function")
+    val EXECUTION_VALUE = ClassName("io.github.charlietap.chasm.executor.runtime.value", "ExecutionValue")
+    val RUNTIME_NUMBER_VALUE = ClassName("io.github.charlietap.chasm.executor.runtime.value", "NumberValue")
+    val RUNTIME_NUMBER_VALUE_I32 = RUNTIME_NUMBER_VALUE.nestedClass("I32")
+
+    internal object AstType {
+        const val PACKAGE = "io.github.charlietap.chasm.ast.type"
+        val AST_FUNCTION_TYPE = ClassName(PACKAGE, "FunctionType")
+        val AST_NUMBER_TYPE = ClassName(PACKAGE, "NumberType")
+        val AST_NUMBER_TYPE_I32 = AST_NUMBER_TYPE.member("I32")
+        val AST_NUMBER_TYPE_I64 = AST_NUMBER_TYPE.member("I64")
+        val AST_RESULT_TYPE = ClassName(PACKAGE, "ResultType")
+        val AST_VALUE_TYPE = ClassName(PACKAGE, "ValueType")
+        val VALUE_TYPE_NUMBER = AST_VALUE_TYPE.nestedClass("Number")
+    }
 }

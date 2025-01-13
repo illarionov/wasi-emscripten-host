@@ -64,7 +64,6 @@ kotlin {
     macosX64()
     linuxArm64()
     linuxX64()
-    mingwX64 { binaries.all { linkerOpts("-lntdll") } }
 
     testableTargets.withType<KotlinNativeTargetWithHostTests> {
         testRuns.all {

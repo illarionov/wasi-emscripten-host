@@ -4,34 +4,34 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@file:Suppress("UNCHECKED_CAST")
+@file:Suppress("NOTHING_TO_INLINE")
 
 package at.released.weh.bindings.chasm.ext
 
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
-import io.github.charlietap.chasm.embedding.shapes.Value
-import io.github.charlietap.chasm.embedding.shapes.Value.Number
+import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asByte(): Byte = (this as Number<Int>).value.toByte()
+public inline fun ExecutionValue.asByte(): Byte = (this as NumberValue.I32).value.toByte()
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asShort(): Short = (this as Number<Int>).value.toShort()
+public inline fun ExecutionValue.asShort(): Short = (this as NumberValue.I32).value.toShort()
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asInt(): Int = (this as Number<Int>).value
+public inline fun ExecutionValue.asInt(): Int = (this as NumberValue.I32).value
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asUInt(): UInt = (this as Number<Int>).value.toUInt()
+public inline fun ExecutionValue.asUInt(): UInt = (this as NumberValue.I32).value.toUInt()
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asLong(): Long = (this as Number<Long>).value
+public inline fun ExecutionValue.asLong(): Long = (this as NumberValue.I64).value
 
 @InternalWasiEmscriptenHostApi
-public fun Value.asULong(): ULong = (this as Number<Long>).value.toULong()
+public inline fun ExecutionValue.asULong(): ULong = (this as NumberValue.I64).value.toULong()
 
 @IntWasmPtr
 @InternalWasiEmscriptenHostApi
-public fun Value.asWasmAddr(): WasmPtr = this.asInt()
+public inline fun ExecutionValue.asWasmAddr(): WasmPtr = this.asInt()

@@ -26,11 +26,6 @@ kotlin {
     linuxX64()
     macosArm64()
     macosX64()
-    mingwX64 {
-        binaries.all {
-            linkerOpts("-lole32")
-        }
-    }
 
     sourceSets {
         commonMain.dependencies {

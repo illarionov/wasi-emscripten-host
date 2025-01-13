@@ -15,7 +15,7 @@ import at.released.weh.emcripten.runtime.function.SyscallOpenatFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.ReadOnlyMemory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.embedding.shapes.Value
+import io.github.charlietap.chasm.executor.runtime.value.NumberValue
 
 internal class SyscallOpenat(
     host: EmbedderHost,
@@ -35,6 +35,6 @@ internal class SyscallOpenat(
             rawFlags = args[2].asInt(),
             rawMode = mode,
         )
-        listOf(Value.Number.I32(fdOrErrno))
+        listOf(NumberValue.I32(fdOrErrno))
     }
 }

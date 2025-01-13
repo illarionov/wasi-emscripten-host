@@ -88,8 +88,8 @@ internal class ChasmHostFunctionsAdapterGenerator(
             FunSpec.builder("toListOfReturnValues")
                 .addModifiers(PRIVATE)
                 .receiver(WehWasiPreview1ClassName.ERRNO)
-                .returns(LIST.parameterizedBy(ChasmShapesClassname.VALUE))
-                .addCode("""return listOf(Value.Number.I32(this.code))""")
+                .returns(LIST.parameterizedBy(ChasmShapesClassname.EXECUTION_VALUE))
+                .addCode("""return listOf(%T(this.code))""", ChasmShapesClassname.RUNTIME_NUMBER_VALUE_I32)
                 .build(),
         )
     }.build()
