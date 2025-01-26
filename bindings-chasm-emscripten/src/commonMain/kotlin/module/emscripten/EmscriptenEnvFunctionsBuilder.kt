@@ -23,6 +23,7 @@ import at.released.weh.bindings.chasm.module.emscripten.function.LocaltimeJs
 import at.released.weh.bindings.chasm.module.emscripten.function.MmapJs
 import at.released.weh.bindings.chasm.module.emscripten.function.MunmapJs
 import at.released.weh.bindings.chasm.module.emscripten.function.NotImplementedEmscriptenFunction
+import at.released.weh.bindings.chasm.module.emscripten.function.SetittimerJs
 import at.released.weh.bindings.chasm.module.emscripten.function.SyscallChmod
 import at.released.weh.bindings.chasm.module.emscripten.function.SyscallFaccessat
 import at.released.weh.bindings.chasm.module.emscripten.function.SyscallFchmod
@@ -56,6 +57,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.HANDLE_STACK_OVE
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.LOCALTIME_JS
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.MMAP_JS
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.MUNMAP_JS
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SETITIMER_JS
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_CHMOD
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FACCESSAT
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.SYSCALL_FCHMOD
@@ -124,6 +126,7 @@ private fun EmscriptenHostFunction.createChasmHostFunction(
     LOCALTIME_JS -> LocaltimeJs(host, memory)
     MMAP_JS -> MmapJs(host)
     MUNMAP_JS -> MunmapJs(host)
+    SETITIMER_JS -> SetittimerJs(host)
     SYSCALL_CHMOD -> SyscallChmod(host, memory)
     SYSCALL_FACCESSAT -> SyscallFaccessat(host, memory)
     SYSCALL_FCHMOD -> SyscallFchmod(host)

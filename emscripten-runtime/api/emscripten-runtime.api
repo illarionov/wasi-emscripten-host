@@ -29,6 +29,7 @@ public final class at/released/weh/emcripten/runtime/EmscriptenHostFunction : ja
 	public static final field MMAP_JS Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field MUNMAP_JS Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field PTHREAD_CREATE_JS Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
+	public static final field SETITIMER_JS Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field SYSCALL_CHMOD Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field SYSCALL_FACCESSAT Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field SYSCALL_FCHMOD Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
@@ -173,6 +174,10 @@ public abstract interface class at/released/weh/emcripten/runtime/export/stack/E
 public final class at/released/weh/emcripten/runtime/export/stack/EmscriptenStackExports$Companion {
 }
 
+public abstract interface class at/released/weh/emcripten/runtime/export/timer/IntervalTimerExports {
+	public abstract fun get_emscripten_timeout ()Lat/released/weh/wasm/core/WasmFunctionBinding;
+}
+
 public final class at/released/weh/emcripten/runtime/function/AbortJsFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute ()Ljava/lang/Void;
@@ -257,6 +262,11 @@ public final class at/released/weh/emcripten/runtime/function/MmapJsFunctionHand
 public final class at/released/weh/emcripten/runtime/function/MunapJsFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
 	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
 	public final fun execute (IIIIIJ)I
+}
+
+public final class at/released/weh/emcripten/runtime/function/SetitimerJsFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute (ID)I
 }
 
 public final class at/released/weh/emcripten/runtime/function/SyscallChmodFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
@@ -376,5 +386,15 @@ public final class at/released/weh/emcripten/runtime/include/sys/MemoryProtectio
 	public static final field PROT_NONE I
 	public static final field PROT_READ I
 	public static final field PROT_WRITE I
+}
+
+public abstract interface annotation class at/released/weh/emcripten/runtime/include/sys/SysIntervalTimer : java/lang/annotation/Annotation {
+}
+
+public final class at/released/weh/emcripten/runtime/include/sys/SysIntervalTimerValue {
+	public static final field INSTANCE Lat/released/weh/emcripten/runtime/include/sys/SysIntervalTimerValue;
+	public static final field ITIMER_PROF I
+	public static final field ITIMER_REAL I
+	public static final field ITIMER_VIRTUAL I
 }
 
