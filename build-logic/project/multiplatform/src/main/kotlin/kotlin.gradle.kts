@@ -6,7 +6,6 @@
 
 package at.released.weh.gradle.multiplatform
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -21,7 +20,6 @@ plugins {
 kotlin {
     explicitApi = ExplicitApiMode.Warning
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
