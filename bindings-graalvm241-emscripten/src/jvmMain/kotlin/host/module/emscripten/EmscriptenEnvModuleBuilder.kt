@@ -27,6 +27,7 @@ import at.released.weh.bindings.graalvm241.host.module.emscripten.function.Handl
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.LocaltimeJs
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.MmapJs
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.MunapJs
+import at.released.weh.bindings.graalvm241.host.module.emscripten.function.SetittimerJs
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.SyscallChmod
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.SyscallFaccessat
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.SyscallFchmod
@@ -93,6 +94,7 @@ internal class EmscriptenEnvModuleBuilder(
             EmscriptenHostFunction.LOCALTIME_JS -> ::LocaltimeJs
             EmscriptenHostFunction.MMAP_JS -> ::MmapJs
             EmscriptenHostFunction.MUNMAP_JS -> ::MunapJs
+            EmscriptenHostFunction.SETITIMER_JS -> ::SetittimerJs
             EmscriptenHostFunction.SYSCALL_CHMOD -> ::SyscallChmod
             EmscriptenHostFunction.SYSCALL_FACCESSAT -> ::SyscallFaccessat
             EmscriptenHostFunction.SYSCALL_FCHMOD -> ::SyscallFchmod

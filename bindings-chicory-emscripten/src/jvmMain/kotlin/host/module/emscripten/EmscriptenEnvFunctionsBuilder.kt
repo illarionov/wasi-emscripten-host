@@ -22,6 +22,7 @@ import at.released.weh.bindings.chicory.host.module.emscripten.function.Localtim
 import at.released.weh.bindings.chicory.host.module.emscripten.function.MmapJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.MunmapJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.NotImplemented
+import at.released.weh.bindings.chicory.host.module.emscripten.function.SetittimerJs
 import at.released.weh.bindings.chicory.host.module.emscripten.function.SyscallChmod
 import at.released.weh.bindings.chicory.host.module.emscripten.function.SyscallFaccessat
 import at.released.weh.bindings.chicory.host.module.emscripten.function.SyscallFchmod
@@ -88,6 +89,7 @@ private fun EmscriptenHostFunction.createChicoryEmscriptenFunction(
     EmscriptenHostFunction.LOCALTIME_JS -> LocaltimeJs(host, memoryProvider)
     EmscriptenHostFunction.MMAP_JS -> MmapJs(host)
     EmscriptenHostFunction.MUNMAP_JS -> MunmapJs(host)
+    EmscriptenHostFunction.SETITIMER_JS -> SetittimerJs(host)
     EmscriptenHostFunction.SYSCALL_CHMOD -> SyscallChmod(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_FACCESSAT -> SyscallFaccessat(host, memoryProvider)
     EmscriptenHostFunction.SYSCALL_FCHMOD -> SyscallFchmod(host)

@@ -152,6 +152,11 @@ public enum class EmscriptenHostFunction(
         paramTypes = List(4) { I32 },
         retType = I32,
     ),
+    SETITIMER_JS(
+        wasmName = "_setitimer_js",
+        paramTypes = listOf(I32, F64),
+        retType = I32,
+    ),
     SYSCALL_CHMOD(
         wasmName = "__syscall_chmod",
         paramTypes = listOf(I32, I32),
