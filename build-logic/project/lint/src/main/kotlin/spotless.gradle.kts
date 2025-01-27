@@ -36,14 +36,14 @@ spotless {
 
         trimTrailingWhitespace()
         endWithNewline()
-        indentWithSpaces(2)
+        leadingTabsToSpaces(2)
     }
     format("toml") {
         target(rootDir.filter { it.name.endsWith(".toml") })
 
         trimTrailingWhitespace()
         endWithNewline()
-        indentWithSpaces(2)
+        leadingTabsToSpaces(2)
     }
     format("markdown") {
         target(rootDir.filter { it.name.endsWith(".md") || it.name.endsWith(".markdown") })
