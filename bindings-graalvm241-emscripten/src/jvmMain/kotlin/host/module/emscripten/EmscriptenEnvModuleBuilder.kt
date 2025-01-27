@@ -20,6 +20,7 @@ import at.released.weh.bindings.graalvm241.host.module.emscripten.function.Emscr
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenGetNowIsMonotonic
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenInitMainThreadJs
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenResizeHeap
+import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenRuntimeKeepaliveClear
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.EmscriptenThreadMailboxAwait
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.FdDatasync
 import at.released.weh.bindings.graalvm241.host.module.emscripten.function.Getentropy
@@ -77,6 +78,7 @@ internal class EmscriptenEnvModuleBuilder(
             EmscriptenHostFunction.EMSCRIPTEN_GET_NOW -> ::EmscriptenGetNow
             EmscriptenHostFunction.EMSCRIPTEN_GET_NOW_IS_MONOTONIC -> ::EmscriptenGetNowIsMonotonic
             EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP -> ::EmscriptenResizeHeap
+            EmscriptenHostFunction.EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR -> ::EmscriptenRuntimeKeepaliveClear
             EmscriptenHostFunction.GETENTROPY -> ::Getentropy
             EmscriptenHostFunction.HANDLE_STACK_OVERFLOW -> {
                     language: WasmLanguage,

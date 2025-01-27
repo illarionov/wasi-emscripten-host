@@ -16,6 +16,7 @@ import at.released.weh.bindings.chicory.host.module.emscripten.function.Emscript
 import at.released.weh.bindings.chicory.host.module.emscripten.function.EmscriptenGetNow
 import at.released.weh.bindings.chicory.host.module.emscripten.function.EmscriptenGetNowIsMonotonic
 import at.released.weh.bindings.chicory.host.module.emscripten.function.EmscriptenResizeHeap
+import at.released.weh.bindings.chicory.host.module.emscripten.function.EmscriptenRuntimeKeepaliveClear
 import at.released.weh.bindings.chicory.host.module.emscripten.function.Getentropy
 import at.released.weh.bindings.chicory.host.module.emscripten.function.HandleStackOverflow
 import at.released.weh.bindings.chicory.host.module.emscripten.function.LocaltimeJs
@@ -84,6 +85,7 @@ private fun EmscriptenHostFunction.createChicoryEmscriptenFunction(
     EmscriptenHostFunction.EMSCRIPTEN_GET_NOW -> EmscriptenGetNow(host)
     EmscriptenHostFunction.EMSCRIPTEN_GET_NOW_IS_MONOTONIC -> EmscriptenGetNowIsMonotonic(host)
     EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP -> EmscriptenResizeHeap(host)
+    EmscriptenHostFunction.EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR -> EmscriptenRuntimeKeepaliveClear(host)
     EmscriptenHostFunction.GETENTROPY -> Getentropy(host, memoryProvider)
     EmscriptenHostFunction.HANDLE_STACK_OVERFLOW -> HandleStackOverflow(host, stackBindingsRef)
     EmscriptenHostFunction.LOCALTIME_JS -> LocaltimeJs(host, memoryProvider)

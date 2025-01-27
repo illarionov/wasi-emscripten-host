@@ -99,6 +99,10 @@ public enum class EmscriptenHostFunction(
         ),
         retType = I32,
     ),
+    EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR(
+        wasmName = "_emscripten_runtime_keepalive_clear",
+        paramTypes = listOf(),
+    ),
     EMSCRIPTEN_THREAD_CLEANUP(
         wasmName = "_emscripten_thread_cleanup",
         paramTypes = listOf(I32),
