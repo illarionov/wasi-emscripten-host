@@ -18,6 +18,7 @@ public final class at/released/weh/emcripten/runtime/EmscriptenHostFunction : ja
 	public static final field EMSCRIPTEN_NOTIFY_MAILBOX_POSTMESSAGE Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field EMSCRIPTEN_RECEIVE_ON_MAIN_THREAD_JS Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field EMSCRIPTEN_RESIZE_HEAP Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
+	public static final field EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field EMSCRIPTEN_THREAD_CLEANUP Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field EMSCRIPTEN_THREAD_MAILBOX_AWAIT Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
 	public static final field EMSCRIPTEN_THREAD_SET_STRONGREF Lat/released/weh/emcripten/runtime/EmscriptenHostFunction;
@@ -232,6 +233,11 @@ public final class at/released/weh/emcripten/runtime/function/EmscriptenResizeHe
 
 public final class at/released/weh/emcripten/runtime/function/EmscriptenResizeHeapFunctionHandle$Companion {
 	public final fun calculateNewSizePages (JLat/released/weh/wasm/core/memory/Pages;Lat/released/weh/wasm/core/memory/Pages;)Lat/released/weh/wasm/core/memory/Pages;
+}
+
+public final class at/released/weh/emcripten/runtime/function/EmscriptenRuntimeKeepaliveClearFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {
+	public fun <init> (Lat/released/weh/host/EmbedderHost;)V
+	public final fun execute ()V
 }
 
 public final class at/released/weh/emcripten/runtime/function/FdDatasyncFunctionHandle : at/released/weh/emcripten/runtime/function/EmscriptenHostFunctionHandle {

@@ -17,6 +17,7 @@ import at.released.weh.bindings.chasm.module.emscripten.function.EmscriptenDateN
 import at.released.weh.bindings.chasm.module.emscripten.function.EmscriptenGetNow
 import at.released.weh.bindings.chasm.module.emscripten.function.EmscriptenGetNowIsMonotonic
 import at.released.weh.bindings.chasm.module.emscripten.function.EmscriptenResizeHeap
+import at.released.weh.bindings.chasm.module.emscripten.function.EmscriptenRuntimeKeepaliveClear
 import at.released.weh.bindings.chasm.module.emscripten.function.Getentropy
 import at.released.weh.bindings.chasm.module.emscripten.function.HandleStackOverflow
 import at.released.weh.bindings.chasm.module.emscripten.function.LocaltimeJs
@@ -52,6 +53,7 @@ import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_DATE_
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_GET_NOW
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_GET_NOW_IS_MONOTONIC
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_RESIZE_HEAP
+import at.released.weh.emcripten.runtime.EmscriptenHostFunction.EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.GETENTROPY
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.HANDLE_STACK_OVERFLOW
 import at.released.weh.emcripten.runtime.EmscriptenHostFunction.LOCALTIME_JS
@@ -121,6 +123,7 @@ private fun EmscriptenHostFunction.createChasmHostFunction(
     EMSCRIPTEN_GET_NOW -> EmscriptenGetNow(host)
     EMSCRIPTEN_GET_NOW_IS_MONOTONIC -> EmscriptenGetNowIsMonotonic(host)
     EMSCRIPTEN_RESIZE_HEAP -> EmscriptenResizeHeap(host, memory)
+    EMSCRIPTEN_RUNTIME_KEEPALIVE_CLEAR -> EmscriptenRuntimeKeepaliveClear(host)
     GETENTROPY -> Getentropy(host, memory)
     HANDLE_STACK_OVERFLOW -> HandleStackOverflow(host, emscriptenStackRef)
     LOCALTIME_JS -> LocaltimeJs(host, memory)
