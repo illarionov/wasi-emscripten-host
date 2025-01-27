@@ -85,7 +85,7 @@ public enum class EmscriptenHostFunction(
     ),
     EMSCRIPTEN_NOTIFY_MAILBOX_POSTMESSAGE(
         wasmName = "_emscripten_notify_mailbox_postmessage",
-        paramTypes = listOf(I32, I32, I32),
+        paramTypes = listOf(I32, I32),
     ),
     EMSCRIPTEN_RECEIVE_ON_MAIN_THREAD_JS(
         wasmName = "_emscripten_receive_on_main_thread_js",
