@@ -417,6 +417,11 @@
             <pgp value="CFBE6E7934FB211224EE1C2B0C0A9468268C79AE"/>
          </artifact>
       </component>
+      <component group="org.jetbrains" name="markdown-jvm" version="0.7.3">
+         <artifact name="markdown-jvm-0.7.3.jar">
+            <pgp value="CFBE6E7934FB211224EE1C2B0C0A9468268C79AE"/>
+         </artifact>
+      </component>
       <component group="org.jetbrains.intellij.deps" name="trove4j" version="1.0.20200330">
          <artifact name="trove4j-1.0.20200330.jar">
             <pgp value="8756C4F765C9AC3CB6B85D62379CE192D401AB61"/>

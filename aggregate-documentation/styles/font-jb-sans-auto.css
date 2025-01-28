@@ -1,0 +1,33 @@
+/* Replacements JetBrains Sans fonts */
+
+
+
+@font-face {
+    font-family: 'JetBrains Sans';
+    src: local("system-ui"),local("-apple-system"),local("Segoe UI"),local("Roboto"),local("Ubuntu"),local("Cantarell"),local("Noto Sans"),local("BlinkMacSystemFont"),local("Helvetica"),local("Arial"),local("sans-serif"),local("Apple Color Emoji"),local("Segoe UI Emoji"),local("Segoe UI Symbol");
+    font-weight: 300;
+    font-style: normal;
+}
+/* Regular weight */
+@font-face {
+    font-family: 'JetBrains Sans';
+    src: local("system-ui"),local("-apple-system"),local("Segoe UI"),local("Roboto"),local("Ubuntu"),local("Cantarell"),local("Noto Sans"),local("BlinkMacSystemFont"),local("Helvetica"),local("Arial"),local("sans-serif"),local("Apple Color Emoji"),local("Segoe UI Emoji"),local("Segoe UI Symbol");
+    font-weight: 400;
+    font-style: normal;
+}
+/* SemiBold weight */
+@font-face {
+    font-family: 'JetBrains Sans';
+    src: local("system-ui"),local("-apple-system"),local("Segoe UI"),local("Roboto"),local("Ubuntu"),local("Cantarell"),local("Noto Sans"),local("BlinkMacSystemFont"),local("Helvetica"),local("Arial"),local("sans-serif"),local("Apple Color Emoji"),local("Segoe UI Emoji"),local("Segoe UI Symbol");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@supports (font-variation-settings: normal) {
+    @font-face {
+        font-family: 'JetBrains Sans';
+        src: local("system-ui"),local("-apple-system"),local("Segoe UI"),local("Roboto"),local("Ubuntu"),local("Cantarell"),local("Noto Sans"),local("BlinkMacSystemFont"),local("Helvetica"),local("Arial"),local("sans-serif"),local("Apple Color Emoji"),local("Segoe UI Emoji"),local("Segoe UI Symbol");
+        font-weight: 100 900;
+        font-style: normal;
+    }
+}

@@ -11,6 +11,6 @@ plugins {
 group = "at.released.weh.gradle.documentation"
 
 dependencies {
-    implementation(libs.dokkatoo.plugin)
+    implementation(libs.dokka.plugin)
     implementation(libs.node.plugin)
 }

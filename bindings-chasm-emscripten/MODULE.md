@@ -2,7 +2,7 @@
 
 Implementation of Emscripten host functions for the [Chasm] JVM WebAssembly runtime integration.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chasm-emscripten?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chasm/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chasm-emscripten?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chasm-emscripten/overview)
 
 ## Usage
 

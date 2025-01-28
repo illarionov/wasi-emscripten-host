@@ -11,8 +11,7 @@ chasm = "0.9.42"
 chicory = "1.0.0"
 detekt = "1.23.7"
 diktat = "2.0.0"
-dokka = "1.9.20"
-dokkatoo = "2.4.0"
+dokka = "2.0.0"
 graalvm241 = "24.1.2"
 gradle-maven-publish-plugin = "0.30.0"
 kotest = "5.9.1"
@@ -57,7 +56,7 @@ atomicfu-plugin = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plu
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
-dokkatoo-plugin = { group = "dev.adamko.dokkatoo", name = "dokkatoo-plugin", version.ref = "dokkatoo" }
+dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
 node-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "node-plugin" }
 poko-plugin = { group = "dev.drewhamilton.poko", name = "poko-gradle-plugin", version.ref = "poko-plugin" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradle-maven-publish-plugin" }

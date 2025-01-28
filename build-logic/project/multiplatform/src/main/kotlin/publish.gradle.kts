@@ -15,7 +15,7 @@ import com.vanniktech.maven.publish.SonatypeHost
  * Convention plugin with publishing defaults
  */
 plugins {
-    id("at.released.weh.gradle.documentation.dokkatoo.subproject")
+    id("at.released.weh.gradle.documentation.dokka.subproject")
     id("at.released.weh.gradle.multiplatform.distribution.subproject")
     id("org.jetbrains.kotlin.multiplatform")
     id("com.vanniktech.maven.publish.base")

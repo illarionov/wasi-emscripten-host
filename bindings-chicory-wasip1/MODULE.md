@@ -2,7 +2,7 @@
 
 Implementation of WASI Preview 1 host functions for the [Chicory] JVM WebAssembly runtime.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory-wasip1/overview)
 
 * Targets: *JVM*, *Android API 31+*
 
