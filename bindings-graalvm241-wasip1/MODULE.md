@@ -2,7 +2,7 @@
 
 Implementation of WASI Preview 1 host functions for [GraalWasm] WebAssembly runtime.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-graalvm241-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-graalvm240/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-graalvm241-wasip1?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-graalvm240-wasip1/overview)
 
 * Targets: *JVM*
 

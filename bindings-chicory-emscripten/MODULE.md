@@ -2,7 +2,7 @@
 
 Implementation of Emscripten host functions for the [Chicory] JVM WebAssembly runtime integration.
 
-[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-emscripten?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory/overview)
+[<img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/at.released.weh/bindings-chicory-emscripten?style=flat-square">](https://central.sonatype.com/artifact/at.released.weh/bindings-chicory-emscripten/overview)
 
 * Targets: *JVM*, *Android API 31+*
 
