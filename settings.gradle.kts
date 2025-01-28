@@ -21,13 +21,13 @@ buildscript {
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.18.2")
         classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
         classpath("org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:2.0.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.10")
         classpath(
             "org.jetbrains.kotlinx.binary-compatibility-validator:" +
-                    "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.16.3",
+                    "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.17.0",
         )
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.26.1")
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.27.0")
     }
 }
 

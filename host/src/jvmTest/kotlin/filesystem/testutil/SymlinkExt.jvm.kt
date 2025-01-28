@@ -53,8 +53,8 @@ private fun createDirectoryLinkOnWindows(
 
 actual fun normalizeTargetPath(path: String): String {
     return if (Os.isWindows) {
-        return path.replace('/', '\\')
+        path.replace('/', '\\')
     } else {
-        return path
+        path
     }
 }
