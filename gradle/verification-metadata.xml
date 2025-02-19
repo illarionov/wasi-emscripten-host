@@ -217,6 +217,11 @@
             <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
          </artifact>
       </component>
+      <component group="dev.equo.ide" name="solstice" version="1.8.1">
+         <artifact name="solstice-1.8.1.jar">
+            <pgp value="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E"/>
+         </artifact>
+      </component>
       <component group="io.github.davidburstrom.contester" name="contester-breakpoint" version="0.2.0">
          <artifact name="contester-breakpoint-0.2.0.jar">
             <pgp value="C0612048F3393B80B22639B4F067A2FD751AE3E4"/>
