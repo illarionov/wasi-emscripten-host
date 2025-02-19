@@ -15,7 +15,6 @@ import at.released.weh.filesystem.op.readdir.DirEntry
 import at.released.weh.filesystem.op.readdir.DirEntrySequence
 import at.released.weh.filesystem.op.readdir.ReadDirFd
 import at.released.weh.filesystem.op.readdir.ReadDirFd.DirSequenceStartPosition
-import at.released.weh.filesystem.path.virtual.VirtualPath
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.preview1.WasiPreview1HostFunction.FD_READDIR
 import at.released.weh.wasi.preview1.ext.DIRENT_PACKED_SIZE
@@ -75,8 +74,7 @@ public class FdReaddirFunctionHandle(
     }
 
     internal companion object {
-        fun DirEntry.toDirEntWithName(): Pair<Dirent, Buffer> {
-            VirtualPath.create("test")
+        fun DirEntry.toDirEntryWithName(): Pair<Dirent, Buffer> {
             val encodedName = this.name.encodeToBuffer()
             return Dirent(
                 dNext = this.cookie,
@@ -97,7 +95,7 @@ public class FdReaddirFunctionHandle(
 
             @Suppress("LoopWithTooManyJumpStatements")
             for (dirEntry: DirEntry in sequence) {
-                val (dirent, encodedName) = dirEntry.toDirEntWithName()
+                val (dirent, encodedName) = dirEntry.toDirEntryWithName()
 
                 when {
                     bytesLeft >= DIRENT_PACKED_SIZE -> {
