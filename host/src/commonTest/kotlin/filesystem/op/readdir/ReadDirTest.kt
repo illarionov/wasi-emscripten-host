@@ -12,6 +12,8 @@ import assertk.assertions.containsExactlyInAnyOrder
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
+import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
+import at.released.weh.filesystem.testutil.createSymlink
 import at.released.weh.test.utils.absolutePath
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -27,6 +29,7 @@ class ReadDirTest : BaseFileSystemIntegrationTest() {
             createDirectories(Path(root, "dir1"))
             createDirectories(Path(root, "dir1/dir12"))
             createDirectories(Path(root, "dir2"))
+            createSymlink("dir2", Path(root, "dir3"), SYMLINK_TO_DIRECTORY)
             sink(Path(root, "file1")).close()
         }
 
@@ -43,6 +46,7 @@ class ReadDirTest : BaseFileSystemIntegrationTest() {
                     ".." to Filetype.DIRECTORY,
                     "dir1" to Filetype.DIRECTORY,
                     "dir2" to Filetype.DIRECTORY,
+                    "dir3" to Filetype.SYMBOLIC_LINK,
                     "file1" to Filetype.REGULAR_FILE,
                 )
         }

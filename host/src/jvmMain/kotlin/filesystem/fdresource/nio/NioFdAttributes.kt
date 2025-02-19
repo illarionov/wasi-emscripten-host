@@ -22,7 +22,7 @@ internal object NioFdAttributes {
     fun getFileFdAttributes(
         channel: NioFileChannel,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = channel.path.nio.readBasicAttributes()
+        val fileType = channel.path.nio.readBasicAttributes(followSymlinks = false)
             .map(BasicFileAttributes::filetype)
             .mapLeft(::toFdAttributesError)
             .bind()
@@ -40,7 +40,7 @@ internal object NioFdAttributes {
         path: NioRealPath,
         rights: FdRightsBlock,
     ): Either<FdAttributesError, FdAttributesResult> = either {
-        val fileType = path.nio.readBasicAttributes()
+        val fileType = path.nio.readBasicAttributes(followSymlinks = false)
             .map(BasicFileAttributes::filetype)
             .mapLeft(::toFdAttributesError)
             .bind()

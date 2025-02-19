@@ -19,8 +19,9 @@ import java.util.concurrent.TimeUnit
 
 internal fun Path.readOrGenerateInode(
     basicFileAttributes: BasicFileAttributes,
+    followSymlinks: Boolean,
 ): Either<ReadAttributesError, Long> = either {
-    val unixAttrs = readAttributeMapIfSupported("unix:$ATTR_UNI_INO,$ATTR_UNI_CTIME").bind()
+    val unixAttrs = readAttributeMapIfSupported("unix:$ATTR_UNI_INO,$ATTR_UNI_CTIME", followSymlinks).bind()
     readOrGenerateInode(basicFileAttributes, unixAttrs)
 }
 

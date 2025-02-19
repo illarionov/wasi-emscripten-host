@@ -19,10 +19,10 @@ internal fun readDirEntry(
     realPath: Path,
     cookie: Long = 0,
 ): DirEntry {
-    val basicAttrs = realPath.readBasicAttributes().getOrElse {
+    val basicAttrs = realPath.readBasicAttributes(followSymlinks = false).getOrElse {
         throw IOException("Can not read file type: $it")
     }
-    val inode = realPath.readOrGenerateInode(basicAttrs).getOrElse {
+    val inode = realPath.readOrGenerateInode(basicAttrs, followSymlinks = false).getOrElse {
         throw IOException("Can not get inode: $it")
     }
 
