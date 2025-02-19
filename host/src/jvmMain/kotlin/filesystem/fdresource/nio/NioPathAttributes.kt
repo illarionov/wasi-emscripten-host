@@ -22,12 +22,12 @@ import kotlin.io.path.readAttributes
 import kotlin.reflect.KClass
 
 internal fun Path.readBasicAttributes(
-    followSymlinks: Boolean = true,
+    followSymlinks: Boolean,
 ): Either<ReadAttributesError, BasicFileAttributes> = readAttributesNoThrow(BasicFileAttributes::class, followSymlinks)
 
 internal fun <A : BasicFileAttributes> Path.readAttributesNoThrow(
     klass: KClass<A>,
-    followSymlinks: Boolean = true,
+    followSymlinks: Boolean,
 ): Either<ReadAttributesError, A> {
     val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     return Either.catch {
@@ -38,7 +38,7 @@ internal fun <A : BasicFileAttributes> Path.readAttributesNoThrow(
 
 internal fun Path.readAttributeMapIfSupported(
     attributes: String,
-    followSymlinks: Boolean = true,
+    followSymlinks: Boolean,
 ): Either<ReadAttributesError, Map<String, Any?>> {
     val linkOptions: Array<LinkOption> = asLinkOptions(followSymlinks)
     return try {
