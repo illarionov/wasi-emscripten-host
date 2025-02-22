@@ -25,6 +25,7 @@ kermit = "2.0.5"
 node-plugin = "7.0.2"
 poko-plugin = "0.18.2"
 spotless = "7.0.2"
+tempfolder = "0.1"
 
 [libraries]
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
@@ -48,6 +49,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet-jvm", version.ref = "kotlinpoet" }
+tempfolder = { group = "at.released.tempfolder", name = "tempfolder-sync", version.ref = "tempfolder" }
 
 # Dependencies of the included build-logic
 agp-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

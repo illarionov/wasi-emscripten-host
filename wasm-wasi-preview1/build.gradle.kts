@@ -44,10 +44,10 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.tempfolder)
             implementation(projects.hostTestFixtures)
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
-            implementation(projects.testTempfolder)
             implementation(projects.wasmCoreTestFixtures)
         }
     }

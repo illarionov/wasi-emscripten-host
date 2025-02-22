@@ -49,6 +49,7 @@
          <trusted-key id="837B2CBB1D966C80643A2D6527F164F945828C4C" group="^com[.]willowtreeapps($|([.].*))" regex="true"/>
          <trusted-key id="8756C4F765C9AC3CB6B85D62379CE192D401AB61" group="com.diffplug.durian"/>
          <trusted-key id="8A10792983023D5D14C93B488D7F1BEC1E2ECAE7" group="^com[.]fasterxml($|([.].*))" regex="true"/>
+         <trusted-key id="8AB4B1AB3F0067ED73E00F0062C98BA8FCF62075" group="at.released.tempfolder"/>
          <trusted-key id="8E3A02905A1AE67E7B0F9ACD3967D4EDA591B991" group="org.jetbrains.kotlinx" name="kotlinx-html-jvm"/>
          <trusted-key id="98465301A4939C0279F2E847D89D05374952262B" group="org.jetbrains.dokka"/>
          <trusted-key id="A5BD02B93E7A40482EB1D66A5F69AD087600B22C" group="org.ow2.asm"/>

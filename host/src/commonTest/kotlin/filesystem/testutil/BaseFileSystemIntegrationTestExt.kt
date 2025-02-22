@@ -6,10 +6,9 @@
 
 package at.released.weh.filesystem.testutil
 
+import at.released.tempfolder.sync.TempDirectory
 import at.released.weh.filesystem.internal.FileDescriptorTable.Companion.WASI_FIRST_PREOPEN_FD
 import at.released.weh.filesystem.model.BaseDirectory.DirectoryFd
-import at.released.weh.test.utils.TempFolder
-import at.released.weh.test.utils.absolutePath
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -25,22 +24,28 @@ internal const val TEST_LINK = "testlink"
 internal val BaseFileSystemIntegrationTest.tempFolderDirectoryFd: DirectoryFd
     get() = DirectoryFd(WASI_FIRST_PREOPEN_FD)
 
-internal fun TempFolder.path(
-    relativePath: String,
-) = Path(absolutePath(), relativePath)
+internal fun TempDirectory<*>.path(
+    relativePath: String = ".",
+) = absolutePath().asString().let {
+    if (relativePath != ".") {
+        Path(it, relativePath)
+    } else {
+        Path(it)
+    }
+}
 
-internal fun TempFolder.createTestFile(
+internal fun TempDirectory<*>.createTestFile(
     testfilePath: String = TEST_FILE_NAME,
     content: String = TEST_CONTENT,
 ): Path = createTestFile(testfilePath) { writeString(content) }
 
-internal fun TempFolder.createTestFile(
+internal fun TempDirectory<*>.createTestFile(
     testfilePath: String = TEST_FILE_NAME,
     size: Int = 100,
     fillByte: Byte = 0xdd.toByte(),
 ): Path = createTestFile(testfilePath) { write(ByteArray(size) { fillByte }) }
 
-internal fun TempFolder.createTestFile(
+internal fun TempDirectory<*>.createTestFile(
     testfilePath: String = TEST_FILE_NAME,
     content: Sink.() -> Unit,
 ): Path {
@@ -51,7 +56,7 @@ internal fun TempFolder.createTestFile(
     return filePath
 }
 
-internal fun TempFolder.createTestDirectory(
+internal fun TempDirectory<*>.createTestDirectory(
     testDirectoryPath: String = TEST_DIRECTORY_NAME,
 ): Path {
     val path = path(testDirectoryPath)
@@ -59,7 +64,7 @@ internal fun TempFolder.createTestDirectory(
     return path
 }
 
-internal fun TempFolder.createTestSymlink(
+internal fun TempDirectory<*>.createTestSymlink(
     oldPath: String,
     newPath: String = TEST_LINK,
     type: SymlinkType = SymlinkType.NOT_SPECIFIED,
@@ -69,7 +74,7 @@ internal fun TempFolder.createTestSymlink(
     return newAbsolutePath
 }
 
-internal fun TempFolder.readFileContentToString(
+internal fun TempDirectory<*>.readFileContentToString(
     testfilePath: String = TEST_FILE_NAME,
 ): String = SystemFileSystem.source(path(testfilePath)).buffered().use {
     it.readString()

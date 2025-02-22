@@ -9,7 +9,6 @@ package at.released.weh.filesystem.testutil
 import at.released.weh.filesystem.testutil.SymlinkType.NOT_SPECIFIED
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_FILE
-import at.released.weh.test.utils.WindowsIoException
 import kotlinx.io.files.Path
 import platform.windows.CreateSymbolicLinkW
 import platform.windows.GetLastError
