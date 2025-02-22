@@ -17,9 +17,9 @@ import com.dylibso.chicory.runtime.Instance
 internal fun chicoryWasiMemoryReaderProvider(
     chicoryMemoryProvider: ChicoryMemoryProvider,
     fileSystem: FileSystem,
-): (Instance) -> WasiMemoryReader = ChicoryWasiMemoryProvider(chicoryMemoryProvider, fileSystem) { memory, fs ->
+): (Instance) -> WasiMemoryReader = ChicoryLazyMemoryInstance(chicoryMemoryProvider, fileSystem) { memory, fs ->
     val optimizedReader = if (memory is ChicoryMemoryAdapter) {
-        ChicoryWasiMemoryReader.tryCreate(memory.wasmMemory, fs)
+        tryCreateWasiMemoryReaderWriter(memory.wasmMemory, fs)
     } else {
         null
     }
@@ -29,16 +29,16 @@ internal fun chicoryWasiMemoryReaderProvider(
 internal fun chicoryWasiMemoryWriterProvider(
     chicoryMemoryProvider: ChicoryMemoryProvider,
     fileSystem: FileSystem,
-): (Instance) -> WasiMemoryWriter = ChicoryWasiMemoryProvider(chicoryMemoryProvider, fileSystem) { memory, fs ->
+): (Instance) -> WasiMemoryWriter = ChicoryLazyMemoryInstance(chicoryMemoryProvider, fileSystem) { memory, fs ->
     val optimizedWriter = if (memory is ChicoryMemoryAdapter) {
-        ChicoryWasiMemoryWriter.tryCreate(memory.wasmMemory, fs)
+        tryCreateWasiMemoryReaderWriter(memory.wasmMemory, fs)
     } else {
         null
     }
     optimizedWriter ?: DefaultWasiMemoryWriter(memory, fs)
 }
 
-private class ChicoryWasiMemoryProvider<R : Any>(
+private class ChicoryLazyMemoryInstance<R : Any>(
     private val chicoryMemoryProvider: ChicoryMemoryProvider,
     private val fileSystem: FileSystem,
     private val instanceFactory: (memory: Memory, fileSystem: FileSystem) -> R,

@@ -22,6 +22,7 @@ import kotlinx.io.files.Path
 
 object ChasmWasmTestRuntime : WasmTestRuntime {
     private val HOST_FUNCTION_ERROR_PATTERN = """HostFunctionError\(error=(\d+)\)""".toRegex()
+    override val hasOwnStdioTests: Boolean = false
 
     override fun runTest(
         wasmFile: ByteArray,

@@ -25,6 +25,8 @@ import java.nio.file.Path as JvmPath
 class GraalvmNativeWasmTestRuntime(
     private val engine: Engine,
 ) : WasmTestRuntime {
+    override val hasOwnStdioTests: Boolean = true
+
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -74,8 +76,8 @@ class GraalvmNativeWasmTestRuntime(
             exitCode
         }
 
-        assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)
-        assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(arguments.stderr)
+        arguments.stdout?.let { assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(it) }
+        arguments.stderr?.let { assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(it) }
 
         return exitCode
     }
