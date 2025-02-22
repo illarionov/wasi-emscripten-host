@@ -6,22 +6,22 @@
 
 package at.released.weh.filesystem.testutil
 
+import at.released.tempfolder.sync.TempDirectory
+import at.released.tempfolder.sync.createTempDirectory
 import at.released.weh.filesystem.FileSystem
 import at.released.weh.filesystem.dsl.CurrentWorkingDirectoryConfig
 import at.released.weh.test.logger.TestLogger
-import at.released.weh.test.utils.TempFolder
-import at.released.weh.test.utils.absolutePath
 import kotlinx.io.files.Path
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 public abstract class BaseFileSystemIntegrationTest {
     protected val logger = TestLogger()
-    internal lateinit var tempFolder: TempFolder
+    internal lateinit var tempFolder: TempDirectory<*>
 
     @BeforeTest
     fun setup() {
-        tempFolder = TempFolder.create()
+        tempFolder = createTempDirectory { prefix = "weh-" }
     }
 
     @AfterTest
@@ -30,7 +30,7 @@ public abstract class BaseFileSystemIntegrationTest {
     }
 
     open fun createTestFileSystem(
-        root: Path = tempFolder.absolutePath(),
+        root: Path = Path(tempFolder.absolutePath().asString()),
     ): FileSystem = DefaultTestFileSystem(
         engine = getDefaultTestEngine(),
     ) {

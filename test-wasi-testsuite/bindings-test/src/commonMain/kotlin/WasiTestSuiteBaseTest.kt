@@ -6,10 +6,11 @@
 
 package at.released.weh.wasi.bindings.test
 
+import at.released.tempfolder.sync.TempDirectory
+import at.released.tempfolder.sync.createTempDirectory
 import at.released.weh.test.ignore.annotations.dynamic.DynamicIgnoreTarget
 import at.released.weh.test.ignore.annotations.dynamic.checkIfShouldBeIgnored
 import at.released.weh.test.io.bootstrap.TestEnvironment
-import at.released.weh.test.utils.TempFolder
 import at.released.weh.wasi.bindings.test.runner.WasiSuiteTestExecutor
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import kotlinx.io.files.Path
@@ -20,12 +21,12 @@ public abstract class WasiTestSuiteBaseTest(
     public val wasiTestsRoot: Path,
     public val wasmRuntimeExecutorFactory: WasmTestRuntime.Factory,
 ) {
-    private var tempFolder: TempFolder? = null
+    private var tempFolder: TempDirectory<*>? = null
 
     @BeforeTest
     public fun setup() {
         TestEnvironment.prepare()
-        tempFolder = TempFolder.create()
+        tempFolder = createTempDirectory { prefix = "weh-" }
     }
 
     @AfterTest
@@ -50,7 +51,7 @@ public abstract class WasiTestSuiteBaseTest(
                 testsRoot = wasiTestsRoot,
                 testName = testName,
                 wasmTestRuntime = executor,
-                tempRoot = Path(tempFolder!!.path),
+                tempRoot = Path(tempFolder!!.absolutePath().asString()),
             ).runTest()
         }
     }

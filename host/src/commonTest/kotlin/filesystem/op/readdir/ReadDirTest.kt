@@ -14,7 +14,7 @@ import at.released.weh.filesystem.model.Filetype
 import at.released.weh.filesystem.testutil.BaseFileSystemIntegrationTest
 import at.released.weh.filesystem.testutil.SymlinkType.SYMLINK_TO_DIRECTORY
 import at.released.weh.filesystem.testutil.createSymlink
-import at.released.weh.test.utils.absolutePath
+import at.released.weh.filesystem.testutil.path
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.test.Test
@@ -22,7 +22,7 @@ import kotlin.test.Test
 class ReadDirTest : BaseFileSystemIntegrationTest() {
     @Test
     public fun read_dir_should_work() {
-        val root: Path = tempFolder.absolutePath()
+        val root: Path = tempFolder.path()
         val tempfolderFd = WASI_FIRST_PREOPEN_FD
 
         SystemFileSystem.run {

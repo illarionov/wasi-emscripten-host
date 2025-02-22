@@ -36,9 +36,9 @@ kotlin {
         commonTest.dependencies {
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
-            implementation(projects.testTempfolder)
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.tempfolder)
         }
     }
 }

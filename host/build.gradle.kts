@@ -74,11 +74,11 @@ kotlin {
             implementation(projects.testIgnoreAnnotations)
             implementation(projects.testIoBootstrap)
             implementation(projects.testLogger)
-            implementation(projects.testTempfolder)
             implementation(kotlin("test"))
             implementation(libs.assertk)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotest.property)
+            implementation(libs.tempfolder)
         }
     }
 }
