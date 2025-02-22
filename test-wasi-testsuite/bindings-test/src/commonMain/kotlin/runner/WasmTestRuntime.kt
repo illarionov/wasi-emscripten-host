@@ -10,6 +10,8 @@ import at.released.weh.host.EmbedderHost
 import kotlinx.io.files.Path
 
 public interface WasmTestRuntime {
+    public val hasOwnStdioTests: Boolean
+
     public fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,

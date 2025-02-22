@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 
 Key Features:
 
-- Compatible with Android API 33+ and JVM JDK 17+.
+- Compatible with Android API 28+ and JVM JDK 17+.
 - Simple JVM-only runtime with minimal dependencies.
 - Supports single-threaded execution only.
   
@@ -35,7 +35,7 @@ Add the required dependencies:
 ```kotlin
 dependencies {
     implementation("at.released.weh:bindings-chicory-wasip1:0.2")
-    implementation("com.dylibso.chicory:runtime:1.0.0")
+    implementation("com.dylibso.chicory:runtime:1.1.0")
 }
 ```
     </TabItem>
@@ -51,7 +51,7 @@ dependencies {
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -186,7 +186,7 @@ Add the required dependencies:
 ```kotlin
 dependencies {
     implementation("at.released.weh:bindings-chicory-emscripten:0.2")
-    implementation("com.dylibso.chicory:runtime:1.0.0")
+    implementation("com.dylibso.chicory:runtime:1.1.0")
 }
 ```
     </TabItem>
@@ -346,7 +346,7 @@ Chicory is also working on an Ahead-of-Time (AOT) compiler that translates WebAs
 To experiment with this feature, you can add the following dependency:
 
 ```kotlin
-implementation("com.dylibso.chicory:aot-experimental:1.0.0")
+implementation("com.dylibso.chicory:aot-experimental:1.1.0")
 ```
 
 And add `Engine` when building `Module`:

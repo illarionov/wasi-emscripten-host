@@ -10,6 +10,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import at.released.weh.bindings.chicory.exception.ProcExitException
 import at.released.weh.host.EmbedderHost
+import at.released.weh.wasi.bindings.test.chicory.base.ChicoryWasmTestRuntime.Companion.findProcExitExceptionCause
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
 import com.dylibso.chicory.log.SystemLogger
@@ -28,6 +29,8 @@ import kotlin.text.Charsets.UTF_8
  * Chicory implementation of WASI Preview 1 for reference
  */
 object ChicoryNativeWasmTestRuntime : WasmTestRuntime {
+    override val hasOwnStdioTests: Boolean = true
+
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -74,13 +77,14 @@ object ChicoryNativeWasmTestRuntime : WasmTestRuntime {
                 } catch (exit: WasiExitException) {
                     exit.exitCode()
                 } catch (machineException: WasmRuntimeException) {
-                    (machineException.cause as? WasiExitException)?.exitCode() ?: throw machineException
+                    machineException.findProcExitExceptionCause()?.exitCode ?: throw machineException
                 } catch (prce: ProcExitException) {
                     prce.exitCode
                 }
 
-                assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(arguments.stdout)
-                assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(arguments.stderr)
+                arguments.stdout?.let { assertThat(stdOut.toByteArray().toString(UTF_8)).isEqualTo(it) }
+                arguments.stderr?.let { assertThat(stdErr.toByteArray().toString(UTF_8)).isEqualTo(it) }
+
                 return exitCode
             }
     }

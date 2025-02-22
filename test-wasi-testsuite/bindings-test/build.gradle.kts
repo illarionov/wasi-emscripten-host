@@ -34,6 +34,7 @@ wasiTestsuiteTestGen {
     runtimes = setOf(
         WasmRuntimeBindings.CHASM,
         WasmRuntimeBindings.CHICORY,
+        WasmRuntimeBindings.CHICORY_BYTEARRAY_MEMORY,
         WasmRuntimeBindings.GRAALVM,
     )
     cIgnores = listOf(

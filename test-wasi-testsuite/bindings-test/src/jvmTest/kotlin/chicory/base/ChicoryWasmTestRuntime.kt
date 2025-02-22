@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@file:Suppress("WRONG_ORDER_IN_CLASS_LIKE_STRUCTURES")
+
 package at.released.weh.wasi.bindings.test.chicory.base
 
 import at.released.weh.bindings.chicory.exception.ProcExitException
@@ -11,6 +13,7 @@ import at.released.weh.bindings.chicory.wasip1.ChicoryWasiPreview1Builder
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasi.bindings.test.runner.WasiTestsuiteArguments
 import at.released.weh.wasi.bindings.test.runner.WasmTestRuntime
+import com.dylibso.chicory.runtime.ByteArrayMemory
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.Instance
 import com.dylibso.chicory.runtime.Store
@@ -19,7 +22,11 @@ import com.dylibso.chicory.wasi.WasiExitException
 import com.dylibso.chicory.wasm.Parser
 import kotlinx.io.files.Path
 
-object ChicoryWasmTestRuntime : WasmTestRuntime {
+class ChicoryWasmTestRuntime(
+    private val useByteArrayMemory: Boolean,
+) : WasmTestRuntime {
+    override val hasOwnStdioTests: Boolean = false
+
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
@@ -36,11 +43,14 @@ object ChicoryWasmTestRuntime : WasmTestRuntime {
         val wasmModule = Parser.parse(wasmFile)
 
         // Instantiate the WebAssembly module
-        val instance = Instance.builder(wasmModule)
-            .withInitialize(true)
-            .withStart(false)
-            .withImportValues(store.toImportValues())
-            .build()
+        val instance = Instance.builder(wasmModule).apply {
+            withInitialize(true)
+            withStart(false)
+            withImportValues(store.toImportValues())
+            if (useByteArrayMemory) {
+                withMemoryFactory(::ByteArrayMemory)
+            }
+        }.build()
         val exitCode = try {
             instance.export("_start").apply()
             0
@@ -55,24 +65,37 @@ object ChicoryWasmTestRuntime : WasmTestRuntime {
         return exitCode
     }
 
-    private fun Throwable.findProcExitExceptionCause(): ProcExitException? {
-        val causes: MutableSet<Throwable> = mutableSetOf()
-        var ex: Throwable? = this
-        while (ex != null) {
-            if (ex is ProcExitException) {
-                return ex
-            }
-            if (!causes.add(ex)) {
-                break
-            }
-            ex = ex.cause
-        }
-
-        return null
+    /**
+     * ChicoryWasmTestRuntime configured to use default
+     */
+    class Factory : WasmTestRuntime.Factory {
+        override fun invoke(): WasmTestRuntime = ChicoryWasmTestRuntime(useByteArrayMemory = false)
+        override fun close() = Unit
     }
 
-    class Factory : WasmTestRuntime.Factory {
-        override fun invoke(): WasmTestRuntime = ChicoryWasmTestRuntime
+    /**
+     * ChicoryWasmTestRuntime configured to use [ByteArrayMemory]
+     */
+    class ByteArrayMemoryFactory : WasmTestRuntime.Factory {
+        override fun invoke(): WasmTestRuntime = ChicoryWasmTestRuntime(useByteArrayMemory = false)
         override fun close() = Unit
+    }
+
+    companion object {
+        internal fun WasmRuntimeException.findProcExitExceptionCause(): ProcExitException? {
+            val causes: MutableSet<Throwable> = mutableSetOf()
+            var ex: Throwable? = this
+            while (ex != null) {
+                if (ex is ProcExitException) {
+                    return ex
+                }
+                if (!causes.add(ex)) {
+                    break
+                }
+                ex = ex.cause
+            }
+
+            return null
+        }
     }
 }

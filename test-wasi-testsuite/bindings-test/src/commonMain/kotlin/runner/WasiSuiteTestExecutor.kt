@@ -59,17 +59,16 @@ public class WasiSuiteTestExecutor(
         val stdout = testStdout.readContent()
         val stderr = testStderr.readContent()
 
-        logger.i { "stdout: $stdout" }
-        logger.i { "stderr: $stderr" }
+        if (!wasmTestRuntime.hasOwnStdioTests) {
+            logger.i { "stdout: $stdout" }
+            logger.i { "stderr: $stderr" }
+        }
 
         assertThat(exitCode).isEqualTo(arguments.exitCode)
 
-        arguments.stdout?.let {
-            assertThat(stdout).isEqualTo(it)
-        }
-
-        arguments.stderr?.let {
-            assertThat(stderr).isEqualTo(it)
+        if (!wasmTestRuntime.hasOwnStdioTests) {
+            arguments.stdout?.let { assertThat(stdout).isEqualTo(it) }
+            arguments.stderr?.let { assertThat(stderr).isEqualTo(it) }
         }
     }
 

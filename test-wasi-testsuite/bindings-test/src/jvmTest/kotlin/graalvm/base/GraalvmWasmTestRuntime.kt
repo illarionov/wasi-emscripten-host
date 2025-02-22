@@ -20,6 +20,8 @@ import org.graalvm.polyglot.io.ByteSequence
 class GraalvmWasmTestRuntime(
     private val engine: Engine,
 ) : WasmTestRuntime {
+    override val hasOwnStdioTests: Boolean = false
+
     override fun runTest(
         wasmFile: ByteArray,
         host: EmbedderHost,
