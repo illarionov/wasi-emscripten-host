@@ -10,7 +10,7 @@ They are not publicly defined or documented, and the interfaces can change with 
 Consequently, our implementation of these host functions is designed to work only with WebAssembly files 
 compiled using a specific version of Emscripten and with a specific set of compilation flags.
 
-The currently supported version of Emscripten is [3.1.66](https://github.com/emscripten-core/emscripten/releases/tag/3.1.66).
+The currently supported version of Emscripten is [4.0.1](https://github.com/emscripten-core/emscripten/releases/tag/4.0.1).
 
 ## Emscripten Standalone Mode
 
@@ -98,12 +98,14 @@ _emscripten_get_now_is_monotonic
 _emscripten_init_main_thread_js
 _emscripten_notify_mailbox_postmessage
 _emscripten_receive_on_main_thread_js
+_emscripten_runtime_keepalive_clear
 _emscripten_thread_cleanup
 _emscripten_thread_mailbox_await
 _emscripten_thread_set_strongref
 _localtime_js
 _mmap_js
 _munmap_js
+_setitimer_js
 _tzset_js
 emscripten_asm_const_async_on_main_thread
 emscripten_asm_const_int

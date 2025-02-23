@@ -33,9 +33,9 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-graalvm241-wasip1:0.2")
-    implementation("org.graalvm.polyglot:polyglot:24.1.1")
-    implementation("org.graalvm.polyglot:wasm:24.1.1")
+    implementation("at.released.weh:bindings-graalvm241-wasip1:0.3")
+    implementation("org.graalvm.polyglot:polyglot:24.1.2")
+    implementation("org.graalvm.polyglot:wasm:24.1.2")
 }
 ```
     </TabItem>
@@ -46,13 +46,13 @@ dependencies {
     <dependency>
         <groupId>org.graalvm.polyglot</groupId>
         <artifactId>polyglot</artifactId>
-        <version>24.1.1</version>
+        <version>24.1.2</version>
         <type>jar</type>
     </dependency>
     <dependency>
         <groupId>org.graalvm.polyglot</groupId>
         <artifactId>wasm</artifactId>
-        <version>24.1.1</version>
+        <version>24.1.2</version>
         <type>pom</type>
     </dependency>
     <dependency>
@@ -234,9 +234,9 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-graalvm241-emscripten:0.2")
-    implementation("org.graalvm.polyglot:polyglot:24.1.1")
-    implementation("org.graalvm.polyglot:wasm:24.1.1")
+    implementation("at.released.weh:bindings-graalvm241-emscripten:0.3")
+    implementation("org.graalvm.polyglot:polyglot:24.1.2")
+    implementation("org.graalvm.polyglot:wasm:24.1.2")
 }
 ```
     </TabItem>
@@ -434,7 +434,7 @@ To speed up initialization, you can reuse a single instance of the GraalVM Engin
 Check this link for more information: [GraalVM: Managing the Code Cache][graalvm-managing-the-code-cache] 
 
 [GraalWasm]: https://www.graalvm.org/latest/reference-manual/wasm/
-[Polyglot API 24]: https://central.sonatype.com/artifact/org.graalvm.sdk/graal-sdk/24.1.1
+[Polyglot API 24]: https://central.sonatype.com/artifact/org.graalvm.sdk/graal-sdk/24.1.2
 [samples/wasm-gradle/app-graalvm]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle
 [samples/wasm-maven/graalvm-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven
 [graalvm-running-webassembly-embedded-in-java]: https://www.graalvm.org/latest/reference-manual/wasm/#options

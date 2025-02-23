@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 [Chasm] is an experimental WebAssembly runtime built on Kotlin Multiplatform.
 It supports Android API 26+, JVM JDK 17+, and a variety of multiplatform targets.
 
-This integration is compatible with version [0.9.4][Chasm_version] of Chasm.
+This integration is compatible with version [0.9.53][Chasm_version] of Chasm.
 
 ## Wasi Preview 1 Bindings Integration
 
@@ -25,8 +25,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.4")
-        implementation("at.released.weh:bindings-chasm-wasip1:0.2")
+        implementation("io.github.charlietap.chasm:chasm:0.9.53")
+        implementation("at.released.weh:bindings-chasm-wasip1:0.3")
     }
 }
 ```
@@ -101,8 +101,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.4")
-        implementation("at.released.weh:bindings-chasm-emscripten:0.2")
+        implementation("io.github.charlietap.chasm:chasm:0.9.53")
+        implementation("at.released.weh:bindings-chasm-emscripten:0.3")
     }
 }
 ```
@@ -199,5 +199,5 @@ class WasmException(message: String) : RuntimeException(message)
   This example showcases how to execute a Kotlin/Wasm-WASI binary in a Kotlin Multiplatform project.
 
 [Chasm]: https://github.com/CharlieTap/chasm
-[Chasm_version]: https://github.com/CharlieTap/chasm/releases/tag/0.9.4
+[Chasm_version]: https://github.com/CharlieTap/chasm/releases/tag/0.9.53
 [Samples]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples
