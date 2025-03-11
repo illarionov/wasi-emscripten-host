@@ -13,7 +13,7 @@ import org.gradle.kotlin.dsl.create
 internal fun Project.createDocusaurusWebsiteExtension(): DocusaurusWebsiteSiteExtension {
     return extensions.create<DocusaurusWebsiteSiteExtension>("docusaurusWebsite").apply {
         @Suppress("UnstableApiUsage")
-        websiteDirectory.convention(isolated.rootProject.projectDirectory.dir("website"))
+        websiteDirectory.convention(layout.settingsDirectory.dir("website"))
         outputDirectory.convention(layout.buildDirectory.dir("docusaurus/website"))
     }
 }

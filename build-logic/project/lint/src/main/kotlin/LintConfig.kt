@@ -13,11 +13,13 @@ import org.gradle.api.tasks.util.PatternFilterable
 
 internal val Project.configRootDir: Directory
     get() {
-        return rootProject.layout.projectDirectory.dir("config")
+        @Suppress("UnstableApiUsage")
+        return layout.settingsDirectory.dir("config")
     }
 
+@Suppress("UnstableApiUsage")
 internal val Project.lintedFileTree: FileTree
-    get() = rootProject.layout.projectDirectory.asFileTree.matching {
+    get() = layout.settingsDirectory.asFileTree.matching {
         excludeNonLintedDirectories()
     }
 

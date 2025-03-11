@@ -13,7 +13,8 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
-private val htmlResourcesRoot = rootProject.layout.projectDirectory.dir("aggregate-documentation")
+@Suppress("UnstableApiUsage")
+private val htmlResourcesRoot = layout.settingsDirectory.dir("aggregate-documentation")
 
 dokka {
     dokkaPublications.configureEach {
