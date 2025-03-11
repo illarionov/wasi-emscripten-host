@@ -3,6 +3,7 @@ pluginManagement {
 }
 
 plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
     id("at.released.weh.gradle.settings.root")
 }
 
@@ -14,12 +15,9 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("com.diffplug.spotless:spotless-plugin-gradle:7.0.2")
         classpath("com.github.node-gradle:gradle-node-plugin:7.0.2")
-        classpath("com.saveourtool.diktat:diktat-gradle-plugin:2.0.0")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.30.0")
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.18.2")
-        classpath("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
         classpath("org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:2.0.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
         classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.10")
