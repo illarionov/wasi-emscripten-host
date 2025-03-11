@@ -11,8 +11,8 @@ package at.released.weh.bindings.chasm.ext
 import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.IntWasmPtr
 import at.released.weh.wasm.core.WasmPtr
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue
+import io.github.charlietap.chasm.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.runtime.value.NumberValue
 
 @InternalWasiEmscriptenHostApi
 public inline fun ExecutionValue.asByte(): Byte = (this as NumberValue.I32).value.toByte()

@@ -15,7 +15,7 @@ import at.released.weh.emcripten.runtime.function.SyscallGetcwdFunctionHandle
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.memory.Memory
 import io.github.charlietap.chasm.embedding.shapes.HostFunction
-import io.github.charlietap.chasm.executor.runtime.value.NumberValue
+import io.github.charlietap.chasm.runtime.value.NumberValue
 
 internal class SyscallGetcwd(
     host: EmbedderHost,

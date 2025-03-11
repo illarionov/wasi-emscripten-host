@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file
+ * Copyright 2024-2025, the wasi-emscripten-host project authors and contributors. Please see the AUTHORS file
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -18,8 +18,8 @@ import io.github.charlietap.chasm.embedding.memory.readBytes
 import io.github.charlietap.chasm.embedding.memory.writeByte
 import io.github.charlietap.chasm.embedding.memory.writeBytes
 import io.github.charlietap.chasm.embedding.shapes.Store
-import io.github.charlietap.chasm.executor.runtime.instance.ExternalValue
-import io.github.charlietap.chasm.executor.runtime.store.Address
+import io.github.charlietap.chasm.runtime.address.Address
+import io.github.charlietap.chasm.runtime.instance.ExternalValue
 import kotlinx.io.RawSink
 import kotlinx.io.RawSource
 import io.github.charlietap.chasm.embedding.shapes.Memory as ChasmMemory

@@ -10,10 +10,10 @@ import at.released.weh.common.api.InternalWasiEmscriptenHostApi
 import at.released.weh.wasm.core.HostFunction.HostFunctionType
 import at.released.weh.wasm.core.WasmValueType
 import at.released.weh.wasm.core.WasmValueTypes
-import io.github.charlietap.chasm.ast.type.NumberType
-import io.github.charlietap.chasm.ast.type.ResultType
-import io.github.charlietap.chasm.ast.type.ValueType
-import io.github.charlietap.chasm.ast.type.FunctionType as ChasmFunctionType
+import io.github.charlietap.chasm.type.NumberType
+import io.github.charlietap.chasm.type.ResultType
+import io.github.charlietap.chasm.type.ValueType
+import io.github.charlietap.chasm.type.FunctionType as ChasmFunctionType
 
 @InternalWasiEmscriptenHostApi
 public fun List<HostFunctionType>.toChasmFunctionTypes(): Map<HostFunctionType, ChasmFunctionType> = associateWith(
