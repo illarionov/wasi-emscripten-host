@@ -21,7 +21,8 @@ import javax.inject.Inject
 private const val VERSION_PROPERTIES_PATH = "config/version.properties"
 
 internal fun Project.createWehVersionsExtension(): WehVersionsExtension {
-    val configFilePath: RegularFile = project.rootProject.layout.projectDirectory.file(VERSION_PROPERTIES_PATH)
+    @Suppress("UnstableApiUsage")
+    val configFilePath: RegularFile = layout.settingsDirectory.file(VERSION_PROPERTIES_PATH)
     return extensions.create<WehVersionsExtension>("wehVersions", configFilePath)
 }
 

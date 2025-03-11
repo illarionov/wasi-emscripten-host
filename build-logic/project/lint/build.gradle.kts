@@ -13,7 +13,6 @@ group = "at.released.weh.gradle.lint"
 dependencies {
     implementation(libs.detekt.plugin)
     implementation(libs.agp.plugin.api)
-    implementation(libs.diktat.plugin)
     implementation(libs.kotlinx.binary.compatibility.validator.plugin)
     implementation(libs.spotless.plugin)
 }

@@ -9,8 +9,7 @@ arrow = "2.0.1"
 assertk = "0.28.1"
 chasm = "0.9.53"
 chicory = "1.1.0"
-detekt = "1.23.7"
-diktat = "2.0.0"
+detekt = "1.23.8"
 dokka = "2.0.0"
 graalvm241 = "24.1.2"
 gradle-maven-publish-plugin = "0.30.0"
@@ -57,7 +56,6 @@ agp-plugin-api = { module = "com.android.tools.build:gradle-api", version.ref = 
 atomicfu-plugin = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 detekt-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-diktat-plugin = { group = "com.saveourtool.diktat", name = "diktat-gradle-plugin", version.ref = "diktat" }
 dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
 node-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "node-plugin" }
 poko-plugin = { group = "dev.drewhamilton.poko", name = "poko-gradle-plugin", version.ref = "poko-plugin" }
