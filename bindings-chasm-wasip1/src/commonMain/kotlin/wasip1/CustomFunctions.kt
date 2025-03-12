@@ -8,15 +8,15 @@ package at.released.weh.bindings.chasm.wasip1
 
 import at.released.weh.bindings.chasm.ext.asInt
 import at.released.weh.wasm.core.WasmModules
-import io.github.charlietap.chasm.ast.type.FunctionType
-import io.github.charlietap.chasm.ast.type.NumberType.I32
-import io.github.charlietap.chasm.ast.type.ResultType
-import io.github.charlietap.chasm.ast.type.ValueType
 import io.github.charlietap.chasm.embedding.function
 import io.github.charlietap.chasm.embedding.shapes.Import
 import io.github.charlietap.chasm.embedding.shapes.Store
-import io.github.charlietap.chasm.executor.runtime.value.ExecutionValue
 import io.github.charlietap.chasm.host.HostFunctionException
+import io.github.charlietap.chasm.runtime.value.ExecutionValue
+import io.github.charlietap.chasm.type.FunctionType
+import io.github.charlietap.chasm.type.NumberType.I32
+import io.github.charlietap.chasm.type.ResultType
+import io.github.charlietap.chasm.type.ValueType
 import io.github.charlietap.chasm.embedding.shapes.HostFunction as ChasmHostFunction
 
 internal fun createCustomWasiPreview1HostFunctions(
