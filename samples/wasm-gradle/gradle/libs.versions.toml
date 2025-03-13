@@ -1,10 +1,10 @@
 [versions]
 kotlin = "2.1.10"
 
-chasm = "0.9.53"
-chicory = "1.1.0"
+chasm = "0.9.61"
+chicory = "1.1.1"
 graalvm = "24.1.2"
-weh = "0.3"
+weh = "0.4"
 
 [libraries]
 chasm = { group = "io.github.charlietap.chasm", name = "chasm", version.ref = "chasm" }

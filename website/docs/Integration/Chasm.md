@@ -26,7 +26,7 @@ Add the required dependencies:
 sourceSets {
     commonMain.dependencies {
         implementation("io.github.charlietap.chasm:chasm:0.9.53")
-        implementation("at.released.weh:bindings-chasm-wasip1:0.3")
+        implementation("at.released.weh:bindings-chasm-wasip1:0.4")
     }
 }
 ```
@@ -102,7 +102,7 @@ Add the required dependencies:
 sourceSets {
     commonMain.dependencies {
         implementation("io.github.charlietap.chasm:chasm:0.9.53")
-        implementation("at.released.weh:bindings-chasm-emscripten:0.3")
+        implementation("at.released.weh:bindings-chasm-emscripten:0.4")
     }
 }
 ```

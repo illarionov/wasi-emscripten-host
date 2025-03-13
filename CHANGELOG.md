@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4 - 2025-03-13
+
+#### 🚀 New Feature
+
+- Update Chasm to 0.9.61. This is breaking API Change in the `bindings-chasm-*` modules.
+
+#### 🔧 Maintenance
+
+- Bump other versions: Chicory 1.1.1, kotlinx-io 0.7.0, other build dependencies.
+
 ## 0.3 - 2025-02-23
 
 #### 🚀 New Feature

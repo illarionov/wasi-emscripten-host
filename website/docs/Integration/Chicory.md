@@ -19,7 +19,7 @@ Key Features:
   
 This integration allows you to run WebAssembly binaries that use either WASI Preview 1 or Emscripten functions on the JVM with Chicory.
 
-Compatible with version **[1.1.0][Chicory_version]** of Chicory.
+Compatible with version **[1.1.1][Chicory_version]** of Chicory.
 
 ## WASI Preview 1 Bindings Integration
 
@@ -34,8 +34,8 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-wasip1:0.3")
-    implementation("com.dylibso.chicory:runtime:1.1.0")
+    implementation("at.released.weh:bindings-chicory-wasip1:0.4")
+    implementation("com.dylibso.chicory:runtime:1.1.1")
 }
 ```
     </TabItem>
@@ -46,12 +46,12 @@ dependencies {
     <dependency>
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-chicory-wasip1-jvm</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
     </dependency>
 </dependencies>
 ```
@@ -185,8 +185,8 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-emscripten:0.3")
-    implementation("com.dylibso.chicory:runtime:1.1.0")
+    implementation("at.released.weh:bindings-chicory-emscripten:0.4")
+    implementation("com.dylibso.chicory:runtime:1.1.1")
 }
 ```
     </TabItem>
@@ -202,7 +202,7 @@ dependencies {
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.1</version>
     </dependency>
 </dependencies>
 ```
@@ -340,31 +340,11 @@ You can also check out samples in the repository:
 * Gradle project with Kotlin code: [samples/wasm-gradle/app-chicory]
 * Maven project with Java code: [samples/wasm-maven/chicory-maven]
 
-## Runtime Optimizations
+## Optimizations
 
-Chicory is also working on an Ahead-of-Time (AOT) compiler that translates WebAssembly into JVM code.
-To experiment with this feature, you can add the following dependency:
-
-```kotlin
-implementation("com.dylibso.chicory:aot-experimental:1.1.0")
-```
-
-And add `Engine` when building `Module`:
-
-```kotlin
-import com.dylibso.chicory.experimental.aot.AotMachine
-
-val module = Module
-    .builder(File("helloworld.wasm"))
-    .withHostImports(hostImports)
-    .withInitialize(true)
-    .withStart(false)
-    .withMachineFactory(::AotMachine)
-    .build()
-
-```
-
-For the latest updates, check this link: [chicory/aot].
+Chicory also supports Ahead-Of-Time (AOT) optimization of executable WebAssembly code, 
+both at runtime and at build time.
+For the latest updates, visit this link: [chicory/aot]
 
 [Chicory]: https://chicory.dev/
 [Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.1.0
