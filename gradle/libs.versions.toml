@@ -22,7 +22,7 @@ kotlinx-serialization-json = "1.8.0"
 kotlinx-io ="0.7.0"
 kermit = "2.0.5"
 node-plugin = "7.0.2"
-poko-plugin = "0.18.2"
+poko-plugin = "0.18.5"
 spotless = "7.0.2"
 tempfolder = "0.1"
 
