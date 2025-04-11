@@ -19,7 +19,7 @@ Key Features:
   
 This integration allows you to run WebAssembly binaries that use either WASI Preview 1 or Emscripten functions on the JVM with Chicory.
 
-Compatible with version **[1.1.1][Chicory_version]** of Chicory.
+Compatible with version **[1.2.1][Chicory_version]** of Chicory.
 
 ## WASI Preview 1 Bindings Integration
 
@@ -347,7 +347,7 @@ both at runtime and at build time.
 For the latest updates, visit this link: [chicory/aot]
 
 [Chicory]: https://chicory.dev/
-[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.1.0
+[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.2.1
 [samples/wasm-gradle/app-chicory]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle
 [samples/wasm-maven/chicory-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven
 [chicory/aot]: https://chicory.dev/docs/experimental/aot
