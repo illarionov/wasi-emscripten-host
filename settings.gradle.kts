@@ -3,7 +3,7 @@ pluginManagement {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
     id("at.released.weh.gradle.settings.root")
 }
 
@@ -19,8 +19,8 @@ buildscript {
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.31.0")
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.18.5")
         classpath("org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:2.0.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.1.20")
         classpath(
             "org.jetbrains.kotlinx.binary-compatibility-validator:" +
                     "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.17.0",
