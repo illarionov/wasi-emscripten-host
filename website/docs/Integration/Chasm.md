@@ -25,8 +25,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.53")
-        implementation("at.released.weh:bindings-chasm-wasip1:0.4")
+        implementation("io.github.charlietap.chasm:chasm:0.9.65")
+        implementation("at.released.weh:bindings-chasm-wasip1:0.5")
     }
 }
 ```
@@ -101,8 +101,8 @@ Add the required dependencies:
 ```kotlin
 sourceSets {
     commonMain.dependencies {
-        implementation("io.github.charlietap.chasm:chasm:0.9.53")
-        implementation("at.released.weh:bindings-chasm-emscripten:0.4")
+        implementation("io.github.charlietap.chasm:chasm:0.9.65")
+        implementation("at.released.weh:bindings-chasm-emscripten:0.5")
     }
 }
 ```

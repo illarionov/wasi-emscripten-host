@@ -18,12 +18,12 @@
         <dependency>
             <groupId>at.released.weh</groupId>
             <artifactId>bindings-chicory-emscripten-jvm</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>com.dylibso.chicory</groupId>
             <artifactId>runtime</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.1</version>
         </dependency>
     </dependencies>
 </project>
