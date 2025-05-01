@@ -6,8 +6,6 @@
 
 import at.released.weh.gradle.multiplatform.test.setupCopyDirectoryToIosTestResources
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_LINUX
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_MACOS
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_WINDOWS
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.MINGW
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
@@ -49,10 +47,6 @@ wasiTestsuiteTestGen {
         // Fails on MinGW because the test does not close all file descriptors before removing the directory
         // (https://github.com/WebAssembly/wasi-testsuite/pull/102)
         TestIgnore("path_link", setOf(JVM_ON_WINDOWS, MINGW)),
-
-        // Fails on JVM for Linux because JVM rounds timestamps of symlinks to microseconds (JDK-8343417)
-        // Fails on JVM for macOS, fixed by JDK-8343785 (JDK24)
-        TestIgnore("symlink_filestat", setOf(JVM_ON_LINUX, JVM_ON_MACOS)),
     )
 }
 
