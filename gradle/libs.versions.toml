@@ -4,7 +4,7 @@ androidCompileSdk = "34"
 
 agp = "8.7.3"
 antlr4 = "4.13.2"
-atomicfu = "0.27.0"
+atomicfu = "0.29.0"
 arrow = "2.0.1"
 assertk = "0.28.1"
 chasm = "0.9.65"
