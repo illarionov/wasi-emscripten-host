@@ -18,9 +18,7 @@ version = wehVersions.getSubmoduleVersionProvider(
 ).get()
 
 kotlin {
-    jvm {
-        withJava()
-    }
+    jvm()
 
     sourceSets {
         commonMain.dependencies {
