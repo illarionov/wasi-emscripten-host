@@ -48,6 +48,7 @@ import at.released.weh.emcripten.runtime.export.stack.EmscriptenStack
 import at.released.weh.host.EmbedderHost
 import at.released.weh.wasm.core.WasmModules.ENV_MODULE_NAME
 import com.dylibso.chicory.runtime.WasmFunctionHandle
+import com.dylibso.chicory.wasm.types.FunctionType
 import com.dylibso.chicory.runtime.HostFunction as ChicoryHostFunction
 
 internal class EmscriptenEnvFunctionsBuilder(
@@ -62,8 +63,10 @@ internal class EmscriptenEnvFunctionsBuilder(
             ChicoryHostFunction(
                 moduleName,
                 emscriptenFunc.wasmName,
-                emscriptenFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
-                emscriptenFunc.type.returnTypes.map(::wasmValueTypeToChicoryValueType),
+                FunctionType.of(
+                    emscriptenFunc.type.paramTypes.map(::wasmValueTypeToChicoryValueType),
+                    emscriptenFunc.type.returnTypes.map(::wasmValueTypeToChicoryValueType),
+                ),
                 emscriptenFunc.createChicoryEmscriptenFunction(host, memoryProvider, stackBindingsRef),
             )
         }

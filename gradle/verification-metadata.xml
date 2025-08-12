@@ -30,6 +30,7 @@
             <trusting group="androidx.databinding"/>
             <trusting group="^com[.]android($|([.].*))" regex="true"/>
          </trusted-key>
+         <trusted-key id="0FCBBD821362A9C39239162E7D71833C1A8AF208" group="com.dylibso.chicory"/>
          <trusted-key id="1A55F091AD28C07F831FA44D7905DE25C78AD456" group="com.google.protobuf"/>
          <trusted-key id="1D63A77F7270FE07D46B3EB514D68971286170CB" group="io.github.charlietap.chasm"/>
          <trusted-key id="1DE48A38424721249780C6A8C7DFF5A8DBC5381C" group="io.arrow-kt"/>

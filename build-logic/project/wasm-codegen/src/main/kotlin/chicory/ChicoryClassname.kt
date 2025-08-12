@@ -19,9 +19,11 @@ internal object ChicoryClassname {
     const val WASM_TYPES_PACKAGE = "$PACKAGE.wasm.types"
     val HOST_FUNCTION = ClassName(RUNTIME_PACKAGE, "HostFunction")
     val INSTANCE = ClassName(RUNTIME_PACKAGE, "Instance")
-    val VALUE_TYPE = ClassName(WASM_TYPES_PACKAGE, "ValueType")
-    val VALUE_TYPE_I32 = VALUE_TYPE.member("I32")
-    val VALUE_TYPE_I64 = VALUE_TYPE.member("I64")
+    val VAL_TYPE = ClassName(WASM_TYPES_PACKAGE, "ValType")
+    val VAL_TYPE_I32 = VAL_TYPE.member("I32")
+    val VAL_TYPE_I64 = VAL_TYPE.member("I64")
+    private val FUNCTION_TYPE = ClassName(WASM_TYPES_PACKAGE, "FunctionType")
+    val FUNCTION_TYPE_OF = MemberName(FUNCTION_TYPE, "of")
 
     public object Bindings {
         const val CHICORY_BINDINGS_PACKAGE = "at.released.weh.bindings.chicory"

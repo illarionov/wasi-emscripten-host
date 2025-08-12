@@ -14,6 +14,7 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I32
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I64
+import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.getBaseFunctionTypes
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.getListInstances
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listPropertyName
 import at.released.weh.gradle.wasm.codegen.witx.helper.WasiBaseTypeResolver
@@ -33,7 +34,7 @@ internal class ChicoryFactoryFunctionGenerator(
     wasiTypenames: Map<Identifier, WasiType>,
     private val wasiFunctions: List<WasiFunc>,
     private val functionsClassName: ClassName,
-    private val factoryFunctionName: String = "createHostFunctions",
+    private val factoryFunctionName: String = "createWasiPreview1HostFunctions",
 ) {
     private val baseTypeResolver = WasiBaseTypeResolver(wasiTypenames)
 
@@ -57,7 +58,7 @@ internal class ChicoryFactoryFunctionGenerator(
                     separator = ", ",
                 ) { "%M" },
                 args = (
-                        listOf(propertyName, ChicoryClassname.VALUE_TYPE) +
+                        listOf(propertyName, ChicoryClassname.VAL_TYPE) +
                                 listOfArgs.map { it.chicoryValueType }
                         ).toTypedArray(),
             )
@@ -68,17 +69,26 @@ internal class ChicoryFactoryFunctionGenerator(
             functionsClassName,
         )
 
+        getBaseFunctionTypes(wasiFunctions, baseTypeResolver).forEach { functionType ->
+            addCode(
+                "val %N = %M(%N, %N)\n",
+                functionType.propertyName,
+                ChicoryClassname.FUNCTION_TYPE_OF,
+                functionType.input.listPropertyName(),
+                functionType.results.listPropertyName(),
+            )
+        }
+
         addCode("return listOf(⇥⇥\n")
         wasiFunctions.forEach { wasiFunc: WasiFunc ->
             val baseType = BaseFunctionType.fromWasiFunc(wasiFunc, baseTypeResolver)
             val wasiNameCamelCase = wasiFunc.export.toCamelCasePropertyName()
 
             addCode(
-                "%T(moduleName, %S, %N, %N, functions::%N),\n",
+                "%T(moduleName, %S, %N, functions::%N),\n",
                 ChicoryClassname.HOST_FUNCTION,
                 wasiFunc.export,
-                baseType.input.listPropertyName(),
-                baseType.results.listPropertyName(),
+                baseType.propertyName,
                 wasiNameCamelCase,
             )
         }
@@ -88,8 +98,8 @@ internal class ChicoryFactoryFunctionGenerator(
     private companion object {
         private val BaseWebAssemblyType.chicoryValueType: MemberName
             get() = when (this) {
-                I32 -> ChicoryClassname.VALUE_TYPE_I32
-                I64 -> ChicoryClassname.VALUE_TYPE_I64
+                I32 -> ChicoryClassname.VAL_TYPE_I32
+                I64 -> ChicoryClassname.VAL_TYPE_I64
             }
     }
 }

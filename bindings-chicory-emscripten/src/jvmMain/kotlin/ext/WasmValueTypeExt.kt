@@ -7,6 +7,8 @@
 package at.released.weh.bindings.chicory.ext
 
 import at.released.weh.wasm.core.WasmValueType
-import com.dylibso.chicory.wasm.types.ValueType
+import com.dylibso.chicory.wasm.types.ValType
 
-internal fun wasmValueTypeToChicoryValueType(@WasmValueType type: Int): ValueType = ValueType.forId(type)
+internal fun wasmValueTypeToChicoryValueType(@WasmValueType type: Int): ValType {
+    return ValType.builder().withOpcode(type).build()
+}

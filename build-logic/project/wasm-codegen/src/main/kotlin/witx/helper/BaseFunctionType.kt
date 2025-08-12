@@ -113,5 +113,12 @@ internal data class BaseFunctionType(
             input = typeResolver.getFuncInputArgs(func).map { it.baseType.wasmType },
             results = typeResolver.getFuncReturnTypes(func).map { it.baseType.wasmType },
         )
+
+        internal fun getBaseFunctionTypes(
+            wasiFunctions: List<WasiFunc>,
+            typeResolver: WasiBaseTypeResolver,
+        ): Set<BaseFunctionType> {
+            return wasiFunctions.map { fromWasiFunc(it, typeResolver) }.toSortedSet()
+        }
     }
 }
