@@ -1,8 +1,8 @@
 [versions]
 androidMinSdk = "26"
-androidCompileSdk = "34"
+androidCompileSdk = "36"
 
-agp = "8.7.3"
+agp = "8.12.0"
 antlr4 = "4.13.2"
 atomicfu = "0.27.0"
 arrow = "2.0.1"

@@ -14,7 +14,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.3")
+        classpath("com.android.tools.build:gradle:8.12.0")
         classpath("com.github.node-gradle:gradle-node-plugin:7.1.0")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.32.0")
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.18.7")
