@@ -399,6 +399,11 @@
             <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
          </artifact>
       </component>
+      <component group="org.gradle.kotlin" name="gradle-kotlin-dsl-plugins" version="6.2.0">
+         <artifact name="gradle-kotlin-dsl-plugins-6.2.0.jar">
+            <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
+         </artifact>
+      </component>
       <component group="org.gradle.toolchains" name="foojay-resolver" version="0.10.0">
          <artifact name="foojay-resolver-0.10.0.jar">
             <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
