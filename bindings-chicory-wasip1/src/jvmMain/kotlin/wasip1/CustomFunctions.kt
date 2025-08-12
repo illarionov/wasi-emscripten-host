@@ -9,12 +9,21 @@ package at.released.weh.bindings.chicory.wasip1
 import at.released.weh.bindings.chicory.exception.ProcExitException
 import com.dylibso.chicory.runtime.HostFunction
 import com.dylibso.chicory.runtime.WasmFunctionHandle
-import com.dylibso.chicory.wasm.types.ValueType.I32
+import com.dylibso.chicory.wasm.types.FunctionType
+import com.dylibso.chicory.wasm.types.ValType
 
 internal fun createCustomChicoryFunctions(
     moduleName: String = "wasi_snapshot_preview1",
 ): List<HostFunction> = listOf(
-    HostFunction(moduleName, "proc_exit", listOf(I32), emptyList(), procExit),
+    HostFunction(
+        moduleName,
+        "proc_exit",
+        FunctionType.of(
+            arrayOf(ValType.I32),
+            emptyArray<ValType>(),
+        ),
+        procExit,
+    ),
 )
 
 private val procExit: WasmFunctionHandle = WasmFunctionHandle { _, args ->

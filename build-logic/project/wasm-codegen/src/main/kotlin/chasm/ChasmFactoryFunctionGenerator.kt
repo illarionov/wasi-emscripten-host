@@ -16,6 +16,7 @@ import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I32
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.BaseWebAssemblyType.I64
+import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.getBaseFunctionTypes
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.Companion.wasmType
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listOfTypesComparator
 import at.released.weh.gradle.wasm.codegen.witx.helper.BaseFunctionType.ListOfBaseWebAssemblyTypes.listPropertyName
@@ -77,7 +78,7 @@ internal class ChasmFactoryFunctionGenerator(
             )
         }
 
-        getFunctionTypeInstances().forEach { functionType ->
+        getBaseFunctionTypes(wasiFunctions, baseTypeResolver).forEach { functionType ->
             addCode(
                 "val %N = %T(%N, %N)\n",
                 functionType.propertyName,
@@ -115,9 +116,5 @@ internal class ChasmFactoryFunctionGenerator(
         }
             .map { args: List<NamedParamType> -> args.map { it.baseType.wasmType } }
             .toSortedSet(listOfTypesComparator)
-    }
-
-    private fun getFunctionTypeInstances(): Set<BaseFunctionType> {
-        return wasiFunctions.map { BaseFunctionType.fromWasiFunc(it, baseTypeResolver) }.toSortedSet()
     }
 }
