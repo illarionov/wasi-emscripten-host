@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 plugins.withId("org.jetbrains.kotlin.multiplatform") {
     extensions.configure<KotlinMultiplatformExtension> {
         val moduleBuilderGeneratorTask = registerGenerateHostFunctionsBuilderTask()
-        sourceSets.jvmMain {
+        sourceSets.matching { it.name == "jvmMain" }.configureEach {
             kotlin.srcDirs(moduleBuilderGeneratorTask.flatMap(GenerateChicoryHostFunctionsBuilderTask::outputDirectory))
         }
     }

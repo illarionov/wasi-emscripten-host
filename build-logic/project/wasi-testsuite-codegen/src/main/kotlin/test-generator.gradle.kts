@@ -19,7 +19,7 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
             commonTest {
                 kotlin.srcDirs(testsTask.flatMap(GenerateWasiTestsuiteTestsTask::commonTestOutputDirectory))
             }
-            jvmTest {
+            matching { it.name == "jvmTest" }.configureEach {
                 kotlin.srcDirs(testsTask.flatMap(GenerateWasiTestsuiteTestsTask::jvmTestOutputDirectory))
             }
         }
