@@ -23,7 +23,7 @@ kotlinx-io ="0.7.0"
 kermit = "2.0.5"
 node-plugin = "7.1.0"
 poko-plugin = "0.18.7"
-spotless = "7.0.2"
+spotless = "7.2.1"
 tempfolder = "0.1"
 
 [libraries]

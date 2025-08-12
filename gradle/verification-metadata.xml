@@ -57,6 +57,7 @@
          <trusted-key id="8AB4B1AB3F0067ED73E00F0062C98BA8FCF62075" group="at.released.tempfolder"/>
          <trusted-key id="8E3A02905A1AE67E7B0F9ACD3967D4EDA591B991" group="org.jetbrains.kotlinx" name="kotlinx-html-jvm"/>
          <trusted-key id="98465301A4939C0279F2E847D89D05374952262B" group="org.jetbrains.dokka"/>
+         <trusted-key id="A31DDE881C3E3C4C985BD0D02C7F998F4272C851" group="com.diffplug.spotless"/>
          <trusted-key id="A5BD02B93E7A40482EB1D66A5F69AD087600B22C" group="org.ow2.asm"/>
          <trusted-key id="A5F483CD733A4EBAEA378B2AE88979FB9B30ACF2">
             <trusting group="androidx.annotation"/>
@@ -399,6 +400,11 @@
             <pgp value="7C669810892CBD3148FA92995B05CCDE140C2876"/>
          </artifact>
       </component>
+      <component group="org.eclipse.jgit" name="org.eclipse.jgit" version="6.10.1.202505221210-r">
+         <artifact name="org.eclipse.jgit-6.10.1.202505221210-r.jar">
+            <pgp value="7C669810892CBD3148FA92995B05CCDE140C2876"/>
+         </artifact>
+      </component>
       <component group="org.eclipse.platform" name="org.eclipse.osgi" version="3.18.300">
          <artifact name="org.eclipse.osgi-3.18.300.jar">
             <pgp value="9E3044071B758EBCB7E45673700E4F39BC05364B"/>
@@ -406,6 +412,11 @@
       </component>
       <component group="org.eclipse.platform" name="org.eclipse.osgi" version="3.18.500">
          <artifact name="org.eclipse.osgi-3.18.500.jar">
+            <pgp value="9E3044071B758EBCB7E45673700E4F39BC05364B"/>
+         </artifact>
+      </component>
+      <component group="org.eclipse.platform" name="org.eclipse.osgi" version="3.23.100">
+         <artifact name="org.eclipse.osgi-3.23.100.jar">
             <pgp value="9E3044071B758EBCB7E45673700E4F39BC05364B"/>
          </artifact>
       </component>
