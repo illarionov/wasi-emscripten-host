@@ -29,11 +29,12 @@ kotlin {
     sourceSets {
         all {
             languageSettings {
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.1"
+                apiVersion = "2.1"
                 listOf(
                     "kotlin.RequiresOptIn",
                     "kotlin.ExperimentalStdlibApi",
+                    "kotlin.time.ExperimentalTime",
                     "kotlinx.cinterop.ExperimentalForeignApi",
                     "at.released.weh.common.api.InternalWasiEmscriptenHostApi",
                 ).forEach(::optIn)
