@@ -25,10 +25,6 @@ const config: Config = {
 
   staticDirectories: ['static', process.env.API_REFERENCE_DIRECTORY ?? 'kdoc' ],
 
-  future: {
-    experimental_faster: true,
-  },
-
   presets: [
     [
       'classic',
