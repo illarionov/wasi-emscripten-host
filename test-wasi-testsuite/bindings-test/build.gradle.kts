@@ -7,7 +7,6 @@
 import at.released.weh.gradle.multiplatform.test.setupCopyDirectoryToIosTestResources
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore
 import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.JVM_ON_WINDOWS
-import at.released.weh.gradle.wasi.testsuite.codegen.TestIgnore.IgnoreTarget.MINGW
 import at.released.weh.gradle.wasi.testsuite.codegen.generator.WasmRuntimeBindings
 import org.jetbrains.kotlin.gradle.plugin.ExecutionTaskHolder
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
@@ -44,9 +43,7 @@ wasiTestsuiteTestGen {
         TestIgnore("fd_fdstat_set_rights"),
 
         // Fails on JVM for Windows because hardlinks to file must have the same inode,
-        // Fails on MinGW because the test does not close all file descriptors before removing the directory
-        // (https://github.com/WebAssembly/wasi-testsuite/pull/102)
-        TestIgnore("path_link", setOf(JVM_ON_WINDOWS, MINGW)),
+        TestIgnore("path_link", setOf(JVM_ON_WINDOWS)),
     )
 }
 
