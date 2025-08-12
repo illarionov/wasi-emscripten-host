@@ -21,6 +21,7 @@ env:
   GRADLE_OPTS: >-
     -Dorg.gradle.jvmargs="-Xmx3G -XX:MaxMetaspaceSize=1G -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC"
     -Dorg.gradle.dependency.verification.console=verbose
+    -Dorg.gradle.configuration-cache=false
   KOTLIN_DAEMON_JVMARGS: >-
     -Xmx1G -XX:MaxMetaspaceSize=320M -XX:SoftRefLRUPolicyMSPerMB=10 -XX:+UseParallelGC -XX:NewRatio=1
   ORG_GRADLE_PROJECT_verboseTest: true
