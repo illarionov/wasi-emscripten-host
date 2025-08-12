@@ -8,8 +8,8 @@ package at.released.weh.host.jvm.clock
 
 import assertk.assertThat
 import assertk.assertions.isBetween
-import kotlinx.datetime.Clock
 import kotlin.test.Test
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.nanoseconds
 

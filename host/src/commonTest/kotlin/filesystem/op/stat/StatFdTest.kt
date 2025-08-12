@@ -25,9 +25,9 @@ import at.released.weh.filesystem.testutil.createTestDirectory
 import at.released.weh.filesystem.testutil.createTestFile
 import at.released.weh.filesystem.testutil.op.createForTestDirectory
 import at.released.weh.filesystem.testutil.op.createForTestFile
-import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.fail
+import kotlin.time.Clock
 
 class StatFdTest : BaseFileSystemIntegrationTest() {
     @Test
