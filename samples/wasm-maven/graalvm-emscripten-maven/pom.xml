@@ -31,7 +31,7 @@
         <dependency>
             <groupId>at.released.weh</groupId>
             <artifactId>bindings-graalvm241-emscripten-jvm</artifactId>
-            <version>0.5</version>
+            <version>0.6.0</version>
         </dependency>
     </dependencies>
 </project>

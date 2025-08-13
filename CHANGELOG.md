@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.6.0 - 2025-08-13
+
+This version is compatible with the following WebAssembly runtimes:
+
+- Chicory 1.5.1
+- Chasm 1.0.0
+- GraalVM 24.1
+
+#### Implemented interfaces
+
+- WASI Preview 1
+- Emscripten 4.0.1 (partial)
+
+#### 💥 Breaking Change
+
+- Minimum required Kotlin version raised to 2.1
+- Replaced `kotlinx.datetime.Clock` with `kotlin.time.Clock`
+
+#### 🔧 Maintenance
+
+- Updated Chasm to 1.0.0
+- Updated Chicory to 1.5.1
+- Updated Kotlin to 2.2.0
+- Bumped other build dependencies
+
 ## 0.5 - 2025-04-11
 
 #### 🚀 New Feature
