@@ -19,7 +19,7 @@ Key Features:
   
 This integration allows you to run WebAssembly binaries that use either WASI Preview 1 or Emscripten functions on the JVM with Chicory.
 
-Compatible with version **[1.2.1][Chicory_version]** of Chicory.
+Compatible with version **[1.5.1][Chicory_version]** of Chicory.
 
 ## WASI Preview 1 Bindings Integration
 
@@ -34,8 +34,8 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-wasip1:0.5")
-    implementation("com.dylibso.chicory:runtime:1.2.1")
+    implementation("at.released.weh:bindings-chicory-wasip1:0.6.0")
+    implementation("com.dylibso.chicory:runtime:1.5.1")
 }
 ```
     </TabItem>
@@ -46,12 +46,12 @@ dependencies {
     <dependency>
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-chicory-wasip1-jvm</artifactId>
-        <version>0.5</version>
+        <version>0.6.0</version>
     </dependency>
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>1.2.1</version>
+        <version>1.5.1</version>
     </dependency>
 </dependencies>
 ```
@@ -185,8 +185,8 @@ Add the required dependencies:
 
 ```kotlin
 dependencies {
-    implementation("at.released.weh:bindings-chicory-emscripten:0.5")
-    implementation("com.dylibso.chicory:runtime:1.2.1")
+    implementation("at.released.weh:bindings-chicory-emscripten:0.6.0")
+    implementation("com.dylibso.chicory:runtime:1.5.1")
 }
 ```
     </TabItem>
@@ -197,12 +197,12 @@ dependencies {
     <dependency>
         <groupId>at.released.weh</groupId>
         <artifactId>bindings-chicory-emscripten-jvm</artifactId>
-        <version>0.1</version>
+        <version>0.6.0</version>
     </dependency>
     <dependency>
         <groupId>com.dylibso.chicory</groupId>
         <artifactId>runtime</artifactId>
-        <version>1.1.1</version>
+        <version>1.5.1</version>
     </dependency>
 </dependencies>
 ```
@@ -347,7 +347,7 @@ both at runtime and at build time.
 For the latest updates, visit this link: [chicory/aot]
 
 [Chicory]: https://chicory.dev/
-[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.2.1
+[Chicory_version]: https://github.com/dylibso/chicory/releases/tag/1.5.1
 [samples/wasm-gradle/app-chicory]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-gradle
 [samples/wasm-maven/chicory-maven]: https://github.com/illarionov/wasi-emscripten-host/tree/main/samples/wasm-maven
 [chicory/aot]: https://chicory.dev/docs/experimental/aot
