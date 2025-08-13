@@ -9,7 +9,6 @@ package at.released.weh.gradle.multiplatform
 import at.released.weh.gradle.multiplatform.publish.createWehVersionsExtension
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import com.vanniktech.maven.publish.SonatypeHost
 
 /*
  * Convention plugin with publishing defaults
@@ -29,7 +28,7 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 createWehVersionsExtension()
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     publishing {
         repositories {
             maven {

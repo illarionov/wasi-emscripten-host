@@ -16,7 +16,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.12.0")
         classpath("com.github.node-gradle:gradle-node-plugin:7.1.0")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.32.0")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.34.0")
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.19.3")
         classpath("org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:2.0.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0")
