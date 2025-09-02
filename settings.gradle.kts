@@ -19,8 +19,8 @@ buildscript {
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.34.0")
         classpath("dev.drewhamilton.poko:poko-gradle-plugin:0.19.3")
         classpath("org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:2.0.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:2.2.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.10")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.2.10")
         classpath(
             "org.jetbrains.kotlinx.binary-compatibility-validator:" +
                     "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin:0.18.1",
