@@ -59,7 +59,7 @@ jobs:
           dependency-graph: generate
 
       - name: Restore Kotlin Native Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
