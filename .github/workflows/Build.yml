@@ -60,7 +60,7 @@ jobs:
           dependency-graph: generate
 
       - name: Restore Kotlin Native Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
@@ -95,7 +95,7 @@ jobs:
           path: test-reports-linux.tar.zst
 
       - name: Save Kotlin Native Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         if: github.ref_name == 'main'
         with:
           path: ~/.konan
@@ -130,7 +130,7 @@ jobs:
           dependency-graph: generate
 
       - name: Restore Kotlin Native Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
@@ -165,7 +165,7 @@ jobs:
           path: test-reports-macos.tar.zst
 
       - name: Save Kotlin Native Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         if: github.ref_name == 'main'
         with:
           path: ~/.konan
@@ -200,7 +200,7 @@ jobs:
           dependency-graph: generate
 
       - name: Restore Kotlin Native Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle.kts', 'buildSrc') }}
@@ -234,7 +234,7 @@ jobs:
           path: test-reports-windows.tar.zst
 
       - name: Save Kotlin Native Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         if: github.ref_name == 'main'
         with:
           path: ~/.konan
